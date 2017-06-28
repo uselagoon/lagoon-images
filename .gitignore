@@ -1,6 +1,0 @@
-node_modules/
-dist/
-.npmrc
-.DS_Store
-.amazeeio.yml
-npm-debug.log*

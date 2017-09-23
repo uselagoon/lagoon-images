@@ -1,6 +1,4 @@
-#!/bin/bash -xe
-
-set -o pipefail
+#!/bin/bash
 
 function join_by { local d=$1; shift; echo -n "$1"; shift; printf "%s" "${@/#/$d}"; }
 
@@ -14,4 +12,4 @@ fi
 
 # try to pull the last pushed image so we can use it for --cache-from during the build
 docker pull ${OPENSHIFT_REGISTRY}/${OPENSHIFT_PROJECT}/${IMAGE_NAME}:latest || true
-docker build $BUILD_ARGS_JOINED --cache-from $IMAGE_TEMPORARY_NAME --cache-from ${OPENSHIFT_REGISTRY}/${OPENSHIFT_PROJECT}/${IMAGE_NAME}:latest --build-arg IMAGE_REPO=$CI_OVERRIDE_IMAGE_REPO --build-arg AMAZEEIO_GIT_SHA="$AMAZEEIO_GIT_SHA" --build-arg AMAZEEIO_GIT_BRANCH="$BRANCH" --build-arg AMAZEEIO_SITEGROUP="$SITEGROUP" -t $IMAGE_TEMPORARY_NAME -f $BUILD_CONTEXT/$DOCKERFILE $BUILD_CONTEXT
+docker build $BUILD_ARGS_JOINED --cache-from ${OPENSHIFT_REGISTRY}/${OPENSHIFT_PROJECT}/${IMAGE_NAME}:latest --build-arg IMAGE_REPO=$CI_OVERRIDE_IMAGE_REPO --build-arg AMAZEEIO_GIT_SHA="$AMAZEEIO_GIT_SHA" --build-arg AMAZEEIO_GIT_BRANCH="$BRANCH" --build-arg AMAZEEIO_SITEGROUP="$SITEGROUP" -t $IMAGE_NAME -f $BUILD_CONTEXT/$DOCKERFILE $BUILD_CONTEXT

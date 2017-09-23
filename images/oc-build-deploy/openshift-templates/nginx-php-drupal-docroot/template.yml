@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: amazeeio-openshift-template-node
+  name: amazeeio-openshift-template-nginx-php
 parameters:
   - name: SERVICE_NAME
     description: Name of this service
@@ -27,6 +27,16 @@ parameters:
     required: true
 objects:
 - apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: drupal-files
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+- apiVersion: v1
   kind: DeploymentConfig
   metadata:
     creationTimestamp: null
@@ -48,17 +58,79 @@ objects:
           branch: ${SAFE_BRANCH}
           sitegroup: ${SAFE_SITEGROUP}
       spec:
+        volumes:
+          - name: drupal-files
+            persistentVolumeClaim:
+              claimName: drupal-files
         containers:
         - image: ' '
-          name: ${SERVICE_NAME}
+          name: nginx
+          volumeMounts:
+            - name: drupal-files
+              mountPath: /app/docroot/sites/default/files/
           ports:
-          - containerPort: 3000
+          - containerPort: 8080
             protocol: TCP
           readinessProbe:
-            tcpSocket:
-              port: 3000
-            initialDelaySeconds: 15
-            timeoutSeconds: 1
+            httpGet:
+              path: /nginx_status
+              port: 50000
+            initialDelaySeconds: 5
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /nginx_status
+              port: 50000
+            initialDelaySeconds: 90
+            timeoutSeconds: 3
+            failureThreshold: 5
+          env:
+            - name: NGINX_FASTCGI_PASS
+              value: '127.0.0.1'
+            - name: AMAZEEIO_GIT_BRANCH
+              valueFrom:
+                configMapKeyRef:
+                  name: amazeeio-env
+                  key: AMAZEEIO_GIT_BRANCH
+            - name: AMAZEEIO_GIT_SAFE_BRANCH
+              valueFrom:
+                configMapKeyRef:
+                  name: amazeeio-env
+                  key: AMAZEEIO_GIT_SAFE_BRANCH
+            - name: AMAZEEIO_GIT_SHA
+              valueFrom:
+                configMapKeyRef:
+                  name: amazeeio-env
+                  key: AMAZEEIO_GIT_SHA
+            - name: AMAZEEIO_SITEGROUP
+              valueFrom:
+                configMapKeyRef:
+                  name: amazeeio-env
+                  key: AMAZEEIO_SITEGROUP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+        - image: ' '
+          name: php
+          volumeMounts:
+            - name: drupal-files
+              mountPath: /app/docroot/sites/default/files/
+          ports:
+          - containerPort: 9000
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /usr/sbin/check_fcgi
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+              - /usr/sbin/check_fcgi
+            initialDelaySeconds: 60
+            periodSeconds: 5
           env:
             - name: AMAZEEIO_GIT_BRANCH
               valueFrom:
@@ -90,10 +162,18 @@ objects:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - ${SERVICE_NAME}
+        - nginx
         from:
           kind: ImageStreamTag
-          name: ${SERVICE_NAME}:latest
+          name: nginx:latest
+      type: ImageChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - php
+        from:
+          kind: ImageStreamTag
+          name: php:latest
       type: ImageChange
   status: {}
 - apiVersion: v1
@@ -107,10 +187,10 @@ objects:
     name: ${SERVICE_NAME}
   spec:
     ports:
-    - name: 3000-tcp
-      port: 3000
+    - name: 8080-tcp
+      port: 8080
       protocol: TCP
-      targetPort: 3000
+      targetPort: 8080
     selector:
       service: ${SERVICE_NAME}
   status:
@@ -127,7 +207,9 @@ objects:
   spec:
     host: ${SERVICE_NAME}.${ROUTER_URL}
     port:
-      targetPort: 3000-tcp
+      targetPort: 8080-tcp
+    tls:
+      termination: edge
     to:
       kind: Service
       name: ${SERVICE_NAME}

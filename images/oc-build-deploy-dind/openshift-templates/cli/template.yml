@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: amazeeio-openshift-template-nginx
+  name: amazeeio-openshift-template-cli
 parameters:
   - name: SERVICE_NAME
     description: Name of this service
@@ -22,8 +22,14 @@ parameters:
   - name: AMAZEEIO_GIT_SHA
     description: git hash sha of the current deployment
     required: true
-  - name: ROUTER_URL
-    description: URL of the Router
+  - name: SERVICE_ROUTER_URL
+    description: URL of the Router for this service
+    value: ""
+  - name: PROJECT
+    description: Name of the Project that this service is in
+    required: true
+  - name: REGISTRY
+    description: Registry where Images are pushed to
     required: true
 objects:
 - apiVersion: v1
@@ -49,24 +55,8 @@ objects:
           sitegroup: ${SAFE_SITEGROUP}
       spec:
         containers:
-        - image: ' '
+        - image: ${REGISTRY}/${PROJECT}/${SERVICE_NAME}:latest
           name: ${SERVICE_NAME}
-          ports:
-          - containerPort: 8080
-            protocol: TCP
-          readinessProbe:
-            httpGet:
-              path: /nginx_status
-              port: 50000
-            initialDelaySeconds: 5
-            timeoutSeconds: 3
-          livenessProbe:
-            httpGet:
-              path: /nginx_status
-              port: 50000
-            initialDelaySeconds: 90
-            timeoutSeconds: 3
-            failureThreshold: 5
           env:
             - name: AMAZEEIO_GIT_BRANCH
               valueFrom:
@@ -78,11 +68,10 @@ objects:
                 configMapKeyRef:
                   name: amazeeio-env
                   key: AMAZEEIO_GIT_SAFE_BRANCH
+            ## AMAZEEIO_GIT_SHA is injected directly and not loaded via `amazeeio-env` config
+            ## This will cause the cli to redeploy on every deployment, even the files have not changed
             - name: AMAZEEIO_GIT_SHA
-              valueFrom:
-                configMapKeyRef:
-                  name: amazeeio-env
-                  key: AMAZEEIO_GIT_SHA
+              value: ${AMAZEEIO_GIT_SHA}
             - name: AMAZEEIO_SITEGROUP
               valueFrom:
                 configMapKeyRef:
@@ -104,38 +93,3 @@ objects:
           name: ${SERVICE_NAME}:latest
       type: ImageChange
   status: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    creationTimestamp: null
-    labels:
-      service: ${SERVICE_NAME}
-      branch: ${SAFE_BRANCH}
-      sitegroup: ${SAFE_SITEGROUP}
-    name: ${SERVICE_NAME}
-  spec:
-    ports:
-    - name: 8080-tcp
-      port: 8080
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      service: ${SERVICE_NAME}
-  status:
-    loadBalancer: {}
-- apiVersion: v1
-  kind: Route
-  metadata:
-    creationTimestamp: null
-    labels:
-      service: ${SERVICE_NAME}
-      branch: ${SAFE_BRANCH}
-      sitegroup: ${SAFE_SITEGROUP}
-    name: ${SERVICE_NAME}
-  spec:
-    host: ${SERVICE_NAME}.${ROUTER_URL}
-    port:
-      targetPort: 8080-tcp
-    to:
-      kind: Service
-      name: ${SERVICE_NAME}

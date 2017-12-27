@@ -31,6 +31,12 @@ parameters:
   - name: REGISTRY
     description: Registry where Images are pushed to
     required: true
+  - name: PERSISTENT_STORAGE_PATH
+    description: Full path to which should be mounted into persistent storage
+    required: true
+  - name: PERSISTENT_STORAGE_NAME
+    description: Name of the Persistent Volume Claim to use
+    required: true
 objects:
 - apiVersion: v1
   kind: DeploymentConfig
@@ -55,6 +61,9 @@ objects:
           project: ${SAFE_PROJECT}
       spec:
         volumes:
+          - name: ${PERSISTENT_STORAGE_NAME}
+            persistentVolumeClaim:
+              claimName: ${PERSISTENT_STORAGE_NAME}
           - name: lagoon-sshkey
             secret:
               defaultMode: 420
@@ -83,6 +92,8 @@ objects:
                   name: lagoon-env
                   key: LAGOON_PROJECT
           volumeMounts:
+            - name: ${PERSISTENT_STORAGE_NAME}
+              mountPath: ${PERSISTENT_STORAGE_PATH}
             - mountPath: /var/run/secrets/lagoon/sshkey/
               name: lagoon-sshkey
               readOnly: true

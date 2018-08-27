@@ -31,24 +31,25 @@
   - set_fact:
       pr_commit_hash: "{{ current_head }}"
 
-- name: "{{ testname }} - webhook github pull request open"
+- name: "{{ testname }} - webhook bitbucket pull request open"
   hosts: localhost
   serial: 1
   vars:
-    git_base_branch: "pullrequest_base"
+    git_base_branch: "master"
+    git_base_commit_hash: "{{ base_commit_hash }}"
     git_pr_branch: "pullrequest_pr"
     git_pr_commit_hash: "{{ pr_commit_hash }}"
     git_pr_number: "1"
     git_repo_ssh_url: "{{ lookup('env','WEBHOOK_REPO_PREFIX') }}{{ git_repo_name }}"
-    git_pr_title: "PR Title"
+    git_pr_title: "pr-2"
   tasks:
-  - include: ../../tasks/webhook-gitlab/pullrequest-opened.yaml
+  - include: ../../tasks/webhook-bitbucket/pullrequest-opened.yaml
 
 
 - include: ../../checks/check-branch-sha.yaml
   vars:
     expected_head: "{{ pr_commit_hash }}"
-    expected_branch: "pr-1"
+    expected_branch: "pr-2"
     project: "{{ project }}"
     url: "{{ check_url }}"
 
@@ -56,11 +57,11 @@
   vars:
     url: "{{ check_url }}"
     expected_build_type: "pullrequest"
-    expected_pr_base_branch: "pullrequest_base"
-    expected_pr_base_sha: "origin/pullrequest_base"
+    expected_pr_base_branch: "master"
+    expected_pr_base_sha: "{{ base_commit_hash }}"
     expected_pr_head_branch: "pullrequest_pr"
     expected_pr_head_sha: "{{ pr_commit_hash }}"
-    expected_pr_title: "PR Title"
+    expected_pr_title: "new pull request"
 
 - name: "{{ testname }} - git commit a second time into pull request branch"
   hosts: localhost
@@ -77,23 +78,24 @@
   - set_fact:
       pr_2nd_commit_hash: "{{ current_head }}"
 
-- name: "{{ testname }} - webhook github pull request updated"
+- name: "{{ testname }} - webhook bitbucket pull request updated"
   hosts: localhost
   serial: 1
   vars:
-    git_base_branch: "pullrequest_base"
+    git_base_branch: "master"
+    git_base_commit_hash: "{{ base_commit_hash }}"
     git_pr_branch: "pullrequest_pr"
     git_pr_commit_hash: "{{ pr_2nd_commit_hash }}"
     git_pr_number: "1"
     git_repo_ssh_url: "{{ lookup('env','WEBHOOK_REPO_PREFIX') }}{{ git_repo_name }}"
     git_pr_title: "PR Title - UPDATE"
   tasks:
-  - include: ../../tasks/webhook-gitlab/pullrequest-updated.yaml
+  - include: ../../tasks/webhook-bitbucket/pullrequest-updated.yaml
 
 - include: ../../checks/check-branch-sha.yaml
   vars:
     expected_head: "{{ pr_2nd_commit_hash }}"
-    expected_branch: "pr-1"
+    expected_branch: "pr-2"
     project: "{{ project }}"
     url: "{{ check_url }}"
 
@@ -101,23 +103,24 @@
   vars:
     url: "{{ check_url }}"
     expected_build_type: "pullrequest"
-    expected_pr_base_branch: "pullrequest_base"
-    expected_pr_base_sha: "origin/pullrequest_base"
+    expected_pr_base_branch: "master"
+    expected_pr_base_sha: "{{ base_commit_hash }}"
     expected_pr_head_branch: "pullrequest_pr"
     expected_pr_head_sha: "{{ pr_2nd_commit_hash }}"
     expected_pr_title: "PR Title - UPDATE"
 
-- name: "{{ testname }} - webhook github pull request merged"
+- name: "{{ testname }} - webhook bitbucket pull request closed"
   hosts: localhost
   serial: 1
   vars:
-    git_base_branch: "pullrequest_base"
+    git_base_branch: "master"
+    git_base_commit_hash: "00000"
     git_pr_branch: "pullrequest_pr"
     git_pr_commit_hash: "00000"
     git_pr_number: "1"
     git_repo_ssh_url: "{{ lookup('env','WEBHOOK_REPO_PREFIX') }}{{ git_repo_name }}"
   tasks:
-  - include: ../../tasks/webhook-gitlab/pullrequest-closed.yaml
+  - include: ../../tasks/webhook-bitbucket/pullrequest-closed.yaml
 
 - name: "{{ testname }} - check if site for project does not exist anymore"
   hosts: localhost

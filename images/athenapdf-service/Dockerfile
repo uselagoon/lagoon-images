@@ -1,18 +1,20 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM redis:alpine
+FROM arachnysdocker/athenapdf-service:2.13.0
 
 LABEL maintainer="amazee.io"
-ENV LAGOON=redis
+ENV LAGOON=athenapdf-service
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
-COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 RUN chmod g+w /etc/passwd \
     && mkdir -p /home
+
+# Reproduce behavior of Alpine: Run Bash as sh
+RUN rm -f /bin/sh && ln -s /bin/bash /bin/sh
 
 ENV TMPDIR=/tmp \
     TMP=/tmp \
@@ -22,11 +24,7 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-COPY redis.conf /etc/redis/redis.conf
-COPY docker-entrypoint /lagoon/entrypoints/70-redis-entrypoint
+ENV WEAVER_ATHENA_CMD="athenapdf --no-cache --ignore-certificate-errors -S"
+ENV WEAVER_AUTH_KEY=lagoon-athenapdf
 
-RUN fix-permissions /etc/redis/redis.conf \
-    fix-permissions /data
-
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
-CMD ["redis-server", "/etc/redis/redis.conf"]
+COPY entrypoint.sh /athenapdf-service/conf/entrypoint.sh

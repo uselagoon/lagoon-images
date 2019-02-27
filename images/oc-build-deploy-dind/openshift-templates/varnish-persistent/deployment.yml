@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Template
 metadata:
   creationTimestamp: null
-  name: lagoon-openshift-template-cli
+  name: lagoon-openshift-template-varnish
 parameters:
   - name: SERVICE_NAME
     description: Name of this service
@@ -31,20 +31,6 @@ parameters:
   - name: REGISTRY
     description: Registry where Images are pushed to
     required: true
-  - name: PERSISTENT_STORAGE_PATH
-    description: Full path to which should be mounted into persistent storage
-    required: true
-  - name: PERSISTENT_STORAGE_NAME
-    description: Name of the Persistent Volume Claim to use
-    required: true
-  # The following two parameters are actually not used anywhere in this YAML, but they are injected by oc-build-deploy
-  # and `oc process` fails if you inject a parameter that is not defined
-  - name: PERSISTENT_STORAGE_CLASS
-    description: Name of the Storage Class to use
-    value: ''
-  - name: PERSISTENT_STORAGE_SIZE
-    description: Size of the Storage to request
-    value: '5Gi'
   - name: DEPLOYMENT_STRATEGY
     description: Strategy of Deploymentconfig
     value: 'Rolling'
@@ -72,9 +58,6 @@ objects:
         type: ${DEPLOYMENT_STRATEGY}
       template:
         metadata:
-          annotations:
-            appuio.ch/backupcommand: /bin/sh -c "if [[ $MARIADB_HOST ]]; then dump=$(mktemp) && mysqldump --max-allowed-packet=500M --events --routines --quick --add-locks --no-autocommit --single-transaction --no-create-db -h $MARIADB_HOST -u $MARIADB_USERNAME -p$MARIADB_PASSWORD $MARIADB_DATABASE > $dump && cat $dump && rm $dump; fi"
-            backup.appuio.ch/file-extension: .mysql.sql
           creationTimestamp: null
           labels:
             service: ${SERVICE_NAME}
@@ -91,34 +74,39 @@ objects:
               operator: Equal
               value: 'true'
           volumes:
-            - name: ${PERSISTENT_STORAGE_NAME}
-              persistentVolumeClaim:
-                claimName: ${PERSISTENT_STORAGE_NAME}
-            - name: lagoon-sshkey
-              secret:
-                defaultMode: 420
-                secretName: lagoon-sshkey
+          - name: ${SERVICE_NAME}
+            persistentVolumeClaim:
+              claimName: ${SERVICE_NAME}
           containers:
             - image: ${SERVICE_IMAGE}
               name: ${SERVICE_NAME}
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+              volumeMounts:
+                - name: ${SERVICE_NAME}
+                  mountPath: /var/cache/varnish
+              readinessProbe:
+                httpGet:
+                  path: /varnish_status
+                  port: 8080
+                initialDelaySeconds: 5
+                timeoutSeconds: 3
+              livenessProbe:
+                httpGet:
+                  path: /varnish_status
+                  port: 8080
+                initialDelaySeconds: 90
+                timeoutSeconds: 3
+                failureThreshold: 5
               envFrom:
                 - configMapRef:
                     name: lagoon-env
               env:
-                ## LAGOON_GIT_SHA is injected directly and not loaded via `lagoon-env` config
-                ## This will cause the cli to redeploy on every deployment, even the files have not changed
-                - name: LAGOON_GIT_SHA
-                  value: ${LAGOON_GIT_SHA}
                 - name: SERVICE_NAME
                   value: ${SERVICE_NAME}
                 - name: CRONJOBS
                   value: ${CRONJOBS}
-              volumeMounts:
-                - name: ${PERSISTENT_STORAGE_NAME}
-                  mountPath: ${PERSISTENT_STORAGE_PATH}
-                - mountPath: /var/run/secrets/lagoon/sshkey/
-                  name: lagoon-sshkey
-                  readOnly: true
               resources:
                 requests:
                   cpu: 10m

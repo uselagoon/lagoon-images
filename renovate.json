@@ -44,10 +44,22 @@
           "datasources": [
               "docker"
           ],
+          "updateTypes": [
+              "major", "minor"
+          ],
+          "packageNames": [
+              "library/php", "library/node", "library/python"
+          ],
+          "enabled": false
+      },   
+      {
+          "datasources": [
+              "docker"
+          ],
           "excludePackageNames": [
               "library/php", "library/node", "library/python"
           ],
-          "groupName": "other updates"
+          "groupName": "All other updates"
       } 
   ]
 }

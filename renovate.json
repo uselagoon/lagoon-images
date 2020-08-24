@@ -3,6 +3,8 @@
   "extends": [
     "config:base"
   ],
+  "separateMajorMinor": true,
+  "separateMinorPatch": true,
   "packageRules": [
       {
           "datasources": [
@@ -12,33 +14,9 @@
               "patch"
           ],
           "packageNames": [
-              "library/php"
+              "php"
           ],
           "groupName": "PHP patch updates"
-      },
-      {
-          "datasources": [
-              "docker"
-          ],
-          "updateTypes": [
-              "patch"
-          ],
-          "packageNames": [
-              "library/python"
-          ],
-          "groupName": "Python patch updates"
-      },
-      {
-          "datasources": [
-              "docker"
-          ],
-          "updateTypes": [
-              "minor"
-          ],
-          "packageNames": [
-              "library/node"
-          ],
-          "groupName": "Node patch updates"
       },
       {
           "datasources": [
@@ -48,7 +26,7 @@
               "major", "minor"
           ],
           "packageNames": [
-              "library/php", "library/node", "library/python"
+              "php"
           ],
           "enabled": false
       },   
@@ -57,7 +35,7 @@
               "docker"
           ],
           "excludePackageNames": [
-              "library/php", "library/node", "library/python"
+              "php"
           ],
           "groupName": "All other updates"
       } 

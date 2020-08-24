@@ -3,6 +3,7 @@
   "extends":[
     "config:base"
   ],
+  "dependencyDashboard": true,
   "separateMajorMinor":true,
   "separateMinorPatch":true,
   "separateMultipleMajor":true,
@@ -83,6 +84,18 @@
         "docker.elastic.co/elasticsearch/elasticsearch",
         "docker.elastic.co/logstash/logstash",
         "docker.elastic.co/kibana/kibana"
+      ],
+      "enabled":false
+    },
+    {
+      "datasources":[
+        "docker"
+      ],
+      "updateTypes":[
+        "minor"
+      ],
+      "packageNames":[
+        "alpine"
       ],
       "enabled":false
     }

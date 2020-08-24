@@ -5,6 +5,7 @@
   ],
   "separateMajorMinor": true,
   "separateMinorPatch": true,
+  "separateMultipleMajor": true,
   "packageRules": [
       {
           "datasources": [
@@ -14,9 +15,8 @@
               "patch"
           ],
           "packageNames": [
-              "php"
+              "php", "python"
           ],
-          "groupName": "PHP patch updates"
       },
       {
           "datasources": [
@@ -26,16 +26,39 @@
               "major", "minor"
           ],
           "packageNames": [
-              "php"
+              "php", "python"
           ],
           "enabled": false
-      },   
+      },
+      {
+          "datasources": [
+              "docker"
+          ],
+          "updateTypes": [
+              "patch", "minor"
+          ],
+          "packageNames": [
+              "node"
+          ],
+      },
+      {
+          "datasources": [
+              "docker"
+          ],
+          "updateTypes": [
+              "major"
+          ],
+          "packageNames": [
+              "node"
+          ],
+          "enabled": false
+      },     
       {
           "datasources": [
               "docker"
           ],
           "excludePackageNames": [
-              "php"
+              "php", "python", "node"
           ],
           "groupName": "All other updates"
       } 

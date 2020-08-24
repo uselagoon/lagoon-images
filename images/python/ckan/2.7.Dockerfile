@@ -1,6 +1,5 @@
-ARG PYTHON_VERSION
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/python:${PYTHON_VERSION}
+FROM ${IMAGE_REPO:-lagoon}/python-2.7
 
 RUN apk update \
     && apk upgrade \
@@ -9,7 +8,7 @@ RUN apk update \
     postgresql-dev \
     gcc \
     musl-dev \
-    libmagic \
+    file-dev \
     libxslt-dev \
     libxml2-dev \
     libffi-dev

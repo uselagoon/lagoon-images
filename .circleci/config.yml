@@ -1,0 +1,54 @@
+# CircleCI configuration file
+
+version: 2.1
+
+jobs:
+  build:
+    machine:
+      image: ubuntu-1604:202007-01
+    steps:
+      - checkout
+      - run:
+          name: Install Trivy and download DB
+          command: | 
+            curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/master/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
+            trivy image --download-db-only
+      - run:
+          name: Check installed versions
+          command: |
+            docker -v
+            docker-compose -v
+      - run:
+          name: Build base images
+          command: |
+            make -j10 build
+      - run:
+          name: Show all built images
+          command: |
+            docker image ls | sort
+      - run:
+          name: Show all source images
+          command: |
+            grep -Rh ^FROM | grep -v { | sort -u
+      - run:
+          name: Show image tag cross reference
+          command: |
+            cat build.txt
+      - run:
+          name: Show scan results
+          command: |
+            cat scan.txt
+      - run:
+          name: Create legacy amazeeio/ images
+          command: |
+            make tag-images
+      - run:
+          name: Show all built images
+          command: |
+            docker image ls | sort
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build

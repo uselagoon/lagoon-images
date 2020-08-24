@@ -16,7 +16,7 @@
           ],
           "packageNames": [
               "php", "python"
-          ],
+          ]
       },
       {
           "datasources": [
@@ -39,7 +39,7 @@
           ],
           "packageNames": [
               "node"
-          ],
+          ]
       },
       {
           "datasources": [

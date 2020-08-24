@@ -42,7 +42,7 @@
         "minor"
       ],
       "packageNames":[
-        "node"
+        "node", "postgres"
       ]
     },
     {
@@ -53,7 +53,7 @@
         "major"
       ],
       "packageNames":[
-        "node"
+        "node", "postgres"
       ],
       "enabled":false
     },
@@ -94,6 +94,7 @@
         "php",
         "python",
         "node",
+        "postgres",
         "docker.elastic.co/elasticsearch/elasticsearch",
         "docker.elastic.co/logstash/logstash",
         "docker.elastic.co/kibana/kibana"

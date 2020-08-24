@@ -12,7 +12,7 @@
               "patch"
           ],
           "packageNames": [
-              "php"
+              "library/php"
           ],
           "groupName": "PHP patch updates"
       },
@@ -24,7 +24,7 @@
               "patch"
           ],
           "packageNames": [
-              "python"
+              "library/python"
           ],
           "groupName": "Python patch updates"
       },
@@ -33,10 +33,10 @@
               "docker"
           ],
           "updateTypes": [
-              "patch"
+              "minor"
           ],
           "packageNames": [
-              "node"
+              "library/node"
           ],
           "groupName": "Node patch updates"
       },
@@ -44,13 +44,10 @@
           "datasources": [
               "docker"
           ],
-          "updateTypes": [
-              "major", "minor"
-          ],
           "excludePackageNames": [
-              "php", "node", "python"
+              "library/php", "library/node", "library/python"
           ],
-          "groupName": "updates (skip major, minor)"
+          "groupName": "other updates"
       } 
   ]
 }

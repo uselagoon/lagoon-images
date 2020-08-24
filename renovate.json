@@ -1,5 +1,56 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base"
+  ],
+  "packageRules": [
+      {
+          "datasources": [
+              "docker"
+          ],
+          "updateTypes": [
+              "patch"
+          ],
+          "packageNames": [
+              "php"
+          ],
+          "groupName": "PHP patch updates"
+      },
+      {
+          "datasources": [
+              "docker"
+          ],
+          "updateTypes": [
+              "patch"
+          ],
+          "packageNames": [
+              "python"
+          ],
+          "groupName": "Python patch updates"
+      },
+      {
+          "datasources": [
+              "docker"
+          ],
+          "updateTypes": [
+              "patch"
+          ],
+          "packageNames": [
+              "node"
+          ],
+          "groupName": "Node patch updates"
+      },
+      {
+          "datasources": [
+              "docker"
+          ],
+          "updateTypes": [
+              "major", "minor"
+          ],
+          "excludePackageNames": [
+              "php", "node", "python"
+          ],
+          "groupName": "updates (skip major, minor)"
+      } 
   ]
 }

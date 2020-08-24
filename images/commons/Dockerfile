@@ -1,5 +1,4 @@
-ARG ALPINE_VERSION
-FROM alpine:${ALPINE_VERSION}
+FROM alpine:3.11.6
 
 LABEL maintainer="amazee.io"
 

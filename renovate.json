@@ -85,21 +85,6 @@
         "docker.elastic.co/kibana/kibana"
       ],
       "enabled":false
-    },
-    {
-      "datasources":[
-        "docker"
-      ],
-      "excludePackageNames":[
-        "php",
-        "python",
-        "node",
-        "postgres",
-        "docker.elastic.co/elasticsearch/elasticsearch",
-        "docker.elastic.co/logstash/logstash",
-        "docker.elastic.co/kibana/kibana"
-      ],
-      "groupName":"All other updates"
     }
   ]
 }

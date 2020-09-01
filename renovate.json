@@ -3,6 +3,10 @@
   "extends":[
     "config:base"
   ],
+  "timezone": "Australia/Melbourne",
+  "schedule": [
+    "before 6am"
+  ],
   "dependencyDashboard": true,
   "separateMajorMinor":true,
   "separateMinorPatch":true,

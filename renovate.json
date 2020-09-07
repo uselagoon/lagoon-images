@@ -5,7 +5,7 @@
   ],
   "timezone": "Australia/Melbourne",
   "schedule": [
-    "before 6am"
+    "before 1pm every weekday"
   ],
   "dependencyDashboard": true,
   "separateMajorMinor":true,

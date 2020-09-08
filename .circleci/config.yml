@@ -13,7 +13,7 @@ jobs:
           command: |
             echo 'export CI_BUILD_REPO="cilagoon${CIRCLE_PULL_REQUEST##*/}"' >> $BASH_ENV
             echo 'export CI_BUILD_TAG="PR${CIRCLE_PULL_REQUEST##*/}"' >> $BASH_ENV
-            if ${CIRCLE_BRANCH='main'}
+            if [ "${CIRCLE_BRANCH}" == "main" ];
             then
               echo "export DESTINATION_REPO=uselagoon" >> $BASH_ENV
               echo "export DESTINATION_TAG=v${CIRCLE_TAG}" >> $BASH_ENV

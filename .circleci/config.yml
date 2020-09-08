@@ -6,7 +6,10 @@ jobs:
   build:
     machine:
       image: ubuntu-1604:202007-01
-      docker_layer_caching: true
+    environment:
+      CI_BUILD_REPO: "echo cilagoon${CIRCLE_PULL_REQUEST##*/}"
+      CI_BUILD_TAG: "echo PR${CIRCLE_PULL_REQUEST##*/}"
+      DESTINATION_TAG: "echo v${CIRCLE_TAG}"
     steps:
       - checkout
       - run:
@@ -40,7 +43,16 @@ jobs:
           command: |
             cat scan.txt
       - run:
-          name: Create legacy amazeeio/ images
+          name: set reponame correctly
+          command: |
+            if ${CIRCLE_BRANCH='main'}
+              echo "export DESTINATION_REPO=uselagoon" >> $BASH_ENV
+              echo "export DESTINATION_TAG=${DESTINATION_TAG}" >> $BASH_ENV
+            else
+              echo "export DESTINATION_REPO=testlagoon" >> $BASH_ENV
+              echo "export DESTINATION_TAG=${CI_BUILD_TAG}" >> $BASH_ENV
+      - run:
+          name: Create all tagged images
           command: |
             make tag-images
       - run:

@@ -6,12 +6,20 @@ jobs:
   build:
     machine:
       image: ubuntu-1604:202007-01
-    environment:
-      CI_BUILD_REPO: "echo cilagoon${CIRCLE_PULL_REQUEST##*/}"
-      CI_BUILD_TAG: "echo PR${CIRCLE_PULL_REQUEST##*/}"
-      DESTINATION_TAG: "echo v${CIRCLE_TAG}"
     steps:
       - checkout
+      - run:
+          name: Set Environment Variables
+          command: |
+            echo 'export CI_BUILD_REPO="cilagoon${CIRCLE_PULL_REQUEST##*/}"' >> $BASH_ENV
+            echo 'export CI_BUILD_TAG="PR${CIRCLE_PULL_REQUEST##*/}"' >> $BASH_ENV
+            if ${CIRCLE_BRANCH='main'}
+              echo "export DESTINATION_REPO=uselagoon" >> $BASH_ENV
+              echo "export DESTINATION_TAG=v${CIRCLE_TAG}" >> $BASH_ENV
+            else
+              echo "export DESTINATION_REPO=testlagoon" >> $BASH_ENV
+              echo "export DESTINATION_TAG=${CI_BUILD_TAG}" >> $BASH_ENV
+            printenv
       - run:
           name: Install Trivy and download DB
           command: | 
@@ -42,15 +50,6 @@ jobs:
           name: Show scan results
           command: |
             cat scan.txt
-      - run:
-          name: set reponame correctly
-          command: |
-            if ${CIRCLE_BRANCH='main'}
-              echo "export DESTINATION_REPO=uselagoon" >> $BASH_ENV
-              echo "export DESTINATION_TAG=${DESTINATION_TAG}" >> $BASH_ENV
-            else
-              echo "export DESTINATION_REPO=testlagoon" >> $BASH_ENV
-              echo "export DESTINATION_TAG=${CI_BUILD_TAG}" >> $BASH_ENV
       - run:
           name: Create all tagged images
           command: |

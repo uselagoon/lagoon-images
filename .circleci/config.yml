@@ -19,6 +19,7 @@ jobs:
             else
               echo "export DESTINATION_REPO=testlagoon" >> $BASH_ENV
               echo "export DESTINATION_TAG=${CI_BUILD_TAG}" >> $BASH_ENV
+            fi
             printenv
       - run:
           name: Install Trivy and download DB

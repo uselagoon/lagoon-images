@@ -1,8 +1,7 @@
 ARG PYTHON_VERSION
 ARG IMAGE_REPO
-ARG ALPINE_VERSION
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM python:${PYTHON_VERSION}-alpine${ALPINE_VERSION}
+FROM python:${PYTHON_VERSION}-alpine3.11
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=python

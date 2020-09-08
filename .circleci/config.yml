@@ -16,7 +16,6 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "main" ];
             then
               echo "export DESTINATION_REPO=uselagoon" >> $BASH_ENV
-              echo "export DESTINATION_TAG=v${CIRCLE_TAG}" >> $BASH_ENV
             else
               echo "export DESTINATION_REPO=testlagoon" >> $BASH_ENV
               echo "export DESTINATION_TAG=${CI_BUILD_TAG}" >> $BASH_ENV

@@ -56,7 +56,6 @@ DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 
 # Name of the Branch we are currently in
 BRANCH_NAME :=
-DEFAULT_ALPINE_VERSION := 3.11
 
 # Init the file that is used to hold the image tag cross-reference table
 $(shell >build.txt)
@@ -68,7 +67,7 @@ $(shell >scan.txt)
 
 # Builds a docker image. Expects as arguments: name of the image, location of Dockerfile, path of
 # Docker Build Context
-docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_REPO) --build-arg ALPINE_VERSION=$(DEFAULT_ALPINE_VERSION) -t $(CI_BUILD_REPO)/$(1) -f $(2) $(3)
+docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_REPO) -t $(CI_BUILD_REPO)/$(1) -f $(2) $(3)
 
 scan_image = trivy image --timeout 5m0s $(CI_BUILD_REPO)/$(1) >> scan.txt
 

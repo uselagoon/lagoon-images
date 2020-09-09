@@ -114,7 +114,7 @@ $(build-images):
 # Populate the cross-reference table
 	$(shell echo $(image),$(image) >> build.txt)
 #scan created image with Trivy
-	$(call scan_image,$(image),)
+	# $(call scan_image,$(image),)
 
 # Touch an empty file which make itself is using to understand when the image has been last build
 	touch $@
@@ -208,7 +208,7 @@ $(build-multiimages):
 # Populate the cross-reference table
 	$(shell echo $(image),$(legacytag) >> build.txt)
 #scan created images with Trivy
-	$(call scan_image,$(image),)
+	# $(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last built
 	touch $@
 
@@ -318,8 +318,8 @@ ifeq ($(LAGOON_VERSION), development)
 else
 	docker tag $(CI_BUILD_REPO)/$(image):latest amazeeio/$(legacytag):$(LAGOON_VERSION)
 	docker tag $(CI_BUILD_REPO)/$(image):latest amazeeio/$(legacytag)
-	docker tag $(CI_BUILD_REPO)/$(image):latest uselagoon/$(image):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_REPO)/$(image):latest uselagoon/$(image)
+	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image)
 endif
 
 # Publish command to amazeeio docker hub, this should probably only be done during a master deployments

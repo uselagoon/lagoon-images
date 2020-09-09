@@ -59,7 +59,7 @@ node {
         }
 
         stage ('show built images') {
-          docker image ls | sort -u
+          sh 'docker image ls | sort -u'
         }
 
         if (env.TAG_NAME && env.SKIP_IMAGE_PUBLISH != 'true') {

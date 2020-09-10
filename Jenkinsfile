@@ -41,12 +41,12 @@ node {
           sh "make -O${SYNC_MAKE_OUTPUT} -j6 build"
         }
 
-        stage ('push images to amazeeiolagoon/*') {
+        stage ('push images to testlagoon/*') {
           withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
             try {
               if (env.SKIP_IMAGE_PUBLISH != 'true') {
                 sh 'docker login -u amazeeiojenkins -p $PASSWORD'
-                // sh "make -O${SYNC_MAKE_OUTPUT} -j4 publish-amazeeiolagoon-baseimages publish-amazeeiolagoon-serviceimages BRANCH_NAME=${SAFEBRANCH_NAME}"
+                sh "make -O${SYNC_MAKE_OUTPUT} -j4 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}"
               } else {
                 sh 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"'
               }

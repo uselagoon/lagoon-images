@@ -51,7 +51,6 @@ DESTINATION_TAG ?= latest
 # Local environment
 ARCH := $(shell uname | tr '[:upper:]' '[:lower:]')
 LAGOON_VERSION := $(shell git describe --tags --exact-match 2>/dev/null || echo development )
-LAGOON_TAG := $(shell git describe --tags --exact-match 2>/dev/null)
 DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 
 # Name of the Branch we are currently in
@@ -71,14 +70,14 @@ docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(
 
 scan_image = trivy image --timeout 5m0s $(CI_BUILD_REPO)/$(1) >> scan.txt
 
+# Tags an image with the `amazeeio` repository and pushes it
+docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docker push amazeeio/$(2) | cat
+
 # Tags an image with the `uselagoon` repository and pushes it
 docker_publish_uselagoon = docker tag $(CI_BUILD_REPO)/$(1) uselagoon/$(2) && docker push uselagoon/$(2) | cat
 
-# Tags an image with the `amazeeio` repository and pushes it
-docker_publish_amazeeio = docker tag $(CI_BUILD_REPO)/$(1) amazeeio/$(2) && docker push amazeeio/$(2) | cat
-
-# Tags an image with the `amazeeiolagoon` repository and pushes it
-docker_publish_amazeeiolagoon = docker tag $(CI_BUILD_REPO)/$(1) amazeeiolagoon/$(2) && docker push amazeeiolagoon/$(2) | cat
+# Tags an image with the `testlagoon` repository and pushes it
+docker_publish_testlagoon = docker tag $(CI_BUILD_REPO)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
 
 #######
 ####### Base Images
@@ -359,31 +358,31 @@ $(publish-amazeeio-baseimages-with-versions):
 
 
 # Publish command to amazeeio docker hub, this should probably only be done during a master deployments
-publish-amazeeiolagoon-baseimages = $(foreach image,$(base-images),[publish-amazeeiolagoon-baseimages]-$(image))
-publish-amazeeiolagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-amazeeiolagoon-baseimages-with-versions]-$(image))
+publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
+publish-testlagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-testlagoon-baseimages-with-versions]-$(image))
 # tag and push all images
-.PHONY: publish-amazeeiolagoon-baseimages
-publish-amazeeiolagoon-baseimages: $(publish-amazeeiolagoon-baseimages) $(publish-amazeeiolagoon-baseimages-with-versions)
+.PHONY: publish-testlagoon-baseimages
+publish-testlagoon-baseimages: $(publish-testlagoon-baseimages) $(publish-testlagoon-baseimages-with-versions)
 
 
 # tag and push of each image
-.PHONY: $(publish-amazeeiolagoon-baseimages)
-$(publish-amazeeiolagoon-baseimages):
-#   Calling docker_publish for image, but remove the prefix '[publish-amazeeiolagoon-baseimages]-' first
-		$(eval image = $(subst [publish-amazeeiolagoon-baseimages]-,,$@))
+.PHONY: $(publish-testlagoon-baseimages)
+$(publish-testlagoon-baseimages):
+#   Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages]-' first
+		$(eval image = $(subst [publish-testlagoon-baseimages]-,,$@))
 # 	Publish images with version tag
-		$(call docker_publish_amazeeiolagoon,$(image),$(image):$(BRANCH_NAME))
+		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME))
 
 
 # tag and push of base image with version
-.PHONY: $(publish-amazeeiolagoon-baseimages-with-versions)
-$(publish-amazeeiolagoon-baseimages-with-versions):
-#   Calling docker_publish for image, but remove the prefix '[publish-amazeeiolagoon-baseimages-with-versions]-' first
-		$(eval image = $(subst [publish-amazeeiolagoon-baseimages-with-versions]-,,$@))
+.PHONY: $(publish-testlagoon-baseimages-with-versions)
+$(publish-testlagoon-baseimages-with-versions):
+#   Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages-with-versions]-' first
+		$(eval image = $(subst [publish-testlagoon-baseimages-with-versions]-,,$@))
 #   The underline is a placeholder for a colon, replace that
 		$(eval image = $(subst __,:,$(image)))
 #		We add the Lagoon Version just as a dash
-		$(call docker_publish_amazeeiolagoon,$(image),$(image)-$(BRANCH_NAME))
+		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME))
 
 s3-save = $(foreach image,$(s3-images),[s3-save]-$(image))
 # save all images to s3

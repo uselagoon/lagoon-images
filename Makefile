@@ -42,9 +42,9 @@ SHELL := /bin/bash
 DOCKER_BUILD_PARAMS := --quiet
 
 # On CI systems like jenkins we need a way to run multiple testings at the same time. We expect the
-# CI systems to define an Environment variable CI_BUILD_REPO which uniquely identifies each build.
+# CI systems to define an Environment variable CI_BUILD_TAG which uniquely identifies each build.
 # If it's not set we assume that we are running local and just call it lagoon.
-CI_BUILD_REPO ?= locallagoon
+CI_BUILD_TAG ?= lagoon
 DESTINATION_REPO ?= testlagoon
 DESTINATION_TAG ?= latest
 
@@ -66,18 +66,18 @@ $(shell >scan.txt)
 
 # Builds a docker image. Expects as arguments: name of the image, location of Dockerfile, path of
 # Docker Build Context
-docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_REPO) -t $(CI_BUILD_REPO)/$(1) -f $(2) $(3)
+docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
 
-scan_image = trivy image --timeout 5m0s $(CI_BUILD_REPO)/$(1) >> scan.txt
+scan_image = trivy image --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
 
 # Tags an image with the `amazeeio` repository and pushes it
 docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docker push amazeeio/$(2) | cat
 
 # Tags an image with the `uselagoon` repository and pushes it
-docker_publish_uselagoon = docker tag $(CI_BUILD_REPO)/$(1) uselagoon/$(2) && docker push uselagoon/$(2) | cat
+docker_publish_uselagoon = docker tag $(CI_BUILD_TAG)/$(1) uselagoon/$(2) && docker push uselagoon/$(2) | cat
 
 # Tags an image with the `testlagoon` repository and pushes it
-docker_publish_testlagoon = docker tag $(CI_BUILD_REPO)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
+docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
 
 #######
 ####### Base Images
@@ -276,28 +276,28 @@ $(tag-multiimages):
 	
 	$(eval legacytag = $(shell echo $(variant)$(if $(version),:$(version))$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 
-	$(info tagging $(CI_BUILD_REPO)/$(image):latest as legacy tag amazeeio/$(legacytag))
+	$(info tagging $(CI_BUILD_TAG)/$(image):latest as legacy tag amazeeio/$(legacytag))
 ifeq ($(LAGOON_VERSION), development)
-	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
 else
-	docker tag $(CI_BUILD_REPO)/$(image):latest amazeeio/$(legacytag)-$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_REPO)/$(image):latest amazeeio/$(legacytag)-latest
-	docker tag $(CI_BUILD_REPO)/$(image):latest amazeeio/$(legacytag)	
-	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image)
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)-$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)-latest
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)	
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image)
 endif
 
 .PHONY:
 $(tag-consumer-images):
 	$(eval image = $(subst [tag]-,,$@))
-	$(info tagging $(CI_BUILD_REPO)/$(image):latest as legacy tag amazeeio/$(image))
+	$(info tagging $(CI_BUILD_TAG)/$(image):latest as legacy tag amazeeio/$(image))
 ifeq ($(LAGOON_VERSION), development)
-	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
 else
-	docker tag $(CI_BUILD_REPO)/$(image):latest amazeeio/$(image):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_REPO)/$(image):latest amazeeio/$(image)
-	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image)
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(image):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(image)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image)
 endif
 
 
@@ -311,14 +311,14 @@ endif
 	
 	$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 
-	$(info tagging $(CI_BUILD_REPO)/$(image):latest as legacy tag amazeeio/$(legacytag))
+	$(info tagging $(CI_BUILD_TAG)/$(image):latest as legacy tag amazeeio/$(legacytag))
 ifeq ($(LAGOON_VERSION), development)
-	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
 else
-	docker tag $(CI_BUILD_REPO)/$(image):latest amazeeio/$(legacytag):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_REPO)/$(image):latest amazeeio/$(legacytag)
-	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_REPO)/$(image):latest ${DESTINATION_REPO}/$(image)
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image)
 endif
 
 # Publish command to amazeeio docker hub, this should probably only be done during a master deployments
@@ -394,7 +394,7 @@ $(s3-save):
 #   remove the prefix '[s3-save]-' first
 		$(eval image = $(subst [s3-save]-,,$@))
 		$(eval image = $(subst __,:,$(image)))
-		docker save $(CI_BUILD_REPO)/$(image) $$(docker history -q $(CI_BUILD_REPO)/$(image) | grep -v missing) | gzip -9 | aws s3 cp - s3://lagoon-images/$(image).tar.gz
+		docker save $(CI_BUILD_TAG)/$(image) $$(docker history -q $(CI_BUILD_TAG)/$(image) | grep -v missing) | gzip -9 | aws s3 cp - s3://lagoon-images/$(image).tar.gz
 
 s3-load = $(foreach image,$(s3-images),[s3-load]-$(image))
 # save all images to s3

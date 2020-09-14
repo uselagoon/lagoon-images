@@ -45,28 +45,16 @@ DOCKER_BUILD_PARAMS := --quiet
 # CI systems to define an Environment variable CI_BUILD_TAG which uniquely identifies each build.
 # If it's not set we assume that we are running local and just call it lagoon.
 CI_BUILD_TAG ?= lagoon
-BASE_IMAGE_REPO ?= lagoon
-BASE_IMAGE_TAG ?= master
+DESTINATION_REPO ?= testlagoon
+DESTINATION_TAG ?= latest
 
 # Local environment
 ARCH := $(shell uname | tr '[:upper:]' '[:lower:]')
-LAGOON_VERSION := $(shell git describe --tags --exact-match 2>/dev/null || echo development)
-LAGOON_TAG := $(shell git describe --tags --exact-match 2>/dev/null)
+LAGOON_VERSION := $(shell git describe --tags --exact-match 2>/dev/null || echo development )
 DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
-
-# Version and Hash of the k8s tools that should be downloaded
-K3S_VERSION := v1.17.9-k3s1
-KUBECTL_VERSION := v1.17.9
-HELM_VERSION := v3.2.4
-K3D_VERSION := 1.7.0
-
-# k3d has a 35-char name limit
-K3D_NAME := k3s-$(shell echo $(CI_BUILD_TAG) | sed -E 's/.*(.{31})$$/\1/')
 
 # Name of the Branch we are currently in
 BRANCH_NAME :=
-DEFAULT_ALPINE_VERSION := 3.11
-
 
 # Init the file that is used to hold the image tag cross-reference table
 $(shell >build.txt)
@@ -78,15 +66,18 @@ $(shell >scan.txt)
 
 # Builds a docker image. Expects as arguments: name of the image, location of Dockerfile, path of
 # Docker Build Context
-docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) --build-arg ALPINE_VERSION=$(DEFAULT_ALPINE_VERSION) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
+docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
 
 scan_image = trivy image --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
 
 # Tags an image with the `amazeeio` repository and pushes it
 docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docker push amazeeio/$(2) | cat
 
-# Tags an image with the `amazeeiolagoon` repository and pushes it
-docker_publish_amazeeiolagoon = docker tag $(CI_BUILD_TAG)/$(1) amazeeiolagoon/$(2) && docker push amazeeiolagoon/$(2) | cat
+# Tags an image with the `uselagoon` repository and pushes it
+docker_publish_uselagoon = docker tag $(CI_BUILD_TAG)/$(1) uselagoon/$(2) && docker push uselagoon/$(2) | cat
+
+# Tags an image with the `testlagoon` repository and pushes it
+docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
 
 #######
 ####### Base Images
@@ -122,7 +113,7 @@ $(build-images):
 # Populate the cross-reference table
 	$(shell echo $(image),$(image) >> build.txt)
 #scan created image with Trivy
-	$(call scan_image,$(image),)
+	# $(call scan_image,$(image),)
 
 # Touch an empty file which make itself is using to understand when the image has been last build
 	touch $@
@@ -164,7 +155,6 @@ multiimages := 	php-7.2-fpm \
 				python-2.7 \
 				python-3.7 \
 				python-3.8 \
-				python-3.9.0rc1 \
 				python-2.7-ckan \
 				python-2.7-ckandatapusher \
 				node-10 \
@@ -191,6 +181,8 @@ multiimages := 	php-7.2-fpm \
 				redis-6 \
 				redis-6-persistent
 
+# verimages are images that formerly had no versioning, are are made backwards-compatible.
+
 verimages := 	postgres-11 \
 				postgres-11-ckan \
 				postgres-11-drupal \
@@ -207,14 +199,14 @@ $(build-multiimages):
 	$(eval type = $(word 3,$(subst -, ,$(image))))
 	$(eval subtype = $(word 4,$(subst -, ,$(image))))
 # Construct the folder and legacy tag to use - note that if treats undefined vars as 'false' to avoid extra '-/'
-	$(eval folder = $(shell echo $(variant)$(if $(type),/$(type))$(if $(subtype),/$(subtype))))
+	$(eval folder = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 	$(eval legacytag = $(shell echo $(variant)$(if $(version),:$(version))$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 # Call the generic docker build process
 	$(call docker_build,$(image),images/$(folder)/$(if $(version),$(version).)Dockerfile,images/$(folder))
 # Populate the cross-reference table
 	$(shell echo $(image),$(legacytag) >> build.txt)
 #scan created images with Trivy
-	$(call scan_image,$(image),)
+	# $(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last built
 	touch $@
 
@@ -229,7 +221,7 @@ build/php-7.4-cli: build/php-7.4-fpm
 build/php-7.2-cli-drupal: build/php-7.2-cli
 build/php-7.3-cli-drupal: build/php-7.3-cli
 build/php-7.4-cli-drupal: build/php-7.4-cli
-build/python-2.7 build/python-3.7 build/python-3.8 build/python-3.9.0rc1: build/commons
+build/python-2.7 build/python-3.7 build/python-3.8: build/commons
 build/python-2.7-ckan: build/python-2.7
 build/python-2.7-ckandatapusher: build/python-2.7
 build/node-10 build/node-12 build/node-14: build/commons
@@ -283,14 +275,30 @@ $(tag-multiimages):
 	
 	$(eval legacytag = $(shell echo $(variant)$(if $(version),:$(version))$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 
-	$(info tagging lagoon/$(image):latest as legacy tag lagoon/$(legacytag))
-	docker tag lagoon/$(image):latest amazeeio/$(legacytag)
+	$(info tagging $(CI_BUILD_TAG)/$(image):latest as legacy tag amazeeio/$(legacytag))
+ifeq ($(LAGOON_VERSION), development)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
+else
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)-$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)-latest
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)	
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image)
+endif
 
 .PHONY:
 $(tag-consumer-images):
 	$(eval image = $(subst [tag]-,,$@))
-	$(info tagging lagoon/$(image):latest)
-	docker tag lagoon/$(image):latest amazeeio/$(image):latest
+	$(info tagging $(CI_BUILD_TAG)/$(image):latest as legacy tag amazeeio/$(image))
+ifeq ($(LAGOON_VERSION), development)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
+else
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(image):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(image)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image)
+endif
+
 
 .PHONY:
  $(tag-verimages):
@@ -302,8 +310,15 @@ $(tag-consumer-images):
 	
 	$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 
-	$(info tagging lagoon/$(image):latest as legacy tag lagoon/$(legacytag))
-	docker tag lagoon/$(image):latest amazeeio/$(legacytag)
+	$(info tagging $(CI_BUILD_TAG)/$(image):latest as legacy tag amazeeio/$(legacytag))
+ifeq ($(LAGOON_VERSION), development)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
+else
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
+	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image)
+endif
 
 # Publish command to amazeeio docker hub, this should probably only be done during a master deployments
 publish-amazeeio-baseimages = $(foreach image,$(base-images),[publish-amazeeio-baseimages]-$(image))
@@ -342,31 +357,31 @@ $(publish-amazeeio-baseimages-with-versions):
 
 
 # Publish command to amazeeio docker hub, this should probably only be done during a master deployments
-publish-amazeeiolagoon-baseimages = $(foreach image,$(base-images),[publish-amazeeiolagoon-baseimages]-$(image))
-publish-amazeeiolagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-amazeeiolagoon-baseimages-with-versions]-$(image))
+publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
+publish-testlagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-testlagoon-baseimages-with-versions]-$(image))
 # tag and push all images
-.PHONY: publish-amazeeiolagoon-baseimages
-publish-amazeeiolagoon-baseimages: $(publish-amazeeiolagoon-baseimages) $(publish-amazeeiolagoon-baseimages-with-versions)
+.PHONY: publish-testlagoon-baseimages
+publish-testlagoon-baseimages: $(publish-testlagoon-baseimages) $(publish-testlagoon-baseimages-with-versions)
 
 
 # tag and push of each image
-.PHONY: $(publish-amazeeiolagoon-baseimages)
-$(publish-amazeeiolagoon-baseimages):
-#   Calling docker_publish for image, but remove the prefix '[publish-amazeeiolagoon-baseimages]-' first
-		$(eval image = $(subst [publish-amazeeiolagoon-baseimages]-,,$@))
+.PHONY: $(publish-testlagoon-baseimages)
+$(publish-testlagoon-baseimages):
+#   Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages]-' first
+		$(eval image = $(subst [publish-testlagoon-baseimages]-,,$@))
 # 	Publish images with version tag
-		$(call docker_publish_amazeeiolagoon,$(image),$(image):$(BRANCH_NAME))
+		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME))
 
 
 # tag and push of base image with version
-.PHONY: $(publish-amazeeiolagoon-baseimages-with-versions)
-$(publish-amazeeiolagoon-baseimages-with-versions):
-#   Calling docker_publish for image, but remove the prefix '[publish-amazeeiolagoon-baseimages-with-versions]-' first
-		$(eval image = $(subst [publish-amazeeiolagoon-baseimages-with-versions]-,,$@))
+.PHONY: $(publish-testlagoon-baseimages-with-versions)
+$(publish-testlagoon-baseimages-with-versions):
+#   Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages-with-versions]-' first
+		$(eval image = $(subst [publish-testlagoon-baseimages-with-versions]-,,$@))
 #   The underline is a placeholder for a colon, replace that
 		$(eval image = $(subst __,:,$(image)))
 #		We add the Lagoon Version just as a dash
-		$(call docker_publish_amazeeiolagoon,$(image),$(image)-$(BRANCH_NAME))
+		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME))
 
 s3-save = $(foreach image,$(s3-images),[s3-save]-$(image))
 # save all images to s3

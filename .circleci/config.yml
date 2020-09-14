@@ -6,9 +6,21 @@ jobs:
   build:
     machine:
       image: ubuntu-1604:202007-01
-      docker_layer_caching: true
     steps:
       - checkout
+      - run:
+          name: Set Environment Variables
+          command: |
+            echo 'export CI_BUILD_REPO="cilagoon${CIRCLE_PULL_REQUEST##*/}"' >> $BASH_ENV
+            echo 'export CI_BUILD_TAG="PR${CIRCLE_PULL_REQUEST##*/}"' >> $BASH_ENV
+            if [ "${CIRCLE_BRANCH}" == "main" ];
+            then
+              echo "export DESTINATION_REPO=uselagoon" >> $BASH_ENV
+            else
+              echo "export DESTINATION_REPO=testlagoon" >> $BASH_ENV
+              echo "export DESTINATION_TAG=${CI_BUILD_TAG}" >> $BASH_ENV
+            fi
+            printenv
       - run:
           name: Install Trivy and download DB
           command: | 
@@ -40,7 +52,7 @@ jobs:
           command: |
             cat scan.txt
       - run:
-          name: Create legacy amazeeio/ images
+          name: Create all tagged images
           command: |
             make tag-images
       - run:

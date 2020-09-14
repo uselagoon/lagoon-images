@@ -1,7 +1,6 @@
-ARG ALPINE_VERSION
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM golang:1.13-alpine${ALPINE_VERSION} as golang
+FROM golang:1.13-alpine3.11 as golang
 
 RUN apk add --no-cache git
 RUN go get github.com/a8m/envsubst/cmd/envsubst

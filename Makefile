@@ -200,7 +200,7 @@ $(build-multiimages):
 	$(eval type = $(word 3,$(subst -, ,$(image))))
 	$(eval subtype = $(word 4,$(subst -, ,$(image))))
 # Construct the folder and legacy tag to use - note that if treats undefined vars as 'false' to avoid extra '-/'
-	$(eval folder = $(shell echo $(variant)$(if $(type),/$(type))$(if $(subtype),/$(subtype))))
+	$(eval folder = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 	$(eval legacytag = $(shell echo $(variant)$(if $(version),:$(version))$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 # Call the generic docker build process
 	$(call docker_build,$(image),images/$(folder)/$(if $(version),$(version).)Dockerfile,images/$(folder))

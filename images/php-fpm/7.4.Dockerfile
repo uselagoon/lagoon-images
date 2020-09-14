@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.3
 
-FROM php:7.3.21-fpm-alpine3.11
+FROM php:7.4.9-fpm-alpine3.11
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=php
@@ -80,14 +80,7 @@ RUN apk add --no-cache fcgi \
     && yes '' | pecl install -f redis-4.3.0 \
     && yes '' | pecl install -f imagick \
     && docker-php-ext-enable apcu redis xdebug imagick \
-    && case ${PHP_VERSION} in \
-      7.4*) \
-        docker-php-ext-configure gd --with-webp --with-jpeg \
-        ;; \
-      *) \
-        docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-        ;; \
-      esac \
+    && docker-php-ext-configure gd --with-webp --with-jpeg \
     && docker-php-ext-install -j4 bcmath gd gettext pdo_mysql mysqli pdo_pgsql pgsql shmop soap sockets opcache xsl zip \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && rm -rf /var/cache/apk/* /tmp/pear/ \

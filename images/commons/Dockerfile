@@ -6,7 +6,7 @@ ENV LAGOON=commons
 
 COPY lagoon/ /lagoon/
 RUN mkdir -p /lagoon/bin
-COPY fix-permissions docker-sleep /bin/
+COPY fix-permissions docker-sleep entrypoint-readiness /bin/
 COPY .bashrc /home/.bashrc
 
 RUN apk update \

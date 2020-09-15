@@ -84,7 +84,7 @@ docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && d
 #######
 ####### Base Images are the base for all other images and are also published for clients to use during local development
 
-consumer-images :=     commons \
+unversioned-images :=		commons \
 							mariadb \
 							mariadb-drupal \
 							mongo \
@@ -98,11 +98,11 @@ consumer-images :=     commons \
 							toolbox
 
 # base-images is a variable that will be constantly filled with all base image there are
-base-images += $(consumer-images)
-s3-images += $(consumer-images)
+base-images += $(unversioned-images)
+s3-images += $(unversioned-images)
 
 # List with all images prefixed with `build/`. Which are the commands to actually build images
-build-images = $(foreach image,$(consumer-images),build/$(image))
+build-images = $(foreach image,$(unversioned-images),build/$(image))
 
 # Define the make recipe for all base images
 $(build-images):
@@ -134,65 +134,63 @@ build/varnish: build/commons images/varnish/Dockerfile
 build/varnish-drupal: build/varnish images/varnish-drupal/Dockerfile
 build/varnish-persistent: build/varnish images/varnish/Dockerfile
 build/varnish-persistent-drupal: build/varnish-drupal images/varnish-drupal/Dockerfile
-build/docker-host: build/commons images/docker-host/Dockerfile
 build/athenapdf-service: build/commons images/athenapdf-service/Dockerfile
 build/toolbox: build/commons build/mariadb images/toolbox/Dockerfile
-build/kubectl-build-deploy-dind: build/kubectl images/kubectl-build-deploy-dind
 
 #######
 ####### Multi-version Images
 #######
 
-multiimages := 	php-7.2-fpm \
-				php-7.3-fpm \
-				php-7.4-fpm \
-				php-7.2-cli \
-				php-7.3-cli \
-				php-7.4-cli \
-				php-7.2-cli-drupal \
-				php-7.3-cli-drupal \
-				php-7.4-cli-drupal \
-				python-2.7 \
-				python-3.7 \
-				python-3.8 \
-				python-2.7-ckan \
-				python-2.7-ckandatapusher \
-				node-10 \
-				node-12 \
-				node-14 \
-				node-10-builder \
-				node-12-builder \
-				node-14-builder \
-				solr-5.5 \
-				solr-6.6 \
-				solr-7.7 \
-				solr-5.5-drupal \
-				solr-6.6-drupal \
-				solr-7.7-drupal \
-				solr-5.5-ckan \
-				solr-6.6-ckan \
-				elasticsearch-6 \
-				elasticsearch-7 \
-				kibana-6 \
-				kibana-7 \
-				logstash-6 \
-				logstash-7 \
-				postgres-12 \
-				redis-6 \
-				redis-6-persistent
+versioned-images := 		php-7.2-fpm \
+							php-7.3-fpm \
+							php-7.4-fpm \
+							php-7.2-cli \
+							php-7.3-cli \
+							php-7.4-cli \
+							php-7.2-cli-drupal \
+							php-7.3-cli-drupal \
+							php-7.4-cli-drupal \
+							python-2.7 \
+							python-3.7 \
+							python-3.8 \
+							python-2.7-ckan \
+							python-2.7-ckandatapusher \
+							node-10 \
+							node-12 \
+							node-14 \
+							node-10-builder \
+							node-12-builder \
+							node-14-builder \
+							solr-5.5 \
+							solr-6.6 \
+							solr-7.7 \
+							solr-5.5-drupal \
+							solr-6.6-drupal \
+							solr-7.7-drupal \
+							solr-5.5-ckan \
+							solr-6.6-ckan \
+							elasticsearch-6 \
+							elasticsearch-7 \
+							kibana-6 \
+							kibana-7 \
+							logstash-6 \
+							logstash-7 \
+							postgres-12 \
+							redis-6 \
+							redis-6-persistent
 
-# verimages are images that formerly had no versioning, are are made backwards-compatible.
+# newly-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 
-verimages := 	postgres-11 \
-				postgres-11-ckan \
-				postgres-11-drupal \
-				redis-5 \
-				redis-5-persistent
+newly-versioned-images := 	postgres-11 \
+							postgres-11-ckan \
+							postgres-11-drupal \
+							redis-5 \
+							redis-5-persistent
 
-build-multiimages = $(foreach image,$(multiimages) $(verimages),build/$(image))
+build-versioned-images = $(foreach image,$(versioned-images) $(newly-versioned-images),build/$(image))
 
 # Define the make recipe for all multi images
-$(build-multiimages):
+$(build-versioned-images):
 	$(eval image = $(subst build/,,$@))
 	$(eval variant = $(word 1,$(subst -, ,$(image))))
 	$(eval version = $(word 2,$(subst -, ,$(image))))
@@ -210,9 +208,10 @@ $(build-multiimages):
 # Touch an empty file which make itself is using to understand when the image has been last built
 	touch $@
 
-base-images-with-versions += $(multiimages)
-base-images-with-versions += $(verimages)
-s3-images += $(multiimages)
+base-images-with-versions += $(versioned-images)
+base-images-with-versions += $(newly-versioned-images)
+s3-images += $(versioned-images)
+s3-images += $(newly-versioned-images)
 
 build/php-7.2-fpm build/php-7.3-fpm build/php-7.4-fpm: build/commons
 build/php-7.2-cli: build/php-7.2-fpm
@@ -258,75 +257,15 @@ build-list:
 			echo $$number ; \
 	done
 
-tag-consumer-images = $(foreach image,$(consumer-images),[tag]-$(image))
-tag-multiimages = $(foreach image,$(multiimages),[tag]-$(image))
-tag-verimages = $(foreach image,$(verimages),[tag]-$(image))
-
-.PHONY: tag-images
-tag-images: $(tag-multiimages) $(tag-consumer-images) $(tag-verimages)
-
-.PHONY:
-$(tag-multiimages):
-	$(eval image = $(subst [tag]-,,$@))
-	$(eval variant = $(word 1,$(subst -, ,$(image))))
-	$(eval version = $(word 2,$(subst -, ,$(image))))
-	$(eval type = $(word 3,$(subst -, ,$(image))))
-	$(eval subtype = $(word 4,$(subst -, ,$(image))))
-	
-	$(eval legacytag = $(shell echo $(variant)$(if $(version),:$(version))$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
-
-	$(info tagging $(CI_BUILD_TAG)/$(image):latest as legacy tag amazeeio/$(legacytag))
-ifeq ($(LAGOON_VERSION), development)
-	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
-else
-	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)-$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)-latest
-	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)	
-	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image)
-endif
-
-.PHONY:
-$(tag-consumer-images):
-	$(eval image = $(subst [tag]-,,$@))
-	$(info tagging $(CI_BUILD_TAG)/$(image):latest as legacy tag amazeeio/$(image))
-ifeq ($(LAGOON_VERSION), development)
-	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
-else
-	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(image):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(image)
-	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image)
-endif
-
-
-.PHONY:
- $(tag-verimages):
-	$(eval image = $(subst [tag]-,,$@))
-	$(eval variant = $(word 1,$(subst -, ,$(image))))
-	$(eval version = $(word 2,$(subst -, ,$(image))))
-	$(eval type = $(word 3,$(subst -, ,$(image))))
-	$(eval subtype = $(word 4,$(subst -, ,$(image))))
-	
-	$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
-
-	$(info tagging $(CI_BUILD_TAG)/$(image):latest as legacy tag amazeeio/$(legacytag))
-ifeq ($(LAGOON_VERSION), development)
-	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(DESTINATION_TAG)
-else
-	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_TAG)/$(image):latest amazeeio/$(legacytag)
-	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image):$(LAGOON_VERSION)
-	docker tag $(CI_BUILD_TAG)/$(image):latest ${DESTINATION_REPO}/$(image)
-endif
-
 # Publish command to amazeeio docker hub, this should probably only be done during a master deployments
 publish-amazeeio-baseimages = $(foreach image,$(base-images),[publish-amazeeio-baseimages]-$(image))
 publish-amazeeio-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-amazeeio-baseimages-with-versions]-$(image))
+# Special handler for the previously unversioned images that now have versions
+publish-amazeeio-baseimages-without-versions = $(foreach image,$(newly-versioned-images),[publish-amazeeio-baseimages-without-versions]-$(image))
+
 # tag and push all images
 .PHONY: publish-amazeeio-baseimages
-publish-amazeeio-baseimages: $(publish-amazeeio-baseimages) $(publish-amazeeio-baseimages-with-versions)
-
+publish-amazeeio-baseimages: $(publish-amazeeio-baseimages) $(publish-amazeeio-baseimages-with-versions) $(publish-amazeeio-baseimages-without-versions)
 
 # tag and push of each image
 .PHONY: $(publish-amazeeio-baseimages)
@@ -344,19 +283,42 @@ $(publish-amazeeio-baseimages):
 $(publish-amazeeio-baseimages-with-versions):
 #   Calling docker_publish for image, but remove the prefix '[publish-amazeeio-baseimages-with-versions]-' first
 		$(eval image = $(subst [publish-amazeeio-baseimages-with-versions]-,,$@))
-#   The underline is a placeholder for a colon, replace that
-		$(eval image = $(subst __,:,$(image)))
-#		These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
-#		We push a version without the `-latest` suffix
-		$(call docker_publish_amazeeio,$(image),$(image))
-#		Plus a version with the `-latest` suffix, this makes it easier for people with automated testing
-		$(call docker_publish_amazeeio,$(image),$(image)-latest)
-#		We add the Lagoon Version just as a dash
-		$(call docker_publish_amazeeio,$(image),$(image)-$(LAGOON_VERSION))
+		$(eval variant = $(word 1,$(subst -, ,$(image))))
+		$(eval version = $(word 2,$(subst -, ,$(image))))
+		$(eval type = $(word 3,$(subst -, ,$(image))))
+		$(eval subtype = $(word 4,$(subst -, ,$(image))))
+#   Construct a "legacy" tag of the form `amazeeio/variant:version-type-subtype` e.g. `amazeeio/php:7.4-cli-drupal`
+		$(eval legacytag = $(shell echo $(variant)$(if $(version),:$(version))$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
+#	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
+#	We push a version without the `-latest` suffix
+		$(call docker_publish_amazeeio,$(image),$(legacytag))
+#	Plus a version with the `-latest` suffix, this makes it easier for people with automated testing
+		$(call docker_publish_amazeeio,$(image),$(legacytag)-latest)
+#	We add the Lagoon Version just as a dash
+		$(call docker_publish_amazeeio,$(image),$(legacytag)-$(LAGOON_VERSION))
 
 
+# tag and push of unversioned base images
+.PHONY: $(publish-amazeeio-baseimages-without-versions)
+$(publish-amazeeio-baseimages-without-versions):
+#   Calling docker_publish for image, but remove the prefix '[publish-amazeeio-baseimages-with-versions]-' first
+		$(eval image = $(subst [publish-amazeeio-baseimages-without-versions]-,,$@))
+		$(eval variant = $(word 1,$(subst -, ,$(image))))
+		$(eval version = $(word 2,$(subst -, ,$(image))))
+		$(eval type = $(word 3,$(subst -, ,$(image))))
+		$(eval subtype = $(word 4,$(subst -, ,$(image))))
+#   Construct a "legacy" tag of the form `amazeeio/variant-type-subtype` e.g. `amazeeio/postgres-ckan`
+		$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
+#	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
+#	We push a version without the `-latest` suffix
+		$(call docker_publish_amazeeio,$(image),$(legacytag))
+#	Plus a version with the `-latest` suffix, this makes it easier for people with automated testing
+		$(call docker_publish_amazeeio,$(image),$(legacytag)-latest)
+#	We add the Lagoon Version just as a dash
+		$(call docker_publish_amazeeio,$(image),$(legacytag)-$(LAGOON_VERSION))
 
-# Publish command to amazeeio docker hub, this should probably only be done during a master deployments
+
+# Publish command to testlagoon docker hub, done on any main branch or PR
 publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
 publish-testlagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-testlagoon-baseimages-with-versions]-$(image))
 # tag and push all images
@@ -382,6 +344,7 @@ $(publish-testlagoon-baseimages-with-versions):
 		$(eval image = $(subst __,:,$(image)))
 #		We add the Lagoon Version just as a dash
 		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME))
+
 
 s3-save = $(foreach image,$(s3-images),[s3-save]-$(image))
 # save all images to s3

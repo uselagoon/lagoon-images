@@ -33,22 +33,22 @@ node {
         // but we want this on tag deployments in order to ensure that we publish images always with the newest possible images.
         if (env.TAG_NAME) {
           stage ('clean docker image cache') {
-            sh "docker image prune -af"
+            sh script: "docker image prune -af", label: "Pruning images"
           }
         }
 
         stage ('build images') {
-          sh "make -O${SYNC_MAKE_OUTPUT} -j8 build"
+          sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build", label: "Building images"
         }
 
         stage ('push images to testlagoon/*') {
           withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
             try {
               if (env.SKIP_IMAGE_PUBLISH != 'true') {
-                sh 'docker login -u amazeeiojenkins -p $PASSWORD'
-                sh "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}"
+                sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+                sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
               } else {
-                sh 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"'
+                sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
               }
             } catch (e) {
               echo "Something went wrong, trying to cleanup"
@@ -65,15 +65,16 @@ node {
         if (env.TAG_NAME && env.SKIP_IMAGE_PUBLISH != 'true') {
           stage ('publish-amazeeio') {
             withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
-              sh 'docker login -u amazeeiojenkins -p $PASSWORD'
-              // sh "make -O${SYNC_MAKE_OUTPUT} -j8 publish-amazeeio-baseimages"
+              sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+              sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-uselagoon-baseimages", label: "Publishing built images to uselagoon"
+              sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-amazeeio-baseimages", label: "Publishing legacy images to amazeeio"
             }
           }
         }
 
         if (env.BRANCH_NAME == 'main' && env.SKIP_IMAGE_PUBLISH != 'true') {
           stage ('save-images-s3') {
-            sh "make -O${SYNC_MAKE_OUTPUT} -j8 s3-save"
+            sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 s3-save", label: "Saving images to AWS S3"
           }
         }
 

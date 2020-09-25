@@ -1,0 +1,107 @@
+{
+  "$schema":"https://docs.renovatebot.com/renovate-schema.json",
+  "extends":[
+    "config:base"
+  ],
+  "timezone": "Australia/Melbourne",
+  "schedule": [
+    "before 1pm every weekday"
+  ],
+  "dependencyDashboard": true,
+  "separateMajorMinor":true,
+  "separateMinorPatch":true,
+  "separateMultipleMajor":true,
+  "packageRules":[
+    {
+      "datasources":[
+        "docker"
+      ],
+      "updateTypes":[
+        "patch"
+      ],
+      "packageNames":[
+        "php",
+        "python"
+      ]
+    },
+    {
+      "datasources":[
+        "docker"
+      ],
+      "updateTypes":[
+        "major",
+        "minor"
+      ],
+      "packageNames":[
+        "php",
+        "python"
+      ],
+      "enabled":false
+    },
+    {
+      "datasources":[
+        "docker"
+      ],
+      "updateTypes":[
+        "patch",
+        "minor"
+      ],
+      "packageNames":[
+        "node", "postgres"
+      ]
+    },
+    {
+      "datasources":[
+        "docker"
+      ],
+      "updateTypes":[
+        "major"
+      ],
+      "packageNames":[
+        "node", "postgres"
+      ],
+      "enabled":false
+    },
+    {
+      "datasources":[
+        "docker"
+      ],
+      "updateTypes":[
+        "patch",
+        "minor"
+      ],
+      "packageNames":[
+        "docker.elastic.co/elasticsearch/elasticsearch",
+        "docker.elastic.co/logstash/logstash",
+        "docker.elastic.co/kibana/kibana"
+      ],
+      "groupName":"ELK Stack"
+    },
+    {
+      "datasources":[
+        "docker"
+      ],
+      "updateTypes":[
+        "major"
+      ],
+      "packageNames":[
+        "docker.elastic.co/elasticsearch/elasticsearch",
+        "docker.elastic.co/logstash/logstash",
+        "docker.elastic.co/kibana/kibana"
+      ],
+      "enabled":false
+    },
+    {
+      "datasources":[
+        "docker"
+      ],
+      "updateTypes":[
+        "minor"
+      ],
+      "packageNames":[
+        "alpine"
+      ],
+      "enabled":false
+    }
+  ]
+}

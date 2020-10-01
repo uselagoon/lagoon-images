@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM arachnysdocker/athenapdf-service:2.13.0
+FROM arachnysdocker/athenapdf-service:2.16.0
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=athenapdf-service

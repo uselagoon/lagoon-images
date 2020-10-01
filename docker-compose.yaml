@@ -445,7 +445,7 @@ services:
       lagoon.template: services/storage-calculator/.lagoon.yml
       lagoon.image: amazeeiolagoon/storage-calculator:v1-8-2
   logs-collector:
-    image: openshift/origin-logging-fluentd:v3.6.1
+    image: openshift/origin-logging-fluentd:v3.11.0
     labels:
       lagoon.type: custom
       lagoon.template: services/logs-collector/.lagoon.yml

@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM bobrik/curator:5.7.6
+FROM bobrik/curator:5.8.1
 
 USER root
 

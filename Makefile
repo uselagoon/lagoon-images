@@ -94,7 +94,6 @@ unversioned-images :=		commons \
 							varnish-drupal \
 							varnish-persistent \
 							varnish-persistent-drupal \
-							athenapdf-service \
 							toolbox
 
 # base-images is a variable that will be constantly filled with all base image there are
@@ -133,7 +132,6 @@ build/varnish: build/commons images/varnish/Dockerfile
 build/varnish-drupal: build/varnish images/varnish-drupal/Dockerfile
 build/varnish-persistent: build/varnish images/varnish/Dockerfile
 build/varnish-persistent-drupal: build/varnish-drupal images/varnish-drupal/Dockerfile
-build/athenapdf-service: build/commons images/athenapdf-service/Dockerfile
 build/toolbox: build/commons build/mariadb images/toolbox/Dockerfile
 
 #######

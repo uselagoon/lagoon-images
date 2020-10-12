@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.3
 
-FROM php:8.0.0beta4-fpm-alpine3.12
+FROM php:8.0.0rc1-fpm-alpine3.12
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=php
@@ -88,20 +88,20 @@ RUN curl -L https://api.github.com/repos/xdebug/xdebug/tarball > /tmp/xdebug.tar
     && cd /tmp/xdebug-xdebug* \
     && pickle install -n --version-override=2.9.99 \
     && docker-php-ext-enable xdebug
-RUN pickle install -n yaml --version-override=2.2.99 \
+RUN pickle install -n yaml --version-override=2.2.0 #fixup non-semver 2.2.0b2 \
     && docker-php-ext-enable yaml 
 # RUN curl -L https://api.github.com/repos/php/pecl-file_formats-yaml/tarball > /tmp/yaml.tar.gz \
 #     && tar xzvf /tmp/yaml.tar.gz -C /tmp \
 #     && cd /tmp/php-pecl-file_formats-yaml* \
 #     && pickle install --version-override="2.2.99" \
 #     && docker-php-ext-enable yaml
-# RUN pickle install -n redis \ ## released PECL redis not PHP8 compatible at 5.3.1
-#     && docker-php-ext-enable redis
-RUN curl -L https://api.github.com/repos/phpredis/phpredis/tarball > /tmp/phpredis.tar.gz \
-    && tar xzvf /tmp/phpredis.tar.gz -C /tmp \
-    && cd /tmp/phpredis-phpredis* \
-    && pickle install -n --version-override=5.3.99 \
+RUN pickle install -n redis --version-override=5.3.2 #fixup non-semver 5.3.2RC1 \
     && docker-php-ext-enable redis
+# RUN curl -L https://api.github.com/repos/phpredis/phpredis/tarball > /tmp/phpredis.tar.gz \
+#     && tar xzvf /tmp/phpredis.tar.gz -C /tmp \
+#     && cd /tmp/phpredis-phpredis* \
+#     && pickle install -n --version-override=5.3.99 \
+#     && docker-php-ext-enable redis
 # RUN pickle install -n imagick \ ## released PECL imagick not PHP8 compatible at 3.4.4
 #    && docker-php-ext-enable imagick
 RUN curl -L https://api.github.com/repos/imagick/imagick/tarball > /tmp/imagick.tar.gz \

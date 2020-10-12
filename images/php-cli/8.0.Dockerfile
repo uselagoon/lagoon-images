@@ -1,5 +1,5 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/php-8.0.0beta4-fpm
+FROM ${IMAGE_REPO:-lagoon}/php-8.0-fpm
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=cli

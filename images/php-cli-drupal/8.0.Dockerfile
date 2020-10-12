@@ -1,5 +1,5 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/php-8.0.0beta4-cli
+FROM ${IMAGE_REPO:-lagoon}/php-8.0-cli
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=cli-drupal

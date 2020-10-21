@@ -1,3 +1,0 @@
-- name: "{{ testname }} - pause for {{seconds}} seconds"
-  pause:
-    seconds: "{{seconds}}"

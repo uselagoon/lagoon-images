@@ -41,7 +41,7 @@ node {
           sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build", label: "Building images"
         }
 
-        stage ('push images to testlagoon/*') {
+        stage ('push branch images to testlagoon/*') {
           withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
             try {
               if (env.SKIP_IMAGE_PUBLISH != 'true') {
@@ -73,8 +73,11 @@ node {
         }
 
         if (env.BRANCH_NAME == 'main' && env.SKIP_IMAGE_PUBLISH != 'true') {
-          stage ('save-images-s3') {
+          stage ('save images to s3') {
             sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 s3-save", label: "Saving images to AWS S3"
+          }
+          stage ('push latest images to testlagoon') {
+            sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=latest", label: "Publishing :latest images to testlagoon"
           }
         }
 

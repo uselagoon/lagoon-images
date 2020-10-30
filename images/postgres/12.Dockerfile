@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # alpine 3.11 from https://github.com/docker-library/postgres/blob/master/11/alpine/Dockerfile
-FROM postgres:12.3-alpine
+FROM postgres:12.4-alpine
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.3
 
-FROM php:8.0.0rc1-fpm-alpine3.12
+FROM php:8.0.0RC3-fpm-alpine3.12
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=php
@@ -81,13 +81,13 @@ RUN apk add --no-cache fcgi \
     && chmod +x /usr/local/bin/pickle
 RUN pickle install -n apcu \
     && docker-php-ext-enable apcu 
-# RUN pickle install -n xdebug \  ## released PECL xdebug not PHP8 compatible at 2.9.7
-#     && docker-php-ext-enable xdebug 
-RUN curl -L https://api.github.com/repos/xdebug/xdebug/tarball > /tmp/xdebug.tar.gz \
-    && tar xzvf /tmp/xdebug.tar.gz -C /tmp \
-    && cd /tmp/xdebug-xdebug* \
-    && pickle install -n --version-override=2.9.99 \
-    && docker-php-ext-enable xdebug
+RUN pickle install -n xdebug --version-override=3.0.0 #fixup non-semver 3.0.0beta1 \
+    && docker-php-ext-enable xdebug 
+# RUN curl -L https://api.github.com/repos/xdebug/xdebug/tarball > /tmp/xdebug.tar.gz \
+#     && tar xzvf /tmp/xdebug.tar.gz -C /tmp \
+#     && cd /tmp/xdebug-xdebug* \
+#     && pickle install -n --version-override=2.9.99 \
+#     && docker-php-ext-enable xdebug
 RUN pickle install -n yaml --version-override=2.2.0 #fixup non-semver 2.2.0b2 \
     && docker-php-ext-enable yaml 
 # RUN curl -L https://api.github.com/repos/php/pecl-file_formats-yaml/tarball > /tmp/yaml.tar.gz \
@@ -95,7 +95,7 @@ RUN pickle install -n yaml --version-override=2.2.0 #fixup non-semver 2.2.0b2 \
 #     && cd /tmp/php-pecl-file_formats-yaml* \
 #     && pickle install --version-override="2.2.99" \
 #     && docker-php-ext-enable yaml
-RUN pickle install -n redis --version-override=5.3.2 #fixup non-semver 5.3.2RC1 \
+RUN pickle install -n redis \
     && docker-php-ext-enable redis
 # RUN curl -L https://api.github.com/repos/phpredis/phpredis/tarball > /tmp/phpredis.tar.gz \
 #     && tar xzvf /tmp/phpredis.tar.gz -C /tmp \

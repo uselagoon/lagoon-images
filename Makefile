@@ -39,7 +39,7 @@ SHELL := /bin/bash
 #######
 
 # Parameter for all `docker build` commands, can be overwritten by passing `DOCKER_BUILD_PARAMS=` via the `-e` option
-DOCKER_BUILD_PARAMS := --quiet
+DOCKER_BUILD_PARAMS :=
 
 # On CI systems like jenkins we need a way to run multiple testings at the same time. We expect the
 # CI systems to define an Environment variable CI_BUILD_TAG which uniquely identifies each build.
@@ -85,6 +85,7 @@ docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docke
 ####### Base Images are the base for all other images and are also published for clients to use during local development
 
 unversioned-images :=		commons \
+							commonsd \
 							mariadb \
 							mariadb-drupal \
 							mongo \
@@ -174,7 +175,11 @@ versioned-images := 		php-7.2-fpm \
 							logstash-7 \
 							postgres-12 \
 							redis-6 \
-							redis-6-persistent
+							redis-6-persistent \
+							solr-7 \
+							solr-7-drupal \
+							solr-8 \
+							solr-8-drupal
 
 # newly-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 
@@ -236,6 +241,9 @@ build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-5 build/redis-6: build/commons
 build/redis-6-persistent: build/redis-6
+build/solr-7 build/solr-8: build/commons
+build/solr-7-drupal: build/solr-7
+build/solr-8-drupal: build/solr-8
 
 #######
 ####### Building Images

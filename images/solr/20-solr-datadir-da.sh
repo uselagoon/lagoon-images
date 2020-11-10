@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eo pipefail
+set -e
 
 # check if SOLR_COPY_DATA_DIR_SOURCE is set, if yes we're coping the contents of the given folder into the data dir folder
 # this allows to prefill the datadir with a provided datadir (either added in a Dockerfile build, or mounted into the running container).
@@ -91,13 +91,13 @@ if [ -n "$(ls ${SOLR_DATA_DIR:-/var/solr})" ]; then
   done
 fi
 
-function fixConfig {
+fixConfig() {
   fail=0
   if cat $1/solrconfig.xml | grep dataDir | grep -qv "<dataDir>${SOLR_DATA_DIR:-/var/solr}/\${solr.core.name}</dataDir>"; then
     echo "Found old non lagoon compatible dataDir config in solrconfig.xml:"
     cat $1/solrconfig.xml | grep dataDir
     SOLR_DATA_DIR=${SOLR_DATA_DIR:-/var/solr}
-    SOLR_DATA_DIR_ESCAPED=${SOLR_DATA_DIR//\//\\/} # escapig the forward slashes with backslahes
+    SOLR_DATA_DIR_ESCAPED=$(echo "${SOLR_DATA_DIR}" | sed 's:/:\\/:g')
     if [ -w $1/ ]; then
       sed -ibak "/<\!\-\-/!s/<dataDir>.*/<dataDir>$SOLR_DATA_DIR_ESCAPED\/\${solr.core.name}<\/dataDir>/" $1/solrconfig.xml
       echo "automagically updated to compatible config: "
@@ -127,9 +127,6 @@ function fixConfig {
       fail=1
     fi
     printf "\n\n"
-  fi
-  if [ "$fail" == "1" ]; then
-    exit 1;
   fi
 }
 

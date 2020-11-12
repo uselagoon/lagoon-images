@@ -62,6 +62,23 @@ node {
           sh 'docker image ls | sort -u'
         }
 
+        stage ('Install Lando') {
+          sh script: "wget https://files.devwithlando.io/lando-stable.deb && sudo dpkg -i lando-stable.deb"
+          sh script: "lando version"
+        }
+
+        stage ('Copy examples down') {
+          sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests && cd tests"
+          sh script: "git submodule sync && git submodule update --init"
+          sh script: "yarn install"
+        }
+
+        stage ('Configure and Run Tests') {
+          sh script: "yarn generate-tests"
+          sh script: "yarn test:all"
+        }
+
+
         if (env.TAG_NAME && env.SKIP_IMAGE_PUBLISH != 'true') {
           stage ('publish-amazeeio') {
             withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {

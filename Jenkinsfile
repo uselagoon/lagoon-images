@@ -63,7 +63,9 @@ node {
         }
 
         stage ('Install Lando') {
-          sh script: "wget https://files.devwithlando.io/lando-stable.deb && dpkg -i lando-stable.deb"
+          sh script: "git clone https://github.com/lando/lando.git lando"
+          sh script: "cd lando && yarn"
+          sh script: "ln -s /data/jenkins/workspace/_images_testing_jenkins_examples/lando/bin/lando.js /usr/local/bin/lando"
           sh script: "lando version"
         }
 

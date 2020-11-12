@@ -64,6 +64,7 @@ node {
 
         stage ('Install Lando') {
           sh script: "git clone https://github.com/lando/lando.git lando"
+          sh script: "npm install -g yarn"
           sh script: "cd lando && yarn"
           sh script: "ln -s /data/jenkins/workspace/_images_testing_jenkins_examples/lando/bin/lando.js /usr/local/bin/lando"
           sh script: "lando version"

@@ -63,14 +63,18 @@ node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
         }
 
         stage ('Copy examples down') {
-          sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests && cd tests"
-          sh script: "git submodule sync && git submodule update --init"
-          sh script: "yarn install"
+          sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
+          dir ('tests') {
+            sh script: "git submodule sync && git submodule update --init"
+            sh script: "yarn install"
+            sh script: "yarn generate-tests"
+          }
         }
 
         stage ('Configure and Run Tests') {
-          sh script: "yarn generate-tests"
-          sh script: "yarn test:all"
+          dir ('tests') {
+            sh script: "yarn test:all"
+          }
         }
 
 

@@ -3,7 +3,7 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
 FROM composer:latest as healthcheckbuilder
 
-RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.3
+RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
 FROM php:7.3.24-fpm-alpine3.11
 

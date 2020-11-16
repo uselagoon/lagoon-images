@@ -1,4 +1,4 @@
-node {
+node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
   withEnv(['AWS_BUCKET=jobs.amazeeio.services', 'AWS_DEFAULT_REGION=us-east-2']) {
     withCredentials([
       usernamePassword(credentialsId: 'aws-s3-lagoon', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY'),
@@ -60,14 +60,6 @@ node {
 
         stage ('show built images') {
           sh 'docker image ls | sort -u'
-        }
-
-        stage ('Install Lando') {
-          sh script: "git clone https://github.com/lando/lando.git lando"
-          sh script: "npm install -g yarn"
-          sh script: "cd lando && yarn"
-          sh script: "ln -s /data/jenkins/workspace/_images_testing_jenkins_examples/lando/bin/lando.js /usr/local/bin/lando"
-          sh script: "lando version"
         }
 
         stage ('Copy examples down') {

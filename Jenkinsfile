@@ -82,18 +82,18 @@ node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
         }
 
         dir ('tests') {
-          parallel {
+          parallel (
             'docker-compose-drupal-8-advanced': {
               stage ('docker-compose-drupal-8-advanced') {
                 sh script: "yarn test-debug /data/jenkins/workspace/_images_testing_jenkins_examples/tests/test/docker-compose-drupal-8-advanced-php-7-4-nginx-mariadb-solr-redis-varnish.func.js"
               }
-            }
+            },
             'lando-drupal-8-simple': {
               stage ('lando-drupal-8-simple') {
                 sh script: "yarn test-debug /data/jenkins/workspace/_images_testing_jenkins_examples/tests/test/lando-drupal-8-simple-php-7-2-nginx-mariadb.func.js"
               }
             }
-          }
+          )
         }
 
         if (env.TAG_NAME && env.SKIP_IMAGE_PUBLISH != 'true') {

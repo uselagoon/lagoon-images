@@ -77,6 +77,7 @@ node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
             sh script: "grep -rl uselagoon . | xargs sed -i '/image:/ s/uselagoon/testlagoon/'"
             sh script: "grep -rl testlagoon . | xargs sed -i '/^FROM/ s/latest/${SAFEBRANCH_NAME}/'"
             sh script: "grep -rl testlagoon . | xargs sed -i '/image:/ s/latest/${SAFEBRANCH_NAME}/'"
+            sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
             sh script: "yarn test:all"
           }
         }

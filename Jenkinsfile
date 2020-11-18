@@ -114,7 +114,7 @@ node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
               stage ('Simple old PHP tests') {
                 sh script: "yarn test:simple"
               }
-            }
+            },
             'Run Postgres tests': {
               stage ('Postgres tests') {
                 sh script: "yarn test test/docker*postgres*"

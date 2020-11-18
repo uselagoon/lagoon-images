@@ -1,0 +1,74 @@
+# Lagoon Version Update Helper
+#
+# Helper to update Version inside Dockerfiles
+# Update versions below in `vars` and execute locally
+#
+# ansible-playbook helpers/update-versions.yml
+- name: update versions
+  hosts: 127.0.0.1
+  connection: local
+  vars:
+    # Newrelic - https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
+    NEWRELIC_VERSION: '9.14.0.290'
+    # Composer - https://getcomposer.org/download/
+    COMPOSER_VERSION: '1.10.17'
+    COMPOSER_HASH_SHA256: '6fa00eba5103ce6750f94f87af8356e12cc45d5bbb11a140533790cf60725f1c'
+    # Drupal Console Launcher - https://github.com/hechoendrupal/drupal-console-launcher/releases
+    DRUPAL_CONSOLE_LAUNCHER_VERSION: 1.9.4
+    DRUPAL_CONSOLE_LAUNCHER_SHA: b7759279668caf915b8e9f3352e88f18e4f20659
+    # Drush - https://github.com/drush-ops/drush/releases
+    DRUSH_VERSION: 8.4.5
+    # Drush Launcher Version - https://github.com/drush-ops/drush-launcher/releases
+    DRUSH_LAUNCHER_VERSION: 0.8.0
+  tasks:
+  - name: Get a list of test*.conf in /home/user
+    find:  
+        paths:
+          - "{{ lookup('env', 'PWD') }}/images/php-fpm"
+          - "{{ lookup('env', 'PWD') }}/images/php-cli"
+          - "{{ lookup('env', 'PWD') }}/images/php-cli-drupal"
+        patterns: 
+          - '*.Dockerfile'
+    register: my_dockerfiles
+  - name: update NEWRELIC_VERSION
+    replace:
+        path: "{{ item.path }}"
+        regexp: 'ENV NEWRELIC_VERSION=.*'
+        replace: 'ENV NEWRELIC_VERSION={{ NEWRELIC_VERSION }}'
+    with_items: "{{ my_dockerfiles.files }}"
+  - name: update COMPOSER_VERSION
+    replace:
+        path: "{{ item.path }}"
+        regexp: 'ENV COMPOSER_VERSION=.*'
+        replace: 'ENV COMPOSER_VERSION={{ COMPOSER_VERSION }} \\'
+    with_items: "{{ my_dockerfiles.files }}"
+  - name: update COMPOSER_HASH_SHA256
+    replace:
+        path: "{{ item.path }}"
+        regexp: 'COMPOSER_HASH_SHA256=.*'
+        replace: 'COMPOSER_HASH_SHA256={{ COMPOSER_HASH_SHA256 }}'
+    with_items: "{{ my_dockerfiles.files }}"
+  - name: update DRUPAL_CONSOLE_LAUNCHER_VERSION
+    replace:
+        path: "{{ item.path }}"
+        regexp: 'ENV DRUPAL_CONSOLE_LAUNCHER_VERSION=.*'
+        replace: 'ENV DRUPAL_CONSOLE_LAUNCHER_VERSION={{ DRUPAL_CONSOLE_LAUNCHER_VERSION }} \\'
+    with_items: "{{ my_dockerfiles.files }}"
+  - name: update DRUPAL_CONSOLE_LAUNCHER_SHA
+    replace:
+        path: "{{ item.path }}"
+        regexp: 'DRUPAL_CONSOLE_LAUNCHER_SHA=.*'
+        replace: 'DRUPAL_CONSOLE_LAUNCHER_SHA={{ DRUPAL_CONSOLE_LAUNCHER_SHA }} \\'
+    with_items: "{{ my_dockerfiles.files }}"
+  - name: update DRUSH_VERSION
+    replace:
+        path: "{{ item.path }}"
+        regexp: 'DRUSH_VERSION=.*'
+        replace: 'DRUSH_VERSION={{ DRUSH_VERSION }} \\'
+    with_items: "{{ my_dockerfiles.files }}"
+  - name: update DRUSH_LAUNCHER_VERSION
+    replace:
+        path: "{{ item.path }}"
+        regexp: 'DRUSH_LAUNCHER_VERSION=.*'
+        replace: 'DRUSH_LAUNCHER_VERSION={{ DRUSH_LAUNCHER_VERSION }} \\'
+    with_items: "{{ my_dockerfiles.files }}"

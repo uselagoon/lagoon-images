@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.3
 
-FROM php:7.4.11-fpm-alpine3.12
+FROM php:7.4.12-fpm-alpine3.12
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=php
@@ -45,7 +45,7 @@ COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=9.12.0.268
+ENV NEWRELIC_VERSION=9.14.0.290
 
 RUN apk add --no-cache fcgi \
         ssmtp \

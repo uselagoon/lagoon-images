@@ -68,6 +68,7 @@ node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
             sh script: "git submodule sync && git submodule update --init"
             sh script: "yarn install"
             sh script: "yarn generate-tests"
+            sh script: "docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network"
           }
         }
 
@@ -83,15 +84,14 @@ node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
 
         dir ('tests') {
           parallel (
-            'docker-compose-drupal-8-advanced': {
-              stage ('docker-compose-drupal-8-advanced') {
-                sh script: "docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network"
-                sh script: "yarn test-debug /data/jenkins/workspace/_images_testing_jenkins_examples/tests/test/docker-compose-drupal-8-advanced-php-7-4-nginx-mariadb-solr-redis-varnish.func.js"
+            '1:': {
+              stage ('Simple tests') {
+                sh script: "yarn test:simple"
               }
             },
-            'lando-drupal-8-simple': {
-              stage ('lando-drupal-8-simple') {
-                sh script: "yarn test-debug /data/jenkins/workspace/_images_testing_jenkins_examples/tests/test/lagoon-drupal-8-simple-php-74-nginx-mariadb.func.js"
+            '2:': {
+              stage ('Advanced tests') {
+                sh script: "yarn test:advanced"
               }
             }
           )

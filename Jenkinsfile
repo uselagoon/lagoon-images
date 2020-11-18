@@ -84,14 +84,35 @@ node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
 
         dir ('tests') {
           parallel (
-            '1:': {
+            'Run simple Drupal tests': {
               stage ('Simple tests') {
                 sh script: "yarn test:simple"
               }
             },
-            '2:': {
+            'Run advanced Drupal tests': {
               stage ('Advanced tests') {
                 sh script: "yarn test:advanced"
+              }
+            }
+          )
+        }
+
+        stage ('Configure and Run old PHP Tests') {
+          dir ('tests') {
+            sh script: "rm test/*.js"
+            sh script: "grep -rl testlagoon ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.2/'"
+            sh script: "grep -rl PHP ./drupal8-simple/TESTING*.md | xargs sed -i 's/7.4/7.2/'"
+            sh script: "grep -rl testlagoon ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
+            sh script: "grep -rl PHP ./drupal9-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
+            sh script: "yarn generate-tests"
+          }
+        }
+
+        dir ('tests') {
+          parallel (
+            'Run simple old PHP Drupal tests': {
+              stage ('Simple tests') {
+                sh script: "yarn test:simple"
               }
             }
           )

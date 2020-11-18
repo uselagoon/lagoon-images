@@ -1,4 +1,4 @@
-node {
+node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
   withEnv(['AWS_BUCKET=jobs.amazeeio.services', 'AWS_DEFAULT_REGION=us-east-2']) {
     withCredentials([
       usernamePassword(credentialsId: 'aws-s3-lagoon', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY'),
@@ -60,6 +60,67 @@ node {
 
         stage ('show built images') {
           sh 'docker image ls | sort -u'
+        }
+
+        stage ('Copy examples down') {
+          sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
+          dir ('tests') {
+            sh script: "git submodule sync && git submodule update --init"
+            sh script: "yarn install"
+            sh script: "yarn generate-tests"
+            sh script: "docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network"
+          }
+        }
+
+        stage ('Configure and Run Tests') {
+          dir ('tests') {
+            sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/testlagoon/'"
+            sh script: "grep -rl uselagoon . | xargs sed -i '/image:/ s/uselagoon/testlagoon/'"
+            sh script: "grep -rl testlagoon . | xargs sed -i '/^FROM/ s/latest/${SAFEBRANCH_NAME}/'"
+            sh script: "grep -rl testlagoon . | xargs sed -i '/image:/ s/latest/${SAFEBRANCH_NAME}/'"
+            sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
+          }
+        }
+
+        dir ('tests') {
+          parallel (
+            'Run simple Drupal tests': {
+              stage ('Simple tests') {
+                sh script: "yarn test:simple"
+              }
+            },
+            'Run advanced Drupal tests': {
+              stage ('Advanced tests') {
+                sh script: "yarn test:advanced"
+              }
+            }
+          )
+        }
+
+        stage ('Configure and Run old PHP Tests') {
+          dir ('tests') {
+            sh script: "rm test/*.js"
+            sh script: "grep -rl testlagoon ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.2/'"
+            sh script: "grep -rl PHP ./drupal8-simple/TESTING*.md | xargs sed -i 's/7.4/7.2/'"
+            sh script: "grep -rl testlagoon ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
+            sh script: "grep -rl PHP ./drupal9-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
+            sh script: "yarn generate-tests"
+          }
+        }
+
+        dir ('tests') {
+          parallel (
+            'Run simple old PHP Drupal tests': {
+              stage ('Simple old PHP tests') {
+                sh script: "yarn test:simple"
+              }
+            },
+            'Run Postgres tests': {
+              stage ('Postgres tests') {
+                sh script: "yarn test test/docker*postgres*"
+              }
+            }
+          )
         }
 
         if (env.TAG_NAME && env.SKIP_IMAGE_PUBLISH != 'true') {

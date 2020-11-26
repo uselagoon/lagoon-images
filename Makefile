@@ -90,10 +90,6 @@ unversioned-images :=		commons \
 							mongo \
 							nginx \
 							nginx-drupal \
-							varnish \
-							varnish-drupal \
-							varnish-persistent \
-							varnish-persistent-drupal \
 							toolbox
 
 # base-images is a variable that will be constantly filled with all base image there are
@@ -128,10 +124,6 @@ build/mariadb-drupal: build/mariadb images/mariadb-drupal/Dockerfile
 build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
-build/varnish: build/commons images/varnish/Dockerfile
-build/varnish-drupal: build/varnish images/varnish-drupal/Dockerfile
-build/varnish-persistent: build/varnish images/varnish/Dockerfile
-build/varnish-persistent-drupal: build/varnish-drupal images/varnish-drupal/Dockerfile
 build/toolbox: build/commons build/mariadb images/toolbox/Dockerfile
 
 #######
@@ -174,7 +166,11 @@ versioned-images := 		php-7.2-fpm \
 							logstash-7 \
 							postgres-12 \
 							redis-6 \
-							redis-6-persistent
+							redis-6-persistent \
+							varnish-6.5 \
+							varnish-6.5-drupal \
+							varnish-6.5-persistent \
+							varnish-6.5-persistent-drupal
 
 # newly-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 
@@ -182,7 +178,11 @@ newly-versioned-images := 	postgres-11 \
 							postgres-11-ckan \
 							postgres-11-drupal \
 							redis-5 \
-							redis-5-persistent
+							redis-5-persistent \
+							varnish-5.2 \
+							varnish-5.2-drupal \
+							varnish-5.2-persistent \
+							varnish-5.2-persistent-drupal
 
 build-versioned-images = $(foreach image,$(versioned-images) $(newly-versioned-images),build/$(image))
 
@@ -236,6 +236,11 @@ build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-5 build/redis-6: build/commons
 build/redis-6-persistent: build/redis-6
+build/varnish-5.2 build/varnish-6.5: build/commons
+build/varnish-5.2-drupal build/varnish-5.2-persistent: build/varnish-5.2
+build/varnish-5.2-persistent-drupal: build/varnish-5.2-drupal
+build/varnish-6.5-drupal build/varnish-6.5-persistent: build/varnish-6.5
+build/varnish-6.5-persistent-drupal: build/varnish-6.5-drupal
 
 #######
 ####### Building Images

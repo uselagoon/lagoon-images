@@ -279,7 +279,7 @@ sub vcl_hit {
       return (deliver);
     } else {
       # No candidate for grace. Fetch a fresh object.
-      return (miss);
+      return (pass);
     }
   }
   else {
@@ -289,7 +289,7 @@ sub vcl_hit {
       return (deliver);
     } else {
       # no graced object.
-      return (miss);
+      return (pass);
     }
   }
 }

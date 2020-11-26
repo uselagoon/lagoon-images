@@ -304,7 +304,7 @@ $(publish-testlagoon-baseimages-without-versions):
 		$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 #	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
 #	We push a version without the `-latest` suffix
-		$(call docker_publish_testlagoon,$(image),$(legacytag):$(BRANCH_NAME)))
+		$(call docker_publish_testlagoon,$(image),$(legacytag):$(BRANCH_NAME))
 
 #######
 ####### All tagged releases are pushed to uselagoon repository with new semantic tags

@@ -3,9 +3,9 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
 FROM composer:latest as healthcheckbuilder
 
-RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.3
+RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:8.0.0RC3-fpm-alpine3.12
+FROM php:8.0.0RC5-fpm-alpine3.12
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=php
@@ -76,46 +76,20 @@ RUN apk add --no-cache fcgi \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-webp --with-jpeg \
     && docker-php-ext-install -j4 bcmath gd gettext pdo_mysql mysqli pdo_pgsql pgsql shmop soap sockets opcache xsl zip \
-# Using a version of pickle.phar built from v0.6.0-18-g9c9e184
-    && wget -O /usr/local/bin/pickle "https://github.com/tobybellwood/SampleFiles/raw/master/pickle.phar" \
-    && chmod +x /usr/local/bin/pickle
-RUN pickle install -n apcu \
-    && docker-php-ext-enable apcu 
-RUN pickle install -n xdebug --version-override=3.0.0 #fixup non-semver 3.0.0beta1 \
-    && docker-php-ext-enable xdebug 
-# RUN curl -L https://api.github.com/repos/xdebug/xdebug/tarball > /tmp/xdebug.tar.gz \
-#     && tar xzvf /tmp/xdebug.tar.gz -C /tmp \
-#     && cd /tmp/xdebug-xdebug* \
-#     && pickle install -n --version-override=2.9.99 \
-#     && docker-php-ext-enable xdebug
-RUN pickle install -n yaml --version-override=2.2.0 #fixup non-semver 2.2.0b2 \
-    && docker-php-ext-enable yaml 
-# RUN curl -L https://api.github.com/repos/php/pecl-file_formats-yaml/tarball > /tmp/yaml.tar.gz \
-#     && tar xzvf /tmp/yaml.tar.gz -C /tmp \
-#     && cd /tmp/php-pecl-file_formats-yaml* \
-#     && pickle install --version-override="2.2.99" \
-#     && docker-php-ext-enable yaml
-RUN pickle install -n redis \
-    && docker-php-ext-enable redis
-# RUN curl -L https://api.github.com/repos/phpredis/phpredis/tarball > /tmp/phpredis.tar.gz \
-#     && tar xzvf /tmp/phpredis.tar.gz -C /tmp \
-#     && cd /tmp/phpredis-phpredis* \
-#     && pickle install -n --version-override=5.3.99 \
-#     && docker-php-ext-enable redis
-# RUN pickle install -n imagick \ ## released PECL imagick not PHP8 compatible at 3.4.4
-#    && docker-php-ext-enable imagick
-RUN curl -L https://api.github.com/repos/imagick/imagick/tarball > /tmp/imagick.tar.gz \
-    && tar xzvf /tmp/imagick.tar.gz -C /tmp \
-    && cd /tmp/Imagick-imagick* \
-    && pickle install -n --version-override=3.4.99 \
-    && docker-php-ext-enable imagick
+    # ext-imagick - waiting on stable release to use PECL to install
+    && docker-php-source extract \
+    && mkdir -p /usr/src/php/ext/imagick \
+    && curl -fsSL https://api.github.com/repos/imagick/imagick/tarball | tar xvz -C /usr/src/php/ext/imagick --strip 1 \
+    && docker-php-ext-install imagick \
+    && docker-php-source delete \
 # Legacy PECL installs
-    # && yes '' | pecl install -f apcu \
-    # && yes '' | pecl install -f xdebug \
-    # && yes '' | pecl install -f yaml \
-    # && yes '' | pecl install -f redis-4.3.0 \
+    && pecl channel-update pecl.php.net \
+    && yes '' | pecl install -f apcu-5.1.19 \
     # && yes '' | pecl install -f imagick \
-    # && docker-php-ext-enable apcu redis xdebug imagick \
+    && yes '' | pecl install -f redis-5.3.2 \
+    && yes '' | pecl install -f xdebug-3.0.0 \
+    && yes '' | pecl install -f yaml-2.2.0b2 \
+    && docker-php-ext-enable apcu imagick redis xdebug yaml
 # RUN sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
 RUN rm -rf /var/cache/apk/* /tmp/pear/ \
     && apk del .phpize-deps \

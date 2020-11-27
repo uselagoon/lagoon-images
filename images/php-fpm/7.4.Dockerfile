@@ -3,9 +3,9 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
 FROM composer:latest as healthcheckbuilder
 
-RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.3
+RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:7.4.11-fpm-alpine3.11
+FROM php:7.4.12-fpm-alpine3.11
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=php
@@ -45,7 +45,7 @@ COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=9.12.0.268
+ENV NEWRELIC_VERSION=9.14.0.290
 
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.12/main/ 'curl>7.68' 'libcurl>7.68'
 
@@ -75,7 +75,7 @@ RUN apk add --no-cache fcgi \
         imagemagick-dev \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && yes '' | pecl install -f apcu \
-    && yes '' | pecl install -f xdebug \
+    && yes '' | pecl install -f xdebug-2.9.8 \
     && yes '' | pecl install -f yaml \
     && yes '' | pecl install -f redis-4.3.0 \
     && yes '' | pecl install -f imagick \

@@ -3,9 +3,9 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
 FROM composer:latest as healthcheckbuilder
 
-RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.3
+RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:7.3.24-fpm-alpine3.12
+FROM php:7.3.25-fpm-alpine3.12
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=php
@@ -73,7 +73,7 @@ RUN apk add --no-cache fcgi \
         imagemagick-dev \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && yes '' | pecl install -f apcu \
-    && yes '' | pecl install -f xdebug \
+    && yes '' | pecl install -f xdebug-2.9.8 \
     && yes '' | pecl install -f yaml \
     && yes '' | pecl install -f redis-4.3.0 \
     && yes '' | pecl install -f imagick \

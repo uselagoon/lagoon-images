@@ -35,19 +35,20 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 COPY check_fcgi /usr/sbin/
-COPY entrypoints/70-php-config.sh entrypoints/60-php-xdebug.sh entrypoints/50-ssmtp.sh entrypoints/71-php-newrelic.sh /lagoon/entrypoints/
+COPY entrypoints/70-php-config.sh entrypoints/60-php-xdebug.sh entrypoints/50-ssmtp.sh entrypoints/71-php-newrelic.sh entrypoints/80-php-blackfire.sh /lagoon/entrypoints/
 
 COPY php.ini /usr/local/etc/php/
 COPY 00-lagoon-php.ini.tpl /usr/local/etc/php/conf.d/
 COPY php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
+COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
 ENV NEWRELIC_VERSION=9.13.0.270
 
-RUN apk add --no-cache curl --repository http://dl-cdn.alpinelinux.org/alpine/edge/main/
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.12/main/ 'curl>7.68' 'libcurl>7.68'
 
 RUN apk add --no-cache fcgi \
         ssmtp \
@@ -113,6 +114,14 @@ RUN rm -rf /var/cache/apk/* /tmp/pear/ \
     && fix-permissions /usr/local/etc/ \
     && fix-permissions /app \
     && fix-permissions /etc/ssmtp/ssmtp.conf
+
+# Add blackfire probe.
+RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+    && mkdir -p /blackfire \
+    && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
+    && tar zxpf /blackfire/blackfire-probe.tar.gz -C /blackfire \
+    && mv /blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+    && rm -rf /blackfire
 
 EXPOSE 9000
 

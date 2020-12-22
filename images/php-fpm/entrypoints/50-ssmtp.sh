@@ -24,7 +24,7 @@ elif nc -z -w 1 172.17.0.1 1025 &> /dev/null; then
   echo -e "\nmailhub=172.17.0.1:1025" >> /etc/ssmtp/ssmtp.conf
   return
 # Fallback: check if on Lagoon then assume mxout.lagoon.svc can do smtp TLS
-elif [[ ! -z ${LAGOON_PROJECT} ]]; then
+elif [ ! -z ${LAGOON_PROJECT} ]; then
   echo -e "UseTLS=Yes\nmailhub=mxout.lagoon.svc:465" >> /etc/ssmtp/ssmtp.conf
   return
 fi

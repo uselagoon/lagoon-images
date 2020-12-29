@@ -15,7 +15,7 @@ node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
         // See `man -P 'less +/-O' make` for more information about this option.
         //
         // Uncomment the line below to disable output synchronisation.
-        env.SYNC_MAKE_OUTPUT = 'none'
+        // env.SYNC_MAKE_OUTPUT = 'none'
 
         stage ('env') {
           sh "env"
@@ -39,6 +39,10 @@ node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
 
         stage ('build images') {
           sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build", label: "Building images"
+        }
+
+        stage ('show trivy scan results') {
+          sh 'cat scan.txt'
         }
 
         stage ('push branch images to testlagoon/*') {

@@ -68,7 +68,7 @@ $(shell >scan.txt)
 # Docker Build Context
 docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
 
-scan_image = trivy image --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
+scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
 
 # Tags an image with the `testlagoon` repository and pushes it
 docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
@@ -112,7 +112,7 @@ $(build-images):
 # Populate the cross-reference table
 	$(shell echo $(image),$(image) >> build.txt)
 #scan created image with Trivy
-	# $(call scan_image,$(image),)
+	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last build
 	touch $@
 
@@ -203,7 +203,7 @@ $(build-versioned-images):
 # Populate the cross-reference table
 	$(shell echo $(image),$(legacytag) >> build.txt)
 #scan created images with Trivy
-	# $(call scan_image,$(image),)
+	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last built
 	touch $@
 

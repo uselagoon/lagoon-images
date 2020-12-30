@@ -1,13 +1,10 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/php-7.3-fpm
+FROM ${IMAGE_REPO:-lagoon}/php-8.0-fpm
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=cli
 
-# Defining Versions - Composer
-# @see https://getcomposer.org/download/
-ENV COMPOSER_VERSION=1.10.17 \
-  COMPOSER_HASH_SHA256=6fa00eba5103ce6750f94f87af8356e12cc45d5bbb11a140533790cf60725f1c
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 RUN apk add --no-cache git \
         unzip \
@@ -28,10 +25,6 @@ RUN apk add --no-cache git \
         yarn \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
     && rm -rf /var/cache/apk/* \
-    && curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/${COMPOSER_VERSION}/composer.phar \
-    && echo "$COMPOSER_HASH_SHA256 /usr/local/bin/composer" | sha256sum \
-    && chmod +x /usr/local/bin/composer \
-    && php -d memory_limit=-1 /usr/local/bin/composer global require hirak/prestissimo \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/
 

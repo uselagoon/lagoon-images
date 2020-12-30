@@ -68,7 +68,7 @@ $(shell >scan.txt)
 # Docker Build Context
 docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
 
-scan_image = trivy image --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
+scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
 
 # Tags an image with the `testlagoon` repository and pushes it
 docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
@@ -108,7 +108,7 @@ $(build-images):
 # Populate the cross-reference table
 	$(shell echo $(image),$(image) >> build.txt)
 #scan created image with Trivy
-	# $(call scan_image,$(image),)
+	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last build
 	touch $@
 
@@ -133,12 +133,15 @@ build/toolbox: build/commons build/mariadb images/toolbox/Dockerfile
 versioned-images := 		php-7.2-fpm \
 							php-7.3-fpm \
 							php-7.4-fpm \
+							php-8.0-fpm \
 							php-7.2-cli \
 							php-7.3-cli \
 							php-7.4-cli \
+							php-8.0-cli \
 							php-7.2-cli-drupal \
 							php-7.3-cli-drupal \
 							php-7.4-cli-drupal \
+							php-8.0-cli-drupal \
 							python-2.7 \
 							python-3.7 \
 							python-3.8 \
@@ -200,7 +203,7 @@ $(build-versioned-images):
 # Populate the cross-reference table
 	$(shell echo $(image),$(legacytag) >> build.txt)
 #scan created images with Trivy
-	# $(call scan_image,$(image),)
+	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last built
 	touch $@
 
@@ -209,13 +212,15 @@ base-images-with-versions += $(newly-versioned-images)
 s3-images += $(versioned-images)
 s3-images += $(newly-versioned-images)
 
-build/php-7.2-fpm build/php-7.3-fpm build/php-7.4-fpm: build/commons
+build/php-7.2-fpm build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm: build/commons
 build/php-7.2-cli: build/php-7.2-fpm
 build/php-7.3-cli: build/php-7.3-fpm
 build/php-7.4-cli: build/php-7.4-fpm
+build/php-8.0-cli: build/php-8.0-fpm
 build/php-7.2-cli-drupal: build/php-7.2-cli
 build/php-7.3-cli-drupal: build/php-7.3-cli
 build/php-7.4-cli-drupal: build/php-7.4-cli
+build/php-8.0-cli-drupal: build/php-8.0-cli
 build/python-2.7 build/python-3.7 build/python-3.8: build/commons
 build/python-2.7-ckan: build/python-2.7
 build/python-2.7-ckandatapusher: build/python-2.7

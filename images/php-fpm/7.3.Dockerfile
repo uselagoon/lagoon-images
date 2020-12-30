@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:7.3.24-fpm-alpine3.11
+FROM php:7.3.25-fpm-alpine3.11
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=php
@@ -35,12 +35,13 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 COPY check_fcgi /usr/sbin/
-COPY entrypoints/70-php-config.sh entrypoints/60-php-xdebug.sh entrypoints/50-ssmtp.sh entrypoints/71-php-newrelic.sh /lagoon/entrypoints/
+COPY entrypoints/70-php-config.sh entrypoints/60-php-xdebug.sh entrypoints/50-ssmtp.sh entrypoints/71-php-newrelic.sh entrypoints/80-php-blackfire.sh /lagoon/entrypoints/
 
 COPY php.ini /usr/local/etc/php/
 COPY 00-lagoon-php.ini.tpl /usr/local/etc/php/conf.d/
 COPY php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
+COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
@@ -75,7 +76,7 @@ RUN apk add --no-cache fcgi \
         imagemagick-dev \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && yes '' | pecl install -f apcu \
-    && yes '' | pecl install -f xdebug \
+    && yes '' | pecl install -f xdebug-2.9.8 \
     && yes '' | pecl install -f yaml \
     && yes '' | pecl install -f redis-4.3.0 \
     && yes '' | pecl install -f imagick \
@@ -104,6 +105,14 @@ RUN apk add --no-cache fcgi \
     && fix-permissions /usr/local/etc/ \
     && fix-permissions /app \
     && fix-permissions /etc/ssmtp/ssmtp.conf
+
+# Add blackfire probe.
+RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+    && mkdir -p /blackfire \
+    && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
+    && tar zxpf /blackfire/blackfire-probe.tar.gz -C /blackfire \
+    && mv /blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+    && rm -rf /blackfire
 
 EXPOSE 9000
 

@@ -85,7 +85,6 @@ docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docke
 ####### Base Images are the base for all other images and are also published for clients to use during local development
 
 unversioned-images :=		commons \
-							commonsd \
 							mariadb \
 							mariadb-drupal \
 							mongo \

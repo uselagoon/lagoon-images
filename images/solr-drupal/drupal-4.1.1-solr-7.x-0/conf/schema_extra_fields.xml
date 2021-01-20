@@ -47,12 +47,6 @@
 <dynamicField name="tocphoneticm_X3b_en_*" type="text_phonetic_en" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="true" />
 <dynamicField name="tucphonetics_X3b_en_*" type="text_phonetic_en" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="false" />
 <dynamicField name="tucphoneticm_X3b_en_*" type="text_phonetic_en" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
-<dynamicField name="tcphonetics_X3b_es_*" type="text_phonetic_es" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="false" />
-<dynamicField name="tcphoneticm_X3b_es_*" type="text_phonetic_es" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
-<dynamicField name="tocphonetics_X3b_es_*" type="text_phonetic_es" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="true" />
-<dynamicField name="tocphoneticm_X3b_es_*" type="text_phonetic_es" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="true" />
-<dynamicField name="tucphonetics_X3b_es_*" type="text_phonetic_es" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="false" />
-<dynamicField name="tucphoneticm_X3b_es_*" type="text_phonetic_es" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
 <dynamicField name="ts_X3b_und_*" type="text_und" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="false" />
 <dynamicField name="ts_*" type="text_und" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="false" />
 <dynamicField name="tm_X3b_und_*" type="text_und" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
@@ -93,10 +87,3 @@
 <dynamicField name="tucngrams_*" type="text_ngram" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="false" />
 <dynamicField name="tucngramm_X3b_und_*" type="text_ngram" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
 <dynamicField name="tucngramm_*" type="text_ngram" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
-<dynamicField name="ts_X3b_es_*" type="text_es" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="false" />
-<dynamicField name="tm_X3b_es_*" type="text_es" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
-<dynamicField name="tos_X3b_es_*" type="text_es" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="true" />
-<dynamicField name="tom_X3b_es_*" type="text_es" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="true" />
-<dynamicField name="tus_X3b_es_*" type="text_unstemmed_es" stored="true" indexed="true" multiValued="false" termVectors="true" omitNorms="false" />
-<dynamicField name="tum_X3b_es_*" type="text_unstemmed_es" stored="true" indexed="true" multiValued="true" termVectors="true" omitNorms="false" />
-<dynamicField name="sort_X3b_es_*" type="collated_es" stored="false" indexed="false" docValues="true" />

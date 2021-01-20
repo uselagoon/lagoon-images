@@ -28,21 +28,6 @@
       <str name="thresholdTokenFrequency">.01</str>
       <str name="onlyMorePopular">true</str>
     </lst>
-  
-    <lst name="spellchecker">
-      <str name="name">es</str>
-      <str name="field">spellcheck_es</str>
-      <str name="classname">solr.DirectSolrSpellChecker</str>
-      <str name="distanceMeasure">internal</str>
-      <str name="accuracy">0.5</str>
-      <str name="maxEdits">2</str>
-      <str name="minPrefix">1</str>
-      <str name="maxInspections">5</str>
-      <str name="minQueryLength">4</str>
-      <str name="maxQueryFrequency">0.01</str>
-      <str name="thresholdTokenFrequency">.01</str>
-      <str name="onlyMorePopular">true</str>
-    </lst>
   </searchComponent>
 <searchComponent name="suggest" class="solr.SuggestComponent">
     <lst name="suggester">
@@ -62,17 +47,6 @@
       <str name="dictionaryImpl">DocumentDictionaryFactory</str>
       <str name="field">twm_suggest</str>
       <str name="suggestAnalyzerFieldType">text_und</str>
-      <str name="contextField">sm_context_tags</str>
-      <str name="buildOnCommit">true</str>
-      <str name="buildOnStartup">false</str>
-    </lst>
-  
-    <lst name="suggester">
-      <str name="name">es</str>
-      <str name="lookupImpl">AnalyzingInfixLookupFactory</str>
-      <str name="dictionaryImpl">DocumentDictionaryFactory</str>
-      <str name="field">twm_suggest</str>
-      <str name="suggestAnalyzerFieldType">text_es</str>
       <str name="contextField">sm_context_tags</str>
       <str name="buildOnCommit">true</str>
       <str name="buildOnStartup">false</str>

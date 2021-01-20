@@ -144,28 +144,6 @@
   </analyzer>
 </fieldType>
 <!--
-  Fulltext Phonetic Spanish
-  7.0.0
--->
-<fieldType name="text_phonetic_es" class="solr.TextField" positionIncrementGap="100">
-  <analyzer type="index">
-    <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-    <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="1" protected="protwords_es.txt" splitOnCaseChange="1" generateWordParts="1" preserveOriginal="1" catenateAll="0" catenateWords="1"/>
-    <filter class="solr.LowerCaseFilterFactory"/>
-    <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_es.txt"/>
-    <filter class="solr.BeiderMorseFilterFactory" languageSet="spanish" nameType="GENERIC" ruleType="APPROX" concat="true"/>
-    <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-  </analyzer>
-  <analyzer type="query">
-    <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-    <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="0" generateNumberParts="0" protected="protwords_es.txt" splitOnCaseChange="1" generateWordParts="1" preserveOriginal="1" catenateAll="0" catenateWords="0"/>
-    <filter class="solr.LowerCaseFilterFactory"/>
-    <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_es.txt"/>
-    <filter class="solr.BeiderMorseFilterFactory" languageSet="spanish" nameType="GENERIC" ruleType="APPROX" concat="true"/>
-    <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-  </analyzer>
-</fieldType>
-<!--
   Language Undefined Text Field
   7.0.0
 -->
@@ -245,59 +223,6 @@
     <tokenizer class="solr.WhitespaceTokenizerFactory"/>
     <filter class="solr.LengthFilterFactory" min="2" max="100"/>
     <filter class="solr.LowerCaseFilterFactory"/>
-    <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-  </analyzer>
-</fieldType>
-<!--
-  Spanish Text Field
-  7.0.0
--->
-<fieldType name="text_es" class="solr.TextField" positionIncrementGap="100">
-  <analyzer type="index">
-    <charFilter class="solr.MappingCharFilterFactory" mapping="accents_es.txt"/>
-    <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-    <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="1" protected="protwords_es.txt" splitOnCaseChange="1" generateWordParts="1" preserveOriginal="1" catenateAll="0" catenateWords="1"/>
-    <filter class="solr.LowerCaseFilterFactory"/>
-    <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_es.txt"/>
-    <filter class="solr.SnowballPorterFilterFactory" language="Spanish" protected="protwords_es.txt"/>
-    <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-  </analyzer>
-  <analyzer type="query">
-    <charFilter class="solr.MappingCharFilterFactory" mapping="accents_es.txt"/>
-    <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-    <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="0" generateNumberParts="0" protected="protwords_es.txt" splitOnCaseChange="1" generateWordParts="1" preserveOriginal="1" catenateAll="0" catenateWords="0"/>
-    <filter class="solr.LowerCaseFilterFactory"/>
-    <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms_es.txt" expand="true" ignoreCase="true"/>
-    <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_es.txt"/>
-    <filter class="solr.SnowballPorterFilterFactory" language="Spanish" protected="protwords_es.txt"/>
-    <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-  </analyzer>
-</fieldType>
-<!--
-  Spanish Text Field collated
-  7.0.0
--->
-<fieldType name="collated_es" class="solr.ICUCollationField" locale="es" strength="primary" caseLevel="false"/>
-<!--
-  Spanish Text Field unstemmed
-  7.0.0
--->
-<fieldType name="text_unstemmed_es" class="solr.TextField" positionIncrementGap="100">
-  <analyzer type="index">
-    <charFilter class="solr.MappingCharFilterFactory" mapping="accents_es.txt"/>
-    <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-    <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="1" generateNumberParts="1" protected="protwords_es.txt" splitOnCaseChange="1" generateWordParts="1" preserveOriginal="1" catenateAll="0" catenateWords="1"/>
-    <filter class="solr.LowerCaseFilterFactory"/>
-    <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_es.txt"/>
-    <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
-  </analyzer>
-  <analyzer type="query">
-    <charFilter class="solr.MappingCharFilterFactory" mapping="accents_es.txt"/>
-    <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-    <filter class="solr.WordDelimiterGraphFilterFactory" catenateNumbers="0" generateNumberParts="0" protected="protwords_es.txt" splitOnCaseChange="1" generateWordParts="1" preserveOriginal="1" catenateAll="0" catenateWords="0"/>
-    <filter class="solr.LowerCaseFilterFactory"/>
-    <filter class="solr.SynonymGraphFilterFactory" synonyms="synonyms_es.txt" expand="true" ignoreCase="true"/>
-    <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords_es.txt"/>
     <filter class="solr.RemoveDuplicatesTokenFilterFactory"/>
   </analyzer>
 </fieldType>

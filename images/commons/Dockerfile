@@ -26,7 +26,7 @@ RUN apk update \
     && mkdir -p /lagoon/crontabs && fix-permissions /lagoon/crontabs \
     && ln -s /home/.bashrc /home/.profile
 
-RUN chmod g+w /etc/passwd
+RUN fix-permissions /etc/passwd
 
 ARG LAGOON_VERSION
 RUN echo $LAGOON_VERSION > /lagoon/version

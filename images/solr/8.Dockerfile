@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM solr:8.1.1-slim
+FROM solr:8.7.0-slim
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=solr
@@ -39,11 +39,9 @@ RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
 RUN chmod +x /sbin/tini
 RUN mkdir -p /var/solr/data
+RUN mkdir -p /opt/solr/server/solr/mycores
 RUN fix-permissions /var/solr \
-    && chown solr:solr /var/solr \
-    && fix-permissions /opt/solr/server/solr
-#    && fix-permissions /opt/solr/server/logs \
-
+    && chown solr:solr /var/solr
 
 # solr really doesn't like to be run as root, so we define the default user agin
 USER solr
@@ -51,11 +49,10 @@ USER solr
 COPY 10-solr-port.sh /lagoon/entrypoints/
 COPY 20-solr-datadir.sh /lagoon/entrypoints/
 
-
 # Define Volume so locally we get persistent cores
 VOLUME /var/solr
 
-RUN VERBOSE=yes precreate-core mycore
+RUN precreate-core mycore
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
 

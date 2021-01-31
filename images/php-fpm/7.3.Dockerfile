@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:7.3.26-fpm-alpine3.11
+FROM php:7.3.26-fpm-alpine3.12
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=php
@@ -47,8 +47,6 @@ COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
 ENV NEWRELIC_VERSION=9.14.0.290
-
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.12/main/ 'curl>7.68' 'libcurl>7.68'
 
 RUN apk add --no-cache fcgi \
         ssmtp \

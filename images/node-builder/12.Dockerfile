@@ -20,7 +20,7 @@ RUN apk update \
         git \
         file \
         openssl \
-        python \
+        python2 \
         bash \
         ca-certificates \
         wget \

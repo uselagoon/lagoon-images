@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM redis:5.0.9-alpine3.11
+FROM redis:5.0.10-alpine3.12
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=redis

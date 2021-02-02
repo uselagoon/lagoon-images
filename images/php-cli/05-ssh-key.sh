@@ -18,3 +18,14 @@ if [ -f /home/.ssh/key ]; then
   # Fix permissions of SSH key
   chmod 600 /home/.ssh/key
 fi
+
+# If we are not root, remove "  IdentityFile /home/.ssh/lagoon_cli.key" from the /etc/ssh/ssh_config.
+# `/home/.ssh/lagoon_cli.key` is only accessible by root and used during docker builds, during runtime
+# we are not running as root and therefore can never access this file, we're removing it from the ssh_config
+# which will not cause ssh_config to use it and throw any errors.
+if [ ! "$(id -u)" -eq 0 ]; then
+  TMPFILE=$(mktemp -p /tmp passwd.XXXXXX)
+  sed 's/ IdentityFile \/home\/\.ssh\/lagoon_cli\.key//' /etc/ssh/ssh_config > "$TMPFILE"
+  cat "$TMPFILE" > /etc/ssh/ssh_config
+  rm "$TMPFILE"
+fi

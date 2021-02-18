@@ -71,6 +71,7 @@
         "patch",
         "minor"
       ],
+      "allowedVersions": "< 7.11.0",
       "packageNames":[
         "docker.elastic.co/elasticsearch/elasticsearch",
         "docker.elastic.co/logstash/logstash",

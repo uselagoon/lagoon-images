@@ -1,3 +1,8 @@
+FROM golang:alpine3.12 AS builder
+RUN GIT_TAG=github.com/smlx/go-crond@custom-workdir-mod-update GIT_COMMIT=1b81c05ef34903427ed06a56c26cc268a0377b83; \
+    GO111MODULE=on CGO_ENABLED=0 go get -ldflags "-X main.gitTag=$GIT_TAG -X main.gitCommit=$GIT_COMMIT" \
+    github.com/smlx/go-crond@$GIT_COMMIT
+
 FROM alpine:3.12.3
 
 LABEL maintainer="amazee.io"
@@ -9,6 +14,8 @@ RUN mkdir -p /lagoon/bin
 COPY fix-permissions docker-sleep entrypoint-readiness /bin/
 COPY .bashrc /home/.bashrc
 
+COPY --from=builder /go/bin/go-crond /lagoon/bin/cron
+
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache curl tini \
@@ -16,9 +23,6 @@ RUN apk update \
     && curl -sLo /bin/ep https://github.com/kreuzwerker/envplate/releases/download/1.0.0-RC1/ep-linux \
     && echo "48e234e067874a57a4d4bb198b5558d483ee37bcc285287fffb3864818b42f2785be0568faacbc054e97ca1c5047ec70382e1ca0e71182c9dba06649ad83a5f6  /bin/ep" | sha512sum -c \
     && chmod +x /bin/ep \
-    && curl -sLo /lagoon/bin/cron https://github.com/christophlehmann/go-crond/releases/download/0.6.1-2-g7022a21/go-crond-64-linux \
-    && echo "4ecbf269a00416086a855b760b6a691d1b8a6385adb18debec893bdbebccd20822b945c476406e3ca27c784812027c23745048fadc36c4067f12038aff972dce  /lagoon/bin/cron" | sha512sum -c \
-    && chmod +x /lagoon/bin/cron \
     && mkdir -p /lagoon/crontabs && fix-permissions /lagoon/crontabs \
     && ln -s /home/.bashrc /home/.profile
 

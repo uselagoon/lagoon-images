@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM node:14.15-alpine3.12
+FROM node:14.16-alpine3.12
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=node

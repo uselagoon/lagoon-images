@@ -3,7 +3,7 @@ RUN GIT_TAG=github.com/smlx/go-crond@custom-workdir-mod-update GIT_COMMIT=1b81c0
     GO111MODULE=on CGO_ENABLED=0 go get -ldflags "-X main.gitTag=$GIT_TAG -X main.gitCommit=$GIT_COMMIT" \
     github.com/smlx/go-crond@$GIT_COMMIT
 
-FROM alpine:3.12.3
+FROM alpine:3.12.4
 
 LABEL maintainer="amazee.io"
 

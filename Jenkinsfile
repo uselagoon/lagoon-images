@@ -1,4 +1,4 @@
-node ('ax51-1.hetzner.lagoon-ci.amazeeio.cloud') {
+node ('lagoon-images') {
   withEnv(['AWS_BUCKET=jobs.amazeeio.services', 'AWS_DEFAULT_REGION=us-east-2']) {
     withCredentials([
       usernamePassword(credentialsId: 'aws-s3-lagoon', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY'),

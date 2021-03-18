@@ -6,8 +6,8 @@ ENV LAGOON=cli
 
 # Defining Versions - Composer
 # @see https://getcomposer.org/download/
-ENV COMPOSER_VERSION=1.10.17 \
-  COMPOSER_HASH_SHA256=6fa00eba5103ce6750f94f87af8356e12cc45d5bbb11a140533790cf60725f1c
+ENV COMPOSER_VERSION=1.10.20 \
+  COMPOSER_HASH_SHA256=e70b1024c194e07db02275dd26ed511ce620ede45c1e237b3ef51d5f8171348d
 
 RUN apk add --no-cache git \
         unzip \
@@ -21,6 +21,7 @@ RUN apk add --no-cache git \
         coreutils \
         mariadb-client \
         postgresql-client \
+        mongodb-tools \
         openssh-sftp-server \
         findutils \
         nodejs-current \

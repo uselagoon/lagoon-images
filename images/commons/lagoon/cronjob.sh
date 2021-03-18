@@ -11,4 +11,4 @@ trap exit_trap EXIT
 
 echo "$(date --utc +%FT%TZ) CRONJOB: $@"
 
-sh -c "/lagoon/entrypoints.sh $@"
+/lagoon/entrypoints.sh sh -c "$@"

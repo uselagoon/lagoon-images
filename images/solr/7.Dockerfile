@@ -51,7 +51,6 @@ USER solr
 COPY 10-solr-port.sh /lagoon/entrypoints/
 COPY 20-solr-datadir.sh /lagoon/entrypoints/
 
-
 # Define Volume so locally we get persistent cores
 VOLUME /var/solr
 

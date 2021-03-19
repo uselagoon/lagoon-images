@@ -38,22 +38,19 @@ RUN echo "dash dash/sh boolean false" | debconf-set-selections
 RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
 RUN chmod +x /sbin/tini
-RUN mkdir -p /var/solr/data
-RUN mkdir -p /opt/solr/server/solr/mycores
-RUN fix-permissions /var/solr \
-    && chown solr:solr /var/solr
+RUN fix-permissions /var/solr
 
 # solr really doesn't like to be run as root, so we define the default user agin
 USER solr
 
 COPY 10-solr-port.sh /lagoon/entrypoints/
-COPY 20-solr-datadir.sh /lagoon/entrypoints/
+# currently, there is no smart upgrade path from 7 to 8 - no autoremediation etc
+# and whilst sites may work, upgrading from 7 to 8, they won't work downgrading...
+# COPY 20-solr-datadir.sh /lagoon/entrypoints/
 
 # Define Volume so locally we get persistent cores
 VOLUME /var/solr
 
-RUN precreate-core mycore
-
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
 
-CMD ["solr-foreground"]
+CMD ["solr-precreate", "mycore"]

@@ -11,7 +11,7 @@ ENV LAGOON=commons
 
 COPY lagoon/ /lagoon/
 RUN mkdir -p /lagoon/bin
-COPY fix-permissions docker-sleep entrypoint-readiness /bin/
+COPY fix-permissions docker-sleep entrypoint-readiness wait-for /bin/
 COPY .bashrc /home/.bashrc
 
 COPY --from=builder /go/bin/go-crond /lagoon/bin/cron

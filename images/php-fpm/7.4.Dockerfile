@@ -7,7 +7,9 @@ RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
 FROM php:7.4.16-fpm-alpine3.12
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source=https://github.com/uselagoon/lagoon-images
+
 ENV LAGOON=php
 
 ARG LAGOON_VERSION
@@ -113,17 +115,6 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && rm -rf /blackfire
 
 EXPOSE 9000
-
-ENV AMAZEEIO_DB_HOST=mariadb \
-    AMAZEEIO_DB_PORT=3306 \
-    AMAZEEIO_DB_USERNAME=drupal \
-    AMAZEEIO_DB_PASSWORD=drupal \
-    AMAZEEIO_SITENAME=drupal \
-    AMAZEEIO_SITE_NAME=drupal \
-    AMAZEEIO_SITE_ENVIRONMENT=development \
-    AMAZEEIO_HASH_SALT=0000000000000000000000000 \
-    AMAZEEIO_TMP_PATH=/tmp \
-    AMAZEEIO_LOCATION=docker
 
 ENV LAGOON_ENVIRONMENT_TYPE=development
 

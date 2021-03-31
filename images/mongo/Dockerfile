@@ -2,7 +2,9 @@ ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 FROM alpine:3.8
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source=https://github.com/uselagoon/lagoon-images
+
 ENV LAGOON=mongo
 
 ARG LAGOON_VERSION

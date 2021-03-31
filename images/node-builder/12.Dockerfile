@@ -1,7 +1,9 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/node-12
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source=https://github.com/uselagoon/lagoon-images
+
 ENV LAGOON=node
 
 RUN apk update \

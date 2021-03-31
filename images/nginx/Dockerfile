@@ -3,7 +3,9 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # Alpine 3.12 per https://github.com/openresty/docker-openresty/blob/1.19.3.1-0/alpine/Dockerfile
 FROM openresty/openresty:1.19.3.1-alpine
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source=https://github.com/uselagoon/lagoon-images
+
 ENV LAGOON=nginx
 
 ARG LAGOON_VERSION

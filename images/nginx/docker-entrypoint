@@ -5,7 +5,7 @@ if [[ ! "${BASIC_AUTH}" == "off" ]]; then
   # And if a username and password is set.
   if [ ! -z ${BASIC_AUTH_USERNAME+x} ] && [ ! -z ${BASIC_AUTH_PASSWORD+x} ]; then
     # Generate a basic authentication config file for Nginx.
-    printf "${BASIC_AUTH_USERNAME}:$(openssl passwd -crypt ${BASIC_AUTH_PASSWORD})\n" >> /etc/nginx/.htpasswd
+    printf "${BASIC_AUTH_USERNAME}:$(openssl passwd -6 ${BASIC_AUTH_PASSWORD})\n" >> /etc/nginx/.htpasswd
     # Set `BASIC_AUTH` to restricted which will tell nginx to do basic authentication.
     export BASIC_AUTH="restricted"
   fi

@@ -15,6 +15,8 @@ ENV LAGOON=php
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
 
+ARG TARGETARCH
+
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
@@ -113,7 +115,7 @@ RUN if [ "$TARGETARCH" = "amd64" ] ; then \
 # Add blackfire probe.
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && mkdir -p /blackfire \
-    && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/$TARGETARCH/$version \
+    && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/${TARGETARCH}/$version \
     && tar zxpf /blackfire/blackfire-probe.tar.gz -C /blackfire \
     && mv /blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
     && rm -rf /blackfire

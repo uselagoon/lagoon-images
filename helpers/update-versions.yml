@@ -19,7 +19,7 @@
     # Drush - https://github.com/drush-ops/drush/releases
     DRUSH_VERSION: 8.4.6
     # Drush Launcher Version - https://github.com/drush-ops/drush-launcher/releases
-    DRUSH_LAUNCHER_VERSION: 0.9.0
+    DRUSH_LAUNCHER_VERSION: 0.9.1
   tasks:
   - name: Get a list of test*.conf in /home/user
     find:

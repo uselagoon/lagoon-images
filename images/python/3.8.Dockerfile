@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
-FROM python:3.8.8-alpine3.12
+FROM python:3.8.9-alpine3.12
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=python

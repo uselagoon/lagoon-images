@@ -28,6 +28,10 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin
 # we need root for the fix-permissions to work
 USER root
 
+RUN apt-get -y update && apt-get -y install \
+    busybox \
+    && rm -rf /var/lib/apt/lists/*
+
 # needed to fix dash upgrade - man files are removed from slim images
 RUN set -x \
     && mkdir -p /usr/share/man/man1 \

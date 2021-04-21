@@ -46,7 +46,7 @@ COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=9.17.0
+ENV NEWRELIC_VERSION=9.17.0.300
 
 RUN apk add --no-cache fcgi \
         ssmtp \

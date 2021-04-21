@@ -9,7 +9,7 @@
   connection: local
   vars:
     # Newrelic - https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
-    NEWRELIC_VERSION: '9.17.0'
+    NEWRELIC_VERSION: '9.17.0.300'
     # Composer - https://getcomposer.org/download/
     COMPOSER_VERSION: '1.10.21'
     COMPOSER_HASH_SHA256: '1477d56da4a941de4203982c05b8a371ee4a9f2bb88a69f1b31c75d6bd6b8306'

@@ -9,15 +9,15 @@
   connection: local
   vars:
     # Newrelic - https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
-    NEWRELIC_VERSION: '9.16.0.295'
+    NEWRELIC_VERSION: '9.17.0'
     # Composer - https://getcomposer.org/download/
-    COMPOSER_VERSION: '1.10.20'
-    COMPOSER_HASH_SHA256: 'e70b1024c194e07db02275dd26ed511ce620ede45c1e237b3ef51d5f8171348d'
+    COMPOSER_VERSION: '1.10.21'
+    COMPOSER_HASH_SHA256: '1477d56da4a941de4203982c05b8a371ee4a9f2bb88a69f1b31c75d6bd6b8306'
     # Drupal Console Launcher - https://github.com/hechoendrupal/drupal-console-launcher/releases
     DRUPAL_CONSOLE_LAUNCHER_VERSION: 1.9.7
     DRUPAL_CONSOLE_LAUNCHER_SHA: fe83050489c66a0578eb59d6744420be6fd4c5d1
     # Drush - https://github.com/drush-ops/drush/releases
-    DRUSH_VERSION: 8.4.6
+    DRUSH_VERSION: 8.4.8
     # Drush Launcher Version - https://github.com/drush-ops/drush-launcher/releases
     DRUSH_LAUNCHER_VERSION: 0.9.1
   tasks:

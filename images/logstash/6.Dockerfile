@@ -14,7 +14,7 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
-COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
+COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /home /home
 
 RUN curl -sL https://github.com/krallin/tini/releases/download/v0.18.0/tini -o /sbin/tini && chmod a+x /sbin/tini

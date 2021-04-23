@@ -3,8 +3,8 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # Defining Versions - https://www.elastic.co/guide/en/elasticsearch/reference/7.6/docker.html
 FROM docker.elastic.co/elasticsearch/elasticsearch:7.6.1
 
-LABEL org.opencontainers.image.authors="The Lagoon Authors"
-LABEL org.opencontainers.image.source=https://github.com/uselagoon/lagoon-images
+LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
 ENV LAGOON=elasticsearch
 

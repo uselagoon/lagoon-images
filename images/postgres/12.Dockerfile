@@ -3,8 +3,8 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # alpine 3.12 from https://github.com/docker-library/postgres/blob/6f58eab268f60c9dfcfe8a7e3fba7499f239236b/12/alpine/Dockerfile
 FROM postgres:12.6-alpine
 
-LABEL org.opencontainers.image.authors="The Lagoon Authors"
-LABEL org.opencontainers.image.source=https://github.com/uselagoon/lagoon-images
+LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

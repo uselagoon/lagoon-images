@@ -3,8 +3,8 @@ ARG IMAGE_REPO
 ARG PHP_IMAGE_VERSION
 FROM ${IMAGE_REPO:-lagoon}/php:${PHP_VERSION}-fpm
 
-LABEL org.opencontainers.image.authors="The Lagoon Authors"
-LABEL org.opencontainers.image.source=https://github.com/uselagoon/lagoon-images
+LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
 ENV LAGOON=cli
 

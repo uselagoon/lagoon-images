@@ -23,7 +23,7 @@ COPY --from=commons /home /home
 
 COPY --from=healthcheckbuilder /healthz-php /healthz-php
 
-RUN chmod g+w /etc/passwd \
+RUN fix-permissions /etc/passwd \
     && mkdir -p /home
 
 ENV TMPDIR=/tmp \

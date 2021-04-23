@@ -14,7 +14,7 @@ COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
 COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
-RUN chmod g+w /etc/passwd \
+RUN fix-permissions /etc/passwd \
     && mkdir -p /home \
     && fix-permissions /home \
     && mkdir -p /app \

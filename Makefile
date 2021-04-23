@@ -177,7 +177,9 @@ versioned-images := 		php-7.2-fpm \
 							logstash-7 \
 							postgres-12 \
 							redis-6 \
-							redis-6-persistent
+							redis-6-persistent \
+							solr-7 \
+							solr-7-drupal
 
 # newly-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 
@@ -241,6 +243,8 @@ build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-5 build/redis-6: build/commons
 build/redis-6-persistent: build/redis-6
+build/solr-7: build/commons
+build/solr-7-drupal: build/solr-7
 
 #######
 ####### Building Images

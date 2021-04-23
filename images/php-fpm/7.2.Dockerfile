@@ -17,7 +17,7 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
-COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
+COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
@@ -25,7 +25,7 @@ COPY --from=commons /home /home
 
 COPY --from=healthcheckbuilder /healthz-php /healthz-php
 
-RUN chmod g+w /etc/passwd \
+RUN fix-permissions /etc/passwd \
     && mkdir -p /home
 
 ENV TMPDIR=/tmp \
@@ -48,7 +48,7 @@ COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=9.16.0.295
+ENV NEWRELIC_VERSION=9.17.0.300
 
 RUN apk add --no-cache fcgi \
         ssmtp \
@@ -97,8 +97,8 @@ RUN apk add --no-cache fcgi \
     && sed -i -e "s/newrelic.license = .*/newrelic.license = \"\${NEWRELIC_LICENSE:-}\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && sed -i -e "s/;newrelic.loglevel = .*/newrelic.loglevel = \"\${NEWRELIC_LOG_LEVEL:-warning}\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && sed -i -e "s/;newrelic.daemon.loglevel = .*/newrelic.daemon.loglevel = \"\${NEWRELIC_DAEMON_LOG_LEVEL:-warning}\"/" /usr/local/etc/php/conf.d/newrelic.ini \
-    && sed -i -e "s/newrelic.logfile = .*/newrelic.logfile = \"\/dev\/stdout\"/" /usr/local/etc/php/conf.d/newrelic.ini \
-    && sed -i -e "s/newrelic.daemon.logfile = .*/newrelic.daemon.logfile = \"\/dev\/stdout\"/" /usr/local/etc/php/conf.d/newrelic.ini \
+    && sed -i -e "s/newrelic.logfile = .*/newrelic.logfile = \"\/dev\/stderr\"/" /usr/local/etc/php/conf.d/newrelic.ini \
+    && sed -i -e "s/newrelic.daemon.logfile = .*/newrelic.daemon.logfile = \"\/dev\/stderr\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && mv /usr/local/etc/php/conf.d/newrelic.ini /usr/local/etc/php/conf.d/newrelic.disable \
     && cd / && rm -rf /tmp/newrelic \
     && mkdir -p /app \

@@ -173,7 +173,7 @@ versioned-images := 		php-7.2-fpm \
 							varnish-6.5 \
 							varnish-6.5-drupal \
 							varnish-6.5-persistent \
-							varnish-6.5-persistent-drupal
+							varnish-6.5-persistent-drupal \
 							solr-7 \
 							solr-7-drupal
 

@@ -4,7 +4,7 @@ FROM ${IMAGE_REPO:-lagoon}/php-8.0-fpm
 LABEL maintainer="amazee.io"
 ENV LAGOON=cli
 
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:2.0.12 /usr/bin/composer /usr/local/bin/composer
 
 RUN apk add --no-cache git \
         unzip \
@@ -18,6 +18,7 @@ RUN apk add --no-cache git \
         coreutils \
         mariadb-client \
         postgresql-client \
+        mongodb-tools \
         openssh-sftp-server \
         findutils \
         nodejs-current \

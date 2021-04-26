@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM node:12.20-alpine3.12
+FROM node:12.22-alpine3.12
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=node
@@ -10,11 +10,11 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
-COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
+COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
-RUN chmod g+w /etc/passwd \
+RUN fix-permissions /etc/passwd \
     && mkdir -p /home \
     && fix-permissions /home \
     && mkdir -p /app \

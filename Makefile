@@ -174,6 +174,8 @@ versioned-images := 		php-7.2-fpm \
 							varnish-6.5-drupal \
 							varnish-6.5-persistent \
 							varnish-6.5-persistent-drupal
+							solr-7 \
+							solr-7-drupal
 
 # newly-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 
@@ -246,6 +248,8 @@ build/varnish-5.2-drupal build/varnish-5.2-persistent: build/varnish-5.2
 build/varnish-5.2-persistent-drupal: build/varnish-5.2-drupal
 build/varnish-6.5-drupal build/varnish-6.5-persistent: build/varnish-6.5
 build/varnish-6.5-persistent-drupal: build/varnish-6.5-drupal
+build/solr-7: build/commons
+build/solr-7-drupal: build/solr-7
 
 #######
 ####### Building Images

@@ -1,14 +1,14 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # alpine 3.12 from https://github.com/docker-library/postgres/blob/6f58eab268f60c9dfcfe8a7e3fba7499f239236b/12/alpine/Dockerfile
-FROM postgres:12.5-alpine
+FROM postgres:12.6-alpine
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
-COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
+COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
@@ -20,7 +20,7 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-RUN chmod g+w /etc/passwd \
+RUN fix-permissions /etc/passwd \
     && mkdir -p /home
 
 ENV LAGOON=postgres

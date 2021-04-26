@@ -11,11 +11,11 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
-COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
+COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
-RUN chmod g+w /etc/passwd \
+RUN fix-permissions /etc/passwd \
     && mkdir -p /home
 
 ENV TMPDIR=/tmp \
@@ -44,6 +44,7 @@ RUN mkdir -p /app \
     && fix-permissions /var/run/
 
 COPY docker-entrypoint /lagoon/entrypoints/70-nginx-entrypoint
+COPY matomo/80-nginx-matomo-config /lagoon/entrypoints/
 
 WORKDIR /app
 

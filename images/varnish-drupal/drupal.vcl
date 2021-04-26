@@ -388,7 +388,7 @@ sub vcl_deliver {
   if (req.http.grace) {
     set resp.http.X-Varnish-Grace = req.http.grace;
   }
-  set resp.http.X-LAGOON = "${HOSTNAME}-${LAGOON_GIT_BRANCH:-undef}-${LAGOON_PROJECT}>" + resp.http.X-LAGOON;
+  set resp.http.X-LAGOON = "${HOSTNAME}>" + resp.http.X-LAGOON;
   return (deliver);
 }
 

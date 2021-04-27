@@ -158,9 +158,11 @@ versioned-images := 		php-7.2-fpm \
 							node-10 \
 							node-12 \
 							node-14 \
+							node-16 \
 							node-10-builder \
 							node-12-builder \
 							node-14-builder \
+							node-16-builder \
 							solr-5.5 \
 							solr-6.6 \
 							solr-7.7 \
@@ -224,10 +226,11 @@ build/php-8.0-cli-drupal: build/php-8.0-cli
 build/python-2.7 build/python-3.7 build/python-3.8: build/commons
 build/python-2.7-ckan: build/python-2.7
 build/python-2.7-ckandatapusher: build/python-2.7
-build/node-10 build/node-12 build/node-14: build/commons
+build/node-10 build/node-12 build/node-14 build/node-16: build/commons
 build/node-10-builder: build/node-10
 build/node-12-builder: build/node-12
 build/node-14-builder: build/node-14
+build/node-16-builder: build/node-16
 build/solr-5.5  build/solr-6.6 build/solr-7.7: build/commons
 build/solr-5.5-drupal: build/solr-5.5
 build/solr-6.6-drupal: build/solr-6.6

@@ -7,7 +7,9 @@ RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
 FROM php:7.3.27-fpm-alpine3.12
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+
 ENV LAGOON=php
 
 ARG LAGOON_VERSION
@@ -46,7 +48,7 @@ COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=9.16.0.295
+ENV NEWRELIC_VERSION=9.17.0.300
 
 RUN apk add --no-cache fcgi \
         ssmtp \
@@ -95,8 +97,8 @@ RUN apk add --no-cache fcgi \
     && sed -i -e "s/newrelic.license = .*/newrelic.license = \"\${NEWRELIC_LICENSE:-}\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && sed -i -e "s/;newrelic.loglevel = .*/newrelic.loglevel = \"\${NEWRELIC_LOG_LEVEL:-warning}\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && sed -i -e "s/;newrelic.daemon.loglevel = .*/newrelic.daemon.loglevel = \"\${NEWRELIC_DAEMON_LOG_LEVEL:-warning}\"/" /usr/local/etc/php/conf.d/newrelic.ini \
-    && sed -i -e "s/newrelic.logfile = .*/newrelic.logfile = \"\/dev\/stdout\"/" /usr/local/etc/php/conf.d/newrelic.ini \
-    && sed -i -e "s/newrelic.daemon.logfile = .*/newrelic.daemon.logfile = \"\/dev\/stdout\"/" /usr/local/etc/php/conf.d/newrelic.ini \
+    && sed -i -e "s/newrelic.logfile = .*/newrelic.logfile = \"\/dev\/stderr\"/" /usr/local/etc/php/conf.d/newrelic.ini \
+    && sed -i -e "s/newrelic.daemon.logfile = .*/newrelic.daemon.logfile = \"\/dev\/stderr\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && mv /usr/local/etc/php/conf.d/newrelic.ini /usr/local/etc/php/conf.d/newrelic.disable \
     && cd / && rm -rf /tmp/newrelic \
     && mkdir -p /app \
@@ -113,17 +115,6 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && rm -rf /blackfire
 
 EXPOSE 9000
-
-ENV AMAZEEIO_DB_HOST=mariadb \
-    AMAZEEIO_DB_PORT=3306 \
-    AMAZEEIO_DB_USERNAME=drupal \
-    AMAZEEIO_DB_PASSWORD=drupal \
-    AMAZEEIO_SITENAME=drupal \
-    AMAZEEIO_SITE_NAME=drupal \
-    AMAZEEIO_SITE_ENVIRONMENT=development \
-    AMAZEEIO_HASH_SALT=0000000000000000000000000 \
-    AMAZEEIO_TMP_PATH=/tmp \
-    AMAZEEIO_LOCATION=docker
 
 ENV LAGOON_ENVIRONMENT_TYPE=development
 

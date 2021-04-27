@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/amazeeio/lagoon/master/docs/images/lagoon-logo.png" alt="The Lagoon logo is a blue hexagon split in two pieces with an L-shaped cut" width="40%">
+  <img src="https://raw.githubusercontent.com/amazeeio/lagoon/main/docs/images/lagoon-logo.png" alt="The Lagoon logo is a blue hexagon split in two pieces with an L-shaped cut" width="40%">
 </p>
 
 # Lagoon Base Images
@@ -20,16 +20,15 @@ Branch/fork and add/edit a Dockerfile in the `images/` directory.
 
 ### Makefile
 
-This project utilises a Makefile to build and test images.
+This project utilises a Makefile to build images.
 
 Once you have made a modification to a base image, follow these steps to rebuild the images, start a local Lagoon stack from tagged images, and run the predefined tests through a local Kubernetes stack.
 
 ```
 make build
-
-make up
-
-make k8s-tests
 ```
+### Testing
 
-Note that only a few tests are currently provided (NGINX and Drupal) - if you'd like to contribute more, please reach out!
+Currently, all testing is performed on Jenkins, which involves cloning the example projects from https://github.com/uselagoon/lagoon-examples, generating the built-in test suites from those projects, and replacing the image references with the freshly built lagoon-images 
+
+We are working on a locally-runnable set of tests to simplify the process further.

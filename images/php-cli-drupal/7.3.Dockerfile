@@ -1,13 +1,15 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/php-7.3-cli
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+
 ENV LAGOON=cli-drupal
 
 # Defining Versions - https://github.com/hechoendrupal/drupal-console-launcher/releases
 ENV DRUPAL_CONSOLE_LAUNCHER_VERSION=1.9.7 \
     DRUPAL_CONSOLE_LAUNCHER_SHA=fe83050489c66a0578eb59d6744420be6fd4c5d1 \
-    DRUSH_VERSION=8.4.6 \
+    DRUSH_VERSION=8.4.8 \
     DRUSH_LAUNCHER_VERSION=0.9.1 \
     DRUSH_LAUNCHER_FALLBACK=/opt/drush8/vendor/bin/drush
 

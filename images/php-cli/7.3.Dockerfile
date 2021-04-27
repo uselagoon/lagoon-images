@@ -1,13 +1,15 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/php-7.3-fpm
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+
 ENV LAGOON=cli
 
 # Defining Versions - Composer
 # @see https://getcomposer.org/download/
-ENV COMPOSER_VERSION=1.10.20 \
-  COMPOSER_HASH_SHA256=e70b1024c194e07db02275dd26ed511ce620ede45c1e237b3ef51d5f8171348d
+ENV COMPOSER_VERSION=1.10.21 \
+  COMPOSER_HASH_SHA256=1477d56da4a941de4203982c05b8a371ee4a9f2bb88a69f1b31c75d6bd6b8306
 
 RUN apk add --no-cache git \
         unzip \

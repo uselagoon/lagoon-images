@@ -1,7 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
-
 FROM alpine:3.7 as vmod
 ENV LIBVMOD_DYNAMIC_VERSION=5.2
 ENV LIBVMOD_BODYACCESS_VERSION=5.0
@@ -16,6 +15,7 @@ RUN cd /tmp && curl -sSLO https://github.com/aondio/libvmod-bodyaccess/archive/$
   ./autogen.sh && ./configure && make && make install
 
 FROM alpine:3.7
+
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 

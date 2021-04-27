@@ -407,7 +407,7 @@ sub vcl_synth {
   if (resp.status == 701) {
     set resp.status = 401;
     set resp.http.Content-Type = "text/plain; charset=utf-8";
-    synthetic({"XMLRPC Interface is blocked due to SA-CORE-2014-004 - mail support@amazee.io if you need it."});
+    synthetic({"XMLRPC Interface is blocked due to SA-CORE-2014-004"});
     return (deliver);
   }
   if (resp.status == 700) {

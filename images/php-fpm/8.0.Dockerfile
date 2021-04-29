@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:8.0.3-fpm-alpine3.13
+FROM php:8.0.5-fpm-alpine3.13
 
 LABEL maintainer="amazee.io"
 ENV LAGOON=php

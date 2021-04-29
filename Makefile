@@ -170,10 +170,10 @@ versioned-images := 		php-7.2-fpm \
 							postgres-12 \
 							redis-6 \
 							redis-6-persistent \
-							varnish-6.5 \
-							varnish-6.5-drupal \
-							varnish-6.5-persistent \
-							varnish-6.5-persistent-drupal \
+							varnish-6 \
+							varnish-6-drupal \
+							varnish-6-persistent \
+							varnish-6-persistent-drupal \
 							solr-7 \
 							solr-7-drupal
 
@@ -184,10 +184,10 @@ newly-versioned-images := 	postgres-11 \
 							postgres-11-drupal \
 							redis-5 \
 							redis-5-persistent \
-							varnish-5.2 \
-							varnish-5.2-drupal \
-							varnish-5.2-persistent \
-							varnish-5.2-persistent-drupal
+							varnish-5 \
+							varnish-5-drupal \
+							varnish-5-persistent \
+							varnish-5-persistent-drupal
 
 build-versioned-images = $(foreach image,$(versioned-images) $(newly-versioned-images),build/$(image))
 
@@ -243,11 +243,11 @@ build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-5 build/redis-6: build/commons
 build/redis-6-persistent: build/redis-6
-build/varnish-5.2 build/varnish-6.5: build/commons
-build/varnish-5.2-drupal build/varnish-5.2-persistent: build/varnish-5.2
-build/varnish-5.2-persistent-drupal: build/varnish-5.2-drupal
-build/varnish-6.5-drupal build/varnish-6.5-persistent: build/varnish-6.5
-build/varnish-6.5-persistent-drupal: build/varnish-6.5-drupal
+build/varnish-5 build/varnish-6: build/commons
+build/varnish-5-drupal build/varnish-5-persistent: build/varnish-5
+build/varnish-5-persistent-drupal: build/varnish-5-drupal
+build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
+build/varnish-6-persistent-drupal: build/varnish-6-drupal
 build/solr-7: build/commons
 build/solr-7-drupal: build/solr-7
 

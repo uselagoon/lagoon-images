@@ -3,7 +3,9 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # Defining Versions - https://www.elastic.co/guide/en/elasticsearch/reference/6.8/docker.html
 FROM docker.elastic.co/elasticsearch/elasticsearch:6.8.2
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+
 ENV LAGOON=elasticsearch
 
 ARG LAGOON_VERSION
@@ -11,14 +13,14 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
-COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
+COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /home /home
 
 RUN curl -sL https://github.com/krallin/tini/releases/download/v0.18.0/tini -o /sbin/tini && chmod a+x /sbin/tini
 
 COPY docker-entrypoint.sh.6 /lagoon/entrypoints/90-elasticsearch.sh
 
-RUN chmod g+w /etc/passwd \
+RUN fix-permissions /etc/passwd \
     && mkdir -p /home
 
 # Reproduce behavior of Alpine: Run Bash as sh

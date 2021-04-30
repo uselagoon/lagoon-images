@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-# amazee.io lagoon Makefile The main purpose of this Makefile is to provide easier handling of
+# Lagoon Images Makefile The main purpose of this Makefile is to provide easier handling of
 # building images and running tests It understands the relation of the different images (like
 # nginx-drupal is based on nginx) and builds them in the correct order Also it knows which
 # services in docker-compose.yml are depending on which base images or maybe even other service
@@ -90,10 +90,6 @@ unversioned-images :=		commons \
 							mongo \
 							nginx \
 							nginx-drupal \
-							varnish \
-							varnish-drupal \
-							varnish-persistent \
-							varnish-persistent-drupal \
 							toolbox
 
 # base-images is a variable that will be constantly filled with all base image there are
@@ -128,10 +124,6 @@ build/mariadb-drupal: build/mariadb images/mariadb-drupal/Dockerfile
 build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
-build/varnish: build/commons images/varnish/Dockerfile
-build/varnish-drupal: build/varnish images/varnish-drupal/Dockerfile
-build/varnish-persistent: build/varnish images/varnish/Dockerfile
-build/varnish-persistent-drupal: build/varnish-drupal images/varnish-drupal/Dockerfile
 build/toolbox: build/commons build/mariadb images/toolbox/Dockerfile
 
 #######
@@ -158,9 +150,11 @@ versioned-images := 		php-7.2-fpm \
 							node-10 \
 							node-12 \
 							node-14 \
+							node-16 \
 							node-10-builder \
 							node-12-builder \
 							node-14-builder \
+							node-16-builder \
 							solr-5.5 \
 							solr-6.6 \
 							solr-7.7 \
@@ -177,7 +171,13 @@ versioned-images := 		php-7.2-fpm \
 							logstash-7 \
 							postgres-12 \
 							redis-6 \
-							redis-6-persistent
+							redis-6-persistent \
+							varnish-6 \
+							varnish-6-drupal \
+							varnish-6-persistent \
+							varnish-6-persistent-drupal \
+							solr-7 \
+							solr-7-drupal
 
 # newly-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 
@@ -185,7 +185,11 @@ newly-versioned-images := 	postgres-11 \
 							postgres-11-ckan \
 							postgres-11-drupal \
 							redis-5 \
-							redis-5-persistent
+							redis-5-persistent \
+							varnish-5 \
+							varnish-5-drupal \
+							varnish-5-persistent \
+							varnish-5-persistent-drupal
 
 build-versioned-images = $(foreach image,$(versioned-images) $(newly-versioned-images),build/$(image))
 
@@ -224,10 +228,11 @@ build/php-8.0-cli-drupal: build/php-8.0-cli
 build/python-2.7 build/python-3.7 build/python-3.8: build/commons
 build/python-2.7-ckan: build/python-2.7
 build/python-2.7-ckandatapusher: build/python-2.7
-build/node-10 build/node-12 build/node-14: build/commons
+build/node-10 build/node-12 build/node-14 build/node-16: build/commons
 build/node-10-builder: build/node-10
 build/node-12-builder: build/node-12
 build/node-14-builder: build/node-14
+build/node-16-builder: build/node-16
 build/solr-5.5  build/solr-6.6 build/solr-7.7: build/commons
 build/solr-5.5-drupal: build/solr-5.5
 build/solr-6.6-drupal: build/solr-6.6
@@ -241,6 +246,13 @@ build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-5 build/redis-6: build/commons
 build/redis-6-persistent: build/redis-6
+build/varnish-5 build/varnish-6: build/commons
+build/varnish-5-drupal build/varnish-5-persistent: build/varnish-5
+build/varnish-5-persistent-drupal: build/varnish-5-drupal
+build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
+build/varnish-6-persistent-drupal: build/varnish-6-drupal
+build/solr-7: build/commons
+build/solr-7-drupal: build/solr-7
 
 #######
 ####### Building Images
@@ -266,10 +278,12 @@ build-list:
 # Publish command to testlagoon docker hub, done on any main branch or PR
 publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
 publish-testlagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-testlagoon-baseimages-with-versions]-$(image))
-# tag and push all images
+# Special handler for the previously unversioned images that now have versions
+publish-testlagoon-baseimages-without-versions = $(foreach image,$(newly-versioned-images),[publish-testlagoon-baseimages-without-versions]-$(image))
 
+# tag and push all images
 .PHONY: publish-testlagoon-baseimages
-publish-testlagoon-baseimages: $(publish-testlagoon-baseimages) $(publish-testlagoon-baseimages-with-versions)
+publish-testlagoon-baseimages: $(publish-testlagoon-baseimages) $(publish-testlagoon-baseimages-with-versions) $(publish-testlagoon-baseimages-without-versions)
 
 # tag and push of each image
 .PHONY: $(publish-testlagoon-baseimages)
@@ -289,6 +303,20 @@ $(publish-testlagoon-baseimages-with-versions):
 #		We add the Lagoon Version just as a dash
 		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME))
 
+# tag and push of unversioned base images
+.PHONY: $(publish-testlagoon-baseimages-without-versions)
+$(publish-testlagoon-baseimages-without-versions):
+#   Calling docker_publish for image, but remove the prefix '[publish-amazeeio-baseimages-with-versions]-' first
+		$(eval image = $(subst [publish-testlagoon-baseimages-without-versions]-,,$@))
+		$(eval variant = $(word 1,$(subst -, ,$(image))))
+		$(eval version = $(word 2,$(subst -, ,$(image))))
+		$(eval type = $(word 3,$(subst -, ,$(image))))
+		$(eval subtype = $(word 4,$(subst -, ,$(image))))
+#   Construct a "legacy" tag of the form `testlagoon/variant-type-subtype` e.g. `testlagoon/postgres-ckan`
+		$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
+#	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
+#	We push a version without the `-latest` suffix
+		$(call docker_publish_testlagoon,$(image),$(legacytag):$(BRANCH_NAME))
 
 #######
 ####### All tagged releases are pushed to uselagoon repository with new semantic tags

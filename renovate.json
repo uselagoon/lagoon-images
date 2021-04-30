@@ -3,107 +3,106 @@
     "main",
     "testing/alpine_next"
   ],
-  "$schema":"https://docs.renovatebot.com/renovate-schema.json",
-  "extends":[
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>whitesource/merge-confidence:beta",
     "config:base",
     ":disableRateLimiting"
   ],
   "dependencyDashboard": true,
-  "separateMajorMinor":true,
-  "separateMinorPatch":true,
-  "separateMultipleMajor":true,
-  "packageRules":[
+  "separateMajorMinor": true,
+  "separateMinorPatch": true,
+  "separateMultipleMajor": true,
+  "packageRules": [
     {
-      "datasources":[
+      "matchDatasources": [
         "docker"
       ],
-      "updateTypes":[
+      "matchUpdateTypes": [
         "patch"
       ],
-      "packageNames":[
+      "matchPackageNames": [
         "php",
         "python"
       ]
     },
     {
-      "datasources":[
+      "enabled": false,
+      "matchDatasources": [
         "docker"
       ],
-      "updateTypes":[
+      "matchUpdateTypes": [
         "major",
         "minor"
       ],
-      "packageNames":[
+      "matchPackageNames": [
         "php",
         "python"
-      ],
-      "enabled":false
-    },
-    {
-      "datasources":[
-        "docker"
-      ],
-      "updateTypes":[
-        "patch",
-        "minor"
-      ],
-      "packageNames":[
-        "node", "postgres"
       ]
     },
     {
-      "datasources":[
+      "matchDatasources": [
         "docker"
       ],
-      "updateTypes":[
-        "major"
-      ],
-      "packageNames":[
-        "node", "postgres"
-      ],
-      "enabled":false
-    },
-    {
-      "datasources":[
-        "docker"
-      ],
-      "updateTypes":[
+      "matchUpdateTypes": [
         "patch",
         "minor"
       ],
-      "allowedVersions": "< 7.11.0",
-      "packageNames":[
-        "docker.elastic.co/elasticsearch/elasticsearch",
-        "docker.elastic.co/logstash/logstash",
-        "docker.elastic.co/kibana/kibana"
-      ],
-      "groupName":"ELK Stack"
+      "matchPackageNames": [
+        "node",
+        "postgres"
+      ]
     },
     {
-      "datasources":[
+      "enabled": false,
+      "matchDatasources": [
         "docker"
       ],
-      "updateTypes":[
+      "matchUpdateTypes": [
         "major"
       ],
-      "packageNames":[
+      "matchPackageNames": [
+        "node",
+        "postgres"
+      ]
+    },
+    {
+      "groupName": "ELK Stack",
+      "allowedVersions": "<7.11.0",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
         "docker.elastic.co/elasticsearch/elasticsearch",
         "docker.elastic.co/logstash/logstash",
         "docker.elastic.co/kibana/kibana"
-      ],
-      "enabled":false
+      ]
     },
     {
-      "datasources":[
+      "enabled": false,
+      "matchDatasources": [
         "docker"
       ],
-      "updateTypes":[
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "matchPackageNames": [
+        "docker.elastic.co/elasticsearch/elasticsearch",
+        "docker.elastic.co/logstash/logstash",
+        "docker.elastic.co/kibana/kibana"
+      ]
+    },
+    {
+      "enabled": false,
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
         "minor"
       ],
-      "packageNames":[
+      "matchPackageNames": [
         "alpine"
-      ],
-      "enabled":false
+      ]
     }
   ]
 }

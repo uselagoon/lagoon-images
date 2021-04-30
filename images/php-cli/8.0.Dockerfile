@@ -1,7 +1,9 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/php-8.0-fpm
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+
 ENV LAGOON=cli
 
 COPY --from=composer:2.0.13 /usr/bin/composer /usr/local/bin/composer
@@ -18,6 +20,7 @@ RUN apk add --no-cache git \
         coreutils \
         mariadb-client \
         postgresql-client \
+        mongodb-tools \
         openssh-sftp-server \
         findutils \
         nodejs-current \

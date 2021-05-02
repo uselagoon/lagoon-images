@@ -2,7 +2,9 @@ ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 FROM redis:6.0.10-alpine3.12
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+
 ENV LAGOON=redis
 ENV FLAVOR=ephemeral
 
@@ -11,11 +13,11 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
-COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
+COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
-RUN chmod g+w /etc/passwd \
+RUN fix-permissions /etc/passwd \
     && mkdir -p /home
 
 ENV TMPDIR=/tmp \

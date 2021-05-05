@@ -45,6 +45,7 @@ RUN \
     tzdata \
     wget \
     gettext; \
+    tar \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/*; \
     rm -rf /var/lib/mysql/* /etc/mysql/ /etc/my.cnf*; \
     curl -sSL http://mysqltuner.pl/ -o mysqltuner.pl

@@ -54,6 +54,7 @@ RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.12/m
 
 RUN apk add --no-cache fcgi \
         ssmtp \
+        tar \
         libzip libzip-dev \
         # for gd
         libpng-dev \

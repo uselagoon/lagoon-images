@@ -4,7 +4,7 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 FROM varnish:6.5 as vmod
 ENV LIBVMOD_DYNAMIC_VERSION=6.5
 ENV VARNISH_MODULES_VERSION=6.5
-RUN apt-get update && apt-get -y install build-essential automake libtool python-docutils libpcre3-dev varnish-dev curl zip
+RUN apt-get update && apt-get -y install build-essential automake libtool python-docutils libpcre3-dev varnish-dev curl zip tar
 
 RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip && \
   unzip ${LIBVMOD_DYNAMIC_VERSION}.zip && cd libvmod-dynamic-${LIBVMOD_DYNAMIC_VERSION} && \

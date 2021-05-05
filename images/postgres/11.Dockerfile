@@ -26,6 +26,9 @@ ENV TMPDIR=/tmp \
 RUN fix-permissions /etc/passwd \
     && mkdir -p /home
 
+RUN apk update \
+    && apk add --no-cache tar
+
 ENV LAGOON=postgres
 
 COPY postgres-backup.sh /lagoon/

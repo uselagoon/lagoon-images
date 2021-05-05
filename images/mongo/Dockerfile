@@ -23,7 +23,7 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-RUN apk --no-cache add mongodb
+RUN apk --no-cache add mongodb tar
 
 RUN mkdir -p /data/db /data/configdb && \
     fix-permissions /data/db && \

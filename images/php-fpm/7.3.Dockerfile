@@ -52,6 +52,7 @@ ENV NEWRELIC_VERSION=9.17.0.300
 
 RUN apk add --no-cache fcgi \
         ssmtp \
+        tar \
         libzip libzip-dev \
         # for gd
         libpng-dev \

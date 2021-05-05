@@ -28,6 +28,9 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
+RUN apk update \
+    && apk add --no-cache tar
+
 COPY conf /etc/redis/
 COPY docker-entrypoint /lagoon/entrypoints/70-redis-entrypoint
 

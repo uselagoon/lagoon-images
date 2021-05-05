@@ -26,7 +26,7 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 RUN apk add --no-cache --virtual .build-deps \
-      build-base \
+      build-base tar \
     && pip install --upgrade pip \
     && pip install virtualenv==16.7.10 \
     && apk del .build-deps

@@ -78,10 +78,6 @@
       "matchDatasources": [
         "docker"
       ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
       "matchPackageNames": [
         "docker.elastic.co/elasticsearch/elasticsearch",
         "docker.elastic.co/logstash/logstash",

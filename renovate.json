@@ -50,7 +50,10 @@
       ],
       "matchPackageNames": [
         "node",
-        "postgres"
+        "postgres",
+        "redis",
+        "solr",
+        "varnish"
       ]
     },
     {
@@ -63,7 +66,10 @@
       ],
       "matchPackageNames": [
         "node",
-        "postgres"
+        "postgres",
+        "redis",
+        "solr",
+        "varnish"
       ]
     },
     {
@@ -98,6 +104,7 @@
         "docker"
       ],
       "matchUpdateTypes": [
+        "major",
         "minor"
       ],
       "matchPackageNames": [

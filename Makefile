@@ -90,7 +90,9 @@ unversioned-images :=		commons \
 							mongo \
 							nginx \
 							nginx-drupal \
-							toolbox
+							toolbox \
+							rabbitmq \
+							rabbitmq-cluster
 
 # base-images is a variable that will be constantly filled with all base image there are
 base-images += $(unversioned-images)
@@ -125,6 +127,8 @@ build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
 build/toolbox: build/commons build/mariadb images/toolbox/Dockerfile
+build/rabbitmq: build/commons images/rabbitmq/Dockerfile
+build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 
 #######
 ####### Multi-version Images

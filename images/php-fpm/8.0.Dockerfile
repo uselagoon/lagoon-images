@@ -22,7 +22,6 @@ COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 # Copy healthcheck files
-
 COPY --from=healthcheckbuilder /healthz-php /healthz-php
 
 RUN fix-permissions /etc/passwd \
@@ -85,7 +84,7 @@ RUN apk add --no-cache fcgi \
     && curl -fsSL https://api.github.com/repos/imagick/imagick/tarball | tar xvz -C /usr/src/php/ext/imagick --strip 1 \
     && docker-php-ext-install imagick \
     && docker-php-source delete \
-# Legacy PECL installs
+    # Legacy PECL installs
     && pecl channel-update pecl.php.net \
     && yes '' | pecl install -f apcu-5.1.19 \
     # && yes '' | pecl install -f imagick \
@@ -96,7 +95,6 @@ RUN apk add --no-cache fcgi \
 # RUN sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
 RUN rm -rf /var/cache/apk/* /tmp/pear/ \
     && apk del .phpize-deps \
-    && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/yaml.ini \
     && mkdir -p /tmp/newrelic && cd /tmp/newrelic \
     && wget https://download.newrelic.com/php_agent/archive/${NEWRELIC_VERSION}/newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz \
     && gzip -dc newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz | tar --strip-components=1 -xf - \

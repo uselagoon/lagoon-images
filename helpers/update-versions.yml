@@ -11,8 +11,8 @@
     # Newrelic - https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
     NEWRELIC_VERSION: '9.17.0.300'
     # Composer - https://getcomposer.org/download/
-    COMPOSER_VERSION: '1.10.21'
-    COMPOSER_HASH_SHA256: '1477d56da4a941de4203982c05b8a371ee4a9f2bb88a69f1b31c75d6bd6b8306'
+    COMPOSER_VERSION: '1.10.22'
+    COMPOSER_HASH_SHA256: '6127ae192d3b56cd6758c7c72fe2ac6868ecc835dae1451a004aca10ab1e0700'
     # Drupal Console Launcher - https://github.com/hechoendrupal/drupal-console-launcher/releases
     DRUPAL_CONSOLE_LAUNCHER_VERSION: 1.9.7
     DRUPAL_CONSOLE_LAUNCHER_SHA: fe83050489c66a0578eb59d6744420be6fd4c5d1

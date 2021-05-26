@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:8.0.3-fpm-alpine3.12
+FROM php:8.0.6-fpm-alpine3.12
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -24,7 +24,6 @@ COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 # Copy healthcheck files
-
 COPY --from=healthcheckbuilder /healthz-php /healthz-php
 
 RUN fix-permissions /etc/passwd \
@@ -87,7 +86,7 @@ RUN apk add --no-cache fcgi \
     && curl -fsSL https://api.github.com/repos/imagick/imagick/tarball | tar xvz -C /usr/src/php/ext/imagick --strip 1 \
     && docker-php-ext-install imagick \
     && docker-php-source delete \
-# Legacy PECL installs
+    # Legacy PECL installs
     && pecl channel-update pecl.php.net \
     && yes '' | pecl install -f apcu-5.1.19 \
     # && yes '' | pecl install -f imagick \

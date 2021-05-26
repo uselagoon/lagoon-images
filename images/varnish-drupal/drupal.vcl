@@ -31,6 +31,12 @@ sub vcl_init {
 # This configuration is optimized for Drupal hosting:
 # Respond to incoming requests.
 sub vcl_recv {
+  # Count restarts to emulate miss, as per
+  # https://varnish-cache.org/docs/6.2/whats-new/upgrading-6.2.html
+  if (req.restarts > 0) {
+    set req.hash_always_miss = true;
+  }
+
   if (req.url ~ "^/varnish_status$") {
     return (synth(200,"OK"));
   }
@@ -279,7 +285,7 @@ sub vcl_hit {
       return (deliver);
     } else {
       # No candidate for grace. Fetch a fresh object.
-      return (miss);
+      return (restart);
     }
   }
   else {
@@ -289,7 +295,7 @@ sub vcl_hit {
       return (deliver);
     } else {
       # no graced object.
-      return (miss);
+      return (restart);
     }
   }
 }

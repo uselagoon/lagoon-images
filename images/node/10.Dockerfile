@@ -32,6 +32,7 @@ ENV TMPDIR=/tmp \
 
 RUN apk update \
     && apk upgrade \
+    && apk add --no-cache tar \
     && rm -rf /var/cache/apk/*
 
 # Make sure Bower and NPM are allowed to be running as root

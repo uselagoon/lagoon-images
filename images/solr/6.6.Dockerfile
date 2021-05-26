@@ -33,6 +33,8 @@ RUN fix-permissions /var/solr \
     && fix-permissions /opt/solr/server/logs \
     && fix-permissions /opt/solr/server/solr
 
+RUN apk update \
+    && apk add --no-cache tar
 
 # solr really doesn't like to be run as root, so we define the default user agin
 USER solr

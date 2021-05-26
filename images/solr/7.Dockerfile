@@ -31,7 +31,7 @@ ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin
 USER root
 
 RUN apt-get -y update && apt-get -y install \
-    busybox \
+    busybox tar \
     && rm -rf /var/lib/apt/lists/*
 
 # needed to fix dash upgrade - man files are removed from slim images

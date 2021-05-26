@@ -30,6 +30,8 @@ RUN apk add --no-cache --virtual .build-deps \
     && pip install virtualenv==16.7.10 \
     && apk del .build-deps
 
+RUN apk add --no-cache tar
+
 # Make sure shells are not running forever
 COPY 80-shell-timeout.sh /lagoon/entrypoints/
 RUN echo "source /lagoon/entrypoints/80-shell-timeout.sh" >> /home/.bashrc

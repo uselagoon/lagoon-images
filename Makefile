@@ -39,7 +39,7 @@ SHELL := /bin/bash
 #######
 
 # Parameter for all `docker build` commands, can be overwritten by passing `DOCKER_BUILD_PARAMS=` via the `-e` option
-DOCKER_BUILD_PARAMS := --quiet
+DOCKER_BUILD_PARAMS :=
 
 # On CI systems like jenkins we need a way to run multiple testings at the same time. We expect the
 # CI systems to define an Environment variable CI_BUILD_TAG which uniquely identifies each build.
@@ -87,7 +87,6 @@ docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docke
 unversioned-images :=		commons \
 							mariadb \
 							mariadb-drupal \
-							mongo \
 							nginx \
 							nginx-drupal \
 							toolbox
@@ -121,7 +120,6 @@ $(build-images):
 build/commons: images/commons/Dockerfile
 build/mariadb: build/commons images/mariadb/Dockerfile
 build/mariadb-drupal: build/mariadb images/mariadb-drupal/Dockerfile
-build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
 build/toolbox: build/commons build/mariadb images/toolbox/Dockerfile
@@ -178,7 +176,8 @@ versioned-images := 		php-7.2-fpm \
 							varnish-6-persistent \
 							varnish-6-persistent-drupal \
 							solr-7 \
-							solr-7-drupal
+							solr-7-drupal \
+							mongo-4.0
 
 # newly-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 
@@ -190,7 +189,8 @@ newly-versioned-images := 	postgres-11 \
 							varnish-5 \
 							varnish-5-drupal \
 							varnish-5-persistent \
-							varnish-5-persistent-drupal
+							varnish-5-persistent-drupal \
+							mongo-3.6
 
 build-versioned-images = $(foreach image,$(versioned-images) $(newly-versioned-images),build/$(image))
 
@@ -245,7 +245,6 @@ build/postgres-11 build/postgres-12: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
 build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
-build/redis-5 build/redis-6: build/commons
 build/redis-6-persistent: build/redis-6
 build/varnish-5 build/varnish-6: build/commons
 build/varnish-5-drupal build/varnish-5-persistent: build/varnish-5
@@ -254,6 +253,7 @@ build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal
 build/solr-7: build/commons
 build/solr-7-drupal: build/solr-7
+build/mongo-3.6 build/mongo-4.0: build/commons 
 
 #######
 ####### Building Images

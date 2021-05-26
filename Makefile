@@ -406,13 +406,12 @@ $(publish-amazeeio-baseimages-without-versions):
 		$(eval subtype = $(word 4,$(subst -, ,$(image))))
 #   Construct a "legacy" tag of the form `amazeeio/variant-type-subtype` e.g. `amazeeio/postgres-ckan`
 		$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
-#	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
-#	We push a version without the `-latest` suffix
-		$(call docker_publish_amazeeio,$(image),$(legacytag))
-#	Plus a version with the `-latest` suffix, this makes it easier for people with automated testing
-		$(call docker_publish_amazeeio,$(image),$(legacytag)-latest)
-#	We add the Lagoon Version just as a dash
-		$(call docker_publish_amazeeio,$(image),$(legacytag)-$(LAGOON_VERSION))
+#	These images previously had no version tracking, publish them for legacy compatibility only
+		$(call docker_publish_amazeeio,$(image),$(legacytag):latest)
+		$(call docker_publish_uselagoon,$(image),$(legacytag):latest)
+#	These images previously had no version tracking, publish them for legacy compatibility only
+		$(call docker_publish_amazeeio,$(image),$(legacytag):$(LAGOON_VERSION))
+		$(call docker_publish_uselagoon,$(image),$(legacytag):$(LAGOON_VERSION))
 
 
 #######

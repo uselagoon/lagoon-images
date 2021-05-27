@@ -120,7 +120,7 @@ build/commons: images/commons/Dockerfile
 build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
-build/toolbox: build/commons build/mariadb images/toolbox/Dockerfile
+build/toolbox: build/commons build/mariadb-10.5 images/toolbox/Dockerfile
 
 #######
 ####### Multi-version Images

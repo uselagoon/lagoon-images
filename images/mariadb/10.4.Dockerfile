@@ -37,10 +37,10 @@ RUN \
     apk add --no-cache --virtual .common-run-deps \
     bash \
     curl \
-    mariadb \
-    mariadb-client \
-    mariadb-common \
-    mariadb-server-utils \
+    mariadb=~10.4 \
+    mariadb-client=~10.4 \
+    mariadb-common=~10.4 \
+    mariadb-server-utils=~10.4 \
     net-tools \
     pwgen \
     tzdata \

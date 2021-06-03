@@ -37,10 +37,10 @@ RUN \
     apk add --no-cache --virtual .common-run-deps \
     bash \
     curl \
-    mariadb \
-    mariadb-client \
-    mariadb-common \
-    mariadb-server-utils \
+    mariadb=~10.4 \
+    mariadb-client=~10.4 \
+    mariadb-common=~10.4 \
+    mariadb-server-utils=~10.4 \
     net-tools \
     pwgen \
     tzdata \
@@ -48,7 +48,7 @@ RUN \
     gettext; \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/*; \
     rm -rf /var/lib/mysql/* /etc/mysql/ /etc/my.cnf*; \
-    curl -sSL http://mysqltuner.pl/ -o mysqltuner.pl
+    curl -sSL https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl -o mysqltuner.pl
 
 COPY entrypoints/ /lagoon/entrypoints/
 COPY mysql-backup.sh /lagoon/

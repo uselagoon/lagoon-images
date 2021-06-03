@@ -1,14 +1,12 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM node:16.2-alpine3.13
+
+FROM python:3.9.5-alpine3.13
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
-ENV LAGOON=node
-
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
+ENV LAGOON=python
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
@@ -17,10 +15,7 @@ COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 RUN fix-permissions /etc/passwd \
-    && mkdir -p /home \
-    && fix-permissions /home \
-    && mkdir -p /app \
-    && fix-permissions /app
+    && mkdir -p /home
 
 ENV TMPDIR=/tmp \
     TMP=/tmp \
@@ -30,20 +25,15 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-RUN apk update \
-    && apk upgrade \
-    && rm -rf /var/cache/apk/*
+RUN apk add --no-cache --virtual .build-deps \
+      build-base \
+    && pip install --upgrade pip \
+    && pip install virtualenv \
+    && apk del .build-deps
 
-# Make sure Bower and NPM are allowed to be running as root
-RUN echo '{ "allow_root": true }' > /home/.bowerrc \
-    && echo 'unsafe-perm=true' > /home/.npmrc
-
-WORKDIR /app
-
-EXPOSE 3000
-
-# tells the local development environment on which port we are running
-ENV LAGOON_LOCALDEV_HTTP_PORT=3000
+# Make sure shells are not running forever
+COPY 80-shell-timeout.sh /lagoon/entrypoints/
+RUN echo "source /lagoon/entrypoints/80-shell-timeout.sh" >> /home/.bashrc
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
-CMD ["yarn", "run", "start"]
+CMD ["python"]

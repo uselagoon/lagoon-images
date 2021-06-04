@@ -1,9 +1,9 @@
-FROM golang:alpine3.12 AS builder
+FROM golang:alpine3.13 AS builder
 RUN GIT_TAG=github.com/smlx/go-crond@custom-workdir-mod-update GIT_COMMIT=1b81c05ef34903427ed06a56c26cc268a0377b83; \
     GO111MODULE=on CGO_ENABLED=0 go get -ldflags "-X main.gitTag=$GIT_TAG -X main.gitCommit=$GIT_COMMIT" \
     github.com/smlx/go-crond@$GIT_COMMIT
 
-FROM alpine:3.12.7
+FROM alpine:3.13.5
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"

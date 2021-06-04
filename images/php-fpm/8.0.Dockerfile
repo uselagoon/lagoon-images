@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:8.0.6-fpm-alpine3.12
+FROM php:8.0.6-fpm-alpine3.13
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -48,8 +48,6 @@ COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
 ENV NEWRELIC_VERSION=9.17.0.300
-
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.12/main/ 'curl>7.68' 'libcurl>7.68'
 
 RUN apk add --no-cache fcgi \
         ssmtp \

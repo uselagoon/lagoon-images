@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 
-FROM ${IMAGE_REPO:-lagoon}/mariadb as mariadb
+FROM ${IMAGE_REPO:-lagoon}/mariadb-10.5 as mariadb
 
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 

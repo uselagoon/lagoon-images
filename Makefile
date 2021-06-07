@@ -182,9 +182,10 @@ versioned-images := 		php-7.2-fpm \
 							mariadb-10.5 \
 							mariadb-10.5-drupal \
 
-# newly-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
+# default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
+# the below versions are the ones that map to the unversioned namespace
 
-newly-versioned-images := 	mariadb-10.4 \
+default-versioned-images := 	mariadb-10.4 \
 							mariadb-10.4-drupal \
 							postgres-11 \
 							postgres-11-ckan \
@@ -196,7 +197,7 @@ newly-versioned-images := 	mariadb-10.4 \
 							varnish-5-persistent \
 							varnish-5-persistent-drupal
 
-build-versioned-images = $(foreach image,$(versioned-images) $(newly-versioned-images),build/$(image))
+build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images),build/$(image))
 
 # Define the make recipe for all multi images
 $(build-versioned-images):
@@ -217,9 +218,9 @@ $(build-versioned-images):
 	touch $@
 
 base-images-with-versions += $(versioned-images)
-base-images-with-versions += $(newly-versioned-images)
+base-images-with-versions += $(default-versioned-images)
 s3-images += $(versioned-images)
-s3-images += $(newly-versioned-images)
+s3-images += $(default-versioned-images)
 
 build/php-7.2-fpm build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm: build/commons
 build/php-7.2-cli: build/php-7.2-fpm
@@ -286,7 +287,7 @@ build-list:
 publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
 publish-testlagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-testlagoon-baseimages-with-versions]-$(image))
 # Special handler for the previously unversioned images that now have versions
-publish-testlagoon-baseimages-without-versions = $(foreach image,$(newly-versioned-images),[publish-testlagoon-baseimages-without-versions]-$(image))
+publish-testlagoon-baseimages-without-versions = $(foreach image,$(default-versioned-images),[publish-testlagoon-baseimages-without-versions]-$(image))
 
 # tag and push all images
 .PHONY: publish-testlagoon-baseimages
@@ -366,7 +367,7 @@ $(publish-uselagoon-baseimages-with-versions):
 publish-amazeeio-baseimages = $(foreach image,$(base-images),[publish-amazeeio-baseimages]-$(image))
 publish-amazeeio-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-amazeeio-baseimages-with-versions]-$(image))
 # Special handler for the previously unversioned images that now have versions
-publish-amazeeio-baseimages-without-versions = $(foreach image,$(newly-versioned-images),[publish-amazeeio-baseimages-without-versions]-$(image))
+publish-amazeeio-baseimages-without-versions = $(foreach image,$(default-versioned-images),[publish-amazeeio-baseimages-without-versions]-$(image))
 
 # tag and push all images
 .PHONY: publish-amazeeio-baseimages

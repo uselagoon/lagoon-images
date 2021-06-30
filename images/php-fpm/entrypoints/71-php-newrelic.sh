@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# enable newrelic only if NEWRELIC_ENABLED is set
-if [ ${NEWRELIC_ENABLED+x} ]; then
+# enable newrelic only if NEWRELIC_ENABLED is set to true, True, TRUE or any other version of it
+if expr "$NEWRELIC_ENABLED" : '[Tt][Rr][Uu][Ee]' > /dev/null; then
   # envplate the newrelic ini file
   ep /usr/local/etc/php/conf.d/newrelic.disable
 

@@ -9,7 +9,7 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 RUN apk update \
     && apk upgrade \
-    && apk add --no-cache curl ncdu socat ca-certificates openssl perl perl-doc mysql-client rsync mariadb-mytop redis postgresql-client \
+    && apk add --no-cache curl ncdu socat ca-certificates openssl perl perl-doc mysql-client rsync mariadb-mytop redis postgresql-client mongodb-tools \
     && update-ca-certificates \
     && rm -rf /var/cache/apk/* \
     && wget https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl -O mysqltuner.pl \

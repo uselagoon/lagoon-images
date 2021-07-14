@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM redis:6.0.14-alpine3.13
+FROM redis:6.2.4-alpine3.13
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"

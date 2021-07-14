@@ -11,4 +11,4 @@ trap exit_trap EXIT
 
 echo "$(date --utc +%FT%TZ) CRONJOB: $@"
 
-/lagoon/entrypoints.sh sh -c "$@"
+/lagoon/entrypoints.sh flock -n "/tmp/cron.lock.$(echo "$@" | sha256sum | awk '{ print $1 }')" sh -c "$@"

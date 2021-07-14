@@ -2,6 +2,12 @@ FROM golang:alpine3.13 AS builder
 RUN GIT_TAG=github.com/smlx/go-crond@custom-workdir-mod-update GIT_COMMIT=1b81c05ef34903427ed06a56c26cc268a0377b83; \
     GO111MODULE=on CGO_ENABLED=0 go get -ldflags "-X main.gitTag=$GIT_TAG -X main.gitCommit=$GIT_COMMIT" \
     github.com/smlx/go-crond@$GIT_COMMIT
+RUN GIT_TAG=github.com/kreuzwerker/envplate@1.0.0-RC1 GIT_COMMIT=977cb694fd31dd89e9326fe4c85572a147011c8f; \
+    go get -ldflags "-X=main.build=$GIT_COMMIT -X=main.version=$GIT_TAG" \
+    github.com/kreuzwerker/envplate@$GIT_COMMIT \
+    && cd /go/pkg/mod/github.com/kreuzwerker/envplate* \
+    && go mod init github.com/kreuzwerker/envplate \
+    && go install -mod=mod ./bin/ep.go
 
 FROM alpine:3.13.5
 
@@ -16,14 +22,12 @@ COPY fix-permissions docker-sleep entrypoint-readiness wait-for /bin/
 COPY .bashrc /home/.bashrc
 
 COPY --from=builder /go/bin/go-crond /lagoon/bin/cron
+COPY --from=builder /go/bin/ep /bin/ep
 
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache curl tini \
     && rm -rf /var/cache/apk/* \
-    && curl -sLo /bin/ep https://github.com/kreuzwerker/envplate/releases/download/1.0.0-RC1/ep-linux \
-    && echo "48e234e067874a57a4d4bb198b5558d483ee37bcc285287fffb3864818b42f2785be0568faacbc054e97ca1c5047ec70382e1ca0e71182c9dba06649ad83a5f6  /bin/ep" | sha512sum -c \
-    && chmod +x /bin/ep \
     && mkdir -p /lagoon/crontabs && fix-permissions /lagoon/crontabs \
     && ln -s /home/.bashrc /home/.profile
 

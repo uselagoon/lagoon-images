@@ -15,6 +15,8 @@ ENV LAGOON=php
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
 
+ARG TARGETARCH
+
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
@@ -93,7 +95,15 @@ RUN apk add --no-cache fcgi \
 # RUN sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
 RUN rm -rf /var/cache/apk/* /tmp/pear/ \
     && apk del .phpize-deps \
-    && mkdir -p /tmp/newrelic && cd /tmp/newrelic \
+    && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/yaml.ini \
+    && mkdir -p /app \
+    && fix-permissions /usr/local/etc/ \
+    && fix-permissions /app \
+    && fix-permissions /etc/ssmtp/ssmtp.conf
+
+# Add New Relic extension if on supported architecture (currently only amd64).
+RUN if [ "$TARGETARCH" = "amd64" ] ; then \
+    cd / && mkdir -p /tmp/newrelic && cd /tmp/newrelic \
     && wget https://download.newrelic.com/php_agent/archive/${NEWRELIC_VERSION}/newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz \
     && gzip -dc newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz | tar --strip-components=1 -xf - \
     && NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 ./newrelic-install install \
@@ -103,20 +113,18 @@ RUN rm -rf /var/cache/apk/* /tmp/pear/ \
     && sed -i -e "s/newrelic.license = .*/newrelic.license = \"\${NEWRELIC_LICENSE:-}\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && sed -i -e "s/;newrelic.loglevel = .*/newrelic.loglevel = \"\${NEWRELIC_LOG_LEVEL:-warning}\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && sed -i -e "s/;newrelic.daemon.loglevel = .*/newrelic.daemon.loglevel = \"\${NEWRELIC_DAEMON_LOG_LEVEL:-warning}\"/" /usr/local/etc/php/conf.d/newrelic.ini \
-    && sed -i -e "s/newrelic.logfile = .*/newrelic.logfile = \"\/dev\/stderr\"/" /usr/local/etc/php/conf.d/newrelic.ini \
-    && sed -i -e "s/newrelic.daemon.logfile = .*/newrelic.daemon.logfile = \"\/dev\/stderr\"/" /usr/local/etc/php/conf.d/newrelic.ini \
+    && sed -i -e "s/newrelic.logfile = .*/newrelic.logfile = \"\/dev\/stdout\"/" /usr/local/etc/php/conf.d/newrelic.ini \
+    && sed -i -e "s/newrelic.daemon.logfile = .*/newrelic.daemon.logfile = \"\/dev\/stdout\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && mv /usr/local/etc/php/conf.d/newrelic.ini /usr/local/etc/php/conf.d/newrelic.disable \
     && cd / && rm -rf /tmp/newrelic \
-    && mkdir -p /app \
-    && fix-permissions /usr/local/etc/ \
-    && fix-permissions /app \
-    && fix-permissions /etc/ssmtp/ssmtp.conf
+    && fix-permissions /usr/local/etc/ ; fi
 
 # Add blackfire probe and agent.
 ENV BLACKFIRE_VERSION=2.4.2
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+    && architecture=$(case $(uname -m) in i386 | i686 | x86) echo "i386" ;; x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && mkdir -p /blackfire \
-    && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
+    && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/$architecture/$version \
     && tar zxpf /blackfire/blackfire-probe.tar.gz -C /blackfire \
     && mv /blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
     && fix-permissions /usr/local/etc/php/conf.d/ \

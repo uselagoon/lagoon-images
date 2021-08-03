@@ -1,4 +1,6 @@
-FROM webdevops/go-crond:21.5.0-alpine@sha256:8c579dadaad0dd670eeb704e7eab4e08a08431bce1c5c20003a1505d90dbd339 AS go-crond
+FROM webdevops/go-crond:21.5.0-alpine AS go-crond
+FROM tobybellwood/envplate:latest AS envplate
+
 FROM alpine:3.13.5
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
@@ -12,14 +14,12 @@ COPY fix-permissions docker-sleep entrypoint-readiness wait-for /bin/
 COPY .bashrc /home/.bashrc
 
 COPY --from=go-crond /usr/local/bin/go-crond /lagoon/bin/cron
+COPY --from=envplate /usr/local/bin/ep /bin/ep
 
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache curl tini \
     && rm -rf /var/cache/apk/* \
-    && curl -sLo /bin/ep https://github.com/kreuzwerker/envplate/releases/download/1.0.0-RC1/ep-linux \
-    && echo "48e234e067874a57a4d4bb198b5558d483ee37bcc285287fffb3864818b42f2785be0568faacbc054e97ca1c5047ec70382e1ca0e71182c9dba06649ad83a5f6  /bin/ep" | sha512sum -c \
-    && chmod +x /bin/ep \
     && mkdir -p /lagoon/crontabs && fix-permissions /lagoon/crontabs \
     && ln -s /home/.bashrc /home/.profile
 

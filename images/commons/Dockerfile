@@ -1,5 +1,5 @@
 FROM webdevops/go-crond:21.5.0-alpine@sha256:8c579dadaad0dd670eeb704e7eab4e08a08431bce1c5c20003a1505d90dbd339 AS go-crond
-FROM alpine:3.12.7
+FROM alpine:3.13.5
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"

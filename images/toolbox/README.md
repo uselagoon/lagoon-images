@@ -6,3 +6,4 @@ Container that comes with following tools that might get handy for daily operati
 - ncdu
 - openssl
 - socat
+- mongodb-tools

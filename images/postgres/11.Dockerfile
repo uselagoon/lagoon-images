@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # alpine 3.12 from https://github.com/docker-library/postgres/blob/1dcdff4b410936b5b11d1e25c6b60a002b2fc9b9/11/alpine/Dockerfile
-FROM postgres:11.11-alpine
+FROM postgres:11.12-alpine
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"

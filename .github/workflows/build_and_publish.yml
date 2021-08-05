@@ -4,11 +4,9 @@ on:
     branches:
       - "replace_go_crond"
 jobs:
-  build-images:
+  setup-images:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2.3.4
-      - uses: rlespinasse/github-slug-action@v3.x
       - name: Check credentials
         id: docker-credentials
         run: |
@@ -29,9 +27,13 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+  build-commons:
+    runs-on: ubuntu-20.04
+    needs: setup-images
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: rlespinasse/github-slug-action@v3.x
       - name: Build and push "commons"
-        if: steps.docker-credentials.outputs.defined == 'true'
         id: docker_build_commons
         uses: docker/build-push-action@v2
         with:
@@ -42,6 +44,6 @@ jobs:
             testlagoon/commons-test:${{ env.GITHUB_REF_SLUG }}
             ghcr.io/uselagoon/commons-test:${{ env.GITHUB_REF_SLUG }}
 
-      - name: Image digest
+      - name: Show image digest
         run: |
           echo ${{ steps.docker_build_commons.outputs.digest }}

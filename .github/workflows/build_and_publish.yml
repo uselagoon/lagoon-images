@@ -38,8 +38,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            testlagoon/commons-test:$GITHUB_REF
-            ghcr.io/uselagoon/commons-test:$GITHUB_REF
+            testlagoon/commons-test:${{ github.ref }}
+            ghcr.io/uselagoon/commons-test:${{ github.ref }}
 
       - name: Image digest
         run: |

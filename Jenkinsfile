@@ -50,7 +50,7 @@ node ('lagoon-images') {
             try {
               if (env.SKIP_IMAGE_PUBLISH != 'true') {
                 sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                sh script: "make docker_buildx_configure", label: "Configuring buildx for multi-platform build"
+                sh script: "make docker-buildx-configure", label: "Configuring buildx for multi-platform build"
                 sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
               } else {
                 sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
@@ -149,6 +149,8 @@ node ('lagoon-images') {
 
       } catch (e) {
         currentBuild.result = 'FAILURE'
+        echo "Something went wrong, trying to cleanup"
+        cleanup()
         throw e
       } finally {
         notifySlack(currentBuild.result)
@@ -160,6 +162,7 @@ node ('lagoon-images') {
 
 def cleanup() {
   try {
+    sh "make docker-buildx-remove"
     sh "make clean"
   } catch (error) {
     echo "cleanup failed, ignoring this."

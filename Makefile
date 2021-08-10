@@ -70,8 +70,6 @@ docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(
 
 scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
 
-docker_buildx_configure = docker buildx create --driver-opt network=host --name ci-local --use
-
 # Tags an image with the `testlagoon` repository and pushes it
 #docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
 docker_publish_testlagoon = docker buildx build $(DOCKER_BUILD_PARAMS) --platform linux/amd64,linux/arm64/v8 --push --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t testlagoon/$(2) -f images/$(1)/Dockerfile images/$(1)
@@ -286,6 +284,10 @@ build-list:
 ####### All main&PR images are pushed to testlagoon repository
 #######
 
+.PHONY: docker-buildx-configure
+docker-buildx-configure:
+	docker buildx create --driver-opt network=host --name ci-local --use
+
 # Publish command to testlagoon docker hub, done on any main branch or PR
 publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
 publish-testlagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-testlagoon-baseimages-with-versions]-$(image))
@@ -454,5 +456,10 @@ $(s3-load):
 
 # Clean all build touches, which will case make to rebuild the Docker Images (Layer caching is
 # still active, so this is a very safe command)
+
+.PHONY: docker-buildx-remove
+docker-buildx-remove:
+	docker buildx rm ci-local
+
 clean:
 	rm -rf build/*

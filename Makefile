@@ -295,6 +295,8 @@ docker-buildx-configure:
 	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext1
 	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext2
 	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext3
+	docker buildx ls
+	docker context ls
 
 # Publish command to testlagoon docker hub, done on any main branch or PR
 publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
@@ -487,6 +489,8 @@ docker-buildx-remove:
 	docker context rm mycontext2
 	docker context rm mycontext3
 	docker buildx rm ci-local
+	docker buildx ls
+	docker context ls
 
 clean:
 	rm -rf build/*

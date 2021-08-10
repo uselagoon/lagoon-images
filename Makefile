@@ -72,7 +72,7 @@ scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v
 
 # Tags an image with the `testlagoon` repository and pushes it
 #docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
-docker_publish_testlagoon = docker buildx build $(DOCKER_BUILD_PARAMS) --platform linux/amd64,linux/arm64/v8 --push --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t testlagoon/$(2) -f images/$(3)/Dockerfile images/$(3)
+docker_publish_testlagoon = docker buildx build $(DOCKER_BUILD_PARAMS) --platform linux/amd64,linux/arm64/v8 --push --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=localhost:5000/$(CI_BUILD_TAG) -t localhost:5000/$(CI_BUILD_TAG)/$(2) -t testlagoon/$(2) -f images/$(3)/Dockerfile images/$(3)
 
 # Tags an image with the `uselagoon` repository and pushes it
 docker_publish_uselagoon = docker tag $(CI_BUILD_TAG)/$(1) uselagoon/$(2) && docker push uselagoon/$(2) | cat
@@ -286,15 +286,8 @@ build-list:
 
 .PHONY: docker-buildx-configure
 docker-buildx-configure:
-	docker context create --docker host=unix:///var/run/docker.sock mycontext0
-	docker context create --docker host=unix:///var/run/docker.sock mycontext1
-	docker context create --docker host=unix:///var/run/docker.sock mycontext2
-	docker context create --docker host=unix:///var/run/docker.sock mycontext3
+	docker run -d -p 5000:5000 --restart always --name registry registry:2
 	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --use
-	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext0
-	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext1
-	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext2
-	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext3
 	docker buildx ls
 	docker context ls
 
@@ -484,10 +477,8 @@ $(s3-load):
 
 .PHONY: docker-buildx-remove
 docker-buildx-remove:
-	docker context rm mycontext0
-	docker context rm mycontext1
-	docker context rm mycontext2
-	docker context rm mycontext3
+	docker stop registry
+	docker rm registry
 	docker buildx rm ci-local
 	docker buildx ls
 	docker context ls

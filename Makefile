@@ -286,7 +286,15 @@ build-list:
 
 .PHONY: docker-buildx-configure
 docker-buildx-configure:
-	docker buildx create --driver-opt network=host --name ci-local --use
+	docker context create --docker host=unix:///var/run/docker.sock mycontext0
+	docker context create --docker host=unix:///var/run/docker.sock mycontext1
+	docker context create --docker host=unix:///var/run/docker.sock mycontext2
+	docker context create --docker host=unix:///var/run/docker.sock mycontext3
+	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --use
+	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext0
+	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext1
+	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext2
+	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --append mycontext3
 
 # Publish command to testlagoon docker hub, done on any main branch or PR
 publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
@@ -474,6 +482,10 @@ $(s3-load):
 
 .PHONY: docker-buildx-remove
 docker-buildx-remove:
+	docker context rm mycontext0
+	docker context rm mycontext1
+	docker context rm mycontext2
+	docker context rm mycontext3
 	docker buildx rm ci-local
 
 clean:

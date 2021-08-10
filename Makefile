@@ -109,7 +109,7 @@ $(build-images):
 # Populate the cross-reference table
 	$(shell echo $(image),$(image) >> build.txt)
 #scan created image with Trivy
-	$(call scan_image,$(image),)
+#	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last build
 	touch $@
 
@@ -214,7 +214,7 @@ $(build-versioned-images):
 # Populate the cross-reference table
 	$(shell echo $(image),$(legacytag) >> build.txt)
 #scan created images with Trivy
-	$(call scan_image,$(image),)
+#	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last built
 	touch $@
 

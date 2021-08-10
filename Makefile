@@ -120,7 +120,7 @@ $(build-images):
 # 2. Dockerfiles of the Images itself, will cause make to rebuild the images if something has
 #    changed on the Dockerfiles
 build/commons: images/commons/Dockerfile
-build/mongo: build/commons images/mongo/Dockerfile
+#build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
 build/toolbox: build/commons build/mariadb-10.5 images/toolbox/Dockerfile

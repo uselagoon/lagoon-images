@@ -38,6 +38,7 @@ node ('lagoon-images') {
         }
 
         stage ('build images') {
+          sh script: "make docker-buildx-configure", label: "Configuring buildx for multi-platform build"
           sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build", label: "Building images"
         }
 
@@ -50,7 +51,6 @@ node ('lagoon-images') {
             try {
               if (env.SKIP_IMAGE_PUBLISH != 'true') {
                 sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                sh script: "make docker-buildx-configure", label: "Configuring buildx for multi-platform build"
                 sh script: "make -O${SYNC_MAKE_OUTPUT} -j1 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
               } else {
                 sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"

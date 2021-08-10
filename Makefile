@@ -70,6 +70,8 @@ docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(
 
 scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
 
+docker_buildx_configure = docker buildx create --driver-opt network=host --name ci-local --use
+
 # Tags an image with the `testlagoon` repository and pushes it
 #docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
 docker_publish_testlagoon = docker buildx build $(DOCKER_BUILD_PARAMS) --platform linux/amd64,linux/arm64/v8 --push --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t testlagoon/$(2) -f images/$(1)/Dockerfile images/$(1)

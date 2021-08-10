@@ -72,7 +72,7 @@ scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v
 
 # Tags an image with the `testlagoon` repository and pushes it
 #docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
-docker_publish_testlagoon = docker buildx build $(DOCKER_BUILD_PARAMS) --platform linux/amd64,linux/arm64/v8 --push --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=localhost:5000/$(CI_BUILD_TAG) -t localhost:5000/$(CI_BUILD_TAG)/$(2) -t testlagoon/$(2) -f images/$(3)/Dockerfile images/$(3)
+docker_publish_testlagoon = docker buildx build $(DOCKER_BUILD_PARAMS) --platform linux/amd64,linux/arm64/v8 --push --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=localhost:5000/$(CI_BUILD_TAG) -t localhost:5000/$(CI_BUILD_TAG)/$(1) -t testlagoon/$(2) -f images/$(3)/Dockerfile images/$(3)
 
 # Tags an image with the `uselagoon` repository and pushes it
 docker_publish_uselagoon = docker tag $(CI_BUILD_TAG)/$(1) uselagoon/$(2) && docker push uselagoon/$(2) | cat

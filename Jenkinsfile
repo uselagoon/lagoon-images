@@ -64,7 +64,8 @@ node ('lagoon-images') {
         }
 
         stage ('show built images') {
-          sh 'docker image ls | sort -u'
+          sh 'cat build.txt'
+          sh 'docker image ls | grep ${CI_BUILD_TAG} | sort -u'
         }
 
         stage ('Copy examples down') {
@@ -164,6 +165,7 @@ def cleanup() {
   try {
     sh "make docker-buildx-remove"
     sh "make clean"
+    sh "cat build.txt"
   } catch (error) {
     echo "cleanup failed, ignoring this."
   }

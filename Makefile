@@ -176,14 +176,14 @@ versioned-images := 		php-7.2-fpm \
 							postgres-12 \
 							redis-6 \
 							redis-6-persistent \
-							varnish-6 \
-							varnish-6-drupal \
-							varnish-6-persistent \
-							varnish-6-persistent-drupal \
 							solr-7 \
 							solr-7-drupal \
 							mariadb-10.5 \
-							mariadb-10.5-drupal \
+							mariadb-10.5-drupal
+#							varnish-6 \
+#							varnish-6-drupal \
+#							varnish-6-persistent \
+#							varnish-6-persistent-drupal \
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace

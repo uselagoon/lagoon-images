@@ -56,8 +56,10 @@ DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 # Name of the Branch we are currently in
 BRANCH_NAME :=
 
+TEMPFILE := $(shell mktemp build.XXXX -u)
+
 # Init the file that is used to hold the image tag cross-reference table
-$(shell >build.txt)
+# $(shell >build.txt)
 $(shell >scan.txt)
 
 #######
@@ -107,7 +109,7 @@ $(build-images):
 # Call the docker build
 	$(call docker_build,$(image),images/$(image)/Dockerfile,images/$(image))
 # Populate the cross-reference table
-	$(shell echo $(image),images/$(image)/Dockerfile,images/$(image) >> build.txt)
+	$(shell echo $(shell date +"%T") $(image),images/$(image)/Dockerfile,images/$(image) >> $(TEMPFILE))
 #scan created image with Trivy
 #	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last build
@@ -212,7 +214,7 @@ $(build-versioned-images):
 # Call the generic docker build process
 	$(call docker_build,$(image),images/$(folder)/$(if $(version),$(version).)Dockerfile,images/$(folder))
 # Populate the cross-reference table
-	$(shell echo $(image),images/$(folder)/$(if $(version),$(version).)Dockerfile,images/$(folder) >> build.txt)
+	$(shell echo $(shell date +"%T") $(image),images/$(folder)/$(if $(version),$(version).)Dockerfile,images/$(folder) >> $(TEMPFILE))
 #scan created images with Trivy
 #	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last built
@@ -269,7 +271,8 @@ build/mariadb-10.5-drupal: build/mariadb-10.5
 
 # Builds all Images
 .PHONY: build
-build: $(foreach image,$(base-images) $(base-images-with-versions) ,build/$(image))
+build: $(shell >$(TEMPFILE)) $(foreach image,$(base-images) $(base-images-with-versions) ,build/$(image))
+	cat $(TEMPFILE)
 
 # Outputs a list of all Images we manage
 .PHONY: build-list

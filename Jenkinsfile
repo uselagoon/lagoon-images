@@ -38,6 +38,7 @@ node ('lagoon-images') {
         }
 
         stage ('build images') {
+          sh script: "make docker-buildx-remove", label: "Remove any existing buildx config"
           sh script: "make docker-buildx-configure", label: "Configuring buildx for multi-platform build"
           sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build", label: "Building images"
         }
@@ -64,7 +65,7 @@ node ('lagoon-images') {
         }
 
         stage ('show built images') {
-          sh 'cat build.txt'
+          sh 'cat build.*'
           sh 'docker image ls | grep ${CI_BUILD_TAG} | sort -u'
         }
 
@@ -163,9 +164,10 @@ node ('lagoon-images') {
 
 def cleanup() {
   try {
+    sh "cat build.*"
     sh "make docker-buildx-remove"
     sh "make clean"
-    sh "cat build.txt"
+    sh "rm build.*"
   } catch (error) {
     echo "cleanup failed, ignoring this."
   }

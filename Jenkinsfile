@@ -38,7 +38,6 @@ node ('lagoon-images') {
         }
 
         stage ('build images') {
-          sh script: "make docker-buildx-remove", label: "Remove any existing buildx config"
           sh script: "make docker-buildx-configure", label: "Configuring buildx for multi-platform build"
           sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build", label: "Building images"
         }

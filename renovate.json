@@ -9,6 +9,7 @@
     "config:base",
     ":disableRateLimiting"
   ],
+  "labels": ["dependencies"],
   "dependencyDashboard": true,
   "separateMajorMinor": true,
   "separateMinorPatch": true,
@@ -50,7 +51,10 @@
       ],
       "matchPackageNames": [
         "node",
-        "postgres"
+        "postgres",
+        "redis",
+        "solr",
+        "varnish"
       ]
     },
     {
@@ -63,7 +67,10 @@
       ],
       "matchPackageNames": [
         "node",
-        "postgres"
+        "postgres",
+        "redis",
+        "solr",
+        "varnish"
       ]
     },
     {
@@ -98,6 +105,7 @@
         "docker"
       ],
       "matchUpdateTypes": [
+        "major",
         "minor"
       ],
       "matchPackageNames": [

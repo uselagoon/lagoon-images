@@ -1,15 +1,12 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM redis:5.0.12-alpine3.13
+
+FROM python:3.9.6-alpine3.13
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
-ENV LAGOON=redis
-ENV FLAVOR=ephemeral
-
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
+ENV LAGOON=python
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
@@ -28,11 +25,15 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-COPY conf /etc/redis/
-COPY docker-entrypoint /lagoon/entrypoints/70-redis-entrypoint
+RUN apk add --no-cache --virtual .build-deps \
+      build-base \
+    && pip install --upgrade pip \
+    && pip install virtualenv \
+    && apk del .build-deps
 
-RUN fix-permissions /etc/redis \
-    fix-permissions /data
+# Make sure shells are not running forever
+COPY 80-shell-timeout.sh /lagoon/entrypoints/
+RUN echo "source /lagoon/entrypoints/80-shell-timeout.sh" >> /home/.bashrc
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
-CMD ["redis-server", "/etc/redis/redis.conf"]
+CMD ["python"]

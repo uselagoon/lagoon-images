@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:7.3.28-fpm-alpine3.12
+FROM php:7.3.29-fpm-alpine3.13
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -48,7 +48,7 @@ COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=9.17.0.300
+ENV NEWRELIC_VERSION=9.17.1.301
 
 RUN apk add --no-cache fcgi \
         ssmtp \
@@ -106,13 +106,21 @@ RUN apk add --no-cache fcgi \
     && fix-permissions /app \
     && fix-permissions /etc/ssmtp/ssmtp.conf
 
-# Add blackfire probe.
+# Add blackfire probe and agent.
+ENV BLACKFIRE_VERSION=2.4.2
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && mkdir -p /blackfire \
     && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
     && tar zxpf /blackfire/blackfire-probe.tar.gz -C /blackfire \
     && mv /blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && rm -rf /blackfire
+    && fix-permissions /usr/local/etc/php/conf.d/ \
+    && curl -A "Docker" -o /blackfire/blackfire-linux_amd64.tar.gz -D - -L -s https://packages.blackfire.io/binaries/blackfire/${BLACKFIRE_VERSION}/blackfire-linux_amd64.tar.gz \
+    && tar zxpf /blackfire/blackfire-linux_amd64.tar.gz -C /blackfire \
+    && mv /blackfire/blackfire /bin/blackfire \
+    && chmod +x /bin/blackfire \
+    && mkdir -p /etc/blackfire \
+    && touch /etc/blackfire/agent \
+    && fix-permissions /etc/blackfire
 
 EXPOSE 9000
 

@@ -69,7 +69,7 @@ $(shell >scan.txt)
 # Builds a docker image. Expects as arguments: name of the image, location of Dockerfile, path of
 # Docker Build Context
 #docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
-docker_build = docker buildx build $(DOCKER_BUILD_PARAMS) --platform linux/amd64,linux/arm64/v8 --push --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=localhost:5000/$(CI_BUILD_TAG) -t localhost:5000/$(CI_BUILD_TAG)/$(1) -f $(2) $(3)
+docker_build = docker buildx build $(DOCKER_BUILD_PARAMS) --platform linux/amd64,linux/arm64/v8 --push --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=localhost:5000/$(CI_BUILD_TAG) -t localhost:5000/$(CI_BUILD_TAG)/$(1) -t testlagoon/$(1):multiarch -f $(2) $(3)
 
 scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
 

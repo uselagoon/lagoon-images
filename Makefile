@@ -57,7 +57,7 @@ DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 BRANCH_NAME :=
 
 # Only set this to false when ready to push images to dockerhub
-SKIP_IMAGE_PUBLISH ?= true
+PUBLISH_IMAGES ?= false
 
 TEMPFILE := $(shell mktemp build.XXXX -u)
 
@@ -99,7 +99,7 @@ docker_buildx_tag = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						-t testlagoon/$(1)-test:$(BRANCH_NAME) \
 						-f $(2) $(3)
 
-ifeq ($(SKIP_IMAGE_PUBLISH),false)
+ifeq ($(PUBLISH_IMAGES),true)
 	ifdef $(TAG_NAME)
 		docker_build = $(docker_buildx_tag)
 	else

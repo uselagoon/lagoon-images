@@ -57,7 +57,7 @@ DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 BRANCH_NAME :=
 
 # Skip image scanning by default to make building images substantially faster
-SCAN_IMAGES := false
+SCAN_IMAGES ?= false
 
 # Init the file that is used to hold the image tag cross-reference table
 $(shell >build.txt)

@@ -101,11 +101,16 @@ docker_buildx_tag = docker buildx build $(DOCKER_BUILD_PARAMS) \
 
 ifeq ($(PUBLISH_IMAGES),true)
 	ifdef $(TAG_NAME)
+		echo "building tag $(TAG_NAME)"
+		$(MAKE) clean
 		docker_build = $(docker_buildx_tag)
 	else
+		echo "building branch $(BRANCH_NAME)"
+		$(MAKE) clean
 		docker_build = $(docker_buildx_branch)
 	endif
 else
+	echo "building local images"
 	docker_build = $(docker_build_local)
 endif
 

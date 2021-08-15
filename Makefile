@@ -56,6 +56,9 @@ DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 # Name of the Branch we are currently in
 BRANCH_NAME :=
 
+# Only set this to false when ready to push images to dockerhub
+SKIP_IMAGE_PUBLISH ?= true
+
 TEMPFILE := $(shell mktemp build.XXXX -u)
 
 # Init the file that is used to hold the image tag cross-reference table
@@ -68,14 +71,49 @@ $(shell >scan.txt)
 
 # Builds a docker image. Expects as arguments: name of the image, location of Dockerfile, path of
 # Docker Build Context
-#docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
-docker_build = docker buildx build $(DOCKER_BUILD_PARAMS) --platform linux/amd64,linux/arm64/v8 --cache-from=type=registry,ref=testlagoon/$(1):multiarch --push --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=localhost:5000/testlagoon -t localhost:5000/testlagoon/$(1) -t testlagoon/$(1):multiarch -f $(2) $(3)
+docker_build_local = docker build $(DOCKER_BUILD_PARAMS) \
+						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
+						--build-arg IMAGE_REPO=$(CI_BUILD_TAG) \
+						-t $(CI_BUILD_TAG)/$(1) \
+						-f $(2) $(3)
+
+docker_buildx_branch = docker buildx build $(DOCKER_BUILD_PARAMS) \
+						--platform linux/amd64,linux/arm64/v8 \
+						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
+						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
+						--push \
+						-t localhost:5000/testlagoon/$(1) \
+						-t testlagoon/$(1)-test:$(BRANCH_NAME) \
+						-t testlagoon/$(1)-test:latest \
+						-f $(2) $(3)
+
+docker_buildx_tag = docker buildx build $(DOCKER_BUILD_PARAMS) \
+						--platform linux/amd64,linux/arm64/v8 \
+						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
+						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
+						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \
+						--push \
+						-t localhost:5000/uselagoon/$(1) \
+						-t uselagoon/$(1)-test:$(LAGOON_VERSION) \
+						-t uselagoon/$(1)-test:latest \
+						-t testlagoon/$(1)-test:$(BRANCH_NAME) \
+						-f $(2) $(3)
+
+ifeq ($(SKIP_IMAGE_PUBLISH),false)
+	ifdef $(TAG_NAME)
+		docker_build = $(docker_buildx_tag)
+	else
+		docker_build = $(docker_buildx_branch)
+	endif
+else
+	docker_build = $(docker_build_local)
+endif
+
 
 scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
 
 # Tags an image with the `testlagoon` repository and pushes it
-#docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
-docker_publish_testlagoon = docker buildx build $(DOCKER_BUILD_PARAMS) --platform linux/amd64,linux/arm64/v8 --push --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=localhost:5000/$(CI_BUILD_TAG) -t localhost:5000/$(CI_BUILD_TAG)/$(1) -t testlagoon/$(2) -f images/$(3)/Dockerfile images/$(3)
+docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
 
 # Tags an image with the `uselagoon` repository and pushes it
 docker_publish_uselagoon = docker tag $(CI_BUILD_TAG)/$(1) uselagoon/$(2) && docker push uselagoon/$(2) | cat

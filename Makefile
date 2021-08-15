@@ -56,6 +56,9 @@ DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 # Name of the Branch we are currently in
 BRANCH_NAME :=
 
+# Skip image scanning by default to make building images substantially faster
+SCAN_IMAGES := false
+
 # Init the file that is used to hold the image tag cross-reference table
 $(shell >build.txt)
 $(shell >scan.txt)
@@ -68,7 +71,13 @@ $(shell >scan.txt)
 # Docker Build Context
 docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
 
-scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
+scan_cmd = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
+
+ifeq ($(SCAN_IMAGES),true)
+	scan_image = $(scan_cmd)
+else
+	scan_image =
+endif
 
 # Tags an image with the `testlagoon` repository and pushes it
 docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat

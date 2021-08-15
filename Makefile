@@ -83,8 +83,8 @@ docker_buildx_branch = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
 						--push \
 						-t localhost:5000/testlagoon/$(1) \
-						-t testlagoon/$(1)-test:$(BRANCH_NAME) \
-						-t testlagoon/$(1)-test:latest \
+						-t testlagoon/$(1):$(BRANCH_NAME) \
+						-t testlagoon/$(1):multiarch \
 						-f $(2) $(3)
 
 docker_buildx_tag = docker buildx build $(DOCKER_BUILD_PARAMS) \

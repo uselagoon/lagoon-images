@@ -123,9 +123,9 @@ node ('lagoon-images') {
       } catch (e) {
         currentBuild.result = 'FAILURE'
         echo "Something went wrong, trying to cleanup"
-        cleanup()
         throw e
       } finally {
+        cleanup()
         notifySlack(currentBuild.result)
       }
     }

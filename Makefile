@@ -100,11 +100,11 @@ docker_buildx_three = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						-f $(2) $(3)
 
 ifeq ($(PUBLISH_IMAGES),true)
-	ifdef $(REGISTRY_THREE)
+	ifdef REGISTRY_THREE
 		docker_build = $(docker_buildx_three)
-	else ifdef $(REGISTRY_TWO)
+	else ifdef REGISTRY_TWO
 		docker_build = $(docker_buildx_two)
-	else ifdef $(REGISTRY_ONE)
+	else ifdef REGISTRY_ONE
 		docker_build = $(docker_buildx_one)
 	endif
 else

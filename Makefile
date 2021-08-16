@@ -101,10 +101,8 @@ docker_buildx_tag = docker buildx build $(DOCKER_BUILD_PARAMS) \
 
 ifeq ($(PUBLISH_IMAGES),true)
 	ifdef $(TAG_NAME)
-		$(MAKE) clean
 		docker_build = $(docker_buildx_tag)
 	else
-		$(MAKE) clean
 		docker_build = $(docker_buildx_branch)
 	endif
 else
@@ -153,7 +151,7 @@ $(build-images):
 #scan created image with Trivy
 #	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last build
-	touch $@
+#	touch $@
 
 # Define dependencies of Base Images so that make can build them in the right order. There are two
 # types of Dependencies
@@ -258,7 +256,7 @@ $(build-versioned-images):
 #scan created images with Trivy
 #	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last built
-	touch $@
+#	touch $@
 
 base-images-with-versions += $(versioned-images)
 base-images-with-versions += $(default-versioned-images)

@@ -46,23 +46,6 @@ node ('lagoon-images') {
           sh 'cat scan.txt'
         }
 
-        stage ('push branch images to testlagoon/*') {
-          withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
-            try {
-              if (env.SKIP_IMAGE_PUBLISH != 'true') {
-                sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
-              } else {
-                sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
-              }
-            } catch (e) {
-              echo "Something went wrong, trying to cleanup"
-              cleanup()
-              throw e
-            }
-          }
-        }
-
         stage ('show built images') {
           sh 'cat build.*'
           sh 'docker image ls | grep ${CI_BUILD_TAG} | sort -u'
@@ -78,56 +61,79 @@ node ('lagoon-images') {
           }
         }
 
-        stage ('Configure and Run Tests') {
-          dir ('tests') {
-            sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/testlagoon/'"
-            sh script: "grep -rl uselagoon . | xargs sed -i '/image:/ s/uselagoon/testlagoon/'"
-            sh script: "grep -rl testlagoon . | xargs sed -i '/^FROM/ s/latest/${SAFEBRANCH_NAME}/'"
-            sh script: "grep -rl testlagoon . | xargs sed -i '/image:/ s/latest/${SAFEBRANCH_NAME}/'"
-            sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
-          }
-        }
-
-        dir ('tests') {
-          parallel (
+        parallel (
+          'build and push images to dockerhub': {
+            stage ('push branch images to testlagoon/*') {
+              withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
+                try {
+                  if (env.SKIP_IMAGE_PUBLISH != 'true') {
+                    sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
+                  } else {
+                    sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
+                  }
+                } catch (e) {
+                  echo "Something went wrong, trying to cleanup"
+                  cleanup()
+                  throw e
+                }
+              }
+            }
+          },
+          'Run all the tests on the local images': {
+            'Use correct image tags': {
+              stage ('Configure and Run Tests') {
+                dir ('tests') {
+                  sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/testlagoon/'"
+                  sh script: "grep -rl uselagoon . | xargs sed -i '/image:/ s/uselagoon/testlagoon/'"
+                  sh script: "grep -rl testlagoon . | xargs sed -i '/^FROM/ s/latest/${SAFEBRANCH_NAME}/'"
+                  sh script: "grep -rl testlagoon . | xargs sed -i '/image:/ s/latest/${SAFEBRANCH_NAME}/'"
+                  sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
+                }
+              }
+            },
             'Run simple Drupal tests': {
               stage ('Simple tests') {
-                sh script: "yarn test:simple"
+                dir ('tests') {
+                  sh script: "yarn test:simple"
+                }
               }
             },
             'Run advanced Drupal tests': {
               stage ('Advanced tests') {
-                sh script: "yarn test:advanced"
-              }
-            }
-          )
-        }
-
-        stage ('Configure and Run old PHP Tests') {
-          dir ('tests') {
-            sh script: "rm test/*.js"
-            sh script: "grep -rl testlagoon ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.2/'"
-            sh script: "grep -rl PHP ./drupal8-simple/TESTING*.md | xargs sed -i 's/7.4/7.2/'"
-            sh script: "grep -rl testlagoon ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
-            sh script: "grep -rl PHP ./drupal9-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
-            sh script: "yarn generate-tests"
-          }
-        }
-
-        dir ('tests') {
-          parallel (
-            'Run simple old PHP Drupal tests': {
-              stage ('Simple old PHP tests') {
-                sh script: "yarn test:simple"
+                dir ('tests') {
+                  sh script: "yarn test:advanced"
+                }
               }
             },
             'Run Postgres tests': {
               stage ('Postgres tests') {
-                sh script: "yarn test test/docker*postgres*"
+                dir ('tests') {
+                  sh script: "yarn test test/docker*postgres*"
+                }
+              }
+            },
+            'Replace PHP versions in simple tests': {
+              stage ('Configure and Run old PHP Tests') {
+                dir ('tests') {
+                  sh script: "rm test/*.js"
+                  sh script: "grep -rl testlagoon ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.2/'"
+                  sh script: "grep -rl PHP ./drupal8-simple/TESTING*.md | xargs sed -i 's/7.4/7.2/'"
+                  sh script: "grep -rl testlagoon ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
+                  sh script: "grep -rl PHP ./drupal9-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
+                  sh script: "yarn generate-tests"
+                }
+              }
+            },
+            'Run simple old PHP Drupal tests': {
+              stage ('Simple old PHP tests') {
+                dir ('tests') {
+                  sh script: "yarn test:simple"
+                }
               }
             }
-          )
-        }
+          }
+        )
 
         if (env.TAG_NAME && env.SKIP_IMAGE_PUBLISH != 'true') {
           stage ('publish-amazeeio') {

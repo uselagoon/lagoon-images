@@ -68,7 +68,7 @@ node ('lagoon-images') {
                 try {
                   if (env.SKIP_IMAGE_PUBLISH != 'true') {
                     sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
+                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch", label: "Publishing built images to testlagoon"
                   } else {
                     sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
                   }
@@ -83,18 +83,16 @@ node ('lagoon-images') {
           'Run all the tests on the local images': {
             stage ('running test suite') {
               dir ('tests') {
-                sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/testlagoon/'"
-                sh script: "grep -rl uselagoon . | xargs sed -i '/image:/ s/uselagoon/testlagoon/'"
-                sh script: "grep -rl testlagoon . | xargs sed -i '/^FROM/ s/latest/${SAFEBRANCH_NAME}/'"
-                sh script: "grep -rl testlagoon . | xargs sed -i '/image:/ s/latest/${SAFEBRANCH_NAME}/'"
+                sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/${CI_BUILD_TAG}/'"
+                sh script: "grep -rl uselagoon . | xargs sed -i '/image:/ s/uselagoon/${CI_BUILD_TAG}/'"
                 sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
                 sh script: "yarn test:simple", label: "Run simple Drupal tests"
                 sh script: "yarn test:advanced", label: "Run advanced Drupal tests"
                 sh script: "yarn test test/docker*postgres*", label: "Run postgres Drupal tests"
                 sh script: "rm test/*.js"
-                sh script: "grep -rl testlagoon ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.2/'"
+                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.2/'"
                 sh script: "grep -rl PHP ./drupal8-simple/TESTING*.md | xargs sed -i 's/7.4/7.2/'"
-                sh script: "grep -rl testlagoon ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
+                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
                 sh script: "grep -rl PHP ./drupal9-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
                 sh script: "yarn generate-tests"
                 sh script: "yarn test:simple", label: "Re-run simple Drupal tests"

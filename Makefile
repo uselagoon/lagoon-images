@@ -77,20 +77,20 @@ docker_build_local = docker build $(DOCKER_BUILD_PARAMS) \
 						-t $(CI_BUILD_TAG)/$(1) \
 						-f $(2) $(3)
 
-docker_buildx_branch = docker buildx build $(DOCKER_BUILD_PARAMS) \
+docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--platform linux/amd64,linux/arm64/v8 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
 						--push \
 						-t localhost:5000/testlagoon/$(1) \
-						-t testlagoon/$(1):$(BRANCH_NAME) \
-						-t testlagoon/$(1):multiarch \
+						-t $(REGISTRY_ONE)/$(1):$(TAG_ONE) \
+						-t $(REGISTRY_TWO)/$(1):$(TAG_TWO) \
 						-f $(2) $(3)
 
-docker_buildx_tag = docker buildx build $(DOCKER_BUILD_PARAMS) \
+docker_buildx_three = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--platform linux/amd64,linux/arm64/v8 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
-						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
+						--build-arg IMAGE_REPO=localhost:5000/uselagoon \
 						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \
 						--push \
 						-t localhost:5000/uselagoon/$(1) \
@@ -100,10 +100,12 @@ docker_buildx_tag = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						-f $(2) $(3)
 
 ifeq ($(PUBLISH_IMAGES),true)
-	ifdef $(TAG_NAME)
-		docker_build = $(docker_buildx_tag)
-	else
-		docker_build = $(docker_buildx_branch)
+	ifdef $(REGISTRY_THREE)
+		docker_build = $(docker_buildx_three)
+	else ifdef $(REGISTRY_TWO)
+		docker_build = $(docker_buildx_two)
+	else ifdef $(REGISTRY_ONE)
+		docker_build = $(docker_buildx_one)
 	endif
 else
 	docker_build = $(docker_build_local)

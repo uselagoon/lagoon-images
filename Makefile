@@ -81,6 +81,7 @@ docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--platform linux/amd64,linux/arm64/v8 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
+						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \
 						--push \
 						-t localhost:5000/testlagoon/$(1) \
 						-t $(REGISTRY_ONE)/$(1):$(TAG_ONE) \
@@ -131,6 +132,7 @@ docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docke
 unversioned-images :=		commons \
 							nginx \
 							nginx-drupal \
+							mongo \
 							toolbox \
 							rabbitmq \
 							rabbitmq-cluster
@@ -162,7 +164,7 @@ $(build-images):
 # 2. Dockerfiles of the Images itself, will cause make to rebuild the images if something has
 #    changed on the Dockerfiles
 build/commons: images/commons/Dockerfile
-#build/mongo: build/commons images/mongo/Dockerfile
+build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
 build/toolbox: build/commons build/mariadb-10.5 images/toolbox/Dockerfile
@@ -219,11 +221,11 @@ versioned-images := 		php-7.2-fpm \
 							solr-7 \
 							solr-7-drupal \
 							mariadb-10.5 \
-							mariadb-10.5-drupal
-#							varnish-6 \
-#							varnish-6-drupal \
-#							varnish-6-persistent \
-#							varnish-6-persistent-drupal \
+							mariadb-10.5-drupal \
+							varnish-6 \
+							varnish-6-drupal \
+							varnish-6-persistent \
+							varnish-6-persistent-drupal
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -520,8 +522,8 @@ $(s3-load):
 
 .PHONY: docker-buildx-remove
 docker-buildx-remove:
-	docker stop registry
-	docker rm registry
+	docker stop registry || echo "no registry"
+	docker rm registry || echo "no registry"
 	docker buildx rm ci-local
 	docker buildx ls
 	docker context ls

@@ -61,6 +61,9 @@ PUBLISH_IMAGES ?= false
 
 TEMPFILE := $(shell mktemp build.XXXX -u)
 
+# Skip image scanning by default to make building images substantially faster
+SCAN_IMAGES ?= false
+
 # Init the file that is used to hold the image tag cross-reference table
 # $(shell >build.txt)
 $(shell >scan.txt)
@@ -113,7 +116,13 @@ else
 endif
 
 
-scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
+scan_cmd = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
+
+ifeq ($(SCAN_IMAGES),true)
+	scan_image = $(scan_cmd)
+else
+	scan_image =
+endif
 
 # Tags an image with the `testlagoon` repository and pushes it
 docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat

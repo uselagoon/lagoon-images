@@ -39,6 +39,7 @@ node ('lagoon-images') {
 
         stage ('build images') {
           sh script: "make docker-buildx-configure", label: "Configuring buildx for multi-platform build"
+          env.SCAN_IMAGES = 'true'
           sh script: "make -O${SYNC_MAKE_OUTPUT} -j12 build", label: "Building images"
         }
 

@@ -62,13 +62,20 @@ node ('lagoon-images') {
         }
 
         parallel (
-          'build and push images to dockerhub': {
+          'build and push images to testlagoon dockerhub': {
             stage ('push branch images to testlagoon/*') {
               withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
                 try {
                   if (env.SKIP_IMAGE_PUBLISH != 'true') {
                     sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch", label: "Publishing built images to testlagoon"
+                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
+                    if (env.SAFEBRANCH_NAME == 'main') {
+                      sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest", label: "Publishing built images to testlagoon main&latest images"
+                    } else if (env.SAFEBRANCH_NAME == 'arm64-images') {
+                      sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch", label: "Publishing built images to testlagoon arm images"
+                    } else {
+                      sh script: 'echo "No multi-arch images required for this build"', label: "Skipping image publishing"
+                    }
                   } else {
                     sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
                   }
@@ -102,24 +109,35 @@ node ('lagoon-images') {
         )
 
         if (env.TAG_NAME && env.SKIP_IMAGE_PUBLISH != 'true') {
-          stage ('publish-amazeeio') {
-            withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
-              sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-              sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-uselagoon-baseimages", label: "Publishing built images to uselagoon"
-              sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-amazeeio-baseimages", label: "Publishing legacy images to amazeeio"
+          parallel (
+            'build and push images to uselagoon dockerhub': {
+                stage ('push branch images to uselagoon/*') {
+                  withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
+                    try {
+                      if (env.SKIP_IMAGE_PUBLISH != 'true') {
+                        sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+                        sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=uselagoon TAG_ONE=${TAG_NAME} REGISTRY_TWO=uselagoon TAG_TWO=latest", label: "Publishing built images to testlagoon"
+                      } else {
+                        sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
+                      }
+                    } catch (e) {
+                      echo "Something went wrong, trying to cleanup"
+                      cleanup()
+                      throw e
+                    }
+                  }
+                }
+            },
+            'push legacy images to amazeeio dockerhub': {
+              stage ('publish-amazeeio') {
+                withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
+                  sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+                  sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-amazeeio-baseimages", label: "Publishing legacy images to amazeeio"
+                }
+              }
             }
-          }
+          )
         }
-
-        if (env.BRANCH_NAME == 'main' && env.SKIP_IMAGE_PUBLISH != 'true') {
-          stage ('save images to s3') {
-            sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 s3-save", label: "Saving images to AWS S3"
-          }
-          stage ('push latest images to testlagoon') {
-            sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=latest", label: "Publishing :latest images to testlagoon"
-          }
-        }
-
       } catch (e) {
         currentBuild.result = 'FAILURE'
         echo "Something went wrong, trying to cleanup"

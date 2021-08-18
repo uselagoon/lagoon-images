@@ -70,27 +70,19 @@ RUN apk add --no-cache fcgi \
         imagemagick-libs \
         imagemagick-dev
 
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
-
-RUN install-php-extensions apcu-5.1.20 xdebug-2.9.8 yaml-2.2.1 redis-4.3.0 imagick-3.5.1 \
+RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+    && yes '' | pecl install -f apcu-5.1.20 \
+    && yes '' | pecl install -f imagick-3.5.1 \
+    && yes '' | pecl install -f redis-4.3.0 \
+    && yes '' | pecl install -f xdebug-2.9.8 \
+    && yes '' | pecl install -f yaml-2.2.1 \
+    && docker-php-ext-enable apcu imagick redis xdebug yaml \
+    && rm -rf /var/cache/apk/* /tmp/pear/ \
+    && apk del .phpize-deps \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-# RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-#     && yes '' | pecl install -f apcu \
-#     && yes '' | pecl install -f xdebug-2.9.8 \
-#     && yes '' | pecl install -f yaml \
-#     && yes '' | pecl install -f redis-4.3.0 \
-#     && yes '' | pecl install -f imagick \
-#     && docker-php-ext-enable apcu redis xdebug imagick \
-#     && rm -rf /var/cache/apk/* /tmp/pear/ \
-#     && apk del .phpize-deps
-
-RUN docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && install-php-extensions bcmath gd gettext pdo_mysql mysqli pdo_pgsql pgsql shmop soap sockets opcache xsl zip
-
-# RUN  docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-#     && docker-php-ext-install -j4 bcmath gd gettext pdo_mysql mysqli pdo_pgsql pgsql shmop soap sockets opcache xsl zip \
-#     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN  docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip
 
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/

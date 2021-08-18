@@ -147,6 +147,8 @@ node ('lagoon-images') {
         cleanup()
         notifySlack(currentBuild.result)
       }
+      
+      cleanup()
     }
   }
 

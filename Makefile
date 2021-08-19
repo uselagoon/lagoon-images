@@ -157,11 +157,8 @@ versioned-images := 		php-7.3-fpm \
 							node-12-builder \
 							node-14-builder \
 							node-16-builder \
-							solr-6.6 \
 							solr-7.7 \
-							solr-6.6-drupal \
 							solr-7.7-drupal \
-							solr-6.6-ckan \
 							elasticsearch-6 \
 							elasticsearch-7 \
 							kibana-6 \
@@ -232,10 +229,8 @@ build/node-12 build/node-14 build/node-16: build/commons
 build/node-12-builder: build/node-12
 build/node-14-builder: build/node-14
 build/node-16-builder: build/node-16
-build/solr-6.6 build/solr-7.7: build/commons
-build/solr-6.6-drupal: build/solr-6.6
+build/solr-7.7: build/commons
 build/solr-7.7-drupal: build/solr-7.7
-build/solr-6.6-ckan: build/solr-6.6
 build/elasticsearch-6 build/elasticsearch-7 build/kibana-6 build/kibana-7 build/logstash-6 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11

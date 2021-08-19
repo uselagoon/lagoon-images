@@ -88,8 +88,7 @@ RUN  docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-jpeg-dir=/
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
 ENV NEWRELIC_VERSION=9.17.1.301
-RUN if [ "$TARGETARCH" = "amd64" ] ; then \
-    mkdir -p /tmp/newrelic && cd /tmp/newrelic \
+RUN mkdir -p /tmp/newrelic && cd /tmp/newrelic \
     && wget https://download.newrelic.com/php_agent/archive/${NEWRELIC_VERSION}/newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz \
     && gzip -dc newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz | tar --strip-components=1 -xf - \
     && NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 ./newrelic-install install \
@@ -103,7 +102,7 @@ RUN if [ "$TARGETARCH" = "amd64" ] ; then \
     && sed -i -e "s/newrelic.daemon.logfile = .*/newrelic.daemon.logfile = \"\/dev\/stderr\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && mv /usr/local/etc/php/conf.d/newrelic.ini /usr/local/etc/php/conf.d/newrelic.disable \
     && cd / && rm -rf /tmp/newrelic \
-    && fix-permissions /usr/local/etc/ ; fi
+    && fix-permissions /usr/local/etc/
 
 # Add blackfire probe and agent.
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \

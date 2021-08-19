@@ -22,7 +22,6 @@ COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 # Copy healthcheck files
-
 COPY --from=healthcheckbuilder /healthz-php /healthz-php
 
 RUN fix-permissions /etc/passwd \
@@ -81,7 +80,7 @@ RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && apk del .phpize-deps \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
-RUN  docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+RUN docker-php-ext-configure gd --with-webp-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip
 
 # New Relic PHP Agent.

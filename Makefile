@@ -148,12 +148,9 @@ versioned-images := 		php-7.3-fpm \
 							php-7.3-cli-drupal \
 							php-7.4-cli-drupal \
 							php-8.0-cli-drupal \
-							python-2.7 \
 							python-3.7 \
 							python-3.8 \
 							python-3.9 \
-							python-2.7-ckan \
-							python-2.7-ckandatapusher \
 							node-12 \
 							node-14 \
 							node-16 \
@@ -233,9 +230,7 @@ build/php-8.0-cli: build/php-8.0-fpm
 build/php-7.3-cli-drupal: build/php-7.3-cli
 build/php-7.4-cli-drupal: build/php-7.4-cli
 build/php-8.0-cli-drupal: build/php-8.0-cli
-build/python-2.7 build/python-3.7 build/python-3.8 build/python-3.9: build/commons
-build/python-2.7-ckan: build/python-2.7
-build/python-2.7-ckandatapusher: build/python-2.7
+build/python-3.7 build/python-3.8 build/python-3.9: build/commons
 build/node-12 build/node-14 build/node-16: build/commons
 build/node-12-builder: build/node-12
 build/node-14-builder: build/node-14

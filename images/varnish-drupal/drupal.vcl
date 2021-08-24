@@ -105,10 +105,10 @@ sub vcl_recv {
   # Strip out Google Analytics campaign variables. They are only needed
   # by the javascript running on the page
   # utm_source, utm_medium, utm_campaign, gclid
-   if(req.url ~ "(\?|&)(gclid|utm_[a-z]+)=") {
-     set req.url = regsuball(req.url, "(gclid|utm_[a-z]+)=[^\&]+&?", "");
-     set req.url = regsub(req.url, "(\?|&)$", "");
-   }
+  if (req.url ~ "(\?|&)(gclid|utm_[a-z]+)=") {
+    set req.url = regsuball(req.url, "(gclid|utm_[a-z]+)=[^\&]+&?", "");
+    set req.url = regsub(req.url, "(\?|&)$", "");
+  }
 
   # Bypass a cache hit (the request is still sent to the backend)
   if (req.method == "REFRESH") {
@@ -159,7 +159,7 @@ sub vcl_recv {
     req.method != "TRACE" &&
     req.method != "OPTIONS" &&
     req.method != "DELETE") {
-     return (pipe);
+      return (pipe);
   }
 
   # Large binary files are passed.

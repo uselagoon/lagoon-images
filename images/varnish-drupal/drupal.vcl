@@ -58,6 +58,11 @@ sub vcl_recv {
     set req.http.X-LAGOON-VARNISH = "${HOSTNAME}-${LAGOON_GIT_BRANCH:-undef}-${LAGOON_PROJECT}, " + req.http.X-LAGOON-VARNISH;
     set req.http.X-LAGOON-VARNISH-BYPASS = "true";
   }
+  else if (req.http.X-AMAZEEIO-NO-CACHE-CDN) {
+    # Do no pass for requests from the no-cache CDN.
+    set req.http.X-LAGOON-VARNISH = "${HOSTNAME}-${LAGOON_GIT_BRANCH:-undef}-${LAGOON_PROJECT}, amazeeio-no-cache-cdn";
+    set req.http.X-LAGOON-VARNISH-BYPASS = "false";
+  }
   else if (req.http.Fastly-FF) {
     # Pass all Requests which are handled via Fastly
     set req.http.X-LAGOON-VARNISH = "${HOSTNAME}-${LAGOON_GIT_BRANCH:-undef}-${LAGOON_PROJECT}, fastly";

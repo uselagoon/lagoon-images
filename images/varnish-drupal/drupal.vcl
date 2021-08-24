@@ -93,7 +93,7 @@ sub vcl_recv {
     return (pipe);
   }
 
-  if (req.http.X-LAGOON-VARNISH-BYPASS == "true" || req.http.X-LAGOON-VARNISH-BYPASS == "TRUE") {
+  if (req.http.X-LAGOON-VARNISH-BYPASS ~ "(?i)true") {
     return (pass);
   }
 

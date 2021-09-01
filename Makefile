@@ -56,6 +56,9 @@ DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 # Name of the Branch we are currently in
 BRANCH_NAME :=
 
+# Skip image scanning by default to make building images substantially faster
+SCAN_IMAGES ?= false
+
 # Init the file that is used to hold the image tag cross-reference table
 $(shell >build.txt)
 $(shell >scan.txt)
@@ -68,7 +71,13 @@ $(shell >scan.txt)
 # Docker Build Context
 docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
 
-scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
+scan_cmd = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
+
+ifeq ($(SCAN_IMAGES),true)
+	scan_image = $(scan_cmd)
+else
+	scan_image =
+endif
 
 # Tags an image with the `testlagoon` repository and pushes it
 docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
@@ -130,40 +139,26 @@ build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 ####### Multi-version Images
 #######
 
-versioned-images := 		php-7.2-fpm \
-							php-7.3-fpm \
+versioned-images := 		php-7.3-fpm \
 							php-7.4-fpm \
 							php-8.0-fpm \
-							php-7.2-cli \
 							php-7.3-cli \
 							php-7.4-cli \
 							php-8.0-cli \
-							php-7.2-cli-drupal \
 							php-7.3-cli-drupal \
 							php-7.4-cli-drupal \
 							php-8.0-cli-drupal \
-							python-2.7 \
 							python-3.7 \
 							python-3.8 \
 							python-3.9 \
-							python-2.7-ckan \
-							python-2.7-ckandatapusher \
-							node-10 \
 							node-12 \
 							node-14 \
 							node-16 \
-							node-10-builder \
 							node-12-builder \
 							node-14-builder \
 							node-16-builder \
-							solr-5.5 \
-							solr-6.6 \
 							solr-7.7 \
-							solr-5.5-drupal \
-							solr-6.6-drupal \
 							solr-7.7-drupal \
-							solr-5.5-ckan \
-							solr-6.6-ckan \
 							elasticsearch-6 \
 							elasticsearch-7 \
 							kibana-6 \
@@ -222,29 +217,20 @@ base-images-with-versions += $(default-versioned-images)
 s3-images += $(versioned-images)
 s3-images += $(default-versioned-images)
 
-build/php-7.2-fpm build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm: build/commons
-build/php-7.2-cli: build/php-7.2-fpm
+build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm: build/commons
 build/php-7.3-cli: build/php-7.3-fpm
 build/php-7.4-cli: build/php-7.4-fpm
 build/php-8.0-cli: build/php-8.0-fpm
-build/php-7.2-cli-drupal: build/php-7.2-cli
 build/php-7.3-cli-drupal: build/php-7.3-cli
 build/php-7.4-cli-drupal: build/php-7.4-cli
 build/php-8.0-cli-drupal: build/php-8.0-cli
-build/python-2.7 build/python-3.7 build/python-3.8 build/python-3.9: build/commons
-build/python-2.7-ckan: build/python-2.7
-build/python-2.7-ckandatapusher: build/python-2.7
-build/node-10 build/node-12 build/node-14 build/node-16: build/commons
-build/node-10-builder: build/node-10
+build/python-3.7 build/python-3.8 build/python-3.9: build/commons
+build/node-12 build/node-14 build/node-16: build/commons
 build/node-12-builder: build/node-12
 build/node-14-builder: build/node-14
 build/node-16-builder: build/node-16
-build/solr-5.5  build/solr-6.6 build/solr-7.7: build/commons
-build/solr-5.5-drupal: build/solr-5.5
-build/solr-6.6-drupal: build/solr-6.6
+build/solr-7.7: build/commons
 build/solr-7.7-drupal: build/solr-7.7
-build/solr-5.5-ckan: build/solr-5.5
-build/solr-6.6-ckan: build/solr-6.6
 build/elasticsearch-6 build/elasticsearch-7 build/kibana-6 build/kibana-7 build/logstash-6 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11

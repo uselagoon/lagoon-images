@@ -1,20 +1,25 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
-FROM varnish:6.5 as vmod
-ENV LIBVMOD_DYNAMIC_VERSION=6.5
-ENV VARNISH_MODULES_VERSION=6.5
-RUN apt-get update && apt-get -y install build-essential automake libtool python-docutils libpcre3-dev varnish-dev curl zip
+FROM varnish:6.6 as vmod
+ENV LIBVMOD_DYNAMIC_VERSION=6.6
+ENV VARNISH_MODULES_VERSION=6.6
+RUN apt-get update && apt-get -y install build-essential curl zip
 
-RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip && \
-  unzip ${LIBVMOD_DYNAMIC_VERSION}.zip && cd libvmod-dynamic-${LIBVMOD_DYNAMIC_VERSION} && \
-  ./autogen.sh && ./configure && make && make install
+RUN  curl -L https://packagecloud.io/varnishcache/varnish66/gpgkey | apt-key add - \
+  && echo "deb https://packagecloud.io/varnishcache/varnish66/debian/ buster main" | tee /etc/apt/sources.list.d/varnish-cache.list \
+  && apt-get -q update \
+  && apt-get install -qq automake libtool python-docutils libpcre3-dev varnish-dev
 
-RUN cd /tmp && curl -sSLO https://github.com/varnish/varnish-modules/archive/${VARNISH_MODULES_VERSION}.zip && \
-  unzip ${VARNISH_MODULES_VERSION}.zip && cd varnish-modules-${VARNISH_MODULES_VERSION} && \
-  ./bootstrap && ./configure && make && make install
+RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip \
+  && unzip ${LIBVMOD_DYNAMIC_VERSION}.zip && cd libvmod-dynamic-${LIBVMOD_DYNAMIC_VERSION} \
+  && ./autogen.sh && ./configure && make && make install
 
-FROM varnish:6.5
+RUN cd /tmp && curl -sSLO https://github.com/varnish/varnish-modules/archive/${VARNISH_MODULES_VERSION}.zip \
+  && unzip ${VARNISH_MODULES_VERSION}.zip && cd varnish-modules-${VARNISH_MODULES_VERSION} \
+  && ./bootstrap && ./configure && make && make install
+
+FROM varnish:6.6
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"

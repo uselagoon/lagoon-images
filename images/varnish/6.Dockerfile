@@ -9,7 +9,7 @@ RUN apt-get update && apt-get -y install build-essential curl zip
 RUN  curl -L https://packagecloud.io/varnishcache/varnish66/gpgkey | apt-key add - \
   && echo "deb https://packagecloud.io/varnishcache/varnish66/debian/ buster main" | tee /etc/apt/sources.list.d/varnish-cache.list \
   && apt-get -q update \
-  && apt-get install -qq automake libtool python-docutils libpcre3-dev varnish-dev
+  && apt-get install -qq automake libtool python3-docutils libpcre3-dev varnish-dev
 
 RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip \
   && unzip ${LIBVMOD_DYNAMIC_VERSION}.zip && cd libvmod-dynamic-${LIBVMOD_DYNAMIC_VERSION} \

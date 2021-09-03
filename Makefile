@@ -133,6 +133,10 @@ docker_publish_uselagoon = docker tag $(CI_BUILD_TAG)/$(1) uselagoon/$(2) && doc
 # Tags an image with the `amazeeio` repository and pushes it
 docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docker push amazeeio/$(2) | cat
 
+.PHONY: docker_pull
+docker_pull:
+	grep -Eh 'FROM' $$(find . -type f -name *Dockerfile) | grep -Ev 'IMAGE_REPO' | awk '{print $$2}' | sort --unique | xargs -tn1 -P8 docker pull -q
+
 #######
 ####### Base Images
 #######
@@ -184,40 +188,26 @@ build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 ####### Multi-version Images
 #######
 
-versioned-images := 		php-7.2-fpm \
-							php-7.3-fpm \
+versioned-images := 		php-7.3-fpm \
 							php-7.4-fpm \
 							php-8.0-fpm \
-							php-7.2-cli \
 							php-7.3-cli \
 							php-7.4-cli \
 							php-8.0-cli \
-							php-7.2-cli-drupal \
 							php-7.3-cli-drupal \
 							php-7.4-cli-drupal \
 							php-8.0-cli-drupal \
-							python-2.7 \
 							python-3.7 \
 							python-3.8 \
 							python-3.9 \
-							python-2.7-ckan \
-							python-2.7-ckandatapusher \
-							node-10 \
 							node-12 \
 							node-14 \
 							node-16 \
-							node-10-builder \
 							node-12-builder \
 							node-14-builder \
 							node-16-builder \
-							solr-5.5 \
-							solr-6.6 \
 							solr-7.7 \
-							solr-5.5-drupal \
-							solr-6.6-drupal \
 							solr-7.7-drupal \
-							solr-5.5-ckan \
-							solr-6.6-ckan \
 							elasticsearch-6 \
 							elasticsearch-7 \
 							kibana-6 \
@@ -276,29 +266,20 @@ base-images-with-versions += $(default-versioned-images)
 s3-images += $(versioned-images)
 s3-images += $(default-versioned-images)
 
-build/php-7.2-fpm build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm: build/commons
-build/php-7.2-cli: build/php-7.2-fpm
+build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm: build/commons
 build/php-7.3-cli: build/php-7.3-fpm
 build/php-7.4-cli: build/php-7.4-fpm
 build/php-8.0-cli: build/php-8.0-fpm
-build/php-7.2-cli-drupal: build/php-7.2-cli
 build/php-7.3-cli-drupal: build/php-7.3-cli
 build/php-7.4-cli-drupal: build/php-7.4-cli
 build/php-8.0-cli-drupal: build/php-8.0-cli
-build/python-2.7 build/python-3.7 build/python-3.8 build/python-3.9: build/commons
-build/python-2.7-ckan: build/python-2.7
-build/python-2.7-ckandatapusher: build/python-2.7
-build/node-10 build/node-12 build/node-14 build/node-16: build/commons
-build/node-10-builder: build/node-10
+build/python-3.7 build/python-3.8 build/python-3.9: build/commons
+build/node-12 build/node-14 build/node-16: build/commons
 build/node-12-builder: build/node-12
 build/node-14-builder: build/node-14
 build/node-16-builder: build/node-16
-build/solr-5.5  build/solr-6.6 build/solr-7.7: build/commons
-build/solr-5.5-drupal: build/solr-5.5
-build/solr-6.6-drupal: build/solr-6.6
+build/solr-7.7: build/commons
 build/solr-7.7-drupal: build/solr-7.7
-build/solr-5.5-ckan: build/solr-5.5
-build/solr-6.6-ckan: build/solr-6.6
 build/elasticsearch-6 build/elasticsearch-7 build/kibana-6 build/kibana-7 build/logstash-6 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11

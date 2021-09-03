@@ -40,7 +40,8 @@ node ('lagoon-images') {
         stage ('build images') {
           sh script: "make docker-buildx-configure", label: "Configuring buildx for multi-platform build"
           env.SCAN_IMAGES = 'true'
-          sh script: "make -O${SYNC_MAKE_OUTPUT} -j12 build", label: "Building images"
+          sh script: "make docker_pull", label: "Ensuring fresh upstream images"
+          sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build", label: "Building images"
         }
 
         stage ('show trivy scan results') {

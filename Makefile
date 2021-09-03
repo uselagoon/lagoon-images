@@ -88,6 +88,10 @@ docker_publish_uselagoon = docker tag $(CI_BUILD_TAG)/$(1) uselagoon/$(2) && doc
 # Tags an image with the `amazeeio` repository and pushes it
 docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docker push amazeeio/$(2) | cat
 
+.PHONY: docker_pull
+docker_pull:
+	grep -Eh 'FROM' $$(find . -type f -name *Dockerfile) | grep -Ev 'IMAGE_REPO' | awk '{print $$2}' | sort --unique | xargs -tn1 -P8 docker pull -q
+
 #######
 ####### Base Images
 #######

@@ -39,6 +39,7 @@ node ('lagoon-images') {
 
         stage ('build images') {
           env.SCAN_IMAGES = 'true'
+          sh script: "make docker_pull", label: "Ensuring fresh upstream images"
           sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build", label: "Building images"
         }
 

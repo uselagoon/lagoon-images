@@ -36,7 +36,7 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 COPY check_fcgi /usr/sbin/
-COPY entrypoints/70-php-config.sh entrypoints/60-php-xdebug.sh entrypoints/50-ssmtp.sh entrypoints/71-php-newrelic.sh entrypoints/80-php-blackfire.sh /lagoon/entrypoints/
+COPY entrypoints /lagoon/entrypoints/
 
 COPY php.ini /usr/local/etc/php/
 COPY 00-lagoon-php.ini.tpl /usr/local/etc/php/conf.d/

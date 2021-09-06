@@ -27,7 +27,7 @@ RUN apk add --no-cache git \
         openssh-sftp-server \
         findutils \
         nodejs-current \
-        nodejs-npm \
+        npm \
         yarn \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
     && rm -rf /var/cache/apk/* \

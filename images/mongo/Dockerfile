@@ -1,5 +1,5 @@
 ARG IMAGE_REPO
-FROM --platform=linux/amd64  ${IMAGE_REPO:-lagoon}/commons as commons
+FROM --platform=linux/amd64 ${IMAGE_REPO:-lagoon}/commons as commons
 FROM --platform=linux/amd64 alpine:3.8
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"

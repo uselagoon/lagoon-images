@@ -135,7 +135,7 @@ docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docke
 
 .PHONY: docker_pull
 docker_pull:
-	grep -Eh 'FROM' $$(find . -type f -name *Dockerfile) | grep -Ev 'IMAGE_REPO' | awk '{print $$2}' | sort --unique | xargs -tn1 -P8 docker pull -q
+	grep -Eh 'FROM' $$(find . -type f -name *Dockerfile) | grep -Ev 'IMAGE_REPO' | sed 's/\-\-platform\=linux\/amd64//g' | awk '{print $$2}' | sort --unique | xargs -tn1 -P8 docker pull -q
 
 #######
 ####### Base Images

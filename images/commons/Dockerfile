@@ -1,5 +1,5 @@
 FROM webdevops/go-crond:21.5.0-alpine AS go-crond
-FROM tobybellwood/envplate:latest AS envplate
+FROM amazeeio/envplate:dev AS envplate
 
 FROM alpine:3.14.2
 

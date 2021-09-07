@@ -76,19 +76,13 @@ RUN apk add --no-cache fcgi \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && docker-php-ext-configure gd --with-webp --with-jpeg \
     && docker-php-ext-install -j4 bcmath gd gettext pdo_mysql mysqli pdo_pgsql pgsql shmop soap sockets opcache xsl zip \
-    # ext-imagick - waiting on stable release to use PECL to install
-    && docker-php-source extract \
-    && mkdir -p /usr/src/php/ext/imagick \
-    && curl -fsSL https://api.github.com/repos/imagick/imagick/tarball | tar xvz -C /usr/src/php/ext/imagick --strip 1 \
-    && docker-php-ext-install imagick \
-    && docker-php-source delete \
     # Legacy PECL installs
     && pecl channel-update pecl.php.net \
-    && yes '' | pecl install -f apcu-5.1.19 \
-    # && yes '' | pecl install -f imagick \
-    && yes '' | pecl install -f redis-5.3.2 \
-    && yes '' | pecl install -f xdebug-3.0.0 \
-    && yes '' | pecl install -f yaml-2.2.0 \
+    && yes '' | pecl install -f apcu \
+    && yes '' | pecl install -f imagick \
+    && yes '' | pecl install -f redis \
+    && yes '' | pecl install -f xdebug \
+    && yes '' | pecl install -f yaml \
     && docker-php-ext-enable apcu imagick redis xdebug yaml
 # RUN sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
 RUN rm -rf /var/cache/apk/* /tmp/pear/ \

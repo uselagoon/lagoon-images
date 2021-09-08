@@ -84,7 +84,7 @@ RUN apk add --no-cache fcgi \
     && docker-php-source delete \
     # Legacy PECL installs
     && pecl channel-update pecl.php.net \
-    && yes '' | pecl install -f apcu-5.1.19 \
+    && yes '' | pecl install -f apcu-5.1.20 \
     # && yes '' | pecl install -f imagick \
     && yes '' | pecl install -f redis-5.3.2 \
     && yes '' | pecl install -f xdebug-3.0.0 \

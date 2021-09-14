@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-# amazee.io lagoon Makefile The main purpose of this Makefile is to provide easier handling of
+# Lagoon Images Makefile The main purpose of this Makefile is to provide easier handling of
 # building images and running tests It understands the relation of the different images (like
 # nginx-drupal is based on nginx) and builds them in the correct order Also it knows which
 # services in docker-compose.yml are depending on which base images or maybe even other service
@@ -56,6 +56,9 @@ DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 # Name of the Branch we are currently in
 BRANCH_NAME :=
 
+# Skip image scanning by default to make building images substantially faster
+SCAN_IMAGES ?= false
+
 # Init the file that is used to hold the image tag cross-reference table
 $(shell >build.txt)
 $(shell >scan.txt)
@@ -68,7 +71,13 @@ $(shell >scan.txt)
 # Docker Build Context
 docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
 
-scan_image = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock     -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
+scan_cmd = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
+
+ifeq ($(SCAN_IMAGES),true)
+	scan_image = $(scan_cmd)
+else
+	scan_image =
+endif
 
 # Tags an image with the `testlagoon` repository and pushes it
 docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
@@ -79,22 +88,22 @@ docker_publish_uselagoon = docker tag $(CI_BUILD_TAG)/$(1) uselagoon/$(2) && doc
 # Tags an image with the `amazeeio` repository and pushes it
 docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docker push amazeeio/$(2) | cat
 
+.PHONY: docker_pull
+docker_pull:
+	grep -Eh 'FROM' $$(find . -type f -name *Dockerfile) | grep -Ev 'IMAGE_REPO' | awk '{print $$2}' | sort --unique | xargs -tn1 -P8 docker pull -q
+
 #######
 ####### Base Images
 #######
 ####### Base Images are the base for all other images and are also published for clients to use during local development
 
 unversioned-images :=		commons \
-							mariadb \
-							mariadb-drupal \
 							mongo \
 							nginx \
 							nginx-drupal \
-							varnish \
-							varnish-drupal \
-							varnish-persistent \
-							varnish-persistent-drupal \
-							toolbox
+							toolbox \
+							rabbitmq \
+							rabbitmq-cluster
 
 # base-images is a variable that will be constantly filled with all base image there are
 base-images += $(unversioned-images)
@@ -123,52 +132,37 @@ $(build-images):
 # 2. Dockerfiles of the Images itself, will cause make to rebuild the images if something has
 #    changed on the Dockerfiles
 build/commons: images/commons/Dockerfile
-build/mariadb: build/commons images/mariadb/Dockerfile
-build/mariadb-drupal: build/mariadb images/mariadb-drupal/Dockerfile
 build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
-build/varnish: build/commons images/varnish/Dockerfile
-build/varnish-drupal: build/varnish images/varnish-drupal/Dockerfile
-build/varnish-persistent: build/varnish images/varnish/Dockerfile
-build/varnish-persistent-drupal: build/varnish-drupal images/varnish-drupal/Dockerfile
-build/toolbox: build/commons build/mariadb images/toolbox/Dockerfile
+build/toolbox: build/commons build/mariadb-10.5 images/toolbox/Dockerfile
+build/rabbitmq: build/commons images/rabbitmq/Dockerfile
+build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 
 #######
 ####### Multi-version Images
 #######
 
-versioned-images := 		php-7.2-fpm \
-							php-7.3-fpm \
+versioned-images := 		php-7.3-fpm \
 							php-7.4-fpm \
 							php-8.0-fpm \
-							php-7.2-cli \
 							php-7.3-cli \
 							php-7.4-cli \
 							php-8.0-cli \
-							php-7.2-cli-drupal \
 							php-7.3-cli-drupal \
 							php-7.4-cli-drupal \
 							php-8.0-cli-drupal \
-							python-2.7 \
 							python-3.7 \
 							python-3.8 \
-							python-2.7-ckan \
-							python-2.7-ckandatapusher \
-							node-10 \
+							python-3.9 \
 							node-12 \
 							node-14 \
-							node-10-builder \
+							node-16 \
 							node-12-builder \
 							node-14-builder \
-							solr-5.5 \
-							solr-6.6 \
+							node-16-builder \
 							solr-7.7 \
-							solr-5.5-drupal \
-							solr-6.6-drupal \
 							solr-7.7-drupal \
-							solr-5.5-ckan \
-							solr-6.6-ckan \
 							elasticsearch-6 \
 							elasticsearch-7 \
 							kibana-6 \
@@ -178,20 +172,33 @@ versioned-images := 		php-7.2-fpm \
 							postgres-12 \
 							redis-6 \
 							redis-6-persistent \
+							varnish-6 \
+							varnish-6-drupal \
+							varnish-6-persistent \
+							varnish-6-persistent-drupal \
 							solr-7 \
 							solr-7-drupal \
 							solr-8 \
-							solr-8-drupal
+							solr-8-drupal \
+							mariadb-10.5 \
+							mariadb-10.5-drupal \
 
-# newly-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
+# default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
+# the below versions are the ones that map to the unversioned namespace
 
-newly-versioned-images := 	postgres-11 \
+default-versioned-images := 	mariadb-10.4 \
+							mariadb-10.4-drupal \
+							postgres-11 \
 							postgres-11-ckan \
 							postgres-11-drupal \
 							redis-5 \
-							redis-5-persistent
+							redis-5-persistent \
+							varnish-5 \
+							varnish-5-drupal \
+							varnish-5-persistent \
+							varnish-5-persistent-drupal
 
-build-versioned-images = $(foreach image,$(versioned-images) $(newly-versioned-images),build/$(image))
+build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images),build/$(image))
 
 # Define the make recipe for all multi images
 $(build-versioned-images):
@@ -212,42 +219,41 @@ $(build-versioned-images):
 	touch $@
 
 base-images-with-versions += $(versioned-images)
-base-images-with-versions += $(newly-versioned-images)
+base-images-with-versions += $(default-versioned-images)
 s3-images += $(versioned-images)
-s3-images += $(newly-versioned-images)
+s3-images += $(default-versioned-images)
 
-build/php-7.2-fpm build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm: build/commons
-build/php-7.2-cli: build/php-7.2-fpm
+build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm: build/commons
 build/php-7.3-cli: build/php-7.3-fpm
 build/php-7.4-cli: build/php-7.4-fpm
 build/php-8.0-cli: build/php-8.0-fpm
-build/php-7.2-cli-drupal: build/php-7.2-cli
 build/php-7.3-cli-drupal: build/php-7.3-cli
 build/php-7.4-cli-drupal: build/php-7.4-cli
 build/php-8.0-cli-drupal: build/php-8.0-cli
-build/python-2.7 build/python-3.7 build/python-3.8: build/commons
-build/python-2.7-ckan: build/python-2.7
-build/python-2.7-ckandatapusher: build/python-2.7
-build/node-10 build/node-12 build/node-14: build/commons
-build/node-10-builder: build/node-10
+build/python-3.7 build/python-3.8 build/python-3.9: build/commons
+build/node-12 build/node-14 build/node-16: build/commons
 build/node-12-builder: build/node-12
 build/node-14-builder: build/node-14
-build/solr-5.5  build/solr-6.6 build/solr-7.7: build/commons
-build/solr-5.5-drupal: build/solr-5.5
-build/solr-6.6-drupal: build/solr-6.6
+build/node-16-builder: build/node-16
+build/solr-7.7: build/commons
 build/solr-7.7-drupal: build/solr-7.7
-build/solr-5.5-ckan: build/solr-5.5
-build/solr-6.6-ckan: build/solr-6.6
 build/elasticsearch-6 build/elasticsearch-7 build/kibana-6 build/kibana-7 build/logstash-6 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
 build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
-build/redis-5 build/redis-6: build/commons
 build/redis-6-persistent: build/redis-6
+build/varnish-5 build/varnish-6: build/commons
+build/varnish-5-drupal build/varnish-5-persistent: build/varnish-5
+build/varnish-5-persistent-drupal: build/varnish-5-drupal
+build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
+build/varnish-6-persistent-drupal: build/varnish-6-drupal
 build/solr-7 build/solr-8: build/commons
 build/solr-7-drupal: build/solr-7
 build/solr-8-drupal: build/solr-8
+build/mariadb-10.4 build/mariadb-10.5: build/commons
+build/mariadb-10.4-drupal: build/mariadb-10.4
+build/mariadb-10.5-drupal: build/mariadb-10.5
 
 #######
 ####### Building Images
@@ -273,10 +279,12 @@ build-list:
 # Publish command to testlagoon docker hub, done on any main branch or PR
 publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
 publish-testlagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-testlagoon-baseimages-with-versions]-$(image))
-# tag and push all images
+# Special handler for the previously unversioned images that now have versions
+publish-testlagoon-baseimages-without-versions = $(foreach image,$(default-versioned-images),[publish-testlagoon-baseimages-without-versions]-$(image))
 
+# tag and push all images
 .PHONY: publish-testlagoon-baseimages
-publish-testlagoon-baseimages: $(publish-testlagoon-baseimages) $(publish-testlagoon-baseimages-with-versions)
+publish-testlagoon-baseimages: $(publish-testlagoon-baseimages) $(publish-testlagoon-baseimages-with-versions) $(publish-testlagoon-baseimages-without-versions)
 
 # tag and push of each image
 .PHONY: $(publish-testlagoon-baseimages)
@@ -296,6 +304,20 @@ $(publish-testlagoon-baseimages-with-versions):
 #		We add the Lagoon Version just as a dash
 		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME))
 
+# tag and push of unversioned base images
+.PHONY: $(publish-testlagoon-baseimages-without-versions)
+$(publish-testlagoon-baseimages-without-versions):
+#   Calling docker_publish for image, but remove the prefix '[publish-amazeeio-baseimages-with-versions]-' first
+		$(eval image = $(subst [publish-testlagoon-baseimages-without-versions]-,,$@))
+		$(eval variant = $(word 1,$(subst -, ,$(image))))
+		$(eval version = $(word 2,$(subst -, ,$(image))))
+		$(eval type = $(word 3,$(subst -, ,$(image))))
+		$(eval subtype = $(word 4,$(subst -, ,$(image))))
+#   Construct a "legacy" tag of the form `testlagoon/variant-type-subtype` e.g. `testlagoon/postgres-ckan`
+		$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
+#	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
+#	We push a version without the `-latest` suffix
+		$(call docker_publish_testlagoon,$(image),$(legacytag):$(BRANCH_NAME))
 
 #######
 ####### All tagged releases are pushed to uselagoon repository with new semantic tags
@@ -338,7 +360,7 @@ $(publish-uselagoon-baseimages-with-versions):
 publish-amazeeio-baseimages = $(foreach image,$(base-images),[publish-amazeeio-baseimages]-$(image))
 publish-amazeeio-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-amazeeio-baseimages-with-versions]-$(image))
 # Special handler for the previously unversioned images that now have versions
-publish-amazeeio-baseimages-without-versions = $(foreach image,$(newly-versioned-images),[publish-amazeeio-baseimages-without-versions]-$(image))
+publish-amazeeio-baseimages-without-versions = $(foreach image,$(default-versioned-images),[publish-amazeeio-baseimages-without-versions]-$(image))
 
 # tag and push all images
 .PHONY: publish-amazeeio-baseimages
@@ -384,13 +406,12 @@ $(publish-amazeeio-baseimages-without-versions):
 		$(eval subtype = $(word 4,$(subst -, ,$(image))))
 #   Construct a "legacy" tag of the form `amazeeio/variant-type-subtype` e.g. `amazeeio/postgres-ckan`
 		$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
-#	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
-#	We push a version without the `-latest` suffix
-		$(call docker_publish_amazeeio,$(image),$(legacytag))
-#	Plus a version with the `-latest` suffix, this makes it easier for people with automated testing
-		$(call docker_publish_amazeeio,$(image),$(legacytag)-latest)
-#	We add the Lagoon Version just as a dash
-		$(call docker_publish_amazeeio,$(image),$(legacytag)-$(LAGOON_VERSION))
+#	These images previously had no version tracking, publish them for legacy compatibility only
+		$(call docker_publish_amazeeio,$(image),$(legacytag):latest)
+		$(call docker_publish_uselagoon,$(image),$(legacytag):latest)
+#	These images previously had no version tracking, publish them for legacy compatibility only
+		$(call docker_publish_amazeeio,$(image),$(legacytag):$(LAGOON_VERSION))
+		$(call docker_publish_uselagoon,$(image),$(legacytag):$(LAGOON_VERSION))
 
 
 #######

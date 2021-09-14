@@ -9,12 +9,92 @@
     "config:base",
     ":disableRateLimiting"
   ],
+  "labels": ["dependencies"],
   "dependencyDashboard": true,
   "separateMajorMinor": true,
   "separateMinorPatch": true,
   "separateMultipleMajor": true,
-  "packageRules": [
+  "regexManagers": [
     {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["pecl install -f apcu-(?<currentValue>.*?) "],
+      "depNameTemplate": "krakjoe/apcu",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["pecl install -f imagick-(?<currentValue>.*?) "],
+      "depNameTemplate": "Imagick/imagick",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["pecl install -f redis-(?<currentValue>.*?) "],
+      "depNameTemplate": "phpredis/phpredis",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["pecl install -f xdebug-(?<currentValue>.*?) "],
+      "depNameTemplate": "xdebug/xdebug",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["pecl install -f yaml-(?<currentValue>.*?) "],
+      "depNameTemplate": "php/pecl-file_formats-yaml",
+      "datasourceTemplate": "github-tags"
+    }
+  ],
+  "packageRules": [
+    { 
+      "enabled": true,
+      "matchDatasources": [
+        "github-releases",
+        "github-tags"
+      ],
+      "matchPackageNames": [
+        "krakjoe/apcu"
+      ],
+      "extractVersion": "^v(?<version>.*)$"
+    },
+    { 
+      "enabled": true,
+      "matchDatasources": [
+        "github-releases",
+        "github-tags"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "matchPackageNames": [
+        "Imagick/imagick",
+        "phpredis/phpredis",
+        "xdebug/xdebug",
+        "php/pecl-file_formats-yaml"
+      ]
+    },
+    { 
+      "enabled": false,
+      "groupName": "Disable PECL major updates",
+      "matchDatasources": [
+        "github-releases",
+        "github-tags"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "matchPackageNames": [
+        "krakjoe/apcu",
+        "Imagick/imagick",
+        "phpredis/phpredis",
+        "xdebug/xdebug",
+        "php/pecl-file_formats-yaml"
+      ]
+    },
+    {
+      "enabled": true,
       "matchDatasources": [
         "docker"
       ],
@@ -41,6 +121,7 @@
       ]
     },
     {
+      "enabled": true,
       "matchDatasources": [
         "docker"
       ],
@@ -50,7 +131,10 @@
       ],
       "matchPackageNames": [
         "node",
-        "postgres"
+        "postgres",
+        "redis",
+        "solr",
+        "varnish"
       ]
     },
     {
@@ -63,7 +147,10 @@
       ],
       "matchPackageNames": [
         "node",
-        "postgres"
+        "postgres",
+        "redis",
+        "solr",
+        "varnish"
       ]
     },
     {
@@ -98,6 +185,7 @@
         "docker"
       ],
       "matchUpdateTypes": [
+        "major",
         "minor"
       ],
       "matchPackageNames": [

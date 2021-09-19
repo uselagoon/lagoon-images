@@ -1,5 +1,5 @@
 ARG IMAGE_REPO
-FROM --platform=linux/amd64 ${IMAGE_REPO:-lagoon}/commons as commons
+FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
 FROM varnish:6.6 as vmod
 ENV LIBVMOD_DYNAMIC_VERSION=6.6

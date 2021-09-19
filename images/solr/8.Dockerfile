@@ -1,15 +1,17 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM solr:8.7.0-slim
+FROM solr:8.9.0-slim
 
-LABEL maintainer="amazee.io"
+LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+
 ENV LAGOON=solr
+# ENV SOLR_HOME=/opt/solr/server/solr
+ENV SOLR_DATA_HOME=/var/solr
+ENV SOLR_LOGS_DIR=/opt/solr/server/logs
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
-
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
@@ -25,8 +27,15 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
+
 # we need root for the fix-permissions to work
 USER root
+
+RUN apt-get -y update && apt-get -y install \
+    busybox \
+    && rm -rf /var/lib/apt/lists/*
 
 # needed to fix dash upgrade - man files are removed from slim images
 RUN set -x \
@@ -38,7 +47,11 @@ RUN echo "dash dash/sh boolean false" | debconf-set-selections
 RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
 RUN chmod +x /sbin/tini
-RUN fix-permissions /var/solr
+RUN mkdir -p /var/solr /opt/solr/server/logs /opt/solr/server/solr 
+RUN fix-permissions /var/solr \
+    && chown solr:solr /var/solr /opt/solr/server/logs /opt/solr/server/solr \
+    && fix-permissions /opt/solr/server/logs \
+    && fix-permissions /opt/solr/server/solr
 
 # solr really doesn't like to be run as root, so we define the default user agin
 USER solr

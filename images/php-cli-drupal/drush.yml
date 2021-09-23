@@ -4,3 +4,12 @@
 options:
   root: '/app/${env.WEBROOT}'
   uri: '${env.LAGOON_ROUTE}'
+  
+command:
+  sql:
+    dump:
+      options:
+        # Omit cache and similar tables (including during a sql:sync).
+        structure-tables-key: common
+        # Do not write any CREATE LOGFILE GROUP or CREATE TABLESPACE statements in output.
+        extra-dump: --no-tablespaces

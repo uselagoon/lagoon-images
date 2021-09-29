@@ -38,6 +38,7 @@ node ('lagoon-images') {
         }
 
         stage ('build images') {
+          sh script: "docker run --privileged --rm tonistiigi/binfmt --install all", label: "setting binfmt correctly"
           sh script: "make docker-buildx-configure", label: "Configuring buildx for multi-platform build"
           env.SCAN_IMAGES = 'true'
           sh script: "make docker_pull", label: "Ensuring fresh upstream images"

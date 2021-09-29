@@ -29,13 +29,9 @@ ENV LAGOON=varnish
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
 
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
-
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
-#COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 ENV TMPDIR=/tmp \
@@ -55,6 +51,10 @@ RUN echo "${VARNISH_SECRET:-lagoon_default_secret}" >> /etc/varnish/secret
 COPY default.vcl /etc/varnish/default.vcl
 COPY varnish-start.sh /varnish-start.sh
 
+RUN apt-get -y update && apt-get -y install \
+    tini \
+    && rm -rf /var/lib/apt/lists/*
+
 # needed to fix dash upgrade - man files are removed from slim images
 RUN set -x \
     && mkdir -p /usr/share/man/man1 \
@@ -63,8 +63,6 @@ RUN set -x \
 # replace default dash shell with bash to allow for bashisms
 RUN echo "dash dash/sh boolean false" | debconf-set-selections
 RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
-
-RUN chmod +x /sbin/tini
 
 RUN fix-permissions /etc/varnish/ \
     && fix-permissions /var/run/ \
@@ -85,5 +83,5 @@ ENV HTTP_RESP_HDR_LEN=8k \
     LISTEN=":8080" \
     MANAGEMENT_LISTEN=":6082"
 
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/lagoon/entrypoints.sh"]
 CMD ["/varnish-start.sh"]

@@ -59,6 +59,10 @@ RUN echo "${VARNISH_SECRET:-lagoon_default_secret}" >> /etc/varnish/secret
 COPY default.vcl /etc/varnish/default.vcl
 COPY varnish-start.sh /varnish-start.sh
 
+RUN apt-get -y update && apt-get -y install \
+    tini \
+    && rm -rf /var/lib/apt/lists/*
+
 # needed to fix dash upgrade - man files are removed from slim images
 RUN set -x \
     && mkdir -p /usr/share/man/man1 \
@@ -87,5 +91,5 @@ ENV HTTP_RESP_HDR_LEN=8k \
     LISTEN=":8080" \
     MANAGEMENT_LISTEN=":6082"
 
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/lagoon/entrypoints.sh"]
 CMD ["/varnish-start.sh"]

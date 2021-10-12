@@ -12,7 +12,6 @@ RUN apk add --no-cache git \
         unzip \
         gzip  \
         bash \
-        tini \
         openssh-client \
         rsync \
         patch \

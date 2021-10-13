@@ -74,7 +74,7 @@ $(shell >scan.txt)
 
 # Builds a docker image. Expects as arguments: name of the image, location of Dockerfile, path of
 # Docker Build Context
-docker_build_local = docker build $(DOCKER_BUILD_PARAMS) \
+docker_build_local = DOCKER_BUILDKIT=0 docker build $(DOCKER_BUILD_PARAMS) \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=$(CI_BUILD_TAG) \
 						-t $(CI_BUILD_TAG)/$(1) \

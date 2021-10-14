@@ -100,6 +100,7 @@ node ('lagoon-images') {
                 sh script: "yarn test:simple", label: "Run simple Drupal tests"
                 sh script: "yarn test:advanced", label: "Run advanced Drupal tests"
                 sh script: "yarn test test/docker*postgres*", label: "Run postgres Drupal tests"
+                sh script: "yarn test test/docker*all-images*", label: "Run all-images tests"
                 sh script: "rm test/*.js"
                 sh script: "grep -rl ${CI_BUILD_TAG} ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
                 sh script: "grep -rl PHP ./drupal8-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
@@ -138,11 +139,6 @@ node ('lagoon-images') {
                   sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
                   sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-amazeeio-baseimages", label: "Publishing legacy images to amazeeio"
                 }
-              }
-            },
-            'Run all-images tests': {
-              stage ('all-images tests') {
-                sh script: "yarn test test/docker*all-images*"
               }
             }
           )

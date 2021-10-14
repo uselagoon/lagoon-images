@@ -58,6 +58,7 @@ node ('lagoon-images') {
           sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
           dir ('tests') {
             sh script: "git submodule sync && git submodule update --init"
+            sh script: "mkdir -p ./all-images && cp ../helpers/docker-compose.yml ./all-images/ && cp ../helpers/TESTING_dockercompose.md ./all-images/"
             sh script: "yarn install"
             sh script: "yarn generate-tests"
             sh script: "docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network"
@@ -137,6 +138,11 @@ node ('lagoon-images') {
                   sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
                   sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-amazeeio-baseimages", label: "Publishing legacy images to amazeeio"
                 }
+              }
+            },
+            'Run all-images tests': {
+              stage ('all-images tests') {
+                sh script: "yarn test test/docker*all-images*"
               }
             }
           )

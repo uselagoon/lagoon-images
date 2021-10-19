@@ -8,7 +8,6 @@ node ('lagoon-images') {
         env.CI_BUILD_TAG = env.BUILD_TAG.replaceAll('%2f','').replaceAll("[^A-Za-z0-9]+", "").toLowerCase()
         env.SAFEBRANCH_NAME = env.BRANCH_NAME.replaceAll('%2f','-').replaceAll("[^A-Za-z0-9]+", "-").toLowerCase()
         env.SYNC_MAKE_OUTPUT = 'target'
-        env.TAG_NAME = 'tag'
         // make/tests will synchronise (buffer) output by default to avoid interspersed
         // lines from multiple jobs run in parallel. However this means that output for
         // each make target is not written until the command completes.
@@ -108,7 +107,7 @@ node ('lagoon-images') {
                 sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
                 sh script: "grep -rl PHP ./drupal9-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
                 sh script: "yarn generate-tests"
-                sh script: "yarn test:simple", label: "Re-run simple Drupal tests"
+                sh script: "yarn test:simple", label: "Re-run simple Drupal tests again"
               }
             }
           }
@@ -122,7 +121,7 @@ node ('lagoon-images') {
                     try {
                       if (env.SKIP_IMAGE_PUBLISH != 'true') {
                         sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                        sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=amazeeiolagoon TAG_ONE=${TAG_NAME} REGISTRY_TWO=amazeeiolagoon TAG_TWO=latest", label: "Publishing built images to testlagoon"
+                        sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=uselagoon TAG_ONE=${TAG_NAME} REGISTRY_TWO=uselagoon TAG_TWO=latest", label: "Publishing built images to testlagoon"
                       } else {
                         sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
                       }
@@ -138,7 +137,7 @@ node ('lagoon-images') {
               stage ('publish-amazeeio') {
                 withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
                   sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                  //sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-amazeeio-baseimages", label: "Publishing legacy images to amazeeio"
+                  sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-amazeeio-baseimages", label: "Publishing legacy images to amazeeio"
                 }
               }
             }

@@ -370,7 +370,7 @@ $(publish-testlagoon-baseimages-with-versions):
 # tag and push of unversioned base images
 .PHONY: $(publish-testlagoon-baseimages-without-versions)
 $(publish-testlagoon-baseimages-without-versions):
-#   Calling docker_publish for image, but remove the prefix '[publish-amazeeio-baseimages-with-versions]-' first
+#   Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages-with-versions]-' first
 		$(eval image = $(subst [publish-testlagoon-baseimages-without-versions]-,,$@))
 		$(eval variant = $(word 1,$(subst -, ,$(image))))
 		$(eval version = $(word 2,$(subst -, ,$(image))))

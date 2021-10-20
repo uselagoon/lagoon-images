@@ -13,7 +13,6 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
-# COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home/.bashrc /home/.bashrc
 
 ENV TMPDIR=/tmp \
@@ -24,15 +23,16 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
-
 # we need root for the fix-permissions to work
 USER root
 
 RUN apt-get -y update && apt-get -y install \
     busybox \
+    curl \
     && rm -rf /var/lib/apt/lists/*
+
+RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini
 
 # needed to fix dash upgrade - man files are removed from slim images
 RUN set -x \
@@ -43,13 +43,11 @@ RUN set -x \
 RUN echo "dash dash/sh boolean false" | debconf-set-selections
 RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
-RUN chmod +x /sbin/tini
 RUN mkdir -p /var/solr
 RUN fix-permissions /var/solr \
     && chown solr:solr /var/solr \
     && fix-permissions /opt/solr/server/logs \
     && fix-permissions /opt/solr/server/solr
-
 
 # solr really doesn't like to be run as root, so we define the default user agin
 USER solr

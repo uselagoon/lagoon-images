@@ -22,7 +22,6 @@ COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 # Copy healthcheck files
-
 COPY --from=healthcheckbuilder /healthz-php /healthz-php
 
 RUN fix-permissions /etc/passwd \
@@ -37,18 +36,13 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 COPY check_fcgi /usr/sbin/
-COPY entrypoints/70-php-config.sh entrypoints/60-php-xdebug.sh entrypoints/50-ssmtp.sh entrypoints/71-php-newrelic.sh entrypoints/80-php-blackfire.sh /lagoon/entrypoints/
+COPY entrypoints /lagoon/entrypoints/
 
 COPY php.ini /usr/local/etc/php/
 COPY 00-lagoon-php.ini.tpl /usr/local/etc/php/conf.d/
 COPY php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
-
-# New Relic PHP Agent.
-# @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
-# @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=9.17.1.301
 
 RUN apk add --no-cache fcgi \
         ssmtp \
@@ -73,21 +67,27 @@ RUN apk add --no-cache fcgi \
         # for imagemagick
         imagemagick \
         imagemagick-libs \
-        imagemagick-dev \
-    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-    && yes '' | pecl install -f apcu \
-    && yes '' | pecl install -f xdebug-2.9.8 \
-    && yes '' | pecl install -f yaml \
+        imagemagick-dev
+
+RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+    && yes '' | pecl install -f apcu-5.1.20 \
+    && yes '' | pecl install -f imagick-3.5.1 \
     && yes '' | pecl install -f redis-4.3.0 \
-    && yes '' | pecl install -f imagick \
-    && docker-php-ext-enable apcu redis xdebug imagick \
-    && docker-php-ext-configure gd --with-webp --with-jpeg \
-    && docker-php-ext-install -j4 bcmath gd gettext pdo_mysql mysqli pdo_pgsql pgsql shmop soap sockets opcache xsl zip \
-    && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && yes '' | pecl install -f xdebug-2.9.8 \
+    && yes '' | pecl install -f yaml-2.2.1 \
+    && docker-php-ext-enable apcu imagick redis xdebug yaml \
     && rm -rf /var/cache/apk/* /tmp/pear/ \
     && apk del .phpize-deps \
-    && echo "extension=yaml.so" > /usr/local/etc/php/conf.d/yaml.ini \
-    && mkdir -p /tmp/newrelic && cd /tmp/newrelic \
+    && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+RUN docker-php-ext-configure gd --with-webp --with-jpeg \
+    && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip
+
+# New Relic PHP Agent.
+# @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
+# @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
+ENV NEWRELIC_VERSION=9.17.1.301
+RUN mkdir -p /tmp/newrelic && cd /tmp/newrelic \
     && wget https://download.newrelic.com/php_agent/archive/${NEWRELIC_VERSION}/newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz \
     && gzip -dc newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz | tar --strip-components=1 -xf - \
     && NR_INSTALL_USE_CP_NOT_LN=1 NR_INSTALL_SILENT=1 ./newrelic-install install \
@@ -101,26 +101,31 @@ RUN apk add --no-cache fcgi \
     && sed -i -e "s/newrelic.daemon.logfile = .*/newrelic.daemon.logfile = \"\/dev\/stderr\"/" /usr/local/etc/php/conf.d/newrelic.ini \
     && mv /usr/local/etc/php/conf.d/newrelic.ini /usr/local/etc/php/conf.d/newrelic.disable \
     && cd / && rm -rf /tmp/newrelic \
-    && mkdir -p /app \
-    && fix-permissions /usr/local/etc/ \
-    && fix-permissions /app \
-    && fix-permissions /etc/ssmtp/ssmtp.conf
+    && fix-permissions /usr/local/etc/
 
 # Add blackfire probe and agent.
-ENV BLACKFIRE_VERSION=2.4.2
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+    && architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && mkdir -p /blackfire \
-    && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/amd64/$version \
+    && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/$architecture/$version \
     && tar zxpf /blackfire/blackfire-probe.tar.gz -C /blackfire \
     && mv /blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-    && fix-permissions /usr/local/etc/php/conf.d/ \
-    && curl -A "Docker" -o /blackfire/blackfire-linux_amd64.tar.gz -D - -L -s https://packages.blackfire.io/binaries/blackfire/${BLACKFIRE_VERSION}/blackfire-linux_amd64.tar.gz \
-    && tar zxpf /blackfire/blackfire-linux_amd64.tar.gz -C /blackfire \
+    && fix-permissions /usr/local/etc/php/conf.d/
+
+ENV BLACKFIRE_VERSION=2.4.2
+RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && curl -A "Docker" -o /blackfire/blackfire-linux_${architecture}.tar.gz -D - -L -s https://packages.blackfire.io/binaries/blackfire/${BLACKFIRE_VERSION}/blackfire-linux_${architecture}.tar.gz \
+    && tar zxpf /blackfire/blackfire-linux_${architecture}.tar.gz -C /blackfire \
     && mv /blackfire/blackfire /bin/blackfire \
     && chmod +x /bin/blackfire \
     && mkdir -p /etc/blackfire \
     && touch /etc/blackfire/agent \
-    && fix-permissions /etc/blackfire
+    && fix-permissions /etc/blackfire/
+
+RUN mkdir -p /app \
+    && fix-permissions /app \
+    && fix-permissions /etc/ssmtp/ssmtp.conf \
+    && fix-permissions /usr/local/etc/
 
 EXPOSE 9000
 

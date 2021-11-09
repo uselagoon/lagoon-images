@@ -6,10 +6,6 @@ x-user:
     user: '1000'
 
 services:
-  toolbox:
-    image: uselagoon/toolbox:latest
-    << : *default-user # uses the defined user from top
-
   mariadb-10.4:
     image: uselagoon/mariadb-10.4:latest
     labels:

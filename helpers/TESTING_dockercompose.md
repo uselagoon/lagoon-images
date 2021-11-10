@@ -48,6 +48,8 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7_1
 
+# commons Should be running Alpine Linux
+docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
 
 # rabbitmq Should have RabbitMQ running 3.8
 docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.8

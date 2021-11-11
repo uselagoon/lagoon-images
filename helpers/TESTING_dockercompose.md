@@ -47,10 +47,9 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_toolbox_1
 
-# toolbox Should be running Alpine Linux
-docker-compose exec -T toolbox sh -c "cat /etc/os-release" | grep "Alpine Linux"
+# commons Should be running Alpine Linux
+docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
 
 # rabbitmq Should have RabbitMQ running 3.8
 docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.8
@@ -59,7 +58,7 @@ docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.8
 docker-compose exec -T rabbitmq sh -c "rabbitmq-plugins list" | grep "E" | grep "delayed_message_exchange"
 
 # rabbitmq Should have a running RabbitMQ management page running on 15672
-docker-compose exec -T toolbox sh -c "curl -kL http://rabbitmq:15672" | grep "RabbitMQ Management"
+docker-compose exec -T commons sh -c "curl -kL http://rabbitmq:15672" | grep "RabbitMQ Management"
 
 # redis-5 Should be running Redis v5.0
 docker-compose exec -T redis-5 sh -c "redis-server --version" | grep v=5.
@@ -80,19 +79,19 @@ docker-compose exec -T redis-6 sh -c "redis-cli CONFIG GET databases"
 docker-compose exec -T redis-6 sh -c "redis-cli dbsize"
 
 # solr-7 Should have a "mycore" Solr core
-docker-compose exec -T toolbox sh -c "curl solr-7:8983/solr/admin/cores?action=STATUS\&core=mycore"
+docker-compose exec -T commons sh -c "curl solr-7:8983/solr/admin/cores?action=STATUS\&core=mycore"
 
 # solr-7 Should be able to reload "mycore" Solr core
-docker-compose exec -T toolbox sh -c "curl solr-7:8983/solr/admin/cores?action=RELOAD\&core=mycore"
+docker-compose exec -T commons sh -c "curl solr-7:8983/solr/admin/cores?action=RELOAD\&core=mycore"
 
 # solr-7 Check Solr has 7.7 solrconfig in "mycore" core
 docker-compose exec -T solr-7 sh -c "cat /opt/solr/server/solr/mycores/mycore/conf/solrconfig.xml" | grep 7.7
 
 # solr-7.7 Should have a "mycore" Solr core
-docker-compose exec -T toolbox sh -c "curl solr-7.7:8983/solr/admin/cores?action=STATUS\&core=mycore"
+docker-compose exec -T commons sh -c "curl solr-7.7:8983/solr/admin/cores?action=STATUS\&core=mycore"
 
 # solr-7.7 Should be able to reload "mycore" Solr core
-docker-compose exec -T toolbox sh -c "curl solr-7.7:8983/solr/admin/cores?action=RELOAD\&core=mycore"
+docker-compose exec -T commons sh -c "curl solr-7.7:8983/solr/admin/cores?action=RELOAD\&core=mycore"
 
 # solr-7.7 Check Solr has 7.7 solrconfig in "mycore" core
 docker-compose exec -T solr-7.7 sh -c "cat /opt/solr/server/solr/mycores/mycore/conf/solrconfig.xml" | grep 7.7

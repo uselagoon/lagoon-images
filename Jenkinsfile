@@ -140,7 +140,7 @@ node ('lagoon-images') {
           )
         }
 
-        if (env.TAG_NAME || env.SAFEBRANCH_NAME == 'testing/scans') {
+        if (env.TAG_NAME || env.SAFEBRANCH_NAME == 'testing-scans') {
           stage ('scan built images') {
             sh script: 'make scan-images', label: "perform scan routines"
             sh script:  'find ./scans/*trivy* -type f | xargs tail -n +1', label: "Show Trivy vulnerability scan results"

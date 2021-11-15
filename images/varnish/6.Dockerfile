@@ -29,13 +29,9 @@ ENV LAGOON=varnish
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
 
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
-
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
-#COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 ENV TMPDIR=/tmp \
@@ -45,6 +41,14 @@ ENV TMPDIR=/tmp \
     ENV=/home/.bashrc \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
+
+RUN apt-get -y update && apt-get -y install \
+    busybox \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini
 
 # Add varnish mod after the varnish package creates the directory.
 COPY --from=vmod /usr/lib/varnish/vmods/libvmod_dynamic.* /usr/lib/varnish/vmods/
@@ -63,8 +67,6 @@ RUN set -x \
 # replace default dash shell with bash to allow for bashisms
 RUN echo "dash dash/sh boolean false" | debconf-set-selections
 RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
-
-RUN chmod +x /sbin/tini
 
 RUN fix-permissions /etc/varnish/ \
     && fix-permissions /var/run/ \

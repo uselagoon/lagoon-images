@@ -56,11 +56,16 @@ DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 # Name of the Branch we are currently in
 BRANCH_NAME :=
 
+# Only set this to false when ready to push images to dockerhub
+PUBLISH_IMAGES ?= false
+
+TEMPFILE := $(shell mktemp build.XXXX -u)
+
 # Skip image scanning by default to make building images substantially faster
 SCAN_IMAGES ?= false
 
 # Init the file that is used to hold the image tag cross-reference table
-$(shell >build.txt)
+# $(shell >build.txt)
 $(shell >scan.txt)
 
 #######
@@ -69,7 +74,47 @@ $(shell >scan.txt)
 
 # Builds a docker image. Expects as arguments: name of the image, location of Dockerfile, path of
 # Docker Build Context
-docker_build = docker build $(DOCKER_BUILD_PARAMS) --build-arg LAGOON_VERSION=$(LAGOON_VERSION) --build-arg IMAGE_REPO=$(CI_BUILD_TAG) -t $(CI_BUILD_TAG)/$(1) -f $(2) $(3)
+docker_build_local = DOCKER_BUILDKIT=0 docker build $(DOCKER_BUILD_PARAMS) \
+						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
+						--build-arg IMAGE_REPO=$(CI_BUILD_TAG) \
+						-t $(CI_BUILD_TAG)/$(1) \
+						-f $(2) $(3)
+
+docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
+						--platform linux/amd64,linux/arm64/v8 \
+						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
+						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
+						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \
+						--push \
+						-t localhost:5000/testlagoon/$(1) \
+						-t $(REGISTRY_ONE)/$(1):$(TAG_ONE) \
+						-t $(REGISTRY_TWO)/$(1):$(TAG_TWO) \
+						-f $(2) $(3)
+
+docker_buildx_three = docker buildx build $(DOCKER_BUILD_PARAMS) \
+						--platform linux/amd64,linux/arm64/v8 \
+						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
+						--build-arg IMAGE_REPO=localhost:5000/uselagoon \
+						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \
+						--push \
+						-t localhost:5000/uselagoon/$(1) \
+						-t uselagoon/$(1)-test:$(LAGOON_VERSION) \
+						-t uselagoon/$(1)-test:latest \
+						-t testlagoon/$(1)-test:$(BRANCH_NAME) \
+						-f $(2) $(3)
+
+ifeq ($(PUBLISH_IMAGES),true)
+	ifdef REGISTRY_THREE
+		docker_build = $(docker_buildx_three)
+	else ifdef REGISTRY_TWO
+		docker_build = $(docker_buildx_two)
+	else ifdef REGISTRY_ONE
+		docker_build = $(docker_buildx_one)
+	endif
+else
+	docker_build = $(docker_build_local)
+endif
+
 
 scan_cmd = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
 
@@ -90,7 +135,7 @@ docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docke
 
 .PHONY: docker_pull
 docker_pull:
-	grep -Eh 'FROM' $$(find . -type f -name *Dockerfile) | grep -Ev 'IMAGE_REPO' | awk '{print $$2}' | sort --unique | xargs -tn1 -P8 docker pull -q
+	grep -Eh 'FROM' $$(find . -type f -name *Dockerfile) | grep -Ev 'IMAGE_REPO' | sed 's/\-\-platform\=linux\/amd64//g' | awk '{print $$2}' | sort --unique | xargs -tn1 -P8 docker pull -q
 
 #######
 ####### Base Images
@@ -98,10 +143,9 @@ docker_pull:
 ####### Base Images are the base for all other images and are also published for clients to use during local development
 
 unversioned-images :=		commons \
-							mongo \
 							nginx \
 							nginx-drupal \
-							toolbox \
+							mongo \
 							rabbitmq \
 							rabbitmq-cluster
 
@@ -119,11 +163,11 @@ $(build-images):
 # Call the docker build
 	$(call docker_build,$(image),images/$(image)/Dockerfile,images/$(image))
 # Populate the cross-reference table
-	$(shell echo $(image),$(image) >> build.txt)
+	$(shell echo $(shell date +"%T") $(image),images/$(image)/Dockerfile,images/$(image) >> $(TEMPFILE))
 #scan created image with Trivy
-	$(call scan_image,$(image),)
+#	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last build
-	touch $@
+#	touch $@
 
 # Define dependencies of Base Images so that make can build them in the right order. There are two
 # types of Dependencies
@@ -135,7 +179,6 @@ build/commons: images/commons/Dockerfile
 build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
-build/toolbox: build/commons build/mariadb-10.5 images/toolbox/Dockerfile
 build/rabbitmq: build/commons images/rabbitmq/Dockerfile
 build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 
@@ -172,16 +215,16 @@ versioned-images := 		php-7.3-fpm \
 							postgres-12 \
 							redis-6 \
 							redis-6-persistent \
-							varnish-6 \
-							varnish-6-drupal \
-							varnish-6-persistent \
-							varnish-6-persistent-drupal \
 							solr-7 \
 							solr-7-drupal \
 							solr-8 \
 							solr-8-drupal \
 							mariadb-10.5 \
 							mariadb-10.5-drupal \
+							varnish-6 \
+							varnish-6-drupal \
+							varnish-6-persistent \
+							varnish-6-persistent-drupal
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -212,11 +255,11 @@ $(build-versioned-images):
 # Call the generic docker build process
 	$(call docker_build,$(image),images/$(folder)/$(if $(version),$(version).)Dockerfile,images/$(folder))
 # Populate the cross-reference table
-	$(shell echo $(image),$(legacytag) >> build.txt)
+	$(shell echo $(shell date +"%T") $(image),images/$(folder)/$(if $(version),$(version).)Dockerfile,images/$(folder) >> $(TEMPFILE))
 #scan created images with Trivy
-	$(call scan_image,$(image),)
+#	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last built
-	touch $@
+#	touch $@
 
 base-images-with-versions += $(versioned-images)
 base-images-with-versions += $(default-versioned-images)
@@ -261,7 +304,8 @@ build/mariadb-10.5-drupal: build/mariadb-10.5
 
 # Builds all Images
 .PHONY: build
-build: $(foreach image,$(base-images) $(base-images-with-versions) ,build/$(image))
+build: $(shell >$(TEMPFILE)) $(foreach image,$(base-images) $(base-images-with-versions) ,build/$(image))
+	cat $(TEMPFILE)
 
 # Outputs a list of all Images we manage
 .PHONY: build-list
@@ -275,6 +319,13 @@ build-list:
 #######
 ####### All main&PR images are pushed to testlagoon repository
 #######
+
+.PHONY: docker-buildx-configure
+docker-buildx-configure:
+	docker run -d -p 5000:5000 --restart always --name registry registry:2
+	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --use
+	docker buildx ls
+	docker context ls
 
 # Publish command to testlagoon docker hub, done on any main branch or PR
 publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
@@ -291,8 +342,15 @@ publish-testlagoon-baseimages: $(publish-testlagoon-baseimages) $(publish-testla
 $(publish-testlagoon-baseimages):
 #   Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages]-' first
 		$(eval image = $(subst [publish-testlagoon-baseimages]-,,$@))
+		$(eval variant = $(word 1,$(subst -, ,$(image))))
+		$(eval version = $(word 2,$(subst -, ,$(image))))
+		$(eval type = $(word 3,$(subst -, ,$(image))))
+		$(eval subtype = $(word 4,$(subst -, ,$(image))))
+# Construct the folder and legacy tag to use - note that if treats undefined vars as 'false' to avoid extra '-/'
+		$(eval folder = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
+
 # 	Publish images with version tag
-		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME))
+		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME),$(folder))
 
 # tag and push of base image with version
 .PHONY: $(publish-testlagoon-baseimages-with-versions)
@@ -301,13 +359,19 @@ $(publish-testlagoon-baseimages-with-versions):
 		$(eval image = $(subst [publish-testlagoon-baseimages-with-versions]-,,$@))
 #   The underline is a placeholder for a colon, replace that
 		$(eval image = $(subst __,:,$(image)))
+		$(eval variant = $(word 1,$(subst -, ,$(image))))
+		$(eval version = $(word 2,$(subst -, ,$(image))))
+		$(eval type = $(word 3,$(subst -, ,$(image))))
+		$(eval subtype = $(word 4,$(subst -, ,$(image))))
+# Construct the folder and legacy tag to use - note that if treats undefined vars as 'false' to avoid extra '-/'
+		$(eval folder = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 #		We add the Lagoon Version just as a dash
-		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME))
+		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME),$(folder))
 
 # tag and push of unversioned base images
 .PHONY: $(publish-testlagoon-baseimages-without-versions)
 $(publish-testlagoon-baseimages-without-versions):
-#   Calling docker_publish for image, but remove the prefix '[publish-amazeeio-baseimages-with-versions]-' first
+#   Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages-with-versions]-' first
 		$(eval image = $(subst [publish-testlagoon-baseimages-without-versions]-,,$@))
 		$(eval variant = $(word 1,$(subst -, ,$(image))))
 		$(eval version = $(word 2,$(subst -, ,$(image))))
@@ -315,9 +379,11 @@ $(publish-testlagoon-baseimages-without-versions):
 		$(eval subtype = $(word 4,$(subst -, ,$(image))))
 #   Construct a "legacy" tag of the form `testlagoon/variant-type-subtype` e.g. `testlagoon/postgres-ckan`
 		$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
+# Construct the folder and legacy tag to use - note that if treats undefined vars as 'false' to avoid extra '-/'
+		$(eval folder = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 #	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
 #	We push a version without the `-latest` suffix
-		$(call docker_publish_testlagoon,$(image),$(legacytag):$(BRANCH_NAME))
+		$(call docker_publish_testlagoon,$(image),$(legacytag):$(BRANCH_NAME),$(folder))
 
 #######
 ####### All tagged releases are pushed to uselagoon repository with new semantic tags
@@ -444,5 +510,14 @@ $(s3-load):
 
 # Clean all build touches, which will case make to rebuild the Docker Images (Layer caching is
 # still active, so this is a very safe command)
+
+.PHONY: docker-buildx-remove
+docker-buildx-remove:
+	docker stop registry || echo "no registry"
+	docker rm registry || echo "no registry"
+	docker buildx rm ci-local
+	docker buildx ls
+	docker context ls
+
 clean:
 	rm -rf build/*

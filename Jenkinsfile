@@ -38,6 +38,8 @@ node ('lagoon-images') {
         }
 
         stage ('build images') {
+          sh script: "docker run --privileged --rm tonistiigi/binfmt --install all", label: "setting binfmt correctly"
+          sh script: "make docker-buildx-configure", label: "Configuring buildx for multi-platform build"
           env.SCAN_IMAGES = 'true'
           sh script: "make docker_pull", label: "Ensuring fresh upstream images"
           sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build", label: "Building images"
@@ -47,111 +49,110 @@ node ('lagoon-images') {
           sh 'cat scan.txt'
         }
 
-        stage ('push branch images to testlagoon/*') {
-          withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
-            try {
-              if (env.SKIP_IMAGE_PUBLISH != 'true') {
-                sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
-              } else {
-                sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
-              }
-            } catch (e) {
-              echo "Something went wrong, trying to cleanup"
-              cleanup()
-              throw e
-            }
-          }
-        }
-
         stage ('show built images') {
-          sh 'docker image ls | sort -u'
+          sh 'cat build.*'
+          sh 'docker image ls | grep ${CI_BUILD_TAG} | sort -u'
         }
 
         stage ('Copy examples down') {
           sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
           dir ('tests') {
             sh script: "git submodule sync && git submodule update --init"
+            sh script: "mkdir -p ./all-images && cp ../helpers/docker-compose.yml ./all-images/ && cp ../helpers/TESTING_dockercompose.md ./all-images/"
             sh script: "yarn install"
             sh script: "yarn generate-tests"
             sh script: "docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network"
           }
         }
 
-        stage ('Configure and Run Tests') {
-          dir ('tests') {
-            sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/testlagoon/'"
-            sh script: "grep -rl uselagoon . | xargs sed -i '/image:/ s/uselagoon/testlagoon/'"
-            sh script: "grep -rl testlagoon . | xargs sed -i '/^FROM/ s/latest/${SAFEBRANCH_NAME}/'"
-            sh script: "grep -rl testlagoon . | xargs sed -i '/image:/ s/latest/${SAFEBRANCH_NAME}/'"
-            sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
-          }
-        }
-
-        dir ('tests') {
-          parallel (
-            'Run simple Drupal tests': {
-              stage ('Simple tests') {
-                sh script: "yarn test:simple"
-              }
-            },
-            'Run advanced Drupal tests': {
-              stage ('Advanced tests') {
-                sh script: "yarn test:advanced"
-              }
-            }
-          )
-        }
-
-        stage ('Configure and Run old PHP Tests') {
-          dir ('tests') {
-            sh script: "rm test/*.js"
-            sh script: "grep -rl testlagoon ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
-            sh script: "grep -rl PHP ./drupal9-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
-            sh script: "yarn generate-tests"
-          }
-        }
-
-        dir ('tests') {
-          parallel (
-            'Run simple old PHP Drupal tests': {
-              stage ('Simple old PHP tests') {
-                sh script: "yarn test:simple"
-              }
-            },
-            'Run Postgres tests': {
-              stage ('Postgres tests') {
-                sh script: "yarn test test/docker*postgres*"
+        parallel (
+          'build and push images to testlagoon dockerhub': {
+            stage ('push branch images to testlagoon/*') {
+              withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
+                try {
+                  if (env.SKIP_IMAGE_PUBLISH != 'true') {
+                    sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
+                    if (env.SAFEBRANCH_NAME == 'main') {
+                      sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest", label: "Publishing built images to testlagoon main&latest images"
+                    } else if (env.SAFEBRANCH_NAME == 'arm64-images') {
+                      sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch", label: "Publishing built images to testlagoon arm images"
+                    } else {
+                      sh script: 'echo "No multi-arch images required for this build"', label: "Skipping image publishing"
+                    }
+                  } else {
+                    sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
+                  }
+                } catch (e) {
+                  echo "Something went wrong, trying to cleanup"
+                  cleanup()
+                  throw e
+                }
               }
             }
-          )
-        }
+          },
+          'Run all the tests on the local images': {
+            stage ('running test suite') {
+              dir ('tests') {
+                sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/${CI_BUILD_TAG}/'"
+                sh script: "grep -rl uselagoon . | xargs sed -i '/image:/ s/uselagoon/${CI_BUILD_TAG}/'"
+                sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
+                sh script: "yarn test:simple", label: "Run simple Drupal tests"
+                sh script: "yarn test:advanced", label: "Run advanced Drupal tests"
+                sh script: "yarn test test/docker*postgres*", label: "Run postgres Drupal tests"
+                sh script: "yarn test test/docker*all-images*", label: "Run all-images tests"
+                sh script: "rm test/*.js"
+                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
+                sh script: "grep -rl PHP ./drupal8-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
+                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
+                sh script: "grep -rl PHP ./drupal9-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
+                sh script: "yarn generate-tests"
+                sh script: "yarn test:simple", label: "Re-run simple Drupal tests again"
+              }
+            }
+          }
+        )
 
         if (env.TAG_NAME && env.SKIP_IMAGE_PUBLISH != 'true') {
-          stage ('publish-amazeeio') {
-            withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
-              sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-              sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-uselagoon-baseimages", label: "Publishing built images to uselagoon"
-              sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-amazeeio-baseimages", label: "Publishing legacy images to amazeeio"
+          parallel (
+            'build and push images to uselagoon dockerhub': {
+                stage ('push branch images to uselagoon/*') {
+                  withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
+                    try {
+                      if (env.SKIP_IMAGE_PUBLISH != 'true') {
+                        sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+                        sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=uselagoon TAG_ONE=${TAG_NAME} REGISTRY_TWO=uselagoon TAG_TWO=latest", label: "Publishing built images to testlagoon"
+                      } else {
+                        sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
+                      }
+                    } catch (e) {
+                      echo "Something went wrong, trying to cleanup"
+                      cleanup()
+                      throw e
+                    }
+                  }
+                }
+            },
+            'push legacy images to amazeeio dockerhub': {
+              stage ('publish-amazeeio') {
+                withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
+                  sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+                  sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-amazeeio-baseimages", label: "Publishing legacy images to amazeeio"
+                }
+              }
             }
-          }
+          )
         }
-
-        if (env.BRANCH_NAME == 'main' && env.SKIP_IMAGE_PUBLISH != 'true') {
-          stage ('save images to s3') {
-            sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 s3-save", label: "Saving images to AWS S3"
-          }
-          stage ('push latest images to testlagoon') {
-            sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=latest", label: "Publishing :latest images to testlagoon"
-          }
-        }
-
       } catch (e) {
         currentBuild.result = 'FAILURE'
+        echo "Something went wrong, trying to cleanup"
         throw e
       } finally {
+        cleanup()
         notifySlack(currentBuild.result)
       }
+      
+      cleanup()
     }
   }
 
@@ -159,7 +160,10 @@ node ('lagoon-images') {
 
 def cleanup() {
   try {
+    sh "cat build.*"
+    sh "make docker-buildx-remove"
     sh "make clean"
+    sh "rm build.*"
   } catch (error) {
     echo "cleanup failed, ignoring this."
   }

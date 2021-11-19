@@ -20,13 +20,17 @@ fi
 # init script for handling an empty /var/solr
 /opt/docker-solr/scripts/init-var-solr
 
-# ensure that the target directory is empty prior to recreation
-
+# ensure that the target core directory is empty prior to recreation
 rm -rf /var/solr/data/$1
 echo "Removed $1 core prior to recreation"
 
 # run the precreate-core script again to bring in any new config
 /opt/docker-solr/scripts/precreate-core "$@"
+
+# set correct solr.lock.type for Lagoon
+grep -rl solr.lock.type /var/solr/data/$1 | xargs sed -i '/solr.lock.type/ s/native/none/'
+echo "solr.lock.type set for $1 core"
+grep -r solr.lock.type /var/solr/data/$1
 
 # the solr-recreate command only removes and recreates the cores, it doesn't start the solr process
 echo "Please ensure that you run solr-foreground after this command as part of your CMD statement"

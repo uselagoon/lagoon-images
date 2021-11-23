@@ -110,7 +110,7 @@ node ('lagoon-images') {
         )
 
         stage ('publish experimental image tags to testlagoon') {
-          if (env.SAFEBRANCH_NAME == 'main' || pullRequest.labels.contains("experimental")) {
+          if (env.SAFEBRANCH_NAME == 'main' || env.CHANGE_ID && pullRequest.labels.contains("experimental")) {
             sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-experimental-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing experimental images to testlagoon"
           } else {
             sh script: 'echo "not a PR or main branch push"', label: "Skipping experimantal image publishing"

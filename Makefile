@@ -217,8 +217,6 @@ versioned-images := 		php-7.3-fpm \
 							redis-6-persistent \
 							solr-7 \
 							solr-7-drupal \
-							solr-8 \
-							solr-8-drupal \
 							mariadb-10.5 \
 							mariadb-10.5-drupal \
 							varnish-6 \
@@ -394,6 +392,9 @@ $(publish-testlagoon-baseimages-without-versions):
 		$(call docker_publish_testlagoon,$(image),$(legacytag):$(BRANCH_NAME),$(folder))
 
 # tag and push of experimental base images
+.PHONY: publish-testlagoon-experimental-baseimages
+publish-testlagoon-experimental-baseimages: $(publish-testlagoon-experimental-baseimages)
+
 .PHONY: $(publish-testlagoon-experimental-baseimages)
 $(publish-testlagoon-experimental-baseimages):
 # Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages-with-versions]-' first
@@ -406,9 +407,7 @@ $(publish-testlagoon-experimental-baseimages):
 		$(eval subtype = $(word 4,$(subst -, ,$(image))))
 # Construct the folder and legacy tag to use - note that if treats undefined vars as 'false' to avoid extra '-/'
 		$(eval folder = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
-# We publish these images with the branch_name/PR no/tag
-		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME),$(folder))
-# We also publish experimental images with an `:experimental` tag
+# We also publish experimental images with an `:experimental` moving tag
 		$(call docker_publish_testlagoon,$(image),$(image):experimental,$(folder))
 
 #######

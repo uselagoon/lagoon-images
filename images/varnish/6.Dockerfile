@@ -4,6 +4,8 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 FROM varnish:6.6 as vmod
 ENV LIBVMOD_DYNAMIC_VERSION=6.6
 ENV VARNISH_MODULES_VERSION=6.6
+
+USER root
 RUN apt-get update && apt-get -y install build-essential curl zip
 
 RUN  curl -L https://packagecloud.io/varnishcache/varnish66/gpgkey | apt-key add - \
@@ -42,6 +44,7 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
+USER root
 RUN apt-get -y update && apt-get -y install \
     busybox \
     curl \
@@ -73,6 +76,8 @@ RUN fix-permissions /etc/varnish/ \
     && fix-permissions /var/lib/varnish
 
 COPY docker-entrypoint /lagoon/entrypoints/70-varnish-entrypoint
+
+USER varnish
 
 EXPOSE 8080
 

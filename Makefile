@@ -59,13 +59,8 @@ BRANCH_NAME :=
 # Only set this to false when ready to push images to dockerhub
 PUBLISH_IMAGES ?= false
 
-TEMPFILE := $(shell mktemp build.XXXX -u)
-
-# Skip image scanning by default to make building images substantially faster
-SCAN_IMAGES ?= false
-
 # Init the file that is used to hold the image tag cross-reference table
-# $(shell >build.txt)
+$(shell >build.txt)
 $(shell >scan.txt)
 
 #######
@@ -116,14 +111,6 @@ else
 endif
 
 
-scan_cmd = docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$(1) >> scan.txt
-
-ifeq ($(SCAN_IMAGES),true)
-	scan_image = $(scan_cmd)
-else
-	scan_image =
-endif
-
 # Tags an image with the `testlagoon` repository and pushes it
 docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && docker push testlagoon/$(2) | cat
 
@@ -163,7 +150,7 @@ $(build-images):
 # Call the docker build
 	$(call docker_build,$(image),images/$(image)/Dockerfile,images/$(image))
 # Populate the cross-reference table
-	$(shell echo $(shell date +"%T") $(image),images/$(image)/Dockerfile,images/$(image) >> $(TEMPFILE))
+	$(shell echo $(shell date +"%T") $(image),images/$(image)/Dockerfile,images/$(image) >> build.txt)
 #scan created image with Trivy
 #	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last build
@@ -260,7 +247,7 @@ $(build-versioned-images):
 # Call the generic docker build process
 	$(call docker_build,$(image),images/$(folder)/$(if $(version),$(version).)Dockerfile,images/$(folder))
 # Populate the cross-reference table
-	$(shell echo $(shell date +"%T") $(image),images/$(folder)/$(if $(version),$(version).)Dockerfile,images/$(folder) >> $(TEMPFILE))
+	$(shell echo $(shell date +"%T") $(image),images/$(folder)/$(if $(version),$(version).)Dockerfile,images/$(folder) >> build.txt)
 #scan created images with Trivy
 #	$(call scan_image,$(image),)
 # Touch an empty file which make itself is using to understand when the image has been last built
@@ -310,14 +297,25 @@ build/mariadb-10.5-drupal: build/mariadb-10.5
 
 # Builds all Images
 .PHONY: build
-build: $(shell >$(TEMPFILE)) $(foreach image,$(base-images) $(base-images-with-versions) ,build/$(image))
-	cat $(TEMPFILE)
+build: $(foreach image,$(base-images) $(base-images-with-versions) ,build/$(image))
+	cat build.txt
 
 # Outputs a list of all Images we manage
 .PHONY: build-list
 build-list:
 	@for number in $(foreach image,$(base-images) $(base-images-with-versions),build/$(image)); do \
 			echo $$number ; \
+	done
+
+# Conduct post-release scans on images
+.PHONY: scan-images
+scan-images:
+	rm -f ./scans/*.txt
+	@for tag in $(foreach image,$(base-images) $(base-images-with-versions),$(image)); do \
+			docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy --timeout 5m0s $(CI_BUILD_TAG)/$$tag > ./scans/$$tag.trivy.txt ; \
+			docker run --rm -v /var/run/docker.sock:/var/run/docker.sock anchore/syft $(CI_BUILD_TAG)/$$tag > ./scans/$$tag.syft.txt ; \
+			docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/var/lib/grype/db anchore/grype $(CI_BUILD_TAG)/$$tag > ./scans/$$tag.grype.txt ; \
+			echo $$tag ; \
 	done
 
 #######

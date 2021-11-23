@@ -45,12 +45,8 @@ node ('lagoon-images') {
           sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build", label: "Building images"
         }
 
-        stage ('show trivy scan results') {
-          sh 'cat scan.txt'
-        }
-
         stage ('show built images') {
-          sh 'cat build.*'
+          sh 'cat build.txt'
           sh 'docker image ls | grep ${CI_BUILD_TAG} | sort -u'
         }
 
@@ -149,6 +145,16 @@ node ('lagoon-images') {
             }
           )
         }
+
+        if (env.TAG_NAME || env.SAFEBRANCH_NAME == 'testing-scans') {
+          stage ('scan built images') {
+            sh script: 'make scan-images', label: "perform scan routines"
+            sh script:  'find ./scans/*trivy* -type f | xargs tail -n +1', label: "Show Trivy vulnerability scan results"
+            sh script:  'find ./scans/*grype* -type f | xargs tail -n +1', label: "Show Grype vulnerability scan results"
+            sh script:  'find ./scans/*syft* -type f | xargs tail -n +1', label: "Show Syft SBOM results"
+          }
+        }
+
       } catch (e) {
         currentBuild.result = 'FAILURE'
         echo "Something went wrong, trying to cleanup"

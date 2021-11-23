@@ -39,7 +39,7 @@ SHELL := /bin/bash
 #######
 
 # Parameter for all `docker build` commands, can be overwritten by passing `DOCKER_BUILD_PARAMS=` via the `-e` option
-DOCKER_BUILD_PARAMS := --quiet
+DOCKER_BUILD_PARAMS :=
 
 # On CI systems like jenkins we need a way to run multiple testings at the same time. We expect the
 # CI systems to define an Environment variable CI_BUILD_TAG which uniquely identifies each build.
@@ -226,7 +226,14 @@ default-versioned-images := 	mariadb-10.4 \
 							varnish-5-persistent \
 							varnish-5-persistent-drupal
 
-build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images),build/$(image))
+#######
+####### Experimental Images
+#######
+
+experimental-images := 		solr-8 \
+							solr-8-drupal \
+
+build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images) $(experimental-images),build/$(image))
 
 # Define the make recipe for all multi images
 $(build-versioned-images):
@@ -248,8 +255,9 @@ $(build-versioned-images):
 
 base-images-with-versions += $(versioned-images)
 base-images-with-versions += $(default-versioned-images)
+base-images-with-versions += $(experimental-images)
 s3-images += $(versioned-images)
-s3-images += $(default-versioned-images)
+s3-images += $(experimental-images)
 
 build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm: build/commons
 build/php-7.3-cli: build/php-7.3-fpm
@@ -276,8 +284,9 @@ build/varnish-5-drupal build/varnish-5-persistent: build/varnish-5
 build/varnish-5-persistent-drupal: build/varnish-5-drupal
 build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal
-build/solr-7: build/commons
+build/solr-7 build/solr-8: build/commons
 build/solr-7-drupal: build/solr-7
+build/solr-8-drupal: build/solr-8
 build/mariadb-10.4 build/mariadb-10.5: build/commons
 build/mariadb-10.4-drupal: build/mariadb-10.4
 build/mariadb-10.5-drupal: build/mariadb-10.5
@@ -327,15 +336,16 @@ publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlago
 publish-testlagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-testlagoon-baseimages-with-versions]-$(image))
 # Special handler for the previously unversioned images that now have versions
 publish-testlagoon-baseimages-without-versions = $(foreach image,$(default-versioned-images),[publish-testlagoon-baseimages-without-versions]-$(image))
+publish-testlagoon-experimental-baseimages = $(foreach image,$(experimental-images),[publish-testlagoon-experimental-baseimages]-$(image))
 
 # tag and push all images
 .PHONY: publish-testlagoon-baseimages
-publish-testlagoon-baseimages: $(publish-testlagoon-baseimages) $(publish-testlagoon-baseimages-with-versions) $(publish-testlagoon-baseimages-without-versions)
+publish-testlagoon-baseimages: $(publish-testlagoon-baseimages) $(publish-testlagoon-baseimages-with-versions) $(publish-testlagoon-baseimages-without-versions) $(publish-testlagoon-experimental-baseimages)
 
 # tag and push of each image
 .PHONY: $(publish-testlagoon-baseimages)
 $(publish-testlagoon-baseimages):
-#   Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages]-' first
+# Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages]-' first
 		$(eval image = $(subst [publish-testlagoon-baseimages]-,,$@))
 		$(eval variant = $(word 1,$(subst -, ,$(image))))
 		$(eval version = $(word 2,$(subst -, ,$(image))))
@@ -343,16 +353,15 @@ $(publish-testlagoon-baseimages):
 		$(eval subtype = $(word 4,$(subst -, ,$(image))))
 # Construct the folder and legacy tag to use - note that if treats undefined vars as 'false' to avoid extra '-/'
 		$(eval folder = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
-
-# 	Publish images with version tag
+# We publish these images with the branch_name/PR no/tag
 		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME),$(folder))
 
 # tag and push of base image with version
 .PHONY: $(publish-testlagoon-baseimages-with-versions)
 $(publish-testlagoon-baseimages-with-versions):
-#   Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages-with-versions]-' first
+# Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages-with-versions]-' first
 		$(eval image = $(subst [publish-testlagoon-baseimages-with-versions]-,,$@))
-#   The underline is a placeholder for a colon, replace that
+# The underline is a placeholder for a colon, replace that
 		$(eval image = $(subst __,:,$(image)))
 		$(eval variant = $(word 1,$(subst -, ,$(image))))
 		$(eval version = $(word 2,$(subst -, ,$(image))))
@@ -360,25 +369,44 @@ $(publish-testlagoon-baseimages-with-versions):
 		$(eval subtype = $(word 4,$(subst -, ,$(image))))
 # Construct the folder and legacy tag to use - note that if treats undefined vars as 'false' to avoid extra '-/'
 		$(eval folder = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
-#		We add the Lagoon Version just as a dash
+# We publish these images with the branch_name/PR no/tag
 		$(call docker_publish_testlagoon,$(image),$(image):$(BRANCH_NAME),$(folder))
 
 # tag and push of unversioned base images
 .PHONY: $(publish-testlagoon-baseimages-without-versions)
 $(publish-testlagoon-baseimages-without-versions):
-#   Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages-with-versions]-' first
+# Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages-with-versions]-' first
 		$(eval image = $(subst [publish-testlagoon-baseimages-without-versions]-,,$@))
 		$(eval variant = $(word 1,$(subst -, ,$(image))))
 		$(eval version = $(word 2,$(subst -, ,$(image))))
 		$(eval type = $(word 3,$(subst -, ,$(image))))
 		$(eval subtype = $(word 4,$(subst -, ,$(image))))
-#   Construct a "legacy" tag of the form `testlagoon/variant-type-subtype` e.g. `testlagoon/postgres-ckan`
+# Construct a "legacy" tag of the form `testlagoon/variant-type-subtype` e.g. `testlagoon/postgres-ckan`
 		$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 # Construct the folder and legacy tag to use - note that if treats undefined vars as 'false' to avoid extra '-/'
 		$(eval folder = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
-#	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
-#	We push a version without the `-latest` suffix
+# These images already use a tag to differentiate between different versions of the service itself (like node:14 and node:16)
+# We push a version without the `-latest` suffix
 		$(call docker_publish_testlagoon,$(image),$(legacytag):$(BRANCH_NAME),$(folder))
+
+# tag and push of experimental base images
+.PHONY: publish-testlagoon-experimental-baseimages
+publish-testlagoon-experimental-baseimages: $(publish-testlagoon-experimental-baseimages)
+
+.PHONY: $(publish-testlagoon-experimental-baseimages)
+$(publish-testlagoon-experimental-baseimages):
+# Calling docker_publish for image, but remove the prefix '[publish-testlagoon-baseimages-with-versions]-' first
+		$(eval image = $(subst [publish-testlagoon-experimental-baseimages]-,,$@))
+# The underline is a placeholder for a colon, replace that
+		$(eval image = $(subst __,:,$(image)))
+		$(eval variant = $(word 1,$(subst -, ,$(image))))
+		$(eval version = $(word 2,$(subst -, ,$(image))))
+		$(eval type = $(word 3,$(subst -, ,$(image))))
+		$(eval subtype = $(word 4,$(subst -, ,$(image))))
+# Construct the folder and legacy tag to use - note that if treats undefined vars as 'false' to avoid extra '-/'
+		$(eval folder = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
+# We also publish experimental images with an `:experimental` moving tag
+		$(call docker_publish_testlagoon,$(image),$(image):experimental,$(folder))
 
 #######
 ####### All tagged releases are pushed to uselagoon repository with new semantic tags

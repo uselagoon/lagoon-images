@@ -39,7 +39,7 @@ SHELL := /bin/bash
 #######
 
 # Parameter for all `docker build` commands, can be overwritten by passing `DOCKER_BUILD_PARAMS=` via the `-e` option
-DOCKER_BUILD_PARAMS :=
+DOCKER_BUILD_PARAMS := --quiet
 
 # On CI systems like jenkins we need a way to run multiple testings at the same time. We expect the
 # CI systems to define an Environment variable CI_BUILD_TAG which uniquely identifies each build.
@@ -232,6 +232,9 @@ default-versioned-images := 	mariadb-10.4 \
 
 experimental-images := 		solr-8 \
 							solr-8-drupal \
+							php-8.1-fpm \
+							php-8.1-cli \
+							php-8.1-cli-drupal
 
 build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images) $(experimental-images),build/$(image))
 
@@ -259,13 +262,15 @@ base-images-with-versions += $(experimental-images)
 s3-images += $(versioned-images)
 s3-images += $(experimental-images)
 
-build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm: build/commons
+build/php-7.3-fpm build/php-7.4-fpm build/php-8.0-fpm build/php-8.1-fpm: build/commons
 build/php-7.3-cli: build/php-7.3-fpm
 build/php-7.4-cli: build/php-7.4-fpm
 build/php-8.0-cli: build/php-8.0-fpm
+build/php-8.1-cli: build/php-8.1-fpm
 build/php-7.3-cli-drupal: build/php-7.3-cli
 build/php-7.4-cli-drupal: build/php-7.4-cli
 build/php-8.0-cli-drupal: build/php-8.0-cli
+build/php-8.1-cli-drupal: build/php-8.1-cli
 build/python-3.7 build/python-3.8 build/python-3.9: build/commons
 build/node-12 build/node-14 build/node-16: build/commons
 build/node-12-builder: build/node-12

@@ -98,12 +98,12 @@ node ('lagoon-images') {
                 sh script: "yarn test test/docker*postgres*", label: "Run postgres Drupal tests"
                 sh script: "yarn test test/docker*all-images*", label: "Run all-images tests"
                 sh script: "rm test/*.js"
-                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
-                sh script: "grep -rl PHP ./drupal8-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
-                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
-                sh script: "grep -rl PHP ./drupal9-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
-                sh script: "yarn generate-tests"
-                sh script: "yarn test:simple", label: "Re-run simple Drupal tests again"
+//                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
+//                sh script: "grep -rl PHP ./drupal8-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
+//                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
+//                sh script: "grep -rl PHP ./drupal9-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
+//                sh script: "yarn generate-tests"
+//                sh script: "yarn test:simple", label: "Re-run simple Drupal tests again"
               }
             }
           }

@@ -1,5 +1,5 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/php-7.3-cli
+FROM ${IMAGE_REPO:-lagoon}/php-8.1-cli
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -14,7 +14,7 @@ ENV DRUPAL_CONSOLE_LAUNCHER_VERSION=1.9.7 \
     DRUSH_LAUNCHER_FALLBACK=/opt/drush8/vendor/bin/drush
 
 RUN curl -L -o /usr/local/bin/drupal "https://github.com/hechoendrupal/drupal-console-launcher/releases/download/${DRUPAL_CONSOLE_LAUNCHER_VERSION}/drupal.phar" \
-    && echo "${DRUPAL_CONSOLE_LAUNCHER_SHA} /usr/local/bin/drupal" | sha1sum \
+    && echo "${DRUPAL_CONSOLE_LAUNCHER_SHA} /usr/local/bin/drupal" | sha1sum -c - \
     && chmod +x /usr/local/bin/drupal \
     && mkdir -p /opt/drush8 \
     && php /usr/local/bin/composer init -n -d /opt/drush8 --require=drush/drush:${DRUSH_VERSION} \

@@ -6,7 +6,7 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 ENV LAGOON=cli
 
-COPY --from=composer:2.1.12 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:2.1.14 /usr/bin/composer /usr/local/bin/composer
 
 RUN apk add --no-cache git \
         unzip \

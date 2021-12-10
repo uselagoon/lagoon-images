@@ -50,7 +50,7 @@ cluster.remote.connect: "${CLUSTER_REMOTE_CONNECT}"' >> config/elasticsearch.yml
 
 RUN fix-permissions config
 
-ENV ES_JAVA_OPTS="-Xms400m -Xmx400m" \
+ENV ES_JAVA_OPTS="-Xms400m -Xmx400m -Dlog4j2.formatMsgNoLookups=true" \
     NODE_MASTER=true \
     NODE_DATA=true \
     NODE_INGEST=true \

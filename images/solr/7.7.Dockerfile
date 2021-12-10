@@ -37,6 +37,8 @@ RUN fix-permissions /var/solr \
 # solr really doesn't like to be run as root, so we define the default user agin
 USER solr
 
+ENV JAVA_OPTS="-Dlog4j2.formatMsgNoLookups=true"
+
 COPY 10-solr-port.sh /lagoon/entrypoints/
 COPY 20-solr-datadir.sh /lagoon/entrypoints/
 

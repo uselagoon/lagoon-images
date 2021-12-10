@@ -57,6 +57,8 @@ RUN chmod 775 /opt/docker-solr/scripts/solr-recreate
 # solr really doesn't like to be run as root, so we define the default user agin
 USER solr
 
+ENV JAVA_OPTS="-Dlog4j2.formatMsgNoLookups=true"
+
 COPY 10-solr-port.sh /lagoon/entrypoints/
 # currently, there is no smart upgrade path from 7 to 8 - no autoremediation etc
 # and whilst sites may work, upgrading from 7 to 8, they won't work downgrading...

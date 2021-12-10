@@ -37,6 +37,6 @@ ENV TMPDIR=/tmp \
 RUN fix-permissions /usr/share/logstash/data \
     && fix-permissions /usr/share/logstash/config
 
-ENV LS_JAVA_OPTS "-Xms400m -Xmx400m"
+ENV LS_JAVA_OPTS "-Xms400m -Xmx400m -Dlog4j2.formatMsgNoLookups=true"
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash", "/usr/local/bin/docker-entrypoint"]

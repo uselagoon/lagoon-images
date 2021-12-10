@@ -206,7 +206,10 @@ versioned-images := 		php-7.4-fpm \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \
-							varnish-6-persistent-drupal
+							varnish-6-persistent-drupal \
+							php-8.1-fpm \
+							php-8.1-cli \
+							php-8.1-cli-drupal
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -228,10 +231,7 @@ default-versioned-images := 	mariadb-10.4 \
 #######
 
 experimental-images := 		solr-8 \
-							solr-8-drupal \
-							php-8.1-fpm \
-							php-8.1-cli \
-							php-8.1-cli-drupal
+							solr-8-drupal
 
 build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images) $(experimental-images),build/$(image))
 

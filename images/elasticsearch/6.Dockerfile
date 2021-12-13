@@ -46,7 +46,7 @@ discovery.zen.minimum_master_nodes: "${DISCOVERY_ZEN_MINIMUM_MASTER_NODES}"' >> 
 
 RUN fix-permissions config
 
-ENV ES_JAVA_OPTS="-Xms400m -Xmx400m -Dlog4j2.formatMsgNoLookups=true" \
+ENV ES_JAVA_OPTS="-Xms400m -Xmx400m" \
     DISCOVERY_ZEN_MINIMUM_MASTER_NODES=1 \
     NODE_MASTER=true
 

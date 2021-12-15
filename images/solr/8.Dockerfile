@@ -34,7 +34,7 @@ RUN apt-get -y update && apt-get -y install \
     zip \
     && rm -rf /var/lib/apt/lists/*
 
-# Mitigation for CVE-2021-45046
+# Mitigation for CVE-2021-45046 and CVE-2021-44228
 RUN zip -q -d /opt/solr-8.10.1/server/lib/ext/log4j-core-2.14.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
     && zip -q -d /opt/solr-8.10.1/contrib/prometheus-exporter/lib/log4j-core-2.14.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 

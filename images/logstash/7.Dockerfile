@@ -39,7 +39,7 @@ RUN fix-permissions /usr/share/logstash/data \
 
 RUN yum -y install zip && yum -y clean all  && rm -rf /var/cache
 
-# Mitigation for CVE-2021-45046
+# Mitigation for CVE-2021-45046 and CVE-2021-44228
 RUN zip -q -d /usr/share/logstash/logstash-core/lib/jars/log4j-core-2.12.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
     && zip -q -d /usr/share/logstash/vendor/bundle/jruby/2.5.0/gems/logstash-input-tcp-6.0.6-java/vendor/jar-dependencies/org/logstash/inputs/logstash-input-tcp/6.0.6/logstash-input-tcp-6.0.6.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 

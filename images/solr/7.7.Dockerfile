@@ -35,7 +35,7 @@ RUN fix-permissions /var/solr \
 
 RUN apk add --no-cache zip
 
-# Mitigation for CVE-2021-45046
+# Mitigation for CVE-2021-45046 and CVE-2021-44228
 RUN zip -q -d /opt/solr/server/lib/ext/log4j-core-2.11.0.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
     && zip -q -d /opt/solr/contrib/prometheus-exporter/lib/log4j-core-2.11.0.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 

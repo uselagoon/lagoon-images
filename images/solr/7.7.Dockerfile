@@ -36,8 +36,8 @@ RUN fix-permissions /var/solr \
 RUN apk add --no-cache zip
 
 # Mitigation for CVE-2021-45046
-RUN zip -q -d /opt/solr/server/lib/ext/log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
-    && zip -q -d /opt/solr/contrib/prometheus-exporter/lib/log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+RUN zip -q -d /opt/solr/server/lib/ext/log4j-core-2.11.0.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
+    && zip -q -d /opt/solr/contrib/prometheus-exporter/lib/log4j-core-2.11.0.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 
 # solr really doesn't like to be run as root, so we define the default user agin
 USER solr

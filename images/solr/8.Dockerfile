@@ -31,7 +31,12 @@ USER root
 RUN apt-get -y update && apt-get -y install \
     busybox \
     curl \
+    zip \
     && rm -rf /var/lib/apt/lists/*
+
+# Mitigation for CVE-2021-45046
+RUN zip -q -d /opt/solr-8.*/server/lib/ext/log4j-core-2.*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
+    && zip -q -d /opt/solr-8.*/contrib/prometheus-exporter/lib/log4j-core-2.*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini

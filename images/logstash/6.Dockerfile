@@ -39,6 +39,12 @@ ENV TMPDIR=/tmp \
 RUN fix-permissions /usr/share/logstash/data \
     && fix-permissions /usr/share/logstash/config
 
+RUN yum -y install zip && yum -y clean all  && rm -rf /var/cache
+
+# Mitigation for CVE-2021-45046 and CVE-2021-44228
+RUN zip -q -d /usr/share/logstash/logstash-core/lib/jars/log4j-core-2.15.0.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
+    && zip -q -d /usr/share/logstash/vendor/bundle/jruby/2.5.0/gems/logstash-input-tcp-5.2.3-java/vendor/jar-dependencies/org/logstash/inputs/logstash-input-tcp/5.2.3/logstash-input-tcp-5.2.3.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+
 ENV LS_JAVA_OPTS "-Xms400m -Xmx400m -Dlog4j2.formatMsgNoLookups=true"
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash", "/usr/local/bin/docker-entrypoint"]

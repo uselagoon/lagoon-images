@@ -35,6 +35,13 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
+RUN yum -y install zip && yum -y clean all  && rm -rf /var/cache
+
+# Mitigation for CVE-2021-45046 and CVE-2021-44228 (already removed from first jar file)
+# RUN zip -q -d /usr/share/elasticsearch/lib/log4j-core-2.11.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+RUN zip -q -d /usr/share/elasticsearch/bin/elasticsearch-sql-cli-6.8.21.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+
+
 RUN sed -i 's/discovery.zen.minimum_master_nodes: 1//' config/elasticsearch.yml
 
 RUN echo $'xpack.security.enabled: false\n\

@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM solr:8.10.1-slim
+FROM solr:8.11.1-slim
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -34,9 +34,9 @@ RUN apt-get -y update && apt-get -y install \
     zip \
     && rm -rf /var/lib/apt/lists/*
 
-# Mitigation for CVE-2021-45046 and CVE-2021-44228
-RUN zip -q -d /opt/solr-8.10.1/server/lib/ext/log4j-core-2.14.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
-    && zip -q -d /opt/solr-8.10.1/contrib/prometheus-exporter/lib/log4j-core-2.14.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+# Mitigation for CVE-2021-45046 and CVE-2021-44228 - not needed in log4j-core 2.16.0
+#  RUN zip -q -d /opt/solr-8.10.1/server/lib/ext/log4j-core-2.14.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
+#      && zip -q -d /opt/solr-8.10.1/contrib/prometheus-exporter/lib/log4j-core-2.14.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini

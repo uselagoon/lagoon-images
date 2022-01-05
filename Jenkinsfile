@@ -51,7 +51,7 @@ node ('lagoon-images') {
         }
 
         stage ('Copy examples down') {
-          sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
+          sh script: "git clone --branch new_repos https://github.com/uselagoon/lagoon-examples.git tests"
           dir ('tests') {
             sh script: "git submodule sync && git submodule update --init"
             sh script: "mkdir -p ./all-images && cp ../helpers/docker-compose.yml ./all-images/ && cp ../helpers/TESTING_dockercompose.md ./all-images/"
@@ -95,15 +95,15 @@ node ('lagoon-images') {
                 sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
                 sh script: "yarn test:simple", label: "Run simple Drupal tests"
                 sh script: "yarn test:advanced", label: "Run advanced Drupal tests"
-                sh script: "yarn test test/docker*postgres*", label: "Run postgres Drupal tests"
+//                sh script: "yarn test test/docker*postgres*", label: "Run postgres Drupal tests"
                 sh script: "yarn test test/docker*all-images*", label: "Run all-images tests"
                 sh script: "rm test/*.js"
-//                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal8-simple/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/7.4/7.3/'"
-//                sh script: "grep -rl PHP ./drupal8-simple/TESTING*.md | xargs sed -i 's/7.4/7.3/'"
-                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-php8/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/8.0/8.1/'"
-                sh script: "grep -rl PHP ./drupal9-php8/TESTING*.md | xargs sed -i 's/8.0/8.1/'"
+                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-postgres/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/8.0/7.4/'"
+                sh script: "grep -rl PHP ./drupal8-postgres/TESTING*.md | xargs sed -i 's/8.0/7.4/'"
+                sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-base/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/8.0/8.1/'"
+                sh script: "grep -rl PHP ./drupal9-base/TESTING*.md | xargs sed -i 's/8.0/8.1/'"
                 sh script: "yarn generate-tests"
-                sh script: "yarn test ./test/docker-compose-drupal-9-simple-php-8-1-nginx-mariadb.func.js", label: "Run Drupal 9 & PHP 8.1 test"
+                sh script: "yarn test:simple", label: "Rerun Drupal 9 tests with PHP 8.1/7.4"
               }
             }
           }

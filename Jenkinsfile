@@ -99,9 +99,9 @@ node ('lagoon-images') {
                 sh script: "yarn test test/docker*all-images*", label: "Run all-images tests"
                 sh script: "rm test/*.js"
                 sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-postgres/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/8.0/7.4/'"
-                sh script: "grep -rl PHP ./drupal9-postgres/TESTING*.md | xargs sed -i 's/8.0/7.4/'"
+                sh script: "grep -rl PHP ./drupal9-postgres/TESTING*.md | xargs sed -i 's/PHP 8/PHP 7/'"
                 sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-base/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/8.0/8.1/'"
-                sh script: "grep -rl PHP ./drupal9-base/TESTING*.md | xargs sed -i 's/8.0/8.1/'"
+//                sh script: "grep -rl PHP ./drupal9-base/TESTING*.md | xargs sed -i 's/8.0/8.1/'"
                 sh script: "yarn generate-tests"
                 sh script: "yarn test:simple", label: "Rerun Drupal 9 tests with PHP 8.1/7.4"
               }

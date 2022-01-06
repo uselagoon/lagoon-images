@@ -51,7 +51,7 @@ node ('lagoon-images') {
         }
 
         stage ('Copy examples down') {
-          sh script: "git clone --branch new_repos https://github.com/uselagoon/lagoon-examples.git tests"
+          sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
           dir ('tests') {
             sh script: "git submodule sync && git submodule update --init"
             sh script: "mkdir -p ./all-images && cp ../helpers/docker-compose.yml ./all-images/ && cp ../helpers/TESTING_dockercompose.md ./all-images/"

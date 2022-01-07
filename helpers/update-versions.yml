@@ -8,18 +8,20 @@
   hosts: 127.0.0.1
   connection: local
   vars:
-    # Newrelic - https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
-    NEWRELIC_VERSION: '9.17.1.301'
+    # Newrelic - https://github.com/newrelic/newrelic-php-agent/releases
+    NEWRELIC_VERSION: '9.18.1.303'
+    # Blackfire Agent - https://github.com/blackfireio/docker/tags
+    BLACKFIRE_VERSION: '2.5.2'
     # Composer - https://getcomposer.org/download/
-    COMPOSER_VERSION: '1.10.22'
-    COMPOSER_HASH_SHA256: '6127ae192d3b56cd6758c7c72fe2ac6868ecc835dae1451a004aca10ab1e0700'
+    COMPOSER_VERSION: '1.10.24'
+    COMPOSER_HASH_SHA256: '542ce16add6fd5ecfb0049dd49a0214e69a966a602b42c215adb19438c13a890'
     # Drupal Console Launcher - https://github.com/hechoendrupal/drupal-console-launcher/releases
     DRUPAL_CONSOLE_LAUNCHER_VERSION: 1.9.7
     DRUPAL_CONSOLE_LAUNCHER_SHA: fe83050489c66a0578eb59d6744420be6fd4c5d1
     # Drush - https://github.com/drush-ops/drush/releases
-    DRUSH_VERSION: 8.4.8
+    DRUSH_VERSION: 8.4.10
     # Drush Launcher Version - https://github.com/drush-ops/drush-launcher/releases
-    DRUSH_LAUNCHER_VERSION: 0.9.1
+    DRUSH_LAUNCHER_VERSION: 0.9.3
   tasks:
   - name: Get a list of test*.conf in /home/user
     find:
@@ -35,6 +37,12 @@
         path: "{{ item.path }}"
         regexp: 'ENV NEWRELIC_VERSION=.*'
         replace: 'ENV NEWRELIC_VERSION={{ NEWRELIC_VERSION }}'
+    with_items: "{{ my_dockerfiles.files }}"
+  - name: update BLACKLFIRE_VERSION
+    replace:
+        path: "{{ item.path }}"
+        regexp: 'ENV BLACKFIRE_VERSION=.*'
+        replace: 'ENV BLACKFIRE_VERSION={{ BLACKFIRE_VERSION }}'
     with_items: "{{ my_dockerfiles.files }}"
   - name: update COMPOSER_VERSION
     replace:

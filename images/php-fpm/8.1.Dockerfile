@@ -86,7 +86,7 @@ RUN docker-php-ext-configure gd --with-webp --with-jpeg \
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-# ENV NEWRELIC_VERSION=9.17.1.301
+# ENV NEWRELIC_VERSION=9.18.1.303
 # RUN mkdir -p /tmp/newrelic && cd /tmp/newrelic \
 #     && wget https://download.newrelic.com/php_agent/archive/${NEWRELIC_VERSION}/newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz \
 #     && gzip -dc newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz | tar --strip-components=1 -xf - \
@@ -112,7 +112,7 @@ RUN docker-php-ext-configure gd --with-webp --with-jpeg \
 #     && mv /blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
 #     && fix-permissions /usr/local/etc/php/conf.d/
 
-# ENV BLACKFIRE_VERSION=2.4.2
+# ENV BLACKFIRE_VERSION=2.5.2
 # RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
 #     && curl -A "Docker" -o /blackfire/blackfire-linux_${architecture}.tar.gz -D - -L -s https://packages.blackfire.io/binaries/blackfire/${BLACKFIRE_VERSION}/blackfire-linux_${architecture}.tar.gz \
 #     && tar zxpf /blackfire/blackfire-linux_${architecture}.tar.gz -C /blackfire \

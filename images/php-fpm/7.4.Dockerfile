@@ -71,7 +71,7 @@ RUN apk add --no-cache fcgi \
 
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && yes '' | pecl install -f apcu-5.1.21 \
-    && yes '' | pecl install -f imagick-3.5.1 \
+    && yes '' | pecl install -f imagick-3.7.0 \
     && yes '' | pecl install -f redis-4.3.0 \
     && yes '' | pecl install -f xdebug-2.9.8 \
     && yes '' | pecl install -f yaml-2.2.2 \

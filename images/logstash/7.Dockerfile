@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM docker.elastic.co/logstash/logstash:7.8.1
+FROM docker.elastic.co/logstash/logstash:7.10.2
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -40,7 +40,7 @@ RUN fix-permissions /usr/share/logstash/data \
 RUN yum -y install zip && yum -y clean all  && rm -rf /var/cache
 
 # Mitigation for CVE-2021-45046 and CVE-2021-44228
-RUN zip -q -d /usr/share/logstash/logstash-core/lib/jars/log4j-core-2.12.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
+RUN zip -q -d /usr/share/logstash/logstash-core/lib/jars/log4j-core-2.13.3.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
     && zip -q -d /usr/share/logstash/vendor/bundle/jruby/2.5.0/gems/logstash-input-tcp-6.0.6-java/vendor/jar-dependencies/org/logstash/inputs/logstash-input-tcp/6.0.6/logstash-input-tcp-6.0.6.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 
 ENV LS_JAVA_OPTS "-Xms400m -Xmx400m -Dlog4j2.formatMsgNoLookups=true"

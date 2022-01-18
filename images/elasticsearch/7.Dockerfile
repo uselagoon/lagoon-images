@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # Defining Versions - https://www.elastic.co/guide/en/elasticsearch/reference/7.6/docker.html
-FROM docker.elastic.co/elasticsearch/elasticsearch:7.8.1
+FROM docker.elastic.co/elasticsearch/elasticsearch:7.10.2
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -39,7 +39,7 @@ RUN yum -y install zip && yum -y clean all  && rm -rf /var/cache
 
 # Mitigation for CVE-2021-45046 and CVE-2021-44228
 RUN zip -q -d /usr/share/elasticsearch/lib/log4j-core-2.11.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
-    && zip -q -d /usr/share/elasticsearch/bin/elasticsearch-sql-cli-7.8.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+    && zip -q -d /usr/share/elasticsearch/bin/elasticsearch-sql-cli-7.10.2.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
 
 RUN echo $'\n\
 node.name: "${HOSTNAME}"\n\

@@ -39,7 +39,7 @@ SHELL := /bin/bash
 #######
 
 # Parameter for all `docker build` commands, can be overwritten by passing `DOCKER_BUILD_PARAMS=` via the `-e` option
-DOCKER_BUILD_PARAMS := --quiet
+DOCKER_BUILD_PARAMS :=
 
 # On CI systems like jenkins we need a way to run multiple testings at the same time. We expect the
 # CI systems to define an Environment variable CI_BUILD_TAG which uniquely identifies each build.
@@ -71,7 +71,7 @@ $(shell >scan.txt)
 # Docker Build Context
 docker_build_local = DOCKER_BUILDKIT=1 docker build $(DOCKER_BUILD_PARAMS) \
 						--build-arg BUILDKIT_INLINE_CACHE=1 \
-						--cache-from testlagoon/$(1):cache \
+						--cache-from testlagoon/$(1):pr-393 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=$(CI_BUILD_TAG) \
 						-t $(CI_BUILD_TAG)/$(1) \

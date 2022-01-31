@@ -69,7 +69,9 @@ $(shell >scan.txt)
 
 # Builds a docker image. Expects as arguments: name of the image, location of Dockerfile, path of
 # Docker Build Context
-docker_build_local = DOCKER_BUILDKIT=0 docker build $(DOCKER_BUILD_PARAMS) \
+docker_build_local = DOCKER_BUILDKIT=1 docker build $(DOCKER_BUILD_PARAMS) \
+						--build-arg BUILDKIT_INLINE_CACHE=1 \
+						--cache-from testlagoon/$(1):cache \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=$(CI_BUILD_TAG) \
 						-t $(CI_BUILD_TAG)/$(1) \
@@ -77,6 +79,7 @@ docker_build_local = DOCKER_BUILDKIT=0 docker build $(DOCKER_BUILD_PARAMS) \
 
 docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--platform linux/amd64,linux/arm64/v8 \
+						--build-arg BUILDKIT_INLINE_CACHE=1 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
 						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \
@@ -88,6 +91,7 @@ docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
 
 docker_buildx_three = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--platform linux/amd64,linux/arm64/v8 \
+						--build-arg BUILDKIT_INLINE_CACHE=1 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=localhost:5000/uselagoon \
 						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \

@@ -71,7 +71,7 @@ $(shell >scan.txt)
 # Docker Build Context
 docker_build_local = DOCKER_BUILDKIT=1 docker build $(DOCKER_BUILD_PARAMS) \
 						--build-arg BUILDKIT_INLINE_CACHE=1 \
-						--cache-from testlagoon/$(1):pr-393 \
+						--cache-from testlagoon/$(1):main \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=$(CI_BUILD_TAG) \
 						-t $(CI_BUILD_TAG)/$(1) \

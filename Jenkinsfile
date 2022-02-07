@@ -98,7 +98,7 @@ node ('lagoon-images') {
 //                sh script: "yarn test test/docker*postgres*", label: "Run postgres Drupal tests"
                 sh script: "yarn test test/docker*all-images*", label: "Run all-images tests"
                 sh script: "rm test/*.js"
-                sh script: "git submodule add -b php74 https://github.com/lagoon-examples/drupal9-postgres drupal9-postgres-php74 && git submodule deinit drupal9-postgres"
+                sh script: "git submodule add -b php74 https://github.com/lagoon-examples/drupal9-postgres drupal9-postgres-php74 && git submodule deinit -f drupal9-postgres"
                 sh script: "grep -rl ${CI_BUILD_TAG} ./drupal9-base/lagoon/*.dockerfile | xargs sed -i '/^FROM/ s/8.0/8.1/'"
 //                sh script: "grep -rl PHP ./drupal9-base/TESTING*.md | xargs sed -i 's/8.0/8.1/'"
                 sh script: "yarn generate-tests"

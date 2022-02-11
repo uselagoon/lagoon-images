@@ -26,6 +26,14 @@ services:
       - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
     << : *default-user # uses the defined user from top
 
+  mariadb-10.6:
+    image: uselagoon/mariadb-10.6:latest
+    labels:
+      lando.type: mariadb
+    ports:
+      - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+    << : *default-user # uses the defined user from top
+
   mongo:
     image: uselagoon/mongo:latest
     ports:
@@ -73,6 +81,24 @@ services:
       - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
     << : *default-user # uses the defined user from top
 
+
+  postgres-13:
+    image: uselagoon/postgres-13:latest
+    labels:
+      lando.type: postgres
+    ports:
+      - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+    << : *default-user # uses the defined user from top
+
+
+  postgres-14:
+    image: uselagoon/postgres-14:latest
+    labels:
+      lando.type: postgres
+    ports:
+      - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+    << : *default-user # uses the defined user from top
+
   python-3.7:
     image: uselagoon/python-3.7:latest
     << : *default-user # uses the defined user from top
@@ -85,6 +111,9 @@ services:
     image: uselagoon/python-3.9:latest
     << : *default-user # uses the defined user from top
 
+  python-3.10:
+    image: uselagoon/python-3.10:latest
+    << : *default-user # uses the defined user from top
   rabbitmq:
     image: uselagoon/rabbitmq:latest
     << : *default-user # uses the defined user from top
@@ -122,6 +151,12 @@ services:
     ports:
       - "8983" # exposes the port 8983 with a random local port, find it with `docker-compose port solr 8983`
 
+  solr-8:
+    image: uselagoon/solr-8:latest
+    labels:
+      lando.type: solr
+    ports:
+      - "8983" # exposes the port 8983 with a random local port, find it with `docker-compose port solr 8983`
 networks:
   amazeeio-network:
     external: true

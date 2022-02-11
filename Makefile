@@ -179,21 +179,29 @@ build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 
 versioned-images := 		php-7.4-fpm \
 							php-8.0-fpm \
+							php-8.1-fpm \
 							php-7.4-cli \
 							php-8.0-cli \
+							php-8.1-cli \
 							php-7.4-cli-drupal \
 							php-8.0-cli-drupal \
+							php-8.1-cli-drupal \
 							python-3.7 \
 							python-3.8 \
 							python-3.9 \
+							python-3.10 \
 							node-12 \
-							node-14 \
-							node-16 \
 							node-12-builder \
+							node-14 \
 							node-14-builder \
+							node-16 \
 							node-16-builder \
 							solr-7.7 \
 							solr-7.7-drupal \
+							solr-7 \
+							solr-7-drupal \
+							solr-8 \
+							solr-8-drupal \
 							elasticsearch-6 \
 							elasticsearch-7 \
 							kibana-6 \
@@ -201,19 +209,18 @@ versioned-images := 		php-7.4-fpm \
 							logstash-6 \
 							logstash-7 \
 							postgres-12 \
+							postgres-13 \
+							postgres-14 \
 							redis-6 \
 							redis-6-persistent \
-							solr-7 \
-							solr-7-drupal \
 							mariadb-10.5 \
 							mariadb-10.5-drupal \
+							mariadb-10.6 \
+							mariadb-10.6-drupal \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \
-							varnish-6-persistent-drupal \
-							php-8.1-fpm \
-							php-8.1-cli \
-							php-8.1-cli-drupal
+							varnish-6-persistent-drupal
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -234,8 +241,7 @@ default-versioned-images := 	mariadb-10.4 \
 ####### Experimental Images
 #######
 
-experimental-images := 		solr-8 \
-							solr-8-drupal
+experimental-images := 		
 
 build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images) $(experimental-images),build/$(image))
 
@@ -270,7 +276,7 @@ build/php-8.1-cli: build/php-8.1-fpm
 build/php-7.4-cli-drupal: build/php-7.4-cli
 build/php-8.0-cli-drupal: build/php-8.0-cli
 build/php-8.1-cli-drupal: build/php-8.1-cli
-build/python-3.7 build/python-3.8 build/python-3.9: build/commons
+build/python-3.7 build/python-3.8 build/python-3.9 build/python-3.10: build/commons
 build/node-12 build/node-14 build/node-16: build/commons
 build/node-12-builder: build/node-12
 build/node-14-builder: build/node-14
@@ -278,8 +284,11 @@ build/node-16-builder: build/node-16
 build/solr-7.7: build/commons
 build/solr-7.7-drupal: build/solr-7.7
 build/elasticsearch-6 build/elasticsearch-7 build/kibana-6 build/kibana-7 build/logstash-6 build/logstash-7: build/commons
-build/postgres-11 build/postgres-12: build/commons
+build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
+build/postgres-14-drupal: build/postgres-12
+build/postgres-13-drupal: build/postgres-13
+build/postgres-14-drupal: build/postgres-14
 build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-6-persistent: build/redis-6
@@ -291,9 +300,10 @@ build/varnish-6-persistent-drupal: build/varnish-6-drupal
 build/solr-7 build/solr-8: build/commons
 build/solr-7-drupal: build/solr-7
 build/solr-8-drupal: build/solr-8
-build/mariadb-10.4 build/mariadb-10.5: build/commons
+build/mariadb-10.4 build/mariadb-10.5 build/mariadb-10.6: build/commons
 build/mariadb-10.4-drupal: build/mariadb-10.4
 build/mariadb-10.5-drupal: build/mariadb-10.5
+build/mariadb-10.6-drupal: build/mariadb-10.6
 
 #######
 ####### Building Images

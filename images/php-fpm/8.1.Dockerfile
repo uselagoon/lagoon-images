@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:8.1.2-fpm-alpine3.15
+FROM php:8.1.3-fpm-alpine3.15
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -81,9 +81,7 @@ RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 RUN docker-php-ext-configure gd --with-webp --with-jpeg \
-    && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap xsl zip \
-# PHP failing to build sockets extension https://github.com/docker-library/php/issues/1245#issuecomment-1020146157 
-    && CFLAGS="$CFLAGS -D_GNU_SOURCE" docker-php-ext-install -j4 sockets 
+    && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip
 
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/

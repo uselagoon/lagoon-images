@@ -8,4 +8,4 @@ command:
   sql:
     dump:
       options:
-        extra-dump: '--no-tablespaces --max_allowed_packet=${env.MARIADB_MAX_ALLOWED_PACKET}'
+        extra-dump: --no-tablespaces --max_allowed_packet=${env.MARIADB_MAX_ALLOWED_PACKET}

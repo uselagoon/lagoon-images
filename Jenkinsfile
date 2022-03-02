@@ -57,6 +57,7 @@ node ('lagoon-images') {
             sh script: "git submodule add -b php81 https://github.com/lagoon-examples/drupal9-base drupal9-base-php81"
             sh script: "git submodule sync && git submodule update --init"
             sh script: "mkdir -p ./all-images && cp ../helpers/docker-compose.yml ./all-images/ && cp ../helpers/TESTING_dockercompose.md ./all-images/"
+            sh script: "sed -i '/image:/ s/uselagoon/${CI_BUILD_TAG}/' ./all-images/docker-compose.yml"
             sh script: "yarn install"
             sh script: "yarn generate-tests"
             sh script: "docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network"

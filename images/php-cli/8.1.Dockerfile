@@ -5,6 +5,7 @@ LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lago
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
 ENV LAGOON=cli
+ENV MARIADB_MAX_ALLOWED_PACKET=64M
 
 COPY --from=composer:2.2.7 /usr/bin/composer /usr/local/bin/composer
 

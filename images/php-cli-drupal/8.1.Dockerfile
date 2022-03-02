@@ -5,6 +5,7 @@ LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lago
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
 ENV LAGOON=cli-drupal
+ENV MARIADB_MAX_ALLOWED_PACKET=64M
 
 # Defining Versions - https://github.com/hechoendrupal/drupal-console-launcher/releases
 ENV DRUPAL_CONSOLE_LAUNCHER_VERSION=1.9.7 \

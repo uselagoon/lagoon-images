@@ -14,4 +14,4 @@ apc.shm_size = ${PHP_APC_SHM_SIZE:-32m}
 apc.enabled = ${PHP_APC_ENABLED:-1}
 
 [xdebug]
-xdebug.remote_enable = on
+xdebug.mode = debug

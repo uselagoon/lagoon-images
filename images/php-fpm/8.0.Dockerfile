@@ -44,9 +44,8 @@ COPY php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 
-RUN apk add --no-cache fcgi \
-        ssmtp \
-        libzip libzip-dev \
+RUN apk add --no-cache --virtual .devdeps \
+        libzip-dev \
         # for gd
         libpng-dev \
         libjpeg-turbo-dev \
@@ -65,23 +64,37 @@ RUN apk add --no-cache fcgi \
         # for yaml
         yaml-dev \
         # for imagemagick
+        imagemagick-dev \
+        && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+        && yes '' | pecl install -f apcu-5.1.21 \
+        && yes '' | pecl install -f imagick-3.7.0 \
+        && yes '' | pecl install -f redis-5.3.7 \
+        && yes '' | pecl install -f xdebug-3.1.3 \
+        && yes '' | pecl install -f yaml-2.2.2 \
+        && docker-php-ext-enable apcu imagick redis xdebug yaml \
+        && rm -rf /tmp/pear \
+        && apk del -r .phpize-deps \
+        && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+        && docker-php-ext-configure gd --with-webp --with-jpeg \
+        && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip \
+        && apk del -r .devdeps \
+        && apk add --no-cache \
+        fcgi \
+        ssmtp \
+        libzip \
+        libpng \
+        libjpeg-turbo \
+        gettext \
+        libmcrypt \
+        libxml2 \
+        libxslt \
+        libgcrypt \
+        libwebp \
+        postgresql-libs \
+        yaml \
         imagemagick \
-        imagemagick-libs \
-        imagemagick-dev
+        imagemagick-libs
 
-RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-    && yes '' | pecl install -f apcu-5.1.21 \
-    && yes '' | pecl install -f imagick-3.7.0 \
-    && yes '' | pecl install -f redis-5.3.7 \
-    && yes '' | pecl install -f xdebug-3.1.3 \
-    && yes '' | pecl install -f yaml-2.2.2 \
-    && docker-php-ext-enable apcu imagick redis xdebug yaml \
-    && rm -rf /var/cache/apk/* /tmp/pear/ \
-    && apk del .phpize-deps \
-    && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
-RUN docker-php-ext-configure gd --with-webp --with-jpeg \
-    && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip 
 
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/

@@ -107,6 +107,14 @@
       ]
     },
     {
+      "enabled": true,
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": ["openresty/openresty"],
+      "versioning": "regex:^(\\d)\\.(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<build>\\d+)-(?<compatibility>.*)$"
+    },
+    {
       "enabled": false,
       "matchDatasources": [
         "docker"

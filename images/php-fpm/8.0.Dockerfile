@@ -40,7 +40,7 @@ COPY entrypoints /lagoon/entrypoints/
 
 COPY php.ini /usr/local/etc/php/
 COPY 00-lagoon-php.ini.tpl /usr/local/etc/php/conf.d/
-COPY php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf
+COPY php-fpm.d/www.conf php-fpm.d/global.conf /usr/local/etc/php-fpm.d/
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 

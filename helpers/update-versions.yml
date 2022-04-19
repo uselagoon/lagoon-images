@@ -11,10 +11,10 @@
     # Newrelic - https://github.com/newrelic/newrelic-php-agent/releases
     NEWRELIC_VERSION: '9.20.0.310'
     # Blackfire Agent - https://github.com/blackfireio/docker/tags
-    BLACKFIRE_VERSION: '2.7.0'
+    BLACKFIRE_VERSION: '2.7.1'
     # Composer - https://getcomposer.org/download/
-    COMPOSER_VERSION: '1.10.25'
-    COMPOSER_HASH_SHA256: '6b089bd8b78b00c3c15d7b13353fbcbdf16a3f5248203c9a3e76f13948f2de92'
+    COMPOSER_VERSION: '1.10.26'
+    COMPOSER_HASH_SHA256: 'cbfe1f85276c57abe464d934503d935aa213494ac286275c8dfabfa91e3dbdc4'
     # Drupal Console Launcher - https://github.com/hechoendrupal/drupal-console-launcher/releases
     DRUPAL_CONSOLE_LAUNCHER_VERSION: 1.9.7
     DRUPAL_CONSOLE_LAUNCHER_SHA: fe83050489c66a0578eb59d6744420be6fd4c5d1

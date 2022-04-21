@@ -9,19 +9,19 @@
   connection: local
   vars:
     # Newrelic - https://github.com/newrelic/newrelic-php-agent/releases
-    NEWRELIC_VERSION: '9.18.1.303'
+    NEWRELIC_VERSION: '9.20.0.310'
     # Blackfire Agent - https://github.com/blackfireio/docker/tags
-    BLACKFIRE_VERSION: '2.5.2'
+    BLACKFIRE_VERSION: '2.7.1'
     # Composer - https://getcomposer.org/download/
-    COMPOSER_VERSION: '1.10.24'
-    COMPOSER_HASH_SHA256: '542ce16add6fd5ecfb0049dd49a0214e69a966a602b42c215adb19438c13a890'
+    COMPOSER_VERSION: '1.10.26'
+    COMPOSER_HASH_SHA256: 'cbfe1f85276c57abe464d934503d935aa213494ac286275c8dfabfa91e3dbdc4'
     # Drupal Console Launcher - https://github.com/hechoendrupal/drupal-console-launcher/releases
     DRUPAL_CONSOLE_LAUNCHER_VERSION: 1.9.7
     DRUPAL_CONSOLE_LAUNCHER_SHA: fe83050489c66a0578eb59d6744420be6fd4c5d1
     # Drush - https://github.com/drush-ops/drush/releases
     DRUSH_VERSION: 8.4.10
     # Drush Launcher Version - https://github.com/drush-ops/drush-launcher/releases
-    DRUSH_LAUNCHER_VERSION: 0.9.3
+    DRUSH_LAUNCHER_VERSION: 0.10.1
   tasks:
   - name: Get a list of test*.conf in /home/user
     find:

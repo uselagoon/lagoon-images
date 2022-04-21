@@ -5,8 +5,7 @@ LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lago
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
 ENV LAGOON=cli-drupal
-# The --max_allowed_packet=64M is a MariaDB-specific setting, and should be overriden downstream if not needed
-ENV EXTRA_DUMP_CMD="--max_allowed_packet=64M"
+ENV MARIADB_MAX_ALLOWED_PACKET=64M
 
 # Defining Versions - https://github.com/hechoendrupal/drupal-console-launcher/releases
 ENV DRUPAL_CONSOLE_LAUNCHER_VERSION=1.9.7 \

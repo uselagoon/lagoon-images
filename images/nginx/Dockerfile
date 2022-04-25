@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # Alpine 3.12 per https://github.com/openresty/docker-openresty/blob/1.19.3.1-0/alpine/Dockerfile
-FROM openresty/openresty:1.19.9.1-10-alpine-apk
+FROM openresty/openresty:1.19.9.1-12-alpine-apk
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"

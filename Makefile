@@ -196,6 +196,8 @@ versioned-images := 		php-7.4-fpm \
 							node-14-builder \
 							node-16 \
 							node-16-builder \
+							node-18 \
+							node-18-builder \
 							solr-7.7 \
 							solr-7.7-drupal \
 							solr-7 \
@@ -277,10 +279,11 @@ build/php-7.4-cli-drupal: build/php-7.4-cli
 build/php-8.0-cli-drupal: build/php-8.0-cli
 build/php-8.1-cli-drupal: build/php-8.1-cli
 build/python-3.7 build/python-3.8 build/python-3.9 build/python-3.10: build/commons
-build/node-12 build/node-14 build/node-16: build/commons
+build/node-12 build/node-14 build/node-16 build/node-18: build/commons
 build/node-12-builder: build/node-12
 build/node-14-builder: build/node-14
 build/node-16-builder: build/node-16
+build/node-18-builder: build/node-18
 build/solr-7.7: build/commons
 build/solr-7.7-drupal: build/solr-7.7
 build/elasticsearch-6 build/elasticsearch-7 build/kibana-6 build/kibana-7 build/logstash-6 build/logstash-7: build/commons

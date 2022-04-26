@@ -39,9 +39,9 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mongo_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_node-12_1
 docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_node-14_1
 docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_node-16_1
+docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_node-18_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-11_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-12_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-13_1

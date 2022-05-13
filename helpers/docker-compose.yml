@@ -41,14 +41,6 @@ services:
       - "28017"
     << : *default-user # uses the defined user from top
 
-  node-12:
-    image: uselagoon/node-12:latest
-    labels:
-      lando.type: node
-    ports:
-      - "3000" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
-    << : *default-user # uses the defined user from top
-
   node-14:
     image: uselagoon/node-14:latest
     labels:
@@ -65,6 +57,14 @@ services:
       - "3000" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
     << : *default-user # uses the defined user from top
 
+  node-18:
+    image: uselagoon/node-18:latest
+    labels:
+      lando.type: node
+    ports:
+      - "3000" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
+    << : *default-user # uses the defined user from top
+    
   postgres-11:
     image: uselagoon/postgres-11:latest
     labels:

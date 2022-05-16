@@ -220,7 +220,11 @@ versioned-images := 		php-7.4-fpm \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \
-							varnish-6-persistent-drupal
+							varnish-6-persistent-drupal \
+							varnish-7 \
+							varnish-7-drupal \
+							varnish-7-persistent \
+							varnish-7-persistent-drupal
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -292,11 +296,13 @@ build/postgres-14-drupal: build/postgres-14
 build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-6-persistent: build/redis-6
-build/varnish-5 build/varnish-6: build/commons
+build/varnish-5 build/varnish-6 build/varnish-7: build/commons
 build/varnish-5-drupal build/varnish-5-persistent: build/varnish-5
 build/varnish-5-persistent-drupal: build/varnish-5-drupal
 build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal
+build/varnish-7-drupal build/varnish-7-persistent: build/varnish-7
+build/varnish-7-persistent-drupal: build/varnish-7-drupal
 build/solr-7 build/solr-8: build/commons
 build/solr-7-drupal: build/solr-7
 build/solr-8-drupal: build/solr-8

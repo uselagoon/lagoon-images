@@ -56,6 +56,9 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7.7_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-8_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-5_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-6_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-7_1
 
 # commons Should be running Alpine Linux
 docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
@@ -185,6 +188,39 @@ docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 
 # postgres-14 should have lagoon database
 docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
+
+# varnish-5 Check varnish has correct vmods in varnish folder
+docker-compose exec -T varnish-5 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
+docker-compose exec -T varnish-5 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
+
+# varnish-5 Check varnish is version 5
+docker-compose exec -T varnish-5 sh -c "varnishstat -V" | grep varnish-5
+
+# varnish-5 should be serving pages as version 5
+docker-compose exec -T commons sh -c "curl -I varnish-5:8080" | grep "(Varnish/5"
+
+# varnish-6 Check varnish has correct vmods in varnish folder
+docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
+docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
+
+# varnish-6 Check varnish is version 5
+docker-compose exec -T varnish-6 sh -c "varnishstat -V" | grep varnish-6
+
+# varnish-6 should be serving pages as version 5
+docker-compose exec -T commons sh -c "curl -I varnish-6:8080" | grep "(Varnish/6"
+
+# varnish-7 Check varnish has correct vmods in varnish folder
+docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
+docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
+
+# varnish-7 Check varnish is version 5
+docker-compose exec -T varnish-7 sh -c "varnishstat -V" | grep varnish-7
+
+# varnish-7 should be serving pages as version 5
+docker-compose exec -T commons sh -c "curl -I varnish-7:8080" | grep "(Varnish/7"
+
+
+
 ```
 
 Destroy tests

@@ -198,7 +198,7 @@ docker-compose exec -T varnish-5 sh -c "ls -la /usr/lib/varnish/vmods" | grep li
 
 # varnish-5 should be serving pages as version 5
 docker-compose exec -T commons sh -c "curl -I varnish-5:8080" | grep "Varnish" | grep "5."
-docker-compose exec -T varnish-5 sh -c "varnishlog -d" | grep User-Agent | grep curl 
+# docker-compose exec -T varnish-5 sh -c "varnishlog -d" | grep User-Agent | grep curl 
 
 # varnish-6 Check varnish has correct vmods in varnish folder
 docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
@@ -209,7 +209,7 @@ docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep li
 
 # varnish-6 should be serving pages as version 6
 docker-compose exec -T commons sh -c "curl -I varnish-6:8080" | grep "Varnish" | grep "6."
-docker-compose exec -T varnish-6 sh -c "varnishlog -d" | grep User-Agent | grep curl 
+# docker-compose exec -T varnish-6 sh -c "varnishlog -d" | grep User-Agent | grep curl 
 
 # varnish-7 Check varnish has correct vmods in varnish folder
 docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
@@ -220,7 +220,7 @@ docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep li
 
 # varnish-7 should be serving pages as version 7
 docker-compose exec -T commons sh -c "curl -I varnish-7:8080" | grep "Varnish" | grep "7."
-docker-compose exec -T varnish-7 sh -c "varnishlog -d" | grep User-Agent | grep curl 
+# docker-compose exec -T varnish-7 sh -c "varnishlog -d" | grep User-Agent | grep curl 
 
 
 

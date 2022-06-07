@@ -25,7 +25,7 @@ RUN apk add --no-cache git \
         mongodb-tools \
         openssh-sftp-server \
         findutils \
-        nodejs-current \
+        nodejs-current=~18 \
         npm \
         yarn \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \

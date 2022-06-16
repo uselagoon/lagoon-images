@@ -1,7 +1,7 @@
 FROM webdevops/go-crond:21.5.0-alpine AS go-crond
 FROM amazeeio/envplate:v1.0.0-rc.3 AS envplate
 
-FROM alpine:3.15.4
+FROM alpine:3.16.0
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"

@@ -49,6 +49,7 @@ RUN apk add --no-cache --virtual .devdeps \
         # for gd
         libpng-dev \
         libjpeg-turbo-dev \
+        freetype-dev \
         # for gettext
         gettext-dev \
         # for mcrypt
@@ -75,7 +76,7 @@ RUN apk add --no-cache --virtual .devdeps \
         && rm -rf /tmp/pear \
         && apk del -r .phpize-deps \
         && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-        && docker-php-ext-configure gd --with-webp --with-jpeg \
+        && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
         && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip \
         && apk del -r .devdeps \
         && apk add --no-cache \

@@ -29,7 +29,7 @@ SHELL := /bin/bash
 # Runs all tests together. Can be executed with `-j2` for two parallel running tests
 
 # make up
-# Starts all Lagoon Services at once, usefull for local development or just to start all of them.
+# Starts all Lagoon Services at once, useful for local development or just to start all of them.
 
 # make logs
 # Shows logs of Lagoon Services (aka docker-compose logs -f)

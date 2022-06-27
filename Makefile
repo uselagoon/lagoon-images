@@ -209,8 +209,11 @@ versioned-images := 		php-7.4-fpm \
 							logstash-6 \
 							logstash-7 \
 							postgres-12 \
+							postgres-12-drupal \
 							postgres-13 \
+							postgres-13-drupal \
 							postgres-14 \
+							postgres-14-drupal \
 							redis-6 \
 							redis-6-persistent \
 							mariadb-10.5 \
@@ -286,7 +289,7 @@ build/solr-7.7-drupal: build/solr-7.7
 build/elasticsearch-6 build/elasticsearch-7 build/kibana-6 build/kibana-7 build/logstash-6 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
-build/postgres-14-drupal: build/postgres-12
+build/postgres-12-drupal: build/postgres-12
 build/postgres-13-drupal: build/postgres-13
 build/postgres-14-drupal: build/postgres-14
 build/redis-5 build/redis-6: build/commons

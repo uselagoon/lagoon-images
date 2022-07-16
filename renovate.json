@@ -1,7 +1,8 @@
 {
   "baseBranches": [
     "main",
-    "testing/alpine_next"
+    "testing/alpine_next",
+    "testing/renovate"
   ],
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [

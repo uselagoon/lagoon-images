@@ -26,7 +26,7 @@ RUN apk add --no-cache git \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
     && rm -rf /var/cache/apk/*
 
-RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/1.10.25/composer.phar \
+RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/1.10.26/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && php -d memory_limit=-1 /usr/local/bin/composer global require hirak/prestissimo \
     && mkdir -p /home/.ssh \

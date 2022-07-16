@@ -48,7 +48,19 @@
     },
     {
       "fileMatch": ["(^|/|\\.)Dockerfile$"],
-      "matchStrings": ["curl.*https://github.com/(?<depName>.*?)/releases/download/(?<currentValue>.*?)/*.phar.*\n"],
+      "matchStrings": ["ENV BLACKFIRE_VERSION=(?<currentValue>.*?)\n"],
+      "depNameTemplate": "blackfireio/docker",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["ENV NEWRELIC_VERSION=(?<currentValue>.*?)\n"],
+      "depNameTemplate": "newrelic/newrelic-php-agent",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["curl.*https://github.com/(?<depName>.*?)/releases/download/(?<currentValue>.*?)/.*.phar.*\n"],
       "datasourceTemplate": "github-releases"
     },
     {
@@ -73,7 +85,8 @@
       "enabled": true,
       "matchDatasources": [
         "github-releases",
-        "github-tags"
+        "github-tags",
+        "packagist"
       ],
       "matchUpdateTypes": [
         "minor",
@@ -87,7 +100,9 @@
         "composer/composer",
         "drush/drush",
         "hechoendrupal/drupal-console-launcher",
-        "drush-ops/drush-launcher"
+        "drush-ops/drush-launcher",
+        "newrelic/newrelic-php-agent",
+        "blackfireio/docker"
       ]
     },
     { 
@@ -95,7 +110,8 @@
       "groupName": "Disable PHP package/extension major updates",
       "matchDatasources": [
         "github-releases",
-        "github-tags"
+        "github-tags",
+        "packagist"
       ],
       "matchUpdateTypes": [
         "major"
@@ -109,7 +125,9 @@
         "composer/composer",
         "drush/drush",
         "hechoendrupal/drupal-console-launcher",
-        "drush-ops/drush-launcher"
+        "drush-ops/drush-launcher",
+        "newrelic/newrelic-php-agent",
+        "blackfireio/docker"
       ]
     },
     {

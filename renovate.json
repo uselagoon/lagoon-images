@@ -44,6 +44,16 @@
       "matchStrings": ["pecl install -f yaml-(?<currentValue>.*?) "],
       "depNameTemplate": "php/pecl-file_formats-yaml",
       "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["curl.*https://github.com/(?<depName>.*?)/releases/download/(?<currentValue>.*?)/*.phar.*\n"],
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["php.*--require=(?<depName>.*?):(?<currentValue>.*?)\\s.*\n"],
+      "datasourceTemplate": "packagist"
     }
   ],
   "packageRules": [
@@ -72,12 +82,16 @@
         "Imagick/imagick",
         "phpredis/phpredis",
         "xdebug/xdebug",
-        "php/pecl-file_formats-yaml"
+        "php/pecl-file_formats-yaml",
+        "composer/composer",
+        "drush/drush",
+        "hechoendrupal/drupal-console-launcher",
+        "drush-ops/drush-launcher"
       ]
     },
     { 
       "enabled": false,
-      "groupName": "Disable PECL major updates",
+      "groupName": "Disable PHP package/extension major updates",
       "matchDatasources": [
         "github-releases",
         "github-tags"
@@ -90,7 +104,11 @@
         "Imagick/imagick",
         "phpredis/phpredis",
         "xdebug/xdebug",
-        "php/pecl-file_formats-yaml"
+        "php/pecl-file_formats-yaml",
+        "composer/composer",
+        "drush/drush",
+        "hechoendrupal/drupal-console-launcher",
+        "drush-ops/drush-launcher"
       ]
     },
     {
@@ -116,6 +134,7 @@
     },
     {
       "enabled": false,
+      "groupName": "Disable major and minor updates - packages update only patch",
       "matchDatasources": [
         "docker"
       ],
@@ -147,6 +166,7 @@
     },
     {
       "enabled": false,
+      "groupName": "Disable major releases - packages update only minor",
       "matchDatasources": [
         "docker"
       ],

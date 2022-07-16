@@ -20,7 +20,7 @@
       "fileMatch": ["(^|/|\\.)Dockerfile$"],
       "matchStrings": ["pecl install -f apcu-(?<currentValue>.*?) "],
       "depNameTemplate": "krakjoe/apcu",
-      "datasourceTemplate": "github-tags"
+      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": ["(^|/|\\.)Dockerfile$"],
@@ -88,6 +88,19 @@
         "github-tags",
         "packagist"
       ],
+      "matchPackageNames": [
+        "newrelic/newrelic-php-agent"
+      ],
+      "extractVersion": "^v(?<version>.*)$",
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+).(?<build>\\d+)$"
+    },
+    { 
+      "enabled": true,
+      "matchDatasources": [
+        "github-releases",
+        "github-tags",
+        "packagist"
+      ],
       "matchUpdateTypes": [
         "minor",
         "patch"
@@ -101,7 +114,6 @@
         "drush/drush",
         "hechoendrupal/drupal-console-launcher",
         "drush-ops/drush-launcher",
-        "newrelic/newrelic-php-agent",
         "blackfireio/docker"
       ]
     },
@@ -126,7 +138,6 @@
         "drush/drush",
         "hechoendrupal/drupal-console-launcher",
         "drush-ops/drush-launcher",
-        "newrelic/newrelic-php-agent",
         "blackfireio/docker"
       ]
     },

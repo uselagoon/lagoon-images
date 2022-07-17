@@ -85,7 +85,8 @@
       "enabled": true,
       "matchDatasources": [
         "github-releases",
-        "github-tags"
+        "github-tags",
+        "packagist"
       ],
       "matchPackageNames": [
         "newrelic/newrelic-php-agent"

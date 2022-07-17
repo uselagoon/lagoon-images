@@ -29,6 +29,7 @@ RUN apk add --no-cache git \
 RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/1.10.26/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && php -d memory_limit=-1 /usr/local/bin/composer global require hirak/prestissimo \
+    && php /usr/local/bin/composer clear-cache \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/
 

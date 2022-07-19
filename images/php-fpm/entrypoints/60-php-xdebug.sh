@@ -27,7 +27,10 @@ if expr "$XDEBUG_ENABLE" : '[Tt][Rr][Uu][Ee]' > /dev/null; then
 
   # Add the found client_host to xdebug.ini
   echo -e "\n\nxdebug.client_host=${DOCKERHOST}" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
+  # Bare minimum config required for Xdebug 3
+  echo -e "\nxdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+  echo -e "\nxdebug.discover_client_host=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+  
   if [ ${XDEBUG_LOG+x} ]; then
     echo -e "\n\nxdebug.log=/tmp/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
   fi

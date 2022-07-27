@@ -47,15 +47,25 @@ services:
       lando.type: node
     ports:
       - "3000" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
-    << : *default-user # uses the defined user from top
+    user: root
+    command: ["sh", "-c", "
+        npm install -g http-server;
+        node -v | xargs > /app/test.html;
+        exec http-server -p 3000
+        "]
 
   node-16:
-    image: uselagoon/node-14:latest
+    image: uselagoon/node-16:latest
     labels:
       lando.type: node
     ports:
       - "3000" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
-    << : *default-user # uses the defined user from top
+    user: root
+    command: ["sh", "-c", "
+        npm install -g http-server;
+        node -v | xargs > /app/test.html;
+        exec http-server -p 3000
+        "]
 
   node-18:
     image: uselagoon/node-18:latest
@@ -64,7 +74,13 @@ services:
     ports:
       - "3000" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
     << : *default-user # uses the defined user from top
-    
+    user: root
+    command: ["sh", "-c", "
+        npm install -g http-server;
+        node -v | xargs > /app/test.html;
+        exec http-server -p 3000
+        "]
+
   postgres-11:
     image: uselagoon/postgres-11:latest
     labels:
@@ -81,7 +97,6 @@ services:
       - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
     << : *default-user # uses the defined user from top
 
-
   postgres-13:
     image: uselagoon/postgres-13:latest
     labels:
@@ -89,7 +104,6 @@ services:
     ports:
       - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
     << : *default-user # uses the defined user from top
-
 
   postgres-14:
     image: uselagoon/postgres-14:latest
@@ -101,19 +115,42 @@ services:
 
   python-3.7:
     image: uselagoon/python-3.7:latest
+    ports:
+      - "3000"
     << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
 
   python-3.8:
     image: uselagoon/python-3.8:latest
+    ports:
+      - "3000"
     << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
 
   python-3.9:
     image: uselagoon/python-3.9:latest
+    ports:
+      - "3000"
     << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
 
   python-3.10:
     image: uselagoon/python-3.10:latest
     << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
+
   rabbitmq:
     image: uselagoon/rabbitmq:latest
     << : *default-user # uses the defined user from top
@@ -157,6 +194,3 @@ services:
       lando.type: solr
     ports:
       - "8983" # exposes the port 8983 with a random local port, find it with `docker-compose port solr 8983`
-networks:
-  amazeeio-network:
-    external: true

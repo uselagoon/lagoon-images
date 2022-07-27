@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM opensearchproject/opensearch:1.3.1
+FROM opensearchproject/opensearch:2.0.1
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -43,6 +43,8 @@ RUN for plugin in \
   opensearch-alerting \
   opensearch-cross-cluster-replication \
   opensearch-index-management \
+  opensearch-notifications \
+  opensearch-notifications-core \
   opensearch-observability \
   opensearch-reports-scheduler \
   opensearch-security; do \

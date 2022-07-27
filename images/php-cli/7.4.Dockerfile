@@ -6,11 +6,6 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 ENV LAGOON=cli
 
-# Defining Versions - Composer
-# @see https://getcomposer.org/download/
-ENV COMPOSER_VERSION=1.10.26 \
-  COMPOSER_HASH_SHA256=cbfe1f85276c57abe464d934503d935aa213494ac286275c8dfabfa91e3dbdc4
-
 RUN apk add --no-cache git \
         unzip \
         gzip  \
@@ -29,11 +24,12 @@ RUN apk add --no-cache git \
         npm \
         yarn \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
-    && rm -rf /var/cache/apk/* \
-    && curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/${COMPOSER_VERSION}/composer.phar \
-    && echo "$COMPOSER_HASH_SHA256  /usr/local/bin/composer" | sha256sum -c \
+    && rm -rf /var/cache/apk/*
+
+RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/1.10.26/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && php -d memory_limit=-1 /usr/local/bin/composer global require hirak/prestissimo \
+    && php /usr/local/bin/composer clear-cache \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/
 

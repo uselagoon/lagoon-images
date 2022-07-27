@@ -38,8 +38,16 @@ ENV TMPDIR=/tmp \
 
 RUN yum -y install hostname && yum -y clean all  && rm -rf /var/cache
 
-# Uninstall the opensearch-security plugin
-RUN /usr/share/opensearch/bin/opensearch-plugin remove opensearch-security
+# Uninstall the unneded plugins
+RUN for plugin in \
+  opensearch-alerting \
+  opensearch-cross-cluster-replication \
+  opensearch-index-management \
+  opensearch-observability \
+  opensearch-reports-scheduler \
+  opensearch-security; do \
+  /usr/share/opensearch/bin/opensearch-plugin remove --purge $plugin; \
+  done
 
 ENV OPENSEARCH_JAVA_OPTS="-Xms512m -Xmx512m" \
     EXTRA_OPTS=""

@@ -41,6 +41,7 @@ RUN yum -y install hostname && yum -y clean all  && rm -rf /var/cache
 RUN fix-permissions /usr/share/opensearch/config
 
 ENV OPENSEARCH_JAVA_OPTS="-Xms400m -Xmx400m" \
+    DISABLE_SECURITY_PLUGIN="true" \
     EXTRA_OPTS=""
 
 # Copy es-curl wrapper

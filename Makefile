@@ -244,7 +244,7 @@ default-versioned-images := 	mariadb-10.4 \
 ####### Experimental Images
 #######
 
-experimental-images := 		opensearch
+experimental-images := 		opensearch-2
 
 build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images) $(experimental-images),build/$(image))
 
@@ -307,7 +307,7 @@ build/mariadb-10.4 build/mariadb-10.5 build/mariadb-10.6: build/commons
 build/mariadb-10.4-drupal: build/mariadb-10.4
 build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6
-build/opensearch: build/commons
+build/opensearch-2: build/commons
 
 #######
 ####### Building Images

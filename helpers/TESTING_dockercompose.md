@@ -260,7 +260,6 @@ docker-compose exec -T ruby-3.1 sh -c "ruby -v" | grep "3.1"
 
 # ruby-3.1 should be serving content
 docker-compose exec -T commons sh -c "curl ruby-3.1:3000/tmp/" | grep "ruby 3.1"
-
 ```
 
 Destroy tests

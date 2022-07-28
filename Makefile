@@ -223,7 +223,9 @@ versioned-images := 		php-7.4-fpm \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \
-							varnish-6-persistent-drupal
+							varnish-6-persistent-drupal \
+							ruby-3.0 \
+							ruby-3.1
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -244,8 +246,7 @@ default-versioned-images := 	mariadb-10.4 \
 ####### Experimental Images
 #######
 
-experimental-images := 		ruby-3.0 \
-							ruby-3.1
+experimental-images := 		
 
 build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images) $(experimental-images),build/$(image))
 

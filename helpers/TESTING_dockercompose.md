@@ -39,17 +39,17 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mongo_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_node-14_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_node-16_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_node-18_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-14_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-16_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-18_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-11_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-12_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-13_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-14_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_python-3.7_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_python-3.8_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_python-3.9_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_python-3.10_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.7_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.8_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.9_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.10_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_rabbitmq_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
@@ -67,6 +67,7 @@ docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.8
 docker-compose exec -T rabbitmq sh -c "rabbitmq-plugins list" | grep "E" | grep "delayed_message_exchange"
 
 # rabbitmq Should have a running RabbitMQ management page running on 15672
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 docker-compose exec -T commons sh -c "curl -kL http://rabbitmq:15672" | grep "RabbitMQ Management"
 
 # redis-5 Should be running Redis v5.0
@@ -185,6 +186,68 @@ docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 
 # postgres-14 should have lagoon database
 docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
+
+# python-3.7 should be version 3.7
+docker-compose exec -T python-3.7 sh -c "python -V" | grep "3.7"
+
+# python-3.7 should have basic tools installed
+docker-compose exec -T python-3.7 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3.7 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3.7 sh -c "pip list --no-cache-dir" | grep "virtualenv" | grep "16.7.10"
+
+# python-3.7 should be serving content
+docker-compose exec -T commons sh -c "curl python-3.7:3000/tmp/test" | grep "Python 3.7"
+
+# python-3.8 should be version 3.8
+docker-compose exec -T python-3.8 sh -c "python -V" | grep "3.8"
+
+# python-3.8 should have basic tools installed
+docker-compose exec -T python-3.8 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3.8 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3.8 sh -c "pip list --no-cache-dir" | grep "virtualenv" | grep "16.7.10"
+
+# python-3.8 should be serving content
+docker-compose exec -T commons sh -c "curl python-3.8:3000/tmp/test" | grep "Python 3.8"
+
+# python-3.9 should be version 3.9
+docker-compose exec -T python-3.9 sh -c "python -V" | grep "3.9"
+
+# python-3.9 should have basic tools installed
+docker-compose exec -T python-3.9 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3.9 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3.9 sh -c "pip list --no-cache-dir" | grep "virtualenv"
+
+# python-3.9 should be serving content
+docker-compose exec -T commons sh -c "curl python-3.9:3000/tmp/test" | grep "Python 3.9"
+
+# python-3.10 should be version 3.10
+docker-compose exec -T python-3.10 sh -c "python -V" | grep "3.10"
+
+# python-3.10 should have basic tools installed
+docker-compose exec -T python-3.10 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3.10 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3.10 sh -c "pip list --no-cache-dir" | grep "virtualenv"
+
+# python-3.10 should be serving content
+docker-compose exec -T commons sh -c "curl python-3.10:3000/tmp/test" | grep "Python 3.10"
+
+# node-14 should have Node 14
+docker-compose exec -T node-14 sh -c "node -v" | grep "v14"
+
+# node-14 should be serving content
+docker-compose exec -T commons sh -c "curl node-14:3000/test" | grep "v14"
+
+# node-16 should have Node 16
+docker-compose exec -T node-16 sh -c "node -v" | grep "v16"
+
+# node-16 should be serving content
+docker-compose exec -T commons sh -c "curl node-16:3000/test" | grep "v16"
+
+# node-12 should have Node 18
+docker-compose exec -T node-18 sh -c "node -v" | grep "v18"
+
+# node-18 should be serving content
+docker-compose exec -T commons sh -c "curl node-18:3000/test" | grep "v18"
 ```
 
 Destroy tests
@@ -193,6 +256,6 @@ Destroy tests
 Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Should be able to destroy our Drupal 9 site with success
+# Should be able to destroy our services with success
 docker-compose down --volumes --remove-orphans
 ```

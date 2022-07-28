@@ -39,7 +39,7 @@ services:
     image: uselagoon/node-14:latest
     ports:
       - "3000"
-    << : *default-user # uses the defined user from top
+    user: root
     command: ["sh", "-c", "
         npm install -g http-server;
         node -v | xargs > /app/test.html;
@@ -50,7 +50,7 @@ services:
     image: uselagoon/node-16:latest
     ports:
       - "3000"
-    << : *default-user # uses the defined user from top
+    user: root
     command: ["sh", "-c", "
         npm install -g http-server;
         node -v | xargs > /app/test.html;
@@ -61,7 +61,7 @@ services:
     image: uselagoon/node-18:latest
     ports:
       - "3000"
-    << : *default-user # uses the defined user from top
+    user: root
     command: ["sh", "-c", "
         npm install -g http-server;
         node -v | xargs > /app/test.html;
@@ -167,7 +167,7 @@ services:
     image: uselagoon/solr-8:latest
     ports:
       - "8983"
-    << : *default-user # uses the defined user from top
+    user: solr
 
   ruby-3.0:
     image: uselagoon/ruby-3.0:latest
@@ -175,8 +175,7 @@ services:
       - "3000"
     << : *default-user # uses the defined user from top
     command: ["sh", "-c", "
-        mkdir /test;
-        ruby -v | xargs > /test/index.html;
+        ruby -v | xargs > /tmp/index.html;
         exec ruby -run -e httpd / -p 3000
         "]
 
@@ -186,7 +185,6 @@ services:
       - "3000"
     << : *default-user # uses the defined user from top
     command: ["sh", "-c", "
-        mkdir /test;
-        ruby -v | xargs > /test/index.html;
+        ruby -v | xargs > /tmp/index.html;
         exec ruby -run -e httpd / -p 3000
         "]

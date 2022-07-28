@@ -12,26 +12,20 @@ services:
 
   mariadb-10.4:
     image: uselagoon/mariadb-10.4:latest
-    labels:
-      lando.type: mariadb
     ports:
-      - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+      - "3306"
     << : *default-user # uses the defined user from top
 
   mariadb-10.5:
     image: uselagoon/mariadb-10.5:latest
-    labels:
-      lando.type: mariadb
     ports:
-      - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+      - "3306"
     << : *default-user # uses the defined user from top
 
   mariadb-10.6:
     image: uselagoon/mariadb-10.6:latest
-    labels:
-      lando.type: mariadb
     ports:
-      - "3306" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+      - "3306"
     << : *default-user # uses the defined user from top
 
   mongo:
@@ -43,11 +37,9 @@ services:
 
   node-14:
     image: uselagoon/node-14:latest
-    labels:
-      lando.type: node
     ports:
-      - "3000" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
-    user: root
+      - "3000"
+    << : *default-user # uses the defined user from top
     command: ["sh", "-c", "
         npm install -g http-server;
         node -v | xargs > /app/test.html;
@@ -56,11 +48,9 @@ services:
 
   node-16:
     image: uselagoon/node-16:latest
-    labels:
-      lando.type: node
     ports:
-      - "3000" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
-    user: root
+      - "3000"
+    << : *default-user # uses the defined user from top
     command: ["sh", "-c", "
         npm install -g http-server;
         node -v | xargs > /app/test.html;
@@ -69,12 +59,9 @@ services:
 
   node-18:
     image: uselagoon/node-18:latest
-    labels:
-      lando.type: node
     ports:
-      - "3000" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
+      - "3000"
     << : *default-user # uses the defined user from top
-    user: root
     command: ["sh", "-c", "
         npm install -g http-server;
         node -v | xargs > /app/test.html;
@@ -83,34 +70,26 @@ services:
 
   postgres-11:
     image: uselagoon/postgres-11:latest
-    labels:
-      lando.type: postgres
     ports:
-      - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+      - "5432"
     << : *default-user # uses the defined user from top
 
   postgres-12:
     image: uselagoon/postgres-12:latest
-    labels:
-      lando.type: postgres
     ports:
-      - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+      - "5432"
     << : *default-user # uses the defined user from top
 
   postgres-13:
     image: uselagoon/postgres-13:latest
-    labels:
-      lando.type: postgres
     ports:
-      - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+      - "5432"
     << : *default-user # uses the defined user from top
 
   postgres-14:
     image: uselagoon/postgres-14:latest
-    labels:
-      lando.type: postgres
     ports:
-      - "5432" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+      - "5432"
     << : *default-user # uses the defined user from top
 
   python-3.7:
@@ -145,6 +124,8 @@ services:
 
   python-3.10:
     image: uselagoon/python-3.10:latest
+    ports:
+      - "3000"
     << : *default-user # uses the defined user from top
     command: ["sh", "-c", "
         python -V | xargs > tmp/test;
@@ -153,44 +134,59 @@ services:
 
   rabbitmq:
     image: uselagoon/rabbitmq:latest
-    << : *default-user # uses the defined user from top
     ports:
-      - "5672" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
-      - "15672" # exposes the port 3306 with a random local port, find it with `docker-compose port mariadb 3306`
+      - "5672"
+      - "15672"
+    << : *default-user # uses the defined user from top
 
   redis-5:
     image: uselagoon/redis-5:latest
-    labels:
-      lando.type: redis
     ports:
-      - "6379" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
+      - "6379"
     << : *default-user # uses the defined user from top
 
   redis-6:
     image: uselagoon/redis-6:latest
-    labels:
-      lando.type: redis
     ports:
-      - "6379" # exposes the port 6379 with a random local port, find it with `docker-compose port redis 6379`
+      - "6379"
     << : *default-user # uses the defined user from top
 
   solr-7:
     image: uselagoon/solr-7:latest
-    labels:
-      lando.type: solr
     ports:
-      - "8983" # exposes the port 8983 with a random local port, find it with `docker-compose port solr 8983`
+      - "8983"
+    << : *default-user # uses the defined user from top
 
   solr-7.7:
     image: uselagoon/solr-7.7:latest
-    labels:
-      lando.type: solr
     ports:
-      - "8983" # exposes the port 8983 with a random local port, find it with `docker-compose port solr 8983`
+      - "8983"
+    << : *default-user # uses the defined user from top
 
   solr-8:
     image: uselagoon/solr-8:latest
-    labels:
-      lando.type: solr
     ports:
-      - "8983" # exposes the port 8983 with a random local port, find it with `docker-compose port solr 8983`
+      - "8983"
+    << : *default-user # uses the defined user from top
+
+  ruby-3.0:
+    image: uselagoon/ruby-3.0:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        mkdir /test;
+        ruby -v | xargs > /test/index.html;
+        exec ruby -run -e httpd / -p 3000
+        "]
+
+  ruby-3.1:
+    image: uselagoon/ruby-3.1:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        mkdir /test;
+        ruby -v | xargs > /test/index.html;
+        exec ruby -run -e httpd / -p 3000
+        "]

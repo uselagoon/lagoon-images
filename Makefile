@@ -223,7 +223,9 @@ versioned-images := 		php-7.4-fpm \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \
-							varnish-6-persistent-drupal
+							varnish-6-persistent-drupal \
+							ruby-3.0 \
+							ruby-3.1
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -307,6 +309,7 @@ build/mariadb-10.4 build/mariadb-10.5 build/mariadb-10.6: build/commons
 build/mariadb-10.4-drupal: build/mariadb-10.4
 build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6
+build/ruby-3.0 build/ruby-3.1: build/commons
 
 #######
 ####### Building Images

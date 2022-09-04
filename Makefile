@@ -226,7 +226,8 @@ versioned-images := 		php-7.4-fpm \
 							varnish-6-persistent-drupal \
 							ruby-3.0 \
 							ruby-3.1 \
-							dotnet-6-sdk
+							dotnet-6-sdk \
+							dotnet-6-runtime
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -312,6 +313,7 @@ build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6
 build/ruby-3.0 build/ruby-3.1: build/commons
 build/dotnet-6-sdk: build/commons
+build/dotnet-6-runtime: build/commons
 
 #######
 ####### Building Images

@@ -121,7 +121,7 @@ node ('lagoon-images') {
                     try {
                       if (env.SKIP_IMAGE_PUBLISH != 'true') {
                         sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                        sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=uselagoon TAG_ONE=${TAG_NAME} REGISTRY_TWO=uselagoon TAG_TWO=latest", label: "Publishing built images to testlagoon"
+                        sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=uselagoon TAG_ONE=${TAG_NAME} REGISTRY_TWO=uselagoon TAG_TWO=latest", label: "Publishing built images to uselagoon"
                       } else {
                         sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
                       }

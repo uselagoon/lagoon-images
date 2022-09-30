@@ -7,7 +7,6 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 ENV LAGOON=node
 
 RUN apk update \
-    && apk upgrade \
     && apk add --no-cache \
         libstdc++ \
     && apk add --no-cache \

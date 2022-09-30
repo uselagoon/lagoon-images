@@ -31,7 +31,6 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 RUN apk update \
-    && apk upgrade \
     && rm -rf /var/cache/apk/*
 
 # Make sure Bower and NPM are allowed to be running as root

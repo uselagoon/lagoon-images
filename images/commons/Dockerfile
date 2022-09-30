@@ -17,7 +17,6 @@ COPY --from=go-crond /usr/local/bin/go-crond /lagoon/bin/cron
 COPY --from=envplate /usr/local/bin/ep /bin/ep
 
 RUN apk update \
-    && apk upgrade \
     && apk add --no-cache curl tini \
     && rm -rf /var/cache/apk/* \
     && mkdir -p /lagoon/crontabs && fix-permissions /lagoon/crontabs \

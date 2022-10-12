@@ -151,7 +151,8 @@
       ],
       "matchPackageNames": [
         "php",
-        "python"
+        "python",
+        "ruby"
       ]
     },
     {
@@ -174,7 +175,8 @@
       ],
       "matchPackageNames": [
         "php",
-        "python"
+        "python",
+        "ruby"
       ]
     },
     {

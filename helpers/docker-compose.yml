@@ -198,7 +198,7 @@ services:
         "]
 
   varnish-5:
-    image: lagoon/varnish-5:latest
+    image: uselagoon/varnish-5:latest
     labels:
       lando.type: varnish
     ports:
@@ -206,7 +206,7 @@ services:
     << : *default-user # uses the defined user from top
 
   varnish-6:
-    image: lagoon/varnish-6:latest
+    image: uselagoon/varnish-6:latest
     labels:
       lando.type: varnish
     ports:
@@ -214,7 +214,7 @@ services:
     << : *default-user # uses the defined user from top
 
   varnish-7:
-    image: lagoon/varnish-7:latest
+    image: uselagoon/varnish-7:latest
     labels:
       lando.type: varnish
     ports:

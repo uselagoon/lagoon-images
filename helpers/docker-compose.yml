@@ -196,3 +196,27 @@ services:
         ruby -v | xargs > /tmp/index.html;
         exec ruby -run -e httpd / -p 3000
         "]
+
+  varnish-5:
+    image: lagoon/varnish-5:latest
+    labels:
+      lando.type: varnish
+    ports:
+      - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port varnish-5 8080`
+    << : *default-user # uses the defined user from top
+
+  varnish-6:
+    image: lagoon/varnish-6:latest
+    labels:
+      lando.type: varnish
+    ports:
+      - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port varnish-6 8080`
+    << : *default-user # uses the defined user from top
+
+  varnish-7:
+    image: lagoon/varnish-7:latest
+    labels:
+      lando.type: varnish
+    ports:
+      - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port varnish-7 8080`
+    << : *default-user # uses the defined user from top

@@ -35,17 +35,17 @@ ENV MARIADB_DATABASE=lagoon \
 
 RUN \
     apk add --no-cache --virtual .common-run-deps \
-    bash \
-    curl \
-    mariadb=~10.4 \
-    mariadb-client=~10.4 \
-    mariadb-common=~10.4 \
-    mariadb-server-utils=~10.4 \
-    net-tools \
-    pwgen \
-    tzdata \
-    wget \
-    gettext; \
+        bash \
+        curl \
+        gettext \
+        mariadb-client=~10.4 \
+        mariadb-common=~10.4 \
+        mariadb-server-utils=~10.4 \
+        mariadb=~10.4 \
+        net-tools \
+        pwgen \
+        tzdata \
+        wget; \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/*; \
     rm -rf /var/lib/mysql/* /etc/mysql/ /etc/my.cnf*; \
     curl -sSL https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl -o mysqltuner.pl

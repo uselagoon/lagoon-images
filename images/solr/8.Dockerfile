@@ -28,10 +28,11 @@ ENV TMPDIR=/tmp \
 # we need root for the fix-permissions to work
 USER root
 
-RUN apt-get -y update && apt-get -y install \
-    busybox \
-    curl \
-    zip \
+RUN apt-get -y update \
+    && apt-get -y install \
+                  busybox \
+                  curl \
+                  zip \
     && rm -rf /var/lib/apt/lists/*
 
 # Mitigation for CVE-2021-45046 and CVE-2021-44228 - not needed in log4j-core 2.16.0
@@ -50,7 +51,7 @@ RUN set -x \
 RUN echo "dash dash/sh boolean false" | debconf-set-selections
 RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
-RUN mkdir -p /var/solr /opt/solr/server/logs /opt/solr/server/solr 
+RUN mkdir -p /var/solr /opt/solr/server/logs /opt/solr/server/solr
 RUN fix-permissions /var/solr \
     && chown solr:solr /var/solr /opt/solr/server/logs /opt/solr/server/solr \
     && fix-permissions /opt/solr/server/logs \

@@ -73,7 +73,8 @@ RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
 RUN fix-permissions /etc/varnish/ \
     && fix-permissions /var/run/ \
-    && fix-permissions /var/lib/varnish
+    && fix-permissions /var/lib/varnish \
+    && usermod -a -G root varnish
 
 COPY docker-entrypoint /lagoon/entrypoints/70-varnish-entrypoint
 

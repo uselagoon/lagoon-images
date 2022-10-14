@@ -1,7 +1,8 @@
 {
   "baseBranches": [
     "main",
-    "testing/alpine_next"
+    "testing/alpine_next",
+    "testing/renovate"
   ],
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
@@ -19,7 +20,7 @@
       "fileMatch": ["(^|/|\\.)Dockerfile$"],
       "matchStrings": ["pecl install -f apcu-(?<currentValue>.*?) "],
       "depNameTemplate": "krakjoe/apcu",
-      "datasourceTemplate": "github-tags"
+      "datasourceTemplate": "github-releases"
     },
     {
       "fileMatch": ["(^|/|\\.)Dockerfile$"],
@@ -44,6 +45,28 @@
       "matchStrings": ["pecl install -f yaml-(?<currentValue>.*?) "],
       "depNameTemplate": "php/pecl-file_formats-yaml",
       "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["ENV BLACKFIRE_VERSION=(?<currentValue>.*?)\n"],
+      "depNameTemplate": "blackfireio/docker",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["ENV NEWRELIC_VERSION=(?<currentValue>.*?)\n"],
+      "depNameTemplate": "newrelic/newrelic-php-agent",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["curl.*https://github.com/(?<depName>.*?)/releases/download/(?<currentValue>.*?)/.*.phar.*\n"],
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "fileMatch": ["(^|/|\\.)Dockerfile$"],
+      "matchStrings": ["php.*--require=(?<depName>.*?):(?<currentValue>.*?)\\s.*\n"],
+      "datasourceTemplate": "packagist"
     }
   ],
   "packageRules": [
@@ -62,7 +85,21 @@
       "enabled": true,
       "matchDatasources": [
         "github-releases",
-        "github-tags"
+        "github-tags",
+        "packagist"
+      ],
+      "matchPackageNames": [
+        "newrelic/newrelic-php-agent"
+      ],
+      "extractVersion": "^v(?<version>.*)$",
+      "versioning": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+).(?<build>\\d+)$"
+    },
+    { 
+      "enabled": true,
+      "matchDatasources": [
+        "github-releases",
+        "github-tags",
+        "packagist"
       ],
       "matchUpdateTypes": [
         "minor",
@@ -72,15 +109,21 @@
         "Imagick/imagick",
         "phpredis/phpredis",
         "xdebug/xdebug",
-        "php/pecl-file_formats-yaml"
+        "php/pecl-file_formats-yaml",
+        "composer/composer",
+        "drush/drush",
+        "hechoendrupal/drupal-console-launcher",
+        "drush-ops/drush-launcher",
+        "blackfireio/docker"
       ]
     },
     { 
       "enabled": false,
-      "groupName": "Disable PECL major updates",
+      "groupName": "Disable PHP package/extension major updates",
       "matchDatasources": [
         "github-releases",
-        "github-tags"
+        "github-tags",
+        "packagist"
       ],
       "matchUpdateTypes": [
         "major"
@@ -90,7 +133,12 @@
         "Imagick/imagick",
         "phpredis/phpredis",
         "xdebug/xdebug",
-        "php/pecl-file_formats-yaml"
+        "php/pecl-file_formats-yaml",
+        "composer/composer",
+        "drush/drush",
+        "hechoendrupal/drupal-console-launcher",
+        "drush-ops/drush-launcher",
+        "blackfireio/docker"
       ]
     },
     {
@@ -103,7 +151,8 @@
       ],
       "matchPackageNames": [
         "php",
-        "python"
+        "python",
+        "ruby"
       ]
     },
     {
@@ -116,6 +165,7 @@
     },
     {
       "enabled": false,
+      "groupName": "Disable major and minor updates - packages update only patch",
       "matchDatasources": [
         "docker"
       ],
@@ -125,7 +175,8 @@
       ],
       "matchPackageNames": [
         "php",
-        "python"
+        "python",
+        "ruby"
       ]
     },
     {
@@ -147,6 +198,7 @@
     },
     {
       "enabled": false,
+      "groupName": "Disable major releases - packages update only minor",
       "matchDatasources": [
         "docker"
       ],

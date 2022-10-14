@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:8.1.6-fpm-alpine3.15
+FROM php:8.1.11-fpm-alpine3.16
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -49,6 +49,7 @@ RUN apk add --no-cache --virtual .devdeps \
         # for gd
         libpng-dev \
         libjpeg-turbo-dev \
+        freetype-dev \
         # for gettext
         gettext-dev \
         # for mcrypt
@@ -66,16 +67,16 @@ RUN apk add --no-cache --virtual .devdeps \
         # for imagemagick
         imagemagick-dev \
         && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-        && yes '' | pecl install -f apcu-5.1.21 \
+        && yes '' | pecl install -f apcu-5.1.22 \
         && yes '' | pecl install -f imagick-3.7.0 \
         && yes '' | pecl install -f redis-5.3.7 \
-        && yes '' | pecl install -f xdebug-3.1.4 \
+        && yes '' | pecl install -f xdebug-3.1.5 \
         && yes '' | pecl install -f yaml-2.2.2 \
         && docker-php-ext-enable apcu imagick redis xdebug yaml \
         && rm -rf /tmp/pear \
         && apk del -r .phpize-deps \
         && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-        && docker-php-ext-configure gd --with-webp --with-jpeg \
+        && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
         && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip \
         && apk del -r .devdeps \
         && apk add --no-cache \
@@ -124,7 +125,7 @@ RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && mv /blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
     && fix-permissions /usr/local/etc/php/conf.d/
 
-ENV BLACKFIRE_VERSION=2.7.1
+ENV BLACKFIRE_VERSION=2.12.0
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && curl -A "Docker" -o /blackfire/blackfire-linux_${architecture}.tar.gz -D - -L -s https://packages.blackfire.io/binaries/blackfire/${BLACKFIRE_VERSION}/blackfire-linux_${architecture}.tar.gz \
     && tar zxpf /blackfire/blackfire-linux_${architecture}.tar.gz -C /blackfire \

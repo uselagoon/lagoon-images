@@ -196,17 +196,12 @@ versioned-images := 		php-7.4-fpm \
 							node-16-builder \
 							node-18 \
 							node-18-builder \
-							solr-7.7 \
-							solr-7.7-drupal \
 							solr-7 \
 							solr-7-drupal \
 							solr-8 \
 							solr-8-drupal \
-							elasticsearch-6 \
 							elasticsearch-7 \
-							kibana-6 \
 							kibana-7 \
-							logstash-6 \
 							logstash-7 \
 							postgres-12 \
 							postgres-12-drupal \
@@ -236,11 +231,7 @@ default-versioned-images := 	mariadb-10.4 \
 							postgres-11-ckan \
 							postgres-11-drupal \
 							redis-5 \
-							redis-5-persistent \
-							varnish-5 \
-							varnish-5-drupal \
-							varnish-5-persistent \
-							varnish-5-persistent-drupal
+							redis-5-persistent
 
 #######
 ####### Experimental Images
@@ -286,9 +277,7 @@ build/node-14 build/node-16 build/node-18: build/commons
 build/node-14-builder: build/node-14
 build/node-16-builder: build/node-16
 build/node-18-builder: build/node-18
-build/solr-7.7: build/commons
-build/solr-7.7-drupal: build/solr-7.7
-build/elasticsearch-6 build/elasticsearch-7 build/kibana-6 build/kibana-7 build/logstash-6 build/logstash-7: build/commons
+build/elasticsearch-7 build/kibana-7 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
 build/postgres-12-drupal: build/postgres-12
@@ -297,9 +286,7 @@ build/postgres-14-drupal: build/postgres-14
 build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-6-persistent: build/redis-6
-build/varnish-5 build/varnish-6: build/commons
-build/varnish-5-drupal build/varnish-5-persistent: build/varnish-5
-build/varnish-5-persistent-drupal: build/varnish-5-drupal
+build/varnish-6: build/commons
 build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal
 build/solr-7 build/solr-8: build/commons

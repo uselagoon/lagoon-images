@@ -45,56 +45,60 @@ COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 
 RUN apk add --no-cache --virtual .devdeps \
-        libzip-dev \
         # for gd
-        libpng-dev \
-        libjpeg-turbo-dev \
         freetype-dev \
         # for gettext
         gettext-dev \
+        # for imagemagick
+        imagemagick-dev \
         # for mcrypt
+        libgcrypt-dev \
+        # for gd
+        libjpeg-turbo-dev \
         libmcrypt-dev \
+        # for gd
+        libpng-dev \
+        # for webp
+        libwebp-dev \
         # for soap
         libxml2-dev \
         # for xsl
         libxslt-dev \
-        libgcrypt-dev \
-        # for webp
-        libwebp-dev \
+        libzip-dev \
         postgresql-dev \
         # for yaml
         yaml-dev \
-        # for imagemagick
-        imagemagick-dev \
-        && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-        && yes '' | pecl install -f apcu-5.1.22 \
-        && yes '' | pecl install -f imagick-3.7.0 \
-        && yes '' | pecl install -f redis-4.3.0 \
-        && yes '' | pecl install -f xdebug-3.1.5 \
-        && yes '' | pecl install -f yaml-2.2.2 \
-        && docker-php-ext-enable apcu imagick redis xdebug yaml \
-        && rm -rf /tmp/pear \
-        && apk del -r .phpize-deps \
-        && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-        && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
-        && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip \
-        && apk del -r .devdeps \
-        && apk add --no-cache \
-        fcgi \
-        ssmtp \
-        libzip \
-        libpng \
-        libjpeg-turbo \
-        gettext \
-        libmcrypt \
-        libxml2 \
-        libxslt \
-        libgcrypt \
-        libwebp \
-        postgresql-libs \
-        yaml \
-        imagemagick \
-        imagemagick-libs
+    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+    && yes '' | pecl install -f apcu-5.1.22 \
+    && yes '' | pecl install -f imagick-3.7.0 \
+    && yes '' | pecl install -f redis-4.3.0 \
+    && yes '' | pecl install -f xdebug-3.1.5 \
+    && yes '' | pecl install -f yaml-2.2.2 \
+    && docker-php-ext-enable apcu imagick redis xdebug yaml \
+    && rm -rf /tmp/pear \
+    && apk del -r \
+           .phpize-deps \
+    && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
+    && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip \
+    && apk del -r \
+           .devdeps \
+    && apk add --no-cache \
+           fcgi \
+           gettext \
+           imagemagick \
+           imagemagick-libs \
+           libgcrypt \
+           libjpeg-turbo \
+           libmcrypt \
+           libpng \
+           libwebp \
+           libxml2 \
+           libxslt \
+           libzip \
+           postgresql-libs \
+           ssmtp \
+           yaml
 
 
 # New Relic PHP Agent.

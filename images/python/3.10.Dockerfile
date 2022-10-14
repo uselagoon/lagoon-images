@@ -26,10 +26,11 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 RUN apk add --no-cache --virtual .build-deps \
-      build-base \
+        build-base \
     && pip install --upgrade pip \
     && pip install virtualenv \
-    && apk del .build-deps
+    && apk del \
+           .build-deps
 
 # Make sure shells are not running forever
 COPY 80-shell-timeout.sh /lagoon/entrypoints/

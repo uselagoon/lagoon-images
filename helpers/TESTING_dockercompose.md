@@ -54,7 +54,6 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7.7_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-8_1
 
 # commons Should be running Alpine Linux
@@ -105,15 +104,6 @@ docker-compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=R
 
 # solr-8 Check Solr has 8 solrconfig in "mycore" core
 docker-compose exec -T solr-8 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 8.
-
-# solr-7.7 Should have a "mycore" Solr core
-docker-compose exec -T commons sh -c "curl solr-7.7:8983/solr/admin/cores?action=STATUS\&core=mycore"
-
-# solr-7.7 Should be able to reload "mycore" Solr core
-docker-compose exec -T commons sh -c "curl solr-7.7:8983/solr/admin/cores?action=RELOAD\&core=mycore"
-
-# solr-7.7 Check Solr has 7.7 solrconfig in "mycore" core
-docker-compose exec -T solr-7.7 sh -c "cat /opt/solr/server/solr/mycores/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 7.7
 
 # mariadb-10.4 should be version 10.4 client
 docker-compose exec -T mariadb-10.4 sh -c "mysql -V" | grep "10.4"

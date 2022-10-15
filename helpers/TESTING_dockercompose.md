@@ -56,7 +56,6 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-8_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-7_1
 
@@ -179,14 +178,6 @@ docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 
 # postgres-14 should have lagoon database
 docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
-
-# varnish-5 Check varnish has correct vmods in varnish folder
-docker-compose exec -T varnish-5 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
-docker-compose exec -T varnish-5 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
-
-# varnish-5 should be serving pages as version 5
-docker-compose exec -T commons sh -c "curl -I varnish-5:8080" | grep "Varnish" | grep "5."
-docker-compose exec -T varnish-5 sh -c "varnishlog -d" | grep User-Agent | grep curl 
 
 # varnish-6 Check varnish has correct vmods in varnish folder
 docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so

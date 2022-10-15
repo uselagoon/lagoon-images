@@ -26,6 +26,7 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-14:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo:27017 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 ```
 
 Verification commands
@@ -55,6 +56,8 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-8_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-6_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-7_1
 
 # commons Should be running Alpine Linux
 docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
@@ -66,7 +69,6 @@ docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.8
 docker-compose exec -T rabbitmq sh -c "rabbitmq-plugins list" | grep "E" | grep "delayed_message_exchange"
 
 # rabbitmq Should have a running RabbitMQ management page running on 15672
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 docker-compose exec -T commons sh -c "curl -kL http://rabbitmq:15672" | grep "RabbitMQ Management"
 
 # redis-5 Should be running Redis v5.0
@@ -176,6 +178,21 @@ docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 
 # postgres-14 should have lagoon database
 docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
+
+# varnish-6 Check varnish has correct vmods in varnish folder
+docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
+docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
+
+# varnish-6 should be serving pages as version 6
+docker-compose exec -T commons sh -c "curl -I varnish-6:8080" | grep "Varnish" | grep "6."
+
+# varnish-7 Check varnish has correct vmods in varnish folder
+docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
+docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
+
+# varnish-7 should be serving pages as version 7
+docker-compose exec -T commons sh -c "curl -I varnish-7:8080" | grep "Varnish" | grep "7."
+docker-compose exec -T varnish-7 sh -c "varnishlog -d" | grep User-Agent | grep curl 
 
 # python-3.7 should be version 3.7
 docker-compose exec -T python-3.7 sh -c "python -V" | grep "3.7"

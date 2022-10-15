@@ -225,7 +225,8 @@ versioned-images := 		php-7.4-fpm \
 							varnish-6-persistent \
 							varnish-6-persistent-drupal \
 							ruby-3.0 \
-							ruby-3.1
+							ruby-3.1 \
+							opensearch-2
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -246,7 +247,7 @@ default-versioned-images := 	mariadb-10.4 \
 ####### Experimental Images
 #######
 
-experimental-images := 		opensearch-2
+experimental-images := 
 
 build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images) $(experimental-images),build/$(image))
 
@@ -331,7 +332,7 @@ build-list:
 # Conduct post-release scans on images
 .PHONY: scan-images
 scan-images:
-	rm -f ./scans/*.txt ./scans/*.json
+	rm -f ./scans/*.txt
 	@for tag in $(foreach image,$(base-images) $(base-images-with-versions),$(image)); do \
 			docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy image --timeout 5m0s $(CI_BUILD_TAG)/$$tag > ./scans/$$tag.trivy.txt ; \
 			docker run --rm -v /var/run/docker.sock:/var/run/docker.sock anchore/syft $(CI_BUILD_TAG)/$$tag > ./scans/$$tag.syft.txt ; \

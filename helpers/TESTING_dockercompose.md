@@ -27,6 +27,7 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-14:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo:27017 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
 ```
 
 Verification commands
@@ -267,6 +268,19 @@ docker-compose exec -T ruby-3.1 sh -c "ruby -v" | grep "3.1"
 
 # ruby-3.1 should be serving content
 docker-compose exec -T commons sh -c "curl ruby-3.1:3000/tmp/" | grep "ruby 3.1"
+
+# opensearch-2 should have opensearch 2
+docker-compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | grep "2."
+
+# opensearch-2 should be healthy
+docker-compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | json_pp | grep status | grep green
+
+# elasticsearch-7 should have elasticsearch 7
+docker-compose exec -T commons sh -c "curl elasticsearch-7:9200" | grep number | grep "7."
+
+# elasticsearch-7 should be healthy
+docker-compose exec -T commons sh -c "curl elasticsearch-7:9200/_cluster/health" | json_pp | grep status | grep green
+
 ```
 
 Destroy tests

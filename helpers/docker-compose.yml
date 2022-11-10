@@ -208,7 +208,7 @@ services:
     << : *default-user # uses the defined user from top
 
   opensearch-2:
-    image: testlagoon/opensearch-2:latest
+    image: uselagoon/opensearch-2:latest
     labels:
       lando.type: opensearch
     ports:
@@ -216,7 +216,7 @@ services:
     << : *default-user # uses the defined user from top
 
   elasticsearch-7:
-    image: testlagoon/elasticsearch-7:latest
+    image: uselagoon/elasticsearch-7:latest
     labels:
       lando.type: elasticsearch
     ports:

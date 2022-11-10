@@ -280,7 +280,6 @@ docker-compose exec -T commons sh -c "curl elasticsearch-7:9200" | grep number |
 
 # elasticsearch-7 should be healthy
 docker-compose exec -T commons sh -c "curl elasticsearch-7:9200/_cluster/health" | json_pp | grep status | grep green
-
 ```
 
 Destroy tests

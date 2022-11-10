@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:7.4.32-fpm-alpine3.16
+FROM php:7.4.33-fpm-alpine3.16
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -72,7 +72,7 @@ RUN apk add --no-cache --virtual .devdeps \
     && yes '' | pecl install -f apcu-5.1.22 \
     && yes '' | pecl install -f imagick-3.7.0 \
     && yes '' | pecl install -f redis-4.3.0 \
-    && yes '' | pecl install -f xdebug-3.1.5 \
+    && yes '' | pecl install -f xdebug-3.1.6 \
     && yes '' | pecl install -f yaml-2.2.2 \
     && docker-php-ext-enable apcu imagick redis xdebug yaml \
     && rm -rf /tmp/pear \

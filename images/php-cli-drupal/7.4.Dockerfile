@@ -6,20 +6,17 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 ENV LAGOON=cli-drupal
 
-# Defining Versions - https://github.com/hechoendrupal/drupal-console-launcher/releases
-ENV DRUPAL_CONSOLE_LAUNCHER_VERSION=1.9.7 \
-    DRUPAL_CONSOLE_LAUNCHER_SHA=fe83050489c66a0578eb59d6744420be6fd4c5d1 \
-    DRUSH_VERSION=8.4.10 \
-    DRUSH_LAUNCHER_VERSION=0.10.1 \
-    DRUSH_LAUNCHER_FALLBACK=/opt/drush8/vendor/bin/drush
+ENV DRUSH_LAUNCHER_FALLBACK=/opt/drush8/vendor/bin/drush
 
-RUN curl -L -o /usr/local/bin/drupal "https://github.com/hechoendrupal/drupal-console-launcher/releases/download/${DRUPAL_CONSOLE_LAUNCHER_VERSION}/drupal.phar" \
-    && echo "${DRUPAL_CONSOLE_LAUNCHER_SHA} /usr/local/bin/drupal" | sha1sum \
-    && chmod +x /usr/local/bin/drupal \
-    && mkdir -p /opt/drush8 \
-    && php /usr/local/bin/composer init -n -d /opt/drush8 --require=drush/drush:${DRUSH_VERSION} \
+RUN curl -L -o /usr/local/bin/drupal "https://github.com/hechoendrupal/drupal-console-launcher/releases/download/1.9.7/drupal.phar" \
+    && chmod +x /usr/local/bin/drupal
+
+RUN mkdir -p /opt/drush8 \
+    && php /usr/local/bin/composer init -n -d /opt/drush8 --require=drush/drush:8.4.11 \
     && php -d memory_limit=-1 /usr/local/bin/composer update -n -d /opt/drush8 \
-    && wget -O /usr/local/bin/drush "https://github.com/drush-ops/drush-launcher/releases/download/${DRUSH_LAUNCHER_VERSION}/drush.phar" \
+    && php /usr/local/bin/composer clear-cache
+
+RUN curl -L -o /usr/local/bin/drush "https://github.com/drush-ops/drush-launcher/releases/download/0.10.1/drush.phar" \
     && chmod +x /usr/local/bin/drush \
     && mkdir -p /home/.drush
 

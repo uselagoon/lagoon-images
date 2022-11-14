@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM alpine:3.15.4
+FROM alpine:3.16.2
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -34,17 +34,17 @@ ENV MARIADB_DATABASE=lagoon \
 
 RUN \
     apk add --no-cache --virtual .common-run-deps \
-    bash \
-    curl \
-    mariadb=~10.6 \
-    mariadb-client=~10.6 \
-    mariadb-common=~10.6 \
-    mariadb-server-utils=~10.6 \
-    net-tools \
-    pwgen \
-    tzdata \
-    wget \
-    gettext; \
+        bash \
+        curl \
+        gettext \
+        mariadb-client=~10.6 \
+        mariadb-common=~10.6 \
+        mariadb-server-utils=~10.6 \
+        mariadb=~10.6 \
+        net-tools \
+        pwgen \
+        tzdata \
+        wget; \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/*; \
     rm -rf /var/lib/mysql/* /etc/mysql/ /etc/my.cnf*; \
     curl -sSL https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl -o mysqltuner.pl

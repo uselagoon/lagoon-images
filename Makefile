@@ -29,7 +29,7 @@ SHELL := /bin/bash
 # Runs all tests together. Can be executed with `-j2` for two parallel running tests
 
 # make up
-# Starts all Lagoon Services at once, usefull for local development or just to start all of them.
+# Starts all Lagoon Services at once, useful for local development or just to start all of them.
 
 # make logs
 # Shows logs of Lagoon Services (aka docker-compose logs -f)
@@ -199,21 +199,19 @@ versioned-images := 		php-7.4-fpm \
 							node-18 \
 							node-18-builder \
 							node-18-cli \
-							solr-7.7 \
-							solr-7.7-drupal \
 							solr-7 \
 							solr-7-drupal \
 							solr-8 \
 							solr-8-drupal \
-							elasticsearch-6 \
 							elasticsearch-7 \
-							kibana-6 \
 							kibana-7 \
-							logstash-6 \
 							logstash-7 \
 							postgres-12 \
+							postgres-12-drupal \
 							postgres-13 \
+							postgres-13-drupal \
 							postgres-14 \
+							postgres-14-drupal \
 							redis-6 \
 							redis-6-persistent \
 							mariadb-10.5 \
@@ -223,7 +221,14 @@ versioned-images := 		php-7.4-fpm \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \
-							varnish-6-persistent-drupal
+							varnish-6-persistent-drupal \
+							varnish-7 \
+							varnish-7-drupal \
+							varnish-7-persistent \
+							varnish-7-persistent-drupal \
+							ruby-3.0 \
+							ruby-3.1 \
+							opensearch-2
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -234,17 +239,13 @@ default-versioned-images := 	mariadb-10.4 \
 							postgres-11-ckan \
 							postgres-11-drupal \
 							redis-5 \
-							redis-5-persistent \
-							varnish-5 \
-							varnish-5-drupal \
-							varnish-5-persistent \
-							varnish-5-persistent-drupal
+							redis-5-persistent
 
 #######
 ####### Experimental Images
 #######
 
-experimental-images := 		
+experimental-images := 
 
 build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images) $(experimental-images),build/$(image))
 
@@ -287,22 +288,20 @@ build/node-18-builder: build/node-18
 build/node-14-cli: build/node-14
 build/node-16-cli: build/node-16
 build/node-18-cli: build/node-18
-build/solr-7.7: build/commons
-build/solr-7.7-drupal: build/solr-7.7
-build/elasticsearch-6 build/elasticsearch-7 build/kibana-6 build/kibana-7 build/logstash-6 build/logstash-7: build/commons
+build/elasticsearch-7 build/kibana-7 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
-build/postgres-14-drupal: build/postgres-12
+build/postgres-12-drupal: build/postgres-12
 build/postgres-13-drupal: build/postgres-13
 build/postgres-14-drupal: build/postgres-14
 build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-6-persistent: build/redis-6
-build/varnish-5 build/varnish-6: build/commons
-build/varnish-5-drupal build/varnish-5-persistent: build/varnish-5
-build/varnish-5-persistent-drupal: build/varnish-5-drupal
+build/varnish-6 build/varnish-7: build/commons
 build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal
+build/varnish-7-drupal build/varnish-7-persistent: build/varnish-7
+build/varnish-7-persistent-drupal: build/varnish-7-drupal
 build/solr-7 build/solr-8: build/commons
 build/solr-7-drupal: build/solr-7
 build/solr-8-drupal: build/solr-8
@@ -310,6 +309,8 @@ build/mariadb-10.4 build/mariadb-10.5 build/mariadb-10.6: build/commons
 build/mariadb-10.4-drupal: build/mariadb-10.4
 build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6
+build/ruby-3.0 build/ruby-3.1: build/commons
+build/opensearch-2: build/commons
 
 #######
 ####### Building Images

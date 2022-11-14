@@ -7,29 +7,29 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 ENV LAGOON=node
 
 RUN apk update \
-    && apk upgrade \
     && apk add --no-cache \
-        libstdc++ \
+           libstdc++ \
     && apk add --no-cache \
-        binutils-gold \
-        curl \
-        g++ \
-        gcc \
-        gnupg \
-        libgcc \
-        linux-headers \
-        make \
-        git \
-        file \
-        openssl \
-        python3 \
-        bash \
-        ca-certificates \
-        wget \
-        libpng-dev \
-    && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-    && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.33-r0/glibc-2.33-r0.apk \
-    && apk add glibc-2.33-r0.apk \
-    && rm -rf /var/cache/apk/*
+           bash \
+           binutils-gold \
+           ca-certificates \
+           curl \
+           file \
+           g++ \
+           gcc \
+           git \
+           gnupg \
+           libgcc \
+           libpng-dev \
+           linux-headers \
+           make \
+           openssl \
+           python3 \
+           wget \
+        && wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
+        && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.34-r0/glibc-2.34-r0.apk \
+        && apk add \
+               glibc-2.34-r0.apk \
+        && rm -rf /var/cache/apk/*
 
 CMD ["/bin/docker-sleep"]

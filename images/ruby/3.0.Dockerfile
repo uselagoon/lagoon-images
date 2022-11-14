@@ -1,30 +1,21 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM --platform=linux/amd64 docker.elastic.co/kibana/kibana:6.8.23
+
+FROM ruby:3.0.4-alpine3.16
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
-ENV LAGOON=kibana
-
-USER root
-
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
+ENV LAGOON=ruby
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
+COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
-
-RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
-    && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini
 
 RUN fix-permissions /etc/passwd \
     && mkdir -p /home
-
-# Reproduce behavior of Alpine: Run Bash as sh
-RUN rm -f /bin/sh && ln -s /bin/bash /bin/sh
 
 ENV TMPDIR=/tmp \
     TMP=/tmp \
@@ -34,12 +25,15 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-RUN fix-permissions /usr/share/kibana
+RUN apk add --no-cache --virtual .build-deps \
+        build-base \
+    && gem install webrick puma bundler \
+    && apk del \
+           .build-deps
 
-# tells the local development environment on which port we are running
-# ENV LAGOON_LOCALDEV_HTTP_PORT=5601
+# Make sure shells are not running forever
+COPY 80-shell-timeout.sh /lagoon/entrypoints/
+RUN echo "source /lagoon/entrypoints/80-shell-timeout.sh" >> /home/.bashrc
 
-ENV NODE_OPTIONS="--max-old-space-size=200"
-
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash"]
-CMD ["/bin/bash", "/usr/local/bin/kibana-docker"]
+ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
+CMD ["ruby"]

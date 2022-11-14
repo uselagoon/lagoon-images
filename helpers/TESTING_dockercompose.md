@@ -26,6 +26,8 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-14:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo:27017 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
 ```
 
 Verification commands
@@ -39,29 +41,30 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mongo_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_node-14_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_node-16_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_node-18_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-14_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-16_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-18_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-11_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-12_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-13_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-14_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_python-3.7_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_python-3.8_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_python-3.9_1
-docker ps -a --filter label=com.docker.compose.project=all-images | grep Exited | grep all-images_python-3.10_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.7_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.8_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.9_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.10_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_rabbitmq_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7.7_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-8_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-6_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-7_1
 
 # commons Should be running Alpine Linux
 docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
 
-# rabbitmq Should have RabbitMQ running 3.8
-docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.8
+# rabbitmq Should have RabbitMQ running 3.9
+docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.9
 
 # rabbitmq Should have delayed_message_exchange plugin enabled
 docker-compose exec -T rabbitmq sh -c "rabbitmq-plugins list" | grep "E" | grep "delayed_message_exchange"
@@ -104,15 +107,6 @@ docker-compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=R
 
 # solr-8 Check Solr has 8 solrconfig in "mycore" core
 docker-compose exec -T solr-8 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 8.
-
-# solr-7.7 Should have a "mycore" Solr core
-docker-compose exec -T commons sh -c "curl solr-7.7:8983/solr/admin/cores?action=STATUS\&core=mycore"
-
-# solr-7.7 Should be able to reload "mycore" Solr core
-docker-compose exec -T commons sh -c "curl solr-7.7:8983/solr/admin/cores?action=RELOAD\&core=mycore"
-
-# solr-7.7 Check Solr has 7.7 solrconfig in "mycore" core
-docker-compose exec -T solr-7.7 sh -c "cat /opt/solr/server/solr/mycores/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 7.7
 
 # mariadb-10.4 should be version 10.4 client
 docker-compose exec -T mariadb-10.4 sh -c "mysql -V" | grep "10.4"
@@ -185,6 +179,107 @@ docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 
 # postgres-14 should have lagoon database
 docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
+
+# varnish-6 Check varnish has correct vmods in varnish folder
+docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
+docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
+
+# varnish-6 should be serving pages as version 6
+docker-compose exec -T commons sh -c "curl -I varnish-6:8080" | grep "Varnish" | grep "6."
+
+# varnish-7 Check varnish has correct vmods in varnish folder
+docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
+docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
+
+# varnish-7 should be serving pages as version 7
+docker-compose exec -T commons sh -c "curl -I varnish-7:8080" | grep "Varnish" | grep "7."
+docker-compose exec -T varnish-7 sh -c "varnishlog -d" | grep User-Agent | grep curl 
+
+# python-3.7 should be version 3.7
+docker-compose exec -T python-3.7 sh -c "python -V" | grep "3.7"
+
+# python-3.7 should have basic tools installed
+docker-compose exec -T python-3.7 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3.7 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3.7 sh -c "pip list --no-cache-dir" | grep "virtualenv" | grep "16.7.10"
+
+# python-3.7 should be serving content
+docker-compose exec -T commons sh -c "curl python-3.7:3000/tmp/test" | grep "Python 3.7"
+
+# python-3.8 should be version 3.8
+docker-compose exec -T python-3.8 sh -c "python -V" | grep "3.8"
+
+# python-3.8 should have basic tools installed
+docker-compose exec -T python-3.8 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3.8 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3.8 sh -c "pip list --no-cache-dir" | grep "virtualenv" | grep "16.7.10"
+
+# python-3.8 should be serving content
+docker-compose exec -T commons sh -c "curl python-3.8:3000/tmp/test" | grep "Python 3.8"
+
+# python-3.9 should be version 3.9
+docker-compose exec -T python-3.9 sh -c "python -V" | grep "3.9"
+
+# python-3.9 should have basic tools installed
+docker-compose exec -T python-3.9 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3.9 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3.9 sh -c "pip list --no-cache-dir" | grep "virtualenv"
+
+# python-3.9 should be serving content
+docker-compose exec -T commons sh -c "curl python-3.9:3000/tmp/test" | grep "Python 3.9"
+
+# python-3.10 should be version 3.10
+docker-compose exec -T python-3.10 sh -c "python -V" | grep "3.10"
+
+# python-3.10 should have basic tools installed
+docker-compose exec -T python-3.10 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3.10 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3.10 sh -c "pip list --no-cache-dir" | grep "virtualenv"
+
+# python-3.10 should be serving content
+docker-compose exec -T commons sh -c "curl python-3.10:3000/tmp/test" | grep "Python 3.10"
+
+# node-14 should have Node 14
+docker-compose exec -T node-14 sh -c "node -v" | grep "v14"
+
+# node-14 should be serving content
+docker-compose exec -T commons sh -c "curl node-14:3000/test" | grep "v14"
+
+# node-16 should have Node 16
+docker-compose exec -T node-16 sh -c "node -v" | grep "v16"
+
+# node-16 should be serving content
+docker-compose exec -T commons sh -c "curl node-16:3000/test" | grep "v16"
+
+# node-18 should have Node 18
+docker-compose exec -T node-18 sh -c "node -v" | grep "v18"
+
+# node-18 should be serving content
+docker-compose exec -T commons sh -c "curl node-18:3000/test" | grep "v18"
+
+# ruby-3.0 should have Ruby 3.0
+docker-compose exec -T ruby-3.0 sh -c "ruby -v" | grep "3.0"
+
+# ruby-3.0 should be serving content
+docker-compose exec -T commons sh -c "curl ruby-3.0:3000/tmp/" | grep "ruby 3.0"
+
+# ruby-3.1 should have Ruby 3.1
+docker-compose exec -T ruby-3.1 sh -c "ruby -v" | grep "3.1"
+
+# ruby-3.1 should be serving content
+docker-compose exec -T commons sh -c "curl ruby-3.1:3000/tmp/" | grep "ruby 3.1"
+
+# opensearch-2 should have opensearch 2
+docker-compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | grep "2."
+
+# opensearch-2 should be healthy
+docker-compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | json_pp | grep status | grep green
+
+# elasticsearch-7 should have elasticsearch 7
+docker-compose exec -T commons sh -c "curl elasticsearch-7:9200" | grep number | grep "7."
+
+# elasticsearch-7 should be healthy
+docker-compose exec -T commons sh -c "curl elasticsearch-7:9200/_cluster/health" | json_pp | grep status | grep green
 ```
 
 Destroy tests
@@ -193,6 +288,6 @@ Destroy tests
 Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Should be able to destroy our Drupal 9 site with success
+# Should be able to destroy our services with success
 docker-compose down --volumes --remove-orphans
 ```

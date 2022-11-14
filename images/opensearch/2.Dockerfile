@@ -1,15 +1,11 @@
-
-
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM --platform=linux/amd64 docker.elastic.co/logstash/logstash:6.8.23
+FROM opensearchproject/opensearch:2.3.0
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
-ENV LAGOON=logstash
-
-USER root
+ENV LAGOON=opensearch
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -19,8 +15,12 @@ COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /home /home
 
+USER root
+
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
-    && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini
+    && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /usr/sbin/tini && chmod a+x /usr/sbin/tini
+
+COPY docker-entrypoint.sh /lagoon/entrypoints/80-opensearch.sh
 
 RUN fix-permissions /etc/passwd \
     && mkdir -p /home
@@ -36,15 +36,33 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-RUN fix-permissions /usr/share/logstash/data \
-    && fix-permissions /usr/share/logstash/config
+RUN yum -y install hostname && yum -y clean all  && rm -rf /var/cache
 
-RUN yum -y install zip && yum -y clean all  && rm -rf /var/cache
+# Uninstall the unneded plugins
+RUN for plugin in \
+  opensearch-alerting \
+  opensearch-cross-cluster-replication \
+  opensearch-index-management \
+  opensearch-notifications \
+  opensearch-notifications-core \
+  opensearch-observability \
+  opensearch-reports-scheduler \
+  opensearch-security; do \
+  /usr/share/opensearch/bin/opensearch-plugin remove --purge $plugin; \
+  done
 
-# Mitigation for CVE-2021-45046 and CVE-2021-44228 - not needed in log4j-core 2.17.0
-# RUN zip -q -d /usr/share/logstash/logstash-core/lib/jars/log4j-core-2.15.0.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
-#     && zip -q -d /usr/share/logstash/vendor/bundle/jruby/2.5.0/gems/logstash-input-tcp-5.2.3-java/vendor/jar-dependencies/org/logstash/inputs/logstash-input-tcp/5.2.3/logstash-input-tcp-5.2.3.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+ENV OPENSEARCH_JAVA_OPTS="-Xms512m -Xmx512m" \
+    EXTRA_OPTS=""
 
-ENV LS_JAVA_OPTS "-Xms400m -Xmx400m -Dlog4j2.formatMsgNoLookups=true"
+# Copy es-curl wrapper
+COPY es-curl /usr/share/opensearch/bin/es-curl
 
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash", "/usr/local/bin/docker-entrypoint"]
+RUN fix-permissions /usr/share/opensearch
+
+USER opensearch
+
+VOLUME [ "/usr/share/opensearch/data" ]
+
+ENTRYPOINT ["/usr/sbin/tini", "--", "/lagoon/entrypoints.bash"]
+
+CMD ["/usr/share/opensearch/opensearch-docker-entrypoint.sh"]

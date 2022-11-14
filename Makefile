@@ -192,10 +192,13 @@ versioned-images := 		php-7.4-fpm \
 							python-3.10 \
 							node-14 \
 							node-14-builder \
+							node-14-cli \
 							node-16 \
 							node-16-builder \
+							node-16-cli \
 							node-18 \
 							node-18-builder \
+							node-18-cli \
 							solr-7 \
 							solr-7-drupal \
 							solr-8 \
@@ -282,6 +285,9 @@ build/node-14 build/node-16 build/node-18: build/commons
 build/node-14-builder: build/node-14
 build/node-16-builder: build/node-16
 build/node-18-builder: build/node-18
+build/node-14-cli: build/node-14
+build/node-16-cli: build/node-16
+build/node-18-cli: build/node-18
 build/elasticsearch-7 build/kibana-7 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11

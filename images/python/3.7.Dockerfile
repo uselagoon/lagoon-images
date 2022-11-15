@@ -1,6 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM python:3.7.11-alpine3.13
+
+FROM python:3.7.15-alpine3.16
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -25,10 +26,11 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 RUN apk add --no-cache --virtual .build-deps \
-      build-base \
+        build-base \
     && pip install --upgrade pip \
     && pip install virtualenv==16.7.10 \
-    && apk del .build-deps
+    && apk del \
+           .build-deps
 
 # Make sure shells are not running forever
 COPY 80-shell-timeout.sh /lagoon/entrypoints/

@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # Defining Versions - https://www.elastic.co/guide/en/elasticsearch/reference/7.6/docker.html
-FROM docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+FROM docker.elastic.co/elasticsearch/elasticsearch:7.10.2
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -16,7 +16,8 @@ COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /home /home
 
-RUN curl -sL https://github.com/krallin/tini/releases/download/v0.18.0/tini -o /sbin/tini && chmod a+x /sbin/tini
+RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini
 
 COPY docker-entrypoint.sh.7 /lagoon/entrypoints/90-elasticsearch.sh
 
@@ -34,6 +35,14 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* \
+    && sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-* \
+    && yum -y install zip && yum -y clean all  && rm -rf /var/cache
+
+# Mitigation for CVE-2021-45046 and CVE-2021-44228
+RUN zip -q -d /usr/share/elasticsearch/lib/log4j-core-2.11.1.jar org/apache/logging/log4j/core/lookup/JndiLookup.class \
+    && zip -q -d /usr/share/elasticsearch/bin/elasticsearch-sql-cli-7.10.2.jar org/apache/logging/log4j/core/lookup/JndiLookup.class
+
 RUN echo $'\n\
 node.name: "${HOSTNAME}"\n\
 node.master: "${NODE_MASTER}"\n\
@@ -49,7 +58,7 @@ cluster.remote.connect: "${CLUSTER_REMOTE_CONNECT}"' >> config/elasticsearch.yml
 
 RUN fix-permissions config
 
-ENV ES_JAVA_OPTS="-Xms400m -Xmx400m" \
+ENV ES_JAVA_OPTS="-Xms400m -Xmx400m -Dlog4j2.formatMsgNoLookups=true" \
     NODE_MASTER=true \
     NODE_DATA=true \
     NODE_INGEST=true \

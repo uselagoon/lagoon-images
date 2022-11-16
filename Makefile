@@ -136,7 +136,6 @@ docker_pull:
 unversioned-images :=		commons \
 							nginx \
 							nginx-drupal \
-							mongo \
 							rabbitmq \
 							rabbitmq-cluster
 
@@ -227,8 +226,7 @@ versioned-images := 		php-7.4-fpm \
 							varnish-7-persistent-drupal \
 							ruby-3.0 \
 							ruby-3.1 \
-							opensearch-2 \
-							mongo-4.0
+							opensearch-2
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -240,7 +238,7 @@ default-versioned-images := 	mariadb-10.4 \
 							postgres-11-drupal \
 							redis-5 \
 							redis-5-persistent \
-							mongo-4.0
+							mongo-4
 
 #######
 ####### Experimental Images
@@ -312,7 +310,7 @@ build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6
 build/ruby-3.0 build/ruby-3.1: build/commons
 build/opensearch-2: build/commons
-build/mongo-3.6 build/mongo-4.0: build/commons 
+build/mongo-4: build/commons 
 
 #######
 ####### Building Images

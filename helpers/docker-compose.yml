@@ -28,8 +28,8 @@ services:
       - "3306"
     << : *default-user # uses the defined user from top
 
-  mongo:
-    image: uselagoon/mongo:latest
+  mongo-4:
+    image: uselagoon/mongo-4:latest
     ports:
       - "27017"
       - "28017"

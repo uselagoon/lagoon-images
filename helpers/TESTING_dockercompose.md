@@ -25,7 +25,7 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-12:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-14:5432 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo:27017 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo-4:27017 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
 ```
@@ -40,7 +40,7 @@ Run the following commands to validate things are rolling as they should.
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.4_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.6_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mongo_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mongo-4_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-14_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-16_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-18_1
@@ -135,14 +135,14 @@ docker-compose exec -T mariadb-10.6 sh -c "mysql -e \'SHOW variables;\'" | grep 
 # mariadb-10.6 check default credentials
 docker-compose exec -T mariadb-10.6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
 
-# mongo should be version 3.6 client
-docker-compose exec -T mongo sh -c "mongo --version" | grep "shell version" | grep "v3.6"
+# mongo should be version 4.0 client
+docker-compose exec -T mongo-4 sh -c "mongo --version" | grep "shell version" | grep "v4.0"
 
-# mongo should be version 3.6 server
-docker-compose exec -T mongo sh -c "mongo --eval \'printjson(db.serverStatus())\'" | grep "server version" | grep "3.6"
+# mongo should be version 4.0 server
+docker-compose exec -T mongo-4 sh -c "mongo --eval \'printjson(db.serverStatus())\'" | grep "server version" | grep "4.0"
 
 # mongo should have test database
-docker-compose exec -T mongo sh -c "mongo --eval \'db.stats()\'" | grep "db" | grep "test"
+docker-compose exec -T mongo-4 sh -c "mongo --eval \'db.stats()\'" | grep "db" | grep "test"
 
 # postgres-11 should be version 11 client
 docker-compose exec -T postgres-11 bash -c "psql --version" | grep "psql" | grep "11."

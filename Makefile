@@ -39,7 +39,7 @@ SHELL := /bin/bash
 #######
 
 # Parameter for all `docker build` commands, can be overwritten by passing `DOCKER_BUILD_PARAMS=` via the `-e` option
-DOCKER_BUILD_PARAMS := --quiet
+DOCKER_BUILD_PARAMS :=
 
 # On CI systems like jenkins we need a way to run multiple testings at the same time. We expect the
 # CI systems to define an Environment variable CI_BUILD_TAG which uniquely identifies each build.
@@ -136,7 +136,6 @@ docker_pull:
 unversioned-images :=		commons \
 							nginx \
 							nginx-drupal \
-							mongo \
 							rabbitmq \
 							rabbitmq-cluster
 
@@ -167,7 +166,6 @@ $(build-images):
 # 2. Dockerfiles of the Images itself, will cause make to rebuild the images if something has
 #    changed on the Dockerfiles
 build/commons: images/commons/Dockerfile
-build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
 build/rabbitmq: build/commons images/rabbitmq/Dockerfile
@@ -239,7 +237,8 @@ default-versioned-images := 	mariadb-10.4 \
 							postgres-11-ckan \
 							postgres-11-drupal \
 							redis-5 \
-							redis-5-persistent
+							redis-5-persistent \
+							mongo-4
 
 #######
 ####### Experimental Images
@@ -311,6 +310,7 @@ build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6
 build/ruby-3.0 build/ruby-3.1: build/commons
 build/opensearch-2: build/commons
+build/mongo-4: build/commons 
 
 #######
 ####### Building Images

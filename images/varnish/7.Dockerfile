@@ -1,13 +1,12 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM --platform=linux/amd64 docker.elastic.co/kibana/kibana:6.8.23
+
+FROM varnish:7.2-alpine
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
-ENV LAGOON=kibana
-
-USER root
+ENV LAGOON=varnish
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -15,16 +14,8 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
+COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
-
-RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
-    && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini
-
-RUN fix-permissions /etc/passwd \
-    && mkdir -p /home
-
-# Reproduce behavior of Alpine: Run Bash as sh
-RUN rm -f /bin/sh && ln -s /bin/bash /bin/sh
 
 ENV TMPDIR=/tmp \
     TMP=/tmp \
@@ -34,12 +25,33 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-RUN fix-permissions /usr/share/kibana
+USER root
+
+RUN echo "${VARNISH_SECRET:-lagoon_default_secret}" >> /etc/varnish/secret
+
+COPY default.vcl /etc/varnish/default.vcl
+COPY varnish-start.sh /varnish-start.sh
+
+RUN fix-permissions /etc/varnish/ \
+    && fix-permissions /var/run/ \
+    && fix-permissions /var/lib/varnish \
+    && addgroup varnish root
+
+COPY docker-entrypoint /lagoon/entrypoints/70-varnish-entrypoint
+
+USER varnish
+EXPOSE 8080
 
 # tells the local development environment on which port we are running
-# ENV LAGOON_LOCALDEV_HTTP_PORT=5601
+ENV LAGOON_LOCALDEV_HTTP_PORT=8080
 
-ENV NODE_OPTIONS="--max-old-space-size=200"
+ENV HTTP_RESP_HDR_LEN=8k \
+    HTTP_RESP_SIZE=32k \
+    NUKE_LIMIT=150 \
+    CACHE_TYPE=malloc \
+    CACHE_SIZE=500M \
+    LISTEN=":8080" \
+    MANAGEMENT_LISTEN=":6082"
 
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash"]
-CMD ["/bin/bash", "/usr/local/bin/kibana-docker"]
+ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
+CMD ["/varnish-start.sh"]

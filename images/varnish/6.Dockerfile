@@ -6,12 +6,21 @@ ENV LIBVMOD_DYNAMIC_VERSION=6.6
 ENV VARNISH_MODULES_VERSION=6.6
 
 USER root
-RUN apt-get update && apt-get -y install build-essential curl zip
+RUN apt-get update \
+    && apt-get -y install \
+                  build-essential \
+                  curl \
+                  zip
 
 RUN  curl -L https://packagecloud.io/varnishcache/varnish66/gpgkey | apt-key add - \
   && echo "deb https://packagecloud.io/varnishcache/varnish66/debian/ buster main" | tee /etc/apt/sources.list.d/varnish-cache.list \
   && apt-get -q update \
-  && apt-get install -qq automake libtool python3-docutils libpcre3-dev varnish-dev
+  && apt-get install -qq \
+              automake \
+              libpcre3-dev \
+              libtool \
+              python3-docutils \
+              varnish-dev
 
 RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip \
   && unzip ${LIBVMOD_DYNAMIC_VERSION}.zip && cd libvmod-dynamic-${LIBVMOD_DYNAMIC_VERSION} \
@@ -45,9 +54,10 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 USER root
-RUN apt-get -y update && apt-get -y install \
-    busybox \
-    curl \
+RUN apt-get -y update \
+    && apt-get -y install \
+                  busybox \
+                  curl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
@@ -73,7 +83,8 @@ RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
 RUN fix-permissions /etc/varnish/ \
     && fix-permissions /var/run/ \
-    && fix-permissions /var/lib/varnish
+    && fix-permissions /var/lib/varnish \
+    && usermod -a -G root varnish
 
 COPY docker-entrypoint /lagoon/entrypoints/70-varnish-entrypoint
 

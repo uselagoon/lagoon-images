@@ -26,10 +26,11 @@ ENV TMPDIR=/tmp \
 # we need root for the fix-permissions to work
 USER root
 
-RUN apt-get -y update && apt-get -y install \
-    busybox \
-    curl \
-    zip \
+RUN apt-get -y update \
+    && apt-get -y install \
+                  busybox \
+                  curl \
+                  zip \
     && rm -rf /var/lib/apt/lists/*
 
 # Mitigation for CVE-2021-45046 and CVE-2021-44228

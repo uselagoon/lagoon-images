@@ -25,7 +25,9 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-12:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-14:5432 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo:27017 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo-4:27017 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
 ```
 
 Verification commands
@@ -38,7 +40,7 @@ Run the following commands to validate things are rolling as they should.
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.4_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.6_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mongo_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mongo-4_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-14_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-16_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-18_1
@@ -54,20 +56,20 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7.7_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-8_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-6_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-7_1
 
 # commons Should be running Alpine Linux
 docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
 
-# rabbitmq Should have RabbitMQ running 3.8
-docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.8
+# rabbitmq Should have RabbitMQ running 3.9
+docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.9
 
 # rabbitmq Should have delayed_message_exchange plugin enabled
 docker-compose exec -T rabbitmq sh -c "rabbitmq-plugins list" | grep "E" | grep "delayed_message_exchange"
 
 # rabbitmq Should have a running RabbitMQ management page running on 15672
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 docker-compose exec -T commons sh -c "curl -kL http://rabbitmq:15672" | grep "RabbitMQ Management"
 
 # redis-5 Should be running Redis v5.0
@@ -106,15 +108,6 @@ docker-compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=R
 # solr-8 Check Solr has 8 solrconfig in "mycore" core
 docker-compose exec -T solr-8 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 8.
 
-# solr-7.7 Should have a "mycore" Solr core
-docker-compose exec -T commons sh -c "curl solr-7.7:8983/solr/admin/cores?action=STATUS\&core=mycore"
-
-# solr-7.7 Should be able to reload "mycore" Solr core
-docker-compose exec -T commons sh -c "curl solr-7.7:8983/solr/admin/cores?action=RELOAD\&core=mycore"
-
-# solr-7.7 Check Solr has 7.7 solrconfig in "mycore" core
-docker-compose exec -T solr-7.7 sh -c "cat /opt/solr/server/solr/mycores/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 7.7
-
 # mariadb-10.4 should be version 10.4 client
 docker-compose exec -T mariadb-10.4 sh -c "mysql -V" | grep "10.4"
 
@@ -142,14 +135,14 @@ docker-compose exec -T mariadb-10.6 sh -c "mysql -e \'SHOW variables;\'" | grep 
 # mariadb-10.6 check default credentials
 docker-compose exec -T mariadb-10.6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
 
-# mongo should be version 3.6 client
-docker-compose exec -T mongo sh -c "mongo --version" | grep "shell version" | grep "v3.6"
+# mongo should be version 4.0 client
+docker-compose exec -T mongo-4 sh -c "mongo --version" | grep "shell version" | grep "v4.0"
 
-# mongo should be version 3.6 server
-docker-compose exec -T mongo sh -c "mongo --eval \'printjson(db.serverStatus())\'" | grep "server version" | grep "3.6"
+# mongo should be version 4.0 server
+docker-compose exec -T mongo-4 sh -c "mongo --eval \'printjson(db.serverStatus())\'" | grep "server version" | grep "4.0"
 
 # mongo should have test database
-docker-compose exec -T mongo sh -c "mongo --eval \'db.stats()\'" | grep "db" | grep "test"
+docker-compose exec -T mongo-4 sh -c "mongo --eval \'db.stats()\'" | grep "db" | grep "test"
 
 # postgres-11 should be version 11 client
 docker-compose exec -T postgres-11 bash -c "psql --version" | grep "psql" | grep "11."
@@ -186,6 +179,21 @@ docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 
 # postgres-14 should have lagoon database
 docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
+
+# varnish-6 Check varnish has correct vmods in varnish folder
+docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
+docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
+
+# varnish-6 should be serving pages as version 6
+docker-compose exec -T commons sh -c "curl -I varnish-6:8080" | grep "Varnish" | grep "6."
+
+# varnish-7 Check varnish has correct vmods in varnish folder
+docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
+docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
+
+# varnish-7 should be serving pages as version 7
+docker-compose exec -T commons sh -c "curl -I varnish-7:8080" | grep "Varnish" | grep "7."
+docker-compose exec -T varnish-7 sh -c "varnishlog -d" | grep User-Agent | grep curl 
 
 # python-3.7 should be version 3.7
 docker-compose exec -T python-3.7 sh -c "python -V" | grep "3.7"
@@ -260,6 +268,18 @@ docker-compose exec -T ruby-3.1 sh -c "ruby -v" | grep "3.1"
 
 # ruby-3.1 should be serving content
 docker-compose exec -T commons sh -c "curl ruby-3.1:3000/tmp/" | grep "ruby 3.1"
+
+# opensearch-2 should have opensearch 2
+docker-compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | grep "2."
+
+# opensearch-2 should be healthy
+docker-compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | json_pp | grep status | grep green
+
+# elasticsearch-7 should have elasticsearch 7
+docker-compose exec -T commons sh -c "curl elasticsearch-7:9200" | grep number | grep "7."
+
+# elasticsearch-7 should be healthy
+docker-compose exec -T commons sh -c "curl elasticsearch-7:9200/_cluster/health" | json_pp | grep status | grep green
 ```
 
 Destroy tests

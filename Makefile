@@ -39,7 +39,7 @@ SHELL := /bin/bash
 #######
 
 # Parameter for all `docker build` commands, can be overwritten by passing `DOCKER_BUILD_PARAMS=` via the `-e` option
-DOCKER_BUILD_PARAMS := --quiet
+DOCKER_BUILD_PARAMS :=
 
 # On CI systems like jenkins we need a way to run multiple testings at the same time. We expect the
 # CI systems to define an Environment variable CI_BUILD_TAG which uniquely identifies each build.
@@ -136,7 +136,6 @@ docker_pull:
 unversioned-images :=		commons \
 							nginx \
 							nginx-drupal \
-							mongo \
 							rabbitmq \
 							rabbitmq-cluster
 
@@ -167,7 +166,6 @@ $(build-images):
 # 2. Dockerfiles of the Images itself, will cause make to rebuild the images if something has
 #    changed on the Dockerfiles
 build/commons: images/commons/Dockerfile
-build/mongo: build/commons images/mongo/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
 build/rabbitmq: build/commons images/rabbitmq/Dockerfile
@@ -192,21 +190,19 @@ versioned-images := 		php-7.4-fpm \
 							python-3.10 \
 							node-14 \
 							node-14-builder \
+							node-14-cli \
 							node-16 \
 							node-16-builder \
+							node-16-cli \
 							node-18 \
 							node-18-builder \
-							solr-7.7 \
-							solr-7.7-drupal \
+							node-18-cli \
 							solr-7 \
 							solr-7-drupal \
 							solr-8 \
 							solr-8-drupal \
-							elasticsearch-6 \
 							elasticsearch-7 \
-							kibana-6 \
 							kibana-7 \
-							logstash-6 \
 							logstash-7 \
 							postgres-12 \
 							postgres-12-drupal \
@@ -224,8 +220,13 @@ versioned-images := 		php-7.4-fpm \
 							varnish-6-drupal \
 							varnish-6-persistent \
 							varnish-6-persistent-drupal \
+							varnish-7 \
+							varnish-7-drupal \
+							varnish-7-persistent \
+							varnish-7-persistent-drupal \
 							ruby-3.0 \
 							ruby-3.1 \
+							opensearch-2 \
 							dotnet-6-sdk \
 							dotnet-6-runtime
 
@@ -239,16 +240,13 @@ default-versioned-images := 	mariadb-10.4 \
 							postgres-11-drupal \
 							redis-5 \
 							redis-5-persistent \
-							varnish-5 \
-							varnish-5-drupal \
-							varnish-5-persistent \
-							varnish-5-persistent-drupal
+							mongo-4
 
 #######
 ####### Experimental Images
 #######
 
-experimental-images := 		
+experimental-images := 
 
 build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images) $(experimental-images),build/$(image))
 
@@ -288,9 +286,10 @@ build/node-14 build/node-16 build/node-18: build/commons
 build/node-14-builder: build/node-14
 build/node-16-builder: build/node-16
 build/node-18-builder: build/node-18
-build/solr-7.7: build/commons
-build/solr-7.7-drupal: build/solr-7.7
-build/elasticsearch-6 build/elasticsearch-7 build/kibana-6 build/kibana-7 build/logstash-6 build/logstash-7: build/commons
+build/node-14-cli: build/node-14
+build/node-16-cli: build/node-16
+build/node-18-cli: build/node-18
+build/elasticsearch-7 build/kibana-7 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
 build/postgres-12-drupal: build/postgres-12
@@ -299,11 +298,11 @@ build/postgres-14-drupal: build/postgres-14
 build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-6-persistent: build/redis-6
-build/varnish-5 build/varnish-6: build/commons
-build/varnish-5-drupal build/varnish-5-persistent: build/varnish-5
-build/varnish-5-persistent-drupal: build/varnish-5-drupal
+build/varnish-6 build/varnish-7: build/commons
 build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal
+build/varnish-7-drupal build/varnish-7-persistent: build/varnish-7
+build/varnish-7-persistent-drupal: build/varnish-7-drupal
 build/solr-7 build/solr-8: build/commons
 build/solr-7-drupal: build/solr-7
 build/solr-8-drupal: build/solr-8
@@ -312,6 +311,8 @@ build/mariadb-10.4-drupal: build/mariadb-10.4
 build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6
 build/ruby-3.0 build/ruby-3.1: build/commons
+build/opensearch-2: build/commons
+build/mongo-4: build/commons 
 build/dotnet-6-sdk: build/commons
 build/dotnet-6-runtime: build/commons
 

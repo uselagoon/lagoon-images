@@ -28,11 +28,19 @@ services:
       - "3306"
     << : *default-user # uses the defined user from top
 
-  mongo:
-    image: uselagoon/mongo:latest
+  mongo-4:
+    image: uselagoon/mongo-4:latest
     ports:
       - "27017"
       - "28017"
+    << : *default-user # uses the defined user from top
+
+  nginx:
+    image: uselagoon/nginx:latest
+    labels:
+      lando.type: nginx
+    ports:
+      - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port nginx 8080`
     << : *default-user # uses the defined user from top
 
   node-14:
@@ -157,12 +165,6 @@ services:
       - "8983"
     << : *default-user # uses the defined user from top
 
-  solr-7.7:
-    image: uselagoon/solr-7.7:latest
-    ports:
-      - "8983"
-    << : *default-user # uses the defined user from top
-
   solr-8:
     image: uselagoon/solr-8:latest
     ports:
@@ -188,3 +190,35 @@ services:
         ruby -v | xargs > /tmp/index.html;
         exec ruby -run -e httpd / -p 3000
         "]
+
+  varnish-6:
+    image: uselagoon/varnish-6:latest
+    labels:
+      lando.type: varnish
+    ports:
+      - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port varnish-6 8080`
+    << : *default-user # uses the defined user from top
+
+  varnish-7:
+    image: uselagoon/varnish-7:latest
+    labels:
+      lando.type: varnish
+    ports:
+      - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port varnish-7 8080`
+    << : *default-user # uses the defined user from top
+
+  opensearch-2:
+    image: uselagoon/opensearch-2:latest
+    labels:
+      lando.type: opensearch
+    ports:
+      - "9200" # exposes the port 8080 with a random local port, find it with `docker-compose port nginx 8080`
+    << : *default-user # uses the defined user from top
+
+  elasticsearch-7:
+    image: uselagoon/elasticsearch-7:latest
+    labels:
+      lando.type: elasticsearch
+    ports:
+      - "9200" # exposes the port 8080 with a random local port, find it with `docker-compose port nginx 8080`
+    << : *default-user # uses the defined user from top

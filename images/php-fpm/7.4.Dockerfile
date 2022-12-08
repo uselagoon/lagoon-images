@@ -62,6 +62,8 @@ RUN apk add --no-cache --virtual .devdeps \
         libwebp-dev \
         # for soap
         libxml2-dev \
+        # for xdebug
+        linux-headers \
         # for xsl
         libxslt-dev \
         libzip-dev \

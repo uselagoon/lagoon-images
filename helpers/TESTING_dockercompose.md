@@ -63,8 +63,8 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 # commons Should be running Alpine Linux
 docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
 
-# rabbitmq Should have RabbitMQ running 3.9
-docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.9
+# rabbitmq Should have RabbitMQ running 3.10
+docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.10
 
 # rabbitmq Should have delayed_message_exchange plugin enabled
 docker-compose exec -T rabbitmq sh -c "rabbitmq-plugins list" | grep "E" | grep "delayed_message_exchange"

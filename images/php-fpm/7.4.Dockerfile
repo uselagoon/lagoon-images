@@ -62,8 +62,6 @@ RUN apk add --no-cache --virtual .devdeps \
         libwebp-dev \
         # for soap
         libxml2-dev \
-        # for xdebug
-        linux-headers \
         # for xsl
         libxslt-dev \
         libzip-dev \
@@ -74,7 +72,7 @@ RUN apk add --no-cache --virtual .devdeps \
     && yes '' | pecl install -f apcu-5.1.22 \
     && yes '' | pecl install -f imagick-3.7.0 \
     && yes '' | pecl install -f redis-4.3.0 \
-    && yes '' | pecl install -f xdebug-3.2.0 \
+    && yes '' | pecl install -f xdebug-3.1.6 \
     && yes '' | pecl install -f yaml-2.2.2 \
     && docker-php-ext-enable apcu imagick redis xdebug yaml \
     && rm -rf /tmp/pear \

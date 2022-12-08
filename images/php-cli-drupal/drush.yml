@@ -4,3 +4,8 @@
 options:
   root: '/app/${env.WEBROOT}'
   uri: '${env.LAGOON_ROUTE}'
+command:
+  sql:
+    dump:
+      options:
+        extra-dump: --no-tablespaces --max_allowed_packet=${env.MARIADB_MAX_ALLOWED_PACKET}

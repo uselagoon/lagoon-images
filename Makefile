@@ -275,7 +275,7 @@ base-images-with-versions += $(experimental-images)
 s3-images += $(versioned-images)
 s3-images += $(experimental-images)
 
-build/php-7.4-fpm build/php-8.0-fpm build/php-8.1-fpm: build/commons
+build/php-7.4-fpm build/php-8.0-fpm build/php-8.1-fpm build/php-8.2-fpm: build/commons
 build/php-7.4-cli: build/php-7.4-fpm
 build/php-8.0-cli: build/php-8.0-fpm
 build/php-8.1-cli: build/php-8.1-fpm

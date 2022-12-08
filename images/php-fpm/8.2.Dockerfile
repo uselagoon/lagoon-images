@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:8.2.0RC6-fpm-alpine3.16
+FROM php:8.2.0-fpm-alpine3.16
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -45,57 +45,63 @@ COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 
 RUN apk add --no-cache --virtual .devdeps \
-        linux-headers \
-        libzip-dev \
         # for gd
-        libpng-dev \
-        libjpeg-turbo-dev \
         freetype-dev \
         # for gettext
         gettext-dev \
+        # for imagemagick
+        imagemagick-dev \
+        libgcrypt-dev \
+        # for gd
+        libjpeg-turbo-dev \
         # for mcrypt
         libmcrypt-dev \
-        # for soap
-        libxml2-dev \
-        # for xsl
-        libxslt-dev \
-        libgcrypt-dev \
+        # for gd
+        libpng-dev \
         # for webp
         libwebp-dev \
+        # for soap
+        libxml2-dev \
+        # for xdebug
+        linux-headers \
+        # for xsl
+        libxslt-dev \
+        libzip-dev \
         postgresql-dev \
         # for yaml
         yaml-dev \
-        # for imagemagick
-        imagemagick-dev \
-        && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-        && yes '' | pecl install -f apcu-5.1.22 \
-        && yes '' | pecl install -f imagick-3.7.0 \
-        && yes '' | pecl install -f redis-5.3.7 \
-        && yes '' | pecl install -f xdebug-3.2.0alpha3 \
-        && yes '' | pecl install -f yaml-2.2.2 \
-        && docker-php-ext-enable apcu imagick redis xdebug yaml \
-        && rm -rf /tmp/pear \
-        && apk del -r .phpize-deps \
-        && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-        && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
-        && docker-php-ext-install -j4 bcmath gd gettext mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip \
-        && apk del -r .devdeps \
-        && apk add --no-cache \
-        fcgi \
-        ssmtp \
-        libzip \
-        libpng \
-        libjpeg-turbo \
-        gettext \
-        libmcrypt \
-        libxml2 \
-        libxslt \
-        libgcrypt \
-        libwebp \
-        postgresql-libs \
-        yaml \
-        imagemagick \
-        imagemagick-libs
+    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
+    && yes '' | pecl install -f apcu-5.1.22 \
+    && yes '' | pecl install -f imagick-3.7.0 \
+    && yes '' | pecl install -f redis-5.3.7 \
+    && yes '' | pecl install -f xdebug-3.2.0 \
+    && yes '' | pecl install -f yaml-2.2.2 \
+    && docker-php-ext-enable apcu imagick redis xdebug yaml \
+    && rm -rf /tmp/pear \
+    && apk del -r \
+           .phpize-deps \
+    && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
+    && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
+    && docker-php-ext-install -j4 bcmath gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip \
+    && apk del -r \
+           .devdeps \
+    && apk add --no-cache \
+           fcgi \
+           gettext \
+           icu-libs \
+           imagemagick \
+           imagemagick-libs \
+           libgcrypt \
+           libjpeg-turbo \
+           libmcrypt \
+           libpng \
+           libwebp \
+           libxml2 \
+           libxslt \
+           libzip \
+           postgresql-libs \
+           ssmtp \
+           yaml
 
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
@@ -118,23 +124,23 @@ RUN apk add --no-cache --virtual .devdeps \
 #     && fix-permissions /usr/local/etc/
 
 # Add blackfire probe and agent.
-# RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
-#     && architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
-#     && mkdir -p /blackfire \
-#     && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/$architecture/$version \
-#     && tar zxpf /blackfire/blackfire-probe.tar.gz -C /blackfire \
-#     && mv /blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
-#     && fix-permissions /usr/local/etc/php/conf.d/
+RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
+    && architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && mkdir -p /blackfire \
+    && curl -A "Docker" -o /blackfire/blackfire-probe.tar.gz -D - -L -s https://blackfire.io/api/v1/releases/probe/php/alpine/$architecture/$version \
+    && tar zxpf /blackfire/blackfire-probe.tar.gz -C /blackfire \
+    && mv /blackfire/blackfire-*.so $(php -r "echo ini_get('extension_dir');")/blackfire.so \
+    && fix-permissions /usr/local/etc/php/conf.d/
 
-# ENV BLACKFIRE_VERSION=2.12.0
-# RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
-#     && curl -A "Docker" -o /blackfire/blackfire-linux_${architecture}.tar.gz -D - -L -s https://packages.blackfire.io/binaries/blackfire/${BLACKFIRE_VERSION}/blackfire-linux_${architecture}.tar.gz \
-#     && tar zxpf /blackfire/blackfire-linux_${architecture}.tar.gz -C /blackfire \
-#     && mv /blackfire/blackfire /bin/blackfire \
-#     && chmod +x /bin/blackfire \
-#     && mkdir -p /etc/blackfire \
-#     && touch /etc/blackfire/agent \
-#     && fix-permissions /etc/blackfire/
+ENV BLACKFIRE_VERSION=2.13.1
+RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && curl -A "Docker" -o /blackfire/blackfire-linux_${architecture}.tar.gz -D - -L -s https://packages.blackfire.io/binaries/blackfire/${BLACKFIRE_VERSION}/blackfire-linux_${architecture}.tar.gz \
+    && tar zxpf /blackfire/blackfire-linux_${architecture}.tar.gz -C /blackfire \
+    && mv /blackfire/blackfire /bin/blackfire \
+    && chmod +x /bin/blackfire \
+    && mkdir -p /etc/blackfire \
+    && touch /etc/blackfire/agent \
+    && fix-permissions /etc/blackfire/
 
 RUN mkdir -p /app \
     && fix-permissions /app \

@@ -53,8 +53,8 @@ node ('lagoon-images') {
         stage ('Copy examples down') {
           sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
           dir ('tests') {
-            sh script: "git submodule add -b php74 https://github.com/lagoon-examples/drupal9-postgres drupal9-postgres-php74"
-            sh script: "git submodule add -b php81 https://github.com/lagoon-examples/drupal9-base drupal9-base-php81"
+            // sh script: "git submodule add -b php74 https://github.com/lagoon-examples/drupal9-postgres drupal9-postgres-php74"
+            // sh script: "git submodule add -b php81 https://github.com/lagoon-examples/drupal9-base drupal9-base-php81"
             sh script: "git submodule sync && git submodule update --init"
             sh script: "mkdir -p ./all-images && cp ../helpers/docker-compose.yml ./all-images/ && cp ../helpers/TESTING_dockercompose.md ./all-images/"
             sh script: "sed -i '/image:/ s/uselagoon/${CI_BUILD_TAG}/' ./all-images/docker-compose.yml"

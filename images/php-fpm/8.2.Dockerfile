@@ -107,7 +107,7 @@ RUN apk add --no-cache --virtual .devdeps \
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=9.20.0.310
+ENV NEWRELIC_VERSION=10.3.0.315
 # RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac); \
 #     if [ "$architecture" = "arm64" ] || [ "$architecture" = "aarch64" ]; then \
 #         echo "New Relic is not supported in Lagoon arm64 images"; \

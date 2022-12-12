@@ -210,6 +210,8 @@ versioned-images := 		php-8.0-fpm \
 							postgres-13-drupal \
 							postgres-14 \
 							postgres-14-drupal \
+							postgres-15 \
+							postgres-15-drupal \
 							redis-6 \
 							redis-6-persistent \
 							mariadb-10.5 \
@@ -288,11 +290,12 @@ build/node-14-cli: build/node-14
 build/node-16-cli: build/node-16
 build/node-18-cli: build/node-18
 build/elasticsearch-7 build/kibana-7 build/logstash-7: build/commons
-build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14: build/commons
+build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14 build/postgres-15: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
 build/postgres-12-drupal: build/postgres-12
 build/postgres-13-drupal: build/postgres-13
 build/postgres-14-drupal: build/postgres-14
+build/postgres-15-drupal: build/postgres-15
 build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-6-persistent: build/redis-6

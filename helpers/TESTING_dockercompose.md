@@ -180,6 +180,15 @@ docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 # postgres-14 should have lagoon database
 docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
 
+# postgres-15 should be version 15 client
+docker-compose exec -T postgres-15 bash -c "psql --version" | grep "psql" | grep "15."
+
+# postgres-15 should be version 15 server
+docker-compose exec -T postgres-15 bash -c "psql -U lagoon -d lagoon -c \'SELECT version();\'" | grep "PostgreSQL" | grep "15."
+
+# postgres-15 should have lagoon database
+docker-compose exec -T postgres-15 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
+
 # varnish-6 Check varnish has correct vmods in varnish folder
 docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
 docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so

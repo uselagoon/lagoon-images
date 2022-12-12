@@ -100,6 +100,12 @@ services:
       - "5432"
     << : *default-user # uses the defined user from top
 
+  postgres-15:
+    image: uselagoon/postgres-15:latest
+    ports:
+      - "5432"
+    << : *default-user # uses the defined user from top
+
   python-3.7:
     image: uselagoon/python-3.7:latest
     ports:

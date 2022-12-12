@@ -1,5 +1,5 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/php-7.4-fpm
+FROM ${IMAGE_REPO:-lagoon}/php-8.2-fpm
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -26,10 +26,8 @@ RUN apk add --no-cache git \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
     && rm -rf /var/cache/apk/*
 
-RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/1.10.26/composer.phar \
+RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.4.4/composer.phar \
     && chmod +x /usr/local/bin/composer \
-    && php -d memory_limit=-1 /usr/local/bin/composer global require hirak/prestissimo \
-    && php /usr/local/bin/composer clear-cache \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/
 

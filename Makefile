@@ -175,15 +175,15 @@ build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 ####### Multi-version Images
 #######
 
-versioned-images := 		php-7.4-fpm \
-							php-8.0-fpm \
+versioned-images := 		php-8.0-fpm \
 							php-8.1-fpm \
-							php-7.4-cli \
+							php-8.2-fpm \
 							php-8.0-cli \
 							php-8.1-cli \
-							php-7.4-cli-drupal \
+							php-8.2-cli \
 							php-8.0-cli-drupal \
 							php-8.1-cli-drupal \
+							php-8.2-cli-drupal \
 							python-3.7 \
 							python-3.8 \
 							python-3.9 \
@@ -210,6 +210,8 @@ versioned-images := 		php-7.4-fpm \
 							postgres-13-drupal \
 							postgres-14 \
 							postgres-14-drupal \
+							postgres-15 \
+							postgres-15-drupal \
 							redis-6 \
 							redis-6-persistent \
 							mariadb-10.5 \
@@ -272,13 +274,13 @@ base-images-with-versions += $(experimental-images)
 s3-images += $(versioned-images)
 s3-images += $(experimental-images)
 
-build/php-7.4-fpm build/php-8.0-fpm build/php-8.1-fpm: build/commons
-build/php-7.4-cli: build/php-7.4-fpm
+build/php-8.0-fpm build/php-8.1-fpm build/php-8.2-fpm: build/commons
 build/php-8.0-cli: build/php-8.0-fpm
 build/php-8.1-cli: build/php-8.1-fpm
-build/php-7.4-cli-drupal: build/php-7.4-cli
+build/php-8.2-cli: build/php-8.2-fpm
 build/php-8.0-cli-drupal: build/php-8.0-cli
 build/php-8.1-cli-drupal: build/php-8.1-cli
+build/php-8.2-cli-drupal: build/php-8.2-cli
 build/python-3.7 build/python-3.8 build/python-3.9 build/python-3.10: build/commons
 build/node-14 build/node-16 build/node-18: build/commons
 build/node-14-builder: build/node-14
@@ -288,11 +290,12 @@ build/node-14-cli: build/node-14
 build/node-16-cli: build/node-16
 build/node-18-cli: build/node-18
 build/elasticsearch-7 build/kibana-7 build/logstash-7: build/commons
-build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14: build/commons
+build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14 build/postgres-15: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
 build/postgres-12-drupal: build/postgres-12
 build/postgres-13-drupal: build/postgres-13
 build/postgres-14-drupal: build/postgres-14
+build/postgres-15-drupal: build/postgres-15
 build/redis-5 build/redis-6: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-6-persistent: build/redis-6
@@ -495,7 +498,7 @@ $(publish-amazeeio-baseimages-with-versions):
 		$(eval version = $(word 2,$(subst -, ,$(image))))
 		$(eval type = $(word 3,$(subst -, ,$(image))))
 		$(eval subtype = $(word 4,$(subst -, ,$(image))))
-#   Construct a "legacy" tag of the form `amazeeio/variant:version-type-subtype` e.g. `amazeeio/php:7.4-cli-drupal`
+#   Construct a "legacy" tag of the form `amazeeio/variant:version-type-subtype` e.g. `amazeeio/php:8.2-cli-drupal`
 		$(eval legacytag = $(shell echo $(variant)$(if $(version),:$(version))$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
 #	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
 #	We push a version without the `-latest` suffix

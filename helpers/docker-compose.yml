@@ -230,7 +230,7 @@ services:
     << : *default-user # uses the defined user from top
 
   internal-services-test:
-    image: tobybellwood/internal-services-test:main
+    image: docker.io/uselagoon/internal-services-test:main
     ports:
       - "3000"
     environment:

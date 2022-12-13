@@ -91,7 +91,7 @@ docker-compose exec -T redis-6 sh -c "redis-cli CONFIG GET databases"
 docker-compose exec -T redis-6 sh -c "redis-cli dbsize"
 
 # redis-6 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis" | grep "Service_Host=redis-6"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis" | grep "SERVICE_HOST=redis-6"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis" | grep "LAGOON_TEST_VAR=helpers"
 
 # solr-7 should have a "mycore" Solr core
@@ -113,7 +113,7 @@ docker-compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=R
 docker-compose exec -T solr-8 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 8.
 
 # solr-8 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr" | grep "Service_Host=solr-8"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr" | grep "SERVICE_HOST=solr-8"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr" | grep "LAGOON_TEST_VAR=helpers"
 
 # mariadb-10.4 should be version 10.4 client
@@ -144,8 +144,8 @@ docker-compose exec -T mariadb-10.6 sh -c "mysql -e \'SHOW variables;\'" | grep 
 docker-compose exec -T mariadb-10.6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
 
 # mariadb-10.6 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/maria" | grep "Service_Host=mariadb-10.6"
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/maria" | grep "LAGOON_TEST_VAR=helpers"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb" | grep "SERVICE_HOST=mariadb-10.6"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb" | grep "LAGOON_TEST_VAR=helpers"
 
 # mongo-4 should be version 4.0 client
 docker-compose exec -T mongo-4 sh -c "mongo --version" | grep "shell version" | grep "v4.0"
@@ -157,7 +157,7 @@ docker-compose exec -T mongo-4 sh -c "mongo --eval \'printjson(db.serverStatus()
 docker-compose exec -T mongo-4 sh -c "mongo --eval \'db.stats()\'" | grep "db" | grep "test"
 
 # mongo-4 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo" | grep "Service_Host=mongo-4"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo" | grep "SERVICE_HOST=mongo-4"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo" | grep "LAGOON_TEST_VAR=helpers"
 
 # postgres-11 should be version 11 client
@@ -199,13 +199,16 @@ docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'\\l+ l
 # postgres-15 should be version 15 client
 docker-compose exec -T postgres-15 bash -c "psql --version" | grep "psql" | grep "15."
 
+# postgres-15 should be version 15 client
+docker-compose exec -T postgres-15 bash -c "psql --version" | grep "psql" | grep "15."
+
 # postgres-15 should be version 15 server
 docker-compose exec -T postgres-15 bash -c "psql -U lagoon -d lagoon -c \'SELECT version();\'" | grep "PostgreSQL" | grep "15."
 
 # postgres-15 should have lagoon database
 docker-compose exec -T postgres-15 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
 
-# varnish-6 Check varnish has correct vmods in varnish folder
+# varnish-6 should have correct vmods in varnish folder
 docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
 docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
 
@@ -301,7 +304,7 @@ docker-compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | gr
 docker-compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | json_pp | grep status | grep green
 
 # opensearch-2 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch" | grep "Service_Host=opensearch-2"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch" | grep "SERVICE_HOST=opensearch-2"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch" | grep "LAGOON_TEST_VAR=helpers"
 
 # elasticsearch-7 should have elasticsearch 7

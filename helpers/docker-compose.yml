@@ -228,3 +228,31 @@ services:
     ports:
       - "9200" # exposes the port 8080 with a random local port, find it with `docker-compose port nginx 8080`
     << : *default-user # uses the defined user from top
+
+  internal-services-test:
+    image: tobybellwood/internal-services-test:main
+    ports:
+      - "3000"
+    environment:
+      - LAGOON_TEST_VAR=helpers
+      - MARIADB_HOST=mariadb-10.6
+      - MARIADB_USERNAME=lagoon
+      - MARIADB_PASSWORD=lagoon
+      - MARIADB_DATABASE=lagoon
+      - POSTGRES_HOST=postgres-14
+      - POSTGRES_USERNAME=lagoon
+      - POSTGRES_PASSWORD=lagoon
+      - POSTGRES_DATABASE=lagoon
+      - SOLR_HOST=solr-8
+      - REDIS_HOST=redis-6
+      - OPENSEARCH_HOST=opensearch-2
+      - MONGO_HOST=mongo-4
+      - MONGO_DATABASE=lagoon
+    depends_on:
+      - mariadb-10.6
+      - postgres-14
+      - solr-8
+      - redis-6
+      - opensearch-2
+      - mongo-4
+    << : *default-user # uses the defined user from top

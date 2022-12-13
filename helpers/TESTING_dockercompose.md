@@ -9,12 +9,12 @@ Start up tests
 Run the following commands to get up and running with this example.
 
 ```bash
-# Should remove any previous runs and poweroff
+# should remove any previous runs and poweroff
 sed -i -e "/###/d" docker-compose.yml
 docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
 docker-compose down
 
-# Should start up our services successfully
+# should start up our services successfully
 docker-compose build && docker-compose up -d
 
 # Ensure database pods are ready to connect
@@ -36,7 +36,7 @@ Verification commands
 Run the following commands to validate things are rolling as they should.
 
 ```bash
-# Should have all the services we expect
+# should have all the services we expect
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.4_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.6_1
@@ -60,53 +60,61 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-7_1
 
-# commons Should be running Alpine Linux
+# commons should be running Alpine Linux
 docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
 
-# rabbitmq Should have RabbitMQ running 3.10
+# rabbitmq should have RabbitMQ running 3.10
 docker-compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.10
 
-# rabbitmq Should have delayed_message_exchange plugin enabled
+# rabbitmq should have delayed_message_exchange plugin enabled
 docker-compose exec -T rabbitmq sh -c "rabbitmq-plugins list" | grep "E" | grep "delayed_message_exchange"
 
-# rabbitmq Should have a running RabbitMQ management page running on 15672
+# rabbitmq should have a running RabbitMQ management page running on 15672
 docker-compose exec -T commons sh -c "curl -kL http://rabbitmq:15672" | grep "RabbitMQ Management"
 
-# redis-5 Should be running Redis v5.0
+# redis-5 should be running Redis v5.0
 docker-compose exec -T redis-5 sh -c "redis-server --version" | grep v=5.
 
-# redis-5 Should be able to see databases
+# redis-5 should be able to see databases
 docker-compose exec -T redis-5 sh -c "redis-cli CONFIG GET databases"
 
-# redis-5  databases should be initialized
+# redis-5 should have initialized database
 docker-compose exec -T redis-5 sh -c "redis-cli dbsize"
 
-# redis-6 Should be running Redis v6.0
+# redis-6 should be running Redis v6.0
 docker-compose exec -T redis-6 sh -c "redis-server --version" | grep v=6.
 
-# redis-6 Should be able to see Redis databases
+# redis-6 should be able to see Redis databases
 docker-compose exec -T redis-6 sh -c "redis-cli CONFIG GET databases"
 
-# redis-6 databases should be initialized
+# redis-6 should have initialized database
 docker-compose exec -T redis-6 sh -c "redis-cli dbsize"
 
-# solr-7 Should have a "mycore" Solr core
+# redis-6 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis" | grep "Service_Host=redis-6"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis" | grep "LAGOON_TEST_VAR=helpers"
+
+# solr-7 should have a "mycore" Solr core
 docker-compose exec -T commons sh -c "curl solr-7:8983/solr/admin/cores?action=STATUS\&core=mycore"
 
-# solr-7 Should be able to reload "mycore" Solr core
+# solr-7 should be able to reload "mycore" Solr core
 docker-compose exec -T commons sh -c "curl solr-7:8983/solr/admin/cores?action=RELOAD\&core=mycore"
 
-# solr-7 Check Solr has 7.7 solrconfig in "mycore" core
+# solr-7 should have solr 7.7 solrconfig in "mycore" core
 docker-compose exec -T solr-7 sh -c "cat /opt/solr/server/solr/mycores/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 7.7
 
-# solr-8 Should have a "mycore" Solr core
+# solr-8 should have a "mycore" Solr core
 docker-compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=STATUS\&core=mycore"
 
-# solr-8 Should be able to reload "mycore" Solr core
+# solr-8 should be able to reload "mycore" Solr core
 docker-compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=RELOAD\&core=mycore"
 
-# solr-8 Check Solr has 8 solrconfig in "mycore" core
+# solr-8 should have solr 8 solrconfig in "mycore" core
 docker-compose exec -T solr-8 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 8.
+
+# solr-8 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr" | grep "Service_Host=solr-8"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr" | grep "LAGOON_TEST_VAR=helpers"
 
 # mariadb-10.4 should be version 10.4 client
 docker-compose exec -T mariadb-10.4 sh -c "mysql -V" | grep "10.4"
@@ -114,7 +122,7 @@ docker-compose exec -T mariadb-10.4 sh -c "mysql -V" | grep "10.4"
 # mariadb-10.4 should be version 10.4 server
 docker-compose exec -T mariadb-10.4 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.4"
 
-# mariadb-10.4 check default credentials
+# mariadb-10.4 should use default credentials
 docker-compose exec -T mariadb-10.4 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
 
 # mariadb-10.5 should be version 10.5 client
@@ -123,7 +131,7 @@ docker-compose exec -T mariadb-10.5 sh -c "mysql -V" | grep "10.5"
 # mariadb-10.5 should be version 10.5 server
 docker-compose exec -T mariadb-10.5 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.5"
 
-# mariadb-10.5 check default credentials
+# mariadb-10.5 should use default credentials
 docker-compose exec -T mariadb-10.5 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
 
 # mariadb-10.6 should be version 10.6 client
@@ -132,17 +140,25 @@ docker-compose exec -T mariadb-10.6 sh -c "mysql -V" | grep "10.6"
 # mariadb-10.6 should be version 10.6 server
 docker-compose exec -T mariadb-10.6 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.6"
 
-# mariadb-10.6 check default credentials
+# mariadb-10.6 should use default credentials
 docker-compose exec -T mariadb-10.6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
 
-# mongo should be version 4.0 client
+# mariadb-10.6 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/maria" | grep "Service_Host=mariadb-10.6"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/maria" | grep "LAGOON_TEST_VAR=helpers"
+
+# mongo-4 should be version 4.0 client
 docker-compose exec -T mongo-4 sh -c "mongo --version" | grep "shell version" | grep "v4.0"
 
-# mongo should be version 4.0 server
+# mongo-4 should be version 4.0 server
 docker-compose exec -T mongo-4 sh -c "mongo --eval \'printjson(db.serverStatus())\'" | grep "server version" | grep "4.0"
 
-# mongo should have test database
+# mongo-4 should have test database
 docker-compose exec -T mongo-4 sh -c "mongo --eval \'db.stats()\'" | grep "db" | grep "test"
+
+# mongo-4 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo" | grep "Service_Host=mongo-4"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo" | grep "LAGOON_TEST_VAR=helpers"
 
 # postgres-11 should be version 11 client
 docker-compose exec -T postgres-11 bash -c "psql --version" | grep "psql" | grep "11."
@@ -196,7 +212,7 @@ docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep li
 # varnish-6 should be serving pages as version 6
 docker-compose exec -T commons sh -c "curl -I varnish-6:8080" | grep "Varnish" | grep "6."
 
-# varnish-7 Check varnish has correct vmods in varnish folder
+# varnish-7 should have correct vmods in varnish folder
 docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
 docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
 
@@ -284,6 +300,10 @@ docker-compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | gr
 # opensearch-2 should be healthy
 docker-compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | json_pp | grep status | grep green
 
+# opensearch-2 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch" | grep "Service_Host=opensearch-2"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch" | grep "LAGOON_TEST_VAR=helpers"
+
 # elasticsearch-7 should have elasticsearch 7
 docker-compose exec -T commons sh -c "curl elasticsearch-7:9200" | grep number | grep "7."
 
@@ -297,6 +317,6 @@ Destroy tests
 Run the following commands to trash this app like nothing ever happened.
 
 ```bash
-# Should be able to destroy our services with success
+# should be able to destroy our services with success
 docker-compose down --volumes --remove-orphans
 ```

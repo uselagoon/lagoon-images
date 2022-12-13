@@ -10,19 +10,19 @@ services:
     image: uselagoon/commons:latest
     << : *default-user # uses the defined user from top
 
-  mariadb-10.4:
+  mariadb-10-4:
     image: uselagoon/mariadb-10.4:latest
     ports:
       - "3306"
     << : *default-user # uses the defined user from top
 
-  mariadb-10.5:
+  mariadb-10-5:
     image: uselagoon/mariadb-10.5:latest
     ports:
       - "3306"
     << : *default-user # uses the defined user from top
 
-  mariadb-10.6:
+  mariadb-10-6:
     image: uselagoon/mariadb-10.6:latest
     ports:
       - "3306"
@@ -106,7 +106,7 @@ services:
       - "5432"
     << : *default-user # uses the defined user from top
 
-  python-3.7:
+  python-3-7:
     image: uselagoon/python-3.7:latest
     ports:
       - "3000"
@@ -116,7 +116,7 @@ services:
         exec python -m http.server 3000
         "]
 
-  python-3.8:
+  python-3-8:
     image: uselagoon/python-3.8:latest
     ports:
       - "3000"
@@ -126,7 +126,7 @@ services:
         exec python -m http.server 3000
         "]
 
-  python-3.9:
+  python-3-9:
     image: uselagoon/python-3.9:latest
     ports:
       - "3000"
@@ -136,7 +136,7 @@ services:
         exec python -m http.server 3000
         "]
 
-  python-3.10:
+  python-3-10:
     image: uselagoon/python-3.10:latest
     ports:
       - "3000"
@@ -177,7 +177,7 @@ services:
       - "8983"
     user: solr
 
-  ruby-3.0:
+  ruby-3-0:
     image: uselagoon/ruby-3.0:latest
     ports:
       - "3000"
@@ -187,7 +187,7 @@ services:
         exec ruby -run -e httpd / -p 3000
         "]
 
-  ruby-3.1:
+  ruby-3-1:
     image: uselagoon/ruby-3.1:latest
     ports:
       - "3000"
@@ -204,6 +204,8 @@ services:
     ports:
       - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port varnish-6 8080`
     << : *default-user # uses the defined user from top
+    depends_on:
+      - nginx
 
   varnish-7:
     image: uselagoon/varnish-7:latest
@@ -212,6 +214,8 @@ services:
     ports:
       - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port varnish-7 8080`
     << : *default-user # uses the defined user from top
+    depends_on:
+      - nginx
 
   opensearch-2:
     image: uselagoon/opensearch-2:latest
@@ -234,25 +238,5 @@ services:
     ports:
       - "3000"
     environment:
-      - LAGOON_TEST_VAR=helpers
-      - MARIADB_HOST=mariadb-10.6
-      - MARIADB_USERNAME=lagoon
-      - MARIADB_PASSWORD=lagoon
-      - MARIADB_DATABASE=lagoon
-      - POSTGRES_HOST=postgres-14
-      - POSTGRES_USERNAME=lagoon
-      - POSTGRES_PASSWORD=lagoon
-      - POSTGRES_DATABASE=lagoon
-      - SOLR_HOST=solr-8
-      - REDIS_HOST=redis-6
-      - OPENSEARCH_HOST=opensearch-2
-      - MONGO_HOST=mongo-4
-      - MONGO_DATABASE=lagoon
-    depends_on:
-      - mariadb-10.6
-      - postgres-14
-      - solr-8
-      - redis-6
-      - opensearch-2
-      - mongo-4
+      - LAGOON_TEST_VAR=all-images
     << : *default-user # uses the defined user from top

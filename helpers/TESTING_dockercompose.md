@@ -18,13 +18,14 @@ docker-compose down
 docker-compose build && docker-compose up -d
 
 # Ensure database pods are ready to connect
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10.4:3306 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10.5:3306 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10.6:3306 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-4:3306 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-5:3306 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-6:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-11:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-12:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-14:5432 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-15:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo-4:27017 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
@@ -37,9 +38,9 @@ Run the following commands to validate things are rolling as they should.
 
 ```bash
 # should have all the services we expect
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.4_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.5_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10.6_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10-4_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10-5_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mongo-4_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-14_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-16_1
@@ -48,10 +49,11 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-12_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-13_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-14_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.7_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.8_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.9_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3.10_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-15_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3-7_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3-8_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3-9_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3-10_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_rabbitmq_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
@@ -81,6 +83,10 @@ docker-compose exec -T redis-5 sh -c "redis-cli CONFIG GET databases"
 # redis-5 should have initialized database
 docker-compose exec -T redis-5 sh -c "redis-cli dbsize"
 
+# redis-5 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis-5" | grep "SERVICE_HOST=redis-5"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis-5" | grep "LAGOON_TEST_VAR=all-images"
+
 # redis-6 should be running Redis v6.0
 docker-compose exec -T redis-6 sh -c "redis-server --version" | grep v=6.
 
@@ -91,8 +97,8 @@ docker-compose exec -T redis-6 sh -c "redis-cli CONFIG GET databases"
 docker-compose exec -T redis-6 sh -c "redis-cli dbsize"
 
 # redis-6 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis" | grep "SERVICE_HOST=redis-6"
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis" | grep "LAGOON_TEST_VAR=helpers"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis-6" | grep "SERVICE_HOST=redis-6"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis-6" | grep "LAGOON_TEST_VAR=all-images"
 
 # solr-7 should have a "mycore" Solr core
 docker-compose exec -T commons sh -c "curl solr-7:8983/solr/admin/cores?action=STATUS\&core=mycore"
@@ -102,6 +108,10 @@ docker-compose exec -T commons sh -c "curl solr-7:8983/solr/admin/cores?action=R
 
 # solr-7 should have solr 7.7 solrconfig in "mycore" core
 docker-compose exec -T solr-7 sh -c "cat /opt/solr/server/solr/mycores/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 7.7
+
+# solr-7 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr-7" | grep "SERVICE_HOST=solr-7"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr-7" | grep "LAGOON_TEST_VAR=all-images"
 
 # solr-8 should have a "mycore" Solr core
 docker-compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=STATUS\&core=mycore"
@@ -113,39 +123,47 @@ docker-compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=R
 docker-compose exec -T solr-8 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 8.
 
 # solr-8 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr" | grep "SERVICE_HOST=solr-8"
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr" | grep "LAGOON_TEST_VAR=helpers"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr-8" | grep "SERVICE_HOST=solr-8"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr-8" | grep "LAGOON_TEST_VAR=all-images"
 
-# mariadb-10.4 should be version 10.4 client
-docker-compose exec -T mariadb-10.4 sh -c "mysql -V" | grep "10.4"
+# mariadb-10-4 should be version 10.4 client
+docker-compose exec -T mariadb-10-4 sh -c "mysql -V" | grep "10.4"
 
-# mariadb-10.4 should be version 10.4 server
-docker-compose exec -T mariadb-10.4 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.4"
+# mariadb-10-4 should be version 10.4 server
+docker-compose exec -T mariadb-10-4 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.4"
 
-# mariadb-10.4 should use default credentials
-docker-compose exec -T mariadb-10.4 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
+# mariadb-10-4 should use default credentials
+docker-compose exec -T mariadb-10-4 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
 
-# mariadb-10.5 should be version 10.5 client
-docker-compose exec -T mariadb-10.5 sh -c "mysql -V" | grep "10.5"
+# mariadb-10-4 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb-10-4" | grep "SERVICE_HOST=10.4"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb-10-4" | grep "LAGOON_TEST_VAR=all-images"
 
-# mariadb-10.5 should be version 10.5 server
-docker-compose exec -T mariadb-10.5 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.5"
+# mariadb-10-5 should be version 10.5 client
+docker-compose exec -T mariadb-10-5 sh -c "mysql -V" | grep "10.5"
 
-# mariadb-10.5 should use default credentials
-docker-compose exec -T mariadb-10.5 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
+# mariadb-10-5 should be version 10.5 server
+docker-compose exec -T mariadb-10-5 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.5"
 
-# mariadb-10.6 should be version 10.6 client
-docker-compose exec -T mariadb-10.6 sh -c "mysql -V" | grep "10.6"
+# mariadb-10-5 should use default credentials
+docker-compose exec -T mariadb-10-5 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
 
-# mariadb-10.6 should be version 10.6 server
-docker-compose exec -T mariadb-10.6 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.6"
+# mariadb-10-5 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb-10-5" | grep "SERVICE_HOST=10.5"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb-10-5" | grep "LAGOON_TEST_VAR=all-images"
 
-# mariadb-10.6 should use default credentials
-docker-compose exec -T mariadb-10.6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
+# mariadb-10-6 should be version 10.6 client
+docker-compose exec -T mariadb-10-6 sh -c "mysql -V" | grep "10.6"
 
-# mariadb-10.6 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb" | grep "SERVICE_HOST=mariadb-10.6"
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb" | grep "LAGOON_TEST_VAR=helpers"
+# mariadb-10-6 should be version 10.6 server
+docker-compose exec -T mariadb-10-6 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.6"
+
+# mariadb-10-6 should use default credentials
+docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
+
+# mariadb-10-6 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb-10-6" | grep "SERVICE_HOST=10.6"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb-10-6" | grep "LAGOON_TEST_VAR=all-images"
 
 # mongo-4 should be version 4.0 client
 docker-compose exec -T mongo-4 sh -c "mongo --version" | grep "shell version" | grep "v4.0"
@@ -157,8 +175,8 @@ docker-compose exec -T mongo-4 sh -c "mongo --eval \'printjson(db.serverStatus()
 docker-compose exec -T mongo-4 sh -c "mongo --eval \'db.stats()\'" | grep "db" | grep "test"
 
 # mongo-4 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo" | grep "SERVICE_HOST=mongo-4"
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo" | grep "LAGOON_TEST_VAR=helpers"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo-4" | grep "SERVICE_HOST="
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo-4" | grep "LAGOON_TEST_VAR=all"
 
 # postgres-11 should be version 11 client
 docker-compose exec -T postgres-11 bash -c "psql --version" | grep "psql" | grep "11."
@@ -169,6 +187,10 @@ docker-compose exec -T postgres-11 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 # postgres-11 should have lagoon database
 docker-compose exec -T postgres-11 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
 
+# postgres-11 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-11" | grep "SERVICE_HOST=PostgreSQL 11"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-11" | grep "LAGOON_TEST_VAR=all-images"
+
 # postgres-12 should be version 12 client
 docker-compose exec -T postgres-12 bash -c "psql --version" | grep "psql" | grep "12."
 
@@ -177,6 +199,10 @@ docker-compose exec -T postgres-12 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 
 # postgres-12 should have lagoon database
 docker-compose exec -T postgres-12 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
+
+# postgres-12 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-12" | grep "SERVICE_HOST=PostgreSQL 12"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-12" | grep "LAGOON_TEST_VAR=all-images"
 
 # postgres-13 should be version 13 client
 docker-compose exec -T postgres-13 bash -c "psql --version" | grep "psql" | grep "13."
@@ -187,6 +213,10 @@ docker-compose exec -T postgres-13 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 # postgres-13 should have lagoon database
 docker-compose exec -T postgres-13 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
 
+# postgres-13 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-13" | grep "SERVICE_HOST=PostgreSQL 13"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-13" | grep "LAGOON_TEST_VAR=all-images"
+
 # postgres-14 should be version 14 client
 docker-compose exec -T postgres-14 bash -c "psql --version" | grep "psql" | grep "14."
 
@@ -195,6 +225,10 @@ docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 
 # postgres-14 should have lagoon database
 docker-compose exec -T postgres-14 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
+
+# postgres-14 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-14" | grep "SERVICE_HOST=PostgreSQL 14"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-14" | grep "LAGOON_TEST_VAR=all-images"
 
 # postgres-15 should be version 15 client
 docker-compose exec -T postgres-15 bash -c "psql --version" | grep "psql" | grep "15."
@@ -207,6 +241,10 @@ docker-compose exec -T postgres-15 bash -c "psql -U lagoon -d lagoon -c \'SELECT
 
 # postgres-15 should have lagoon database
 docker-compose exec -T postgres-15 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
+
+# postgres-15 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-15" | grep "SERVICE_HOST=PostgreSQL 15"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-15" | grep "LAGOON_TEST_VAR=all-images"
 
 # varnish-6 should have correct vmods in varnish folder
 docker-compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
@@ -223,49 +261,49 @@ docker-compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep li
 docker-compose exec -T commons sh -c "curl -I varnish-7:8080" | grep "Varnish" | grep "7."
 docker-compose exec -T varnish-7 sh -c "varnishlog -d" | grep User-Agent | grep curl 
 
-# python-3.7 should be version 3.7
-docker-compose exec -T python-3.7 sh -c "python -V" | grep "3.7"
+# python-3-7 should be version 3.7
+docker-compose exec -T python-3-7 sh -c "python -V" | grep "3.7"
 
-# python-3.7 should have basic tools installed
-docker-compose exec -T python-3.7 sh -c "pip list --no-cache-dir" | grep "pip"
-docker-compose exec -T python-3.7 sh -c "pip list --no-cache-dir" | grep "setuptools"
-docker-compose exec -T python-3.7 sh -c "pip list --no-cache-dir" | grep "virtualenv" | grep "16.7.10"
+# python-3-7 should have basic tools installed
+docker-compose exec -T python-3-7 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3-7 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3-7 sh -c "pip list --no-cache-dir" | grep "virtualenv" | grep "16.7.10"
 
-# python-3.7 should be serving content
-docker-compose exec -T commons sh -c "curl python-3.7:3000/tmp/test" | grep "Python 3.7"
+# python-3-7 should be serving content
+docker-compose exec -T commons sh -c "curl python-3-7:3000/tmp/test" | grep "Python 3.7"
 
-# python-3.8 should be version 3.8
-docker-compose exec -T python-3.8 sh -c "python -V" | grep "3.8"
+# python-3-8 should be version 3.8
+docker-compose exec -T python-3-8 sh -c "python -V" | grep "3.8"
 
-# python-3.8 should have basic tools installed
-docker-compose exec -T python-3.8 sh -c "pip list --no-cache-dir" | grep "pip"
-docker-compose exec -T python-3.8 sh -c "pip list --no-cache-dir" | grep "setuptools"
-docker-compose exec -T python-3.8 sh -c "pip list --no-cache-dir" | grep "virtualenv" | grep "16.7.10"
+# python-3-8 should have basic tools installed
+docker-compose exec -T python-3-8 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3-8 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3-8 sh -c "pip list --no-cache-dir" | grep "virtualenv" | grep "16.7.10"
 
-# python-3.8 should be serving content
-docker-compose exec -T commons sh -c "curl python-3.8:3000/tmp/test" | grep "Python 3.8"
+# python-3-8 should be serving content
+docker-compose exec -T commons sh -c "curl python-3-8:3000/tmp/test" | grep "Python 3.8"
 
-# python-3.9 should be version 3.9
-docker-compose exec -T python-3.9 sh -c "python -V" | grep "3.9"
+# python-3-9 should be version 3.9
+docker-compose exec -T python-3-9 sh -c "python -V" | grep "3.9"
 
-# python-3.9 should have basic tools installed
-docker-compose exec -T python-3.9 sh -c "pip list --no-cache-dir" | grep "pip"
-docker-compose exec -T python-3.9 sh -c "pip list --no-cache-dir" | grep "setuptools"
-docker-compose exec -T python-3.9 sh -c "pip list --no-cache-dir" | grep "virtualenv"
+# python-3-9 should have basic tools installed
+docker-compose exec -T python-3-9 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3-9 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3-9 sh -c "pip list --no-cache-dir" | grep "virtualenv"
 
-# python-3.9 should be serving content
-docker-compose exec -T commons sh -c "curl python-3.9:3000/tmp/test" | grep "Python 3.9"
+# python-3-9 should be serving content
+docker-compose exec -T commons sh -c "curl python-3-9:3000/tmp/test" | grep "Python 3.9"
 
-# python-3.10 should be version 3.10
-docker-compose exec -T python-3.10 sh -c "python -V" | grep "3.10"
+# python-3-10 should be version 3.10
+docker-compose exec -T python-3-10 sh -c "python -V" | grep "3.10"
 
-# python-3.10 should have basic tools installed
-docker-compose exec -T python-3.10 sh -c "pip list --no-cache-dir" | grep "pip"
-docker-compose exec -T python-3.10 sh -c "pip list --no-cache-dir" | grep "setuptools"
-docker-compose exec -T python-3.10 sh -c "pip list --no-cache-dir" | grep "virtualenv"
+# python-3-10 should have basic tools installed
+docker-compose exec -T python-3-10 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3-10 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3-10 sh -c "pip list --no-cache-dir" | grep "virtualenv"
 
-# python-3.10 should be serving content
-docker-compose exec -T commons sh -c "curl python-3.10:3000/tmp/test" | grep "Python 3.10"
+# python-3-10 should be serving content
+docker-compose exec -T commons sh -c "curl python-3-10:3000/tmp/test" | grep "Python 3.10"
 
 # node-14 should have Node 14
 docker-compose exec -T node-14 sh -c "node -v" | grep "v14"
@@ -285,17 +323,17 @@ docker-compose exec -T node-18 sh -c "node -v" | grep "v18"
 # node-18 should be serving content
 docker-compose exec -T commons sh -c "curl node-18:3000/test" | grep "v18"
 
-# ruby-3.0 should have Ruby 3.0
-docker-compose exec -T ruby-3.0 sh -c "ruby -v" | grep "3.0"
+# ruby-3-0 should have Ruby 3.0
+docker-compose exec -T ruby-3-0 sh -c "ruby -v" | grep "3.0"
 
-# ruby-3.0 should be serving content
-docker-compose exec -T commons sh -c "curl ruby-3.0:3000/tmp/" | grep "ruby 3.0"
+# ruby-3-0 should be serving content
+docker-compose exec -T commons sh -c "curl ruby-3-0:3000/tmp/" | grep "ruby 3.0"
 
-# ruby-3.1 should have Ruby 3.1
-docker-compose exec -T ruby-3.1 sh -c "ruby -v" | grep "3.1"
+# ruby-3-1 should have Ruby 3.1
+docker-compose exec -T ruby-3-1 sh -c "ruby -v" | grep "3.1"
 
-# ruby-3.1 should be serving content
-docker-compose exec -T commons sh -c "curl ruby-3.1:3000/tmp/" | grep "ruby 3.1"
+# ruby-3-1 should be serving content
+docker-compose exec -T commons sh -c "curl ruby-3-1:3000/tmp/" | grep "ruby 3.1"
 
 # opensearch-2 should have opensearch 2
 docker-compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | grep "2."
@@ -304,8 +342,8 @@ docker-compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | gr
 docker-compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | json_pp | grep status | grep green
 
 # opensearch-2 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch" | grep "SERVICE_HOST=opensearch-2"
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch" | grep "LAGOON_TEST_VAR=helpers"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch-2" | grep "SERVICE_HOST=opensearch-2"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch-2" | grep "LAGOON_TEST_VAR=all"
 
 # elasticsearch-7 should have elasticsearch 7
 docker-compose exec -T commons sh -c "curl elasticsearch-7:9200" | grep number | grep "7."

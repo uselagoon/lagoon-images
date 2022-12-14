@@ -13,3 +13,7 @@ openshift
 !services/api/src/resources/openshift
 .loopback
 *~
+/helpers/test
+/helpers/node_modules
+/helpers/yarn.lock
+/helpers/package.json

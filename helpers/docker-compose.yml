@@ -146,6 +146,16 @@ services:
         exec python -m http.server 3000
         "]
 
+  python-3-11:
+    image: uselagoon/python-3.11:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
+
   rabbitmq:
     image: uselagoon/rabbitmq:latest
     ports:

@@ -54,6 +54,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3-8_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3-9_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3-10_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_python-3-11_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_rabbitmq_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
@@ -304,6 +305,17 @@ docker-compose exec -T python-3-10 sh -c "pip list --no-cache-dir" | grep "virtu
 
 # python-3-10 should be serving content
 docker-compose exec -T commons sh -c "curl python-3-10:3000/tmp/test" | grep "Python 3.10"
+
+# python-3-11 should be version 3.11
+docker-compose exec -T python-3-11 sh -c "python -V" | grep "3.11"
+
+# python-3-10 should have basic tools installed
+docker-compose exec -T python-3-11 sh -c "pip list --no-cache-dir" | grep "pip"
+docker-compose exec -T python-3-11 sh -c "pip list --no-cache-dir" | grep "setuptools"
+docker-compose exec -T python-3-11 sh -c "pip list --no-cache-dir" | grep "virtualenv"
+
+# python-3-10 should be serving content
+docker-compose exec -T commons sh -c "curl python-3-11:3000/tmp/test" | grep "Python 3.11"
 
 # node-14 should have Node 14
 docker-compose exec -T node-14 sh -c "node -v" | grep "v14"

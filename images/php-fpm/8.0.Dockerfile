@@ -4,7 +4,7 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
-
+# Alpine 3.17 image not available for PHP 8.0
 FROM php:8.0.27-fpm-alpine3.16
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"

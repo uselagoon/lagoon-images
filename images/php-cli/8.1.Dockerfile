@@ -13,7 +13,7 @@ RUN apk add --no-cache git \
         gzip  \
         mariadb-client \
         mongodb-tools \
-        nodejs-current=~18 \
+        nodejs-dev=~18 \
         npm \
         openssh-client \
         openssh-sftp-server \

@@ -231,7 +231,10 @@ versioned-images := 		php-8.0-fpm \
 							ruby-3.1 \
 							opensearch-2 \
 							dotnet-6-sdk \
-							dotnet-6-runtime
+							dotnet-6-runtime \
+							dotnet-7-sdk \
+							dotnet-7-runtime
+
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
 # the below versions are the ones that map to the unversioned namespace
@@ -317,8 +320,7 @@ build/mariadb-10.6-drupal: build/mariadb-10.6
 build/ruby-3.0 build/ruby-3.1: build/commons
 build/opensearch-2: build/commons
 build/mongo-4: build/commons 
-build/dotnet-6-sdk: build/commons
-build/dotnet-6-runtime: build/commons
+build/dotnet-6-sdk build/dotnet-6-runtime build/dotnet-7-sdk build/dotnet-7-runtime: build/commons
 
 #######
 ####### Building Images

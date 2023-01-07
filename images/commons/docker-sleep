@@ -1,2 +1,25 @@
 #!/bin/sh
-while sleep 3600; do :; done
+
+# Pause indefinitely, but exit immediately on receipt of SIGTERM, which is used
+# by Kubernetes to signal to the container to exit[0].
+#
+# From the Bash Manual[1]:
+#
+# > If Bash is waiting for a command to complete and receives a signal for
+# > which a trap has been set, the trap will not be executed until the command
+# > completes.
+#
+# Therefore sleep not interrupted by signals. Instead background it and wait:
+#
+# > When Bash is waiting for an asynchronous command via the wait builtin, the
+# > reception of a signal for which a trap has been set will cause the wait
+# > builtin to return immediately with an exit status greater than 128,
+# > immediately after which the trap is executed.
+#
+# This behaviour is common amongst POSIX compatible shells including bash,
+# dash (debian), ash (alpine), and busybox.
+#
+# [0] https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination
+# [1] https://www.gnu.org/software/bash/manual/bash.html#Signals
+trap : TERM
+sleep infinity & wait

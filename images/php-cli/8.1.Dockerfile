@@ -13,7 +13,7 @@ RUN apk add --no-cache git \
         gzip  \
         mariadb-client \
         mongodb-tools \
-        nodejs-current=~18 \
+        nodejs-dev=~18 \
         npm \
         openssh-client \
         openssh-sftp-server \
@@ -26,7 +26,7 @@ RUN apk add --no-cache git \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
     && rm -rf /var/cache/apk/*
 
-RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.4.4/composer.phar \
+RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.5.1/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/

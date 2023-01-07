@@ -1,12 +1,9 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM redis:6.2.7-alpine3.17
+FROM postgres:15.1-alpine3.17
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
-
-ENV LAGOON=redis
-ENV FLAVOR=ephemeral
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -17,9 +14,6 @@ COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for
 COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
-RUN fix-permissions /etc/passwd \
-    && mkdir -p /home
-
 ENV TMPDIR=/tmp \
     TMP=/tmp \
     HOME=/home \
@@ -28,11 +22,21 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-COPY conf /etc/redis/
-COPY docker-entrypoint /lagoon/entrypoints/70-redis-entrypoint
+RUN fix-permissions /etc/passwd \
+    && mkdir -p /home
 
-RUN fix-permissions /etc/redis \
-    fix-permissions /data
+ENV LAGOON=postgres
 
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
-CMD ["redis-server", "/etc/redis/redis.conf"]
+COPY postgres-backup.sh /lagoon/
+
+RUN echo -e "local all all md5\nhost  all  all 0.0.0.0/0 md5" >> /usr/local/share/postgresql/pg_hba.conf
+
+ENV PGUSER=postgres \
+    POSTGRES_PASSWORD=lagoon \
+    POSTGRES_USER=lagoon \
+    POSTGRES_DB=lagoon \
+    PGDATA=/var/lib/postgresql/data/pgdata
+
+# Postgresql entrypoint file needs bash, so start the entrypoints with bash
+ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash"]
+CMD ["/usr/local/bin/docker-entrypoint.sh", "postgres"]

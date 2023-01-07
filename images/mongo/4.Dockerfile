@@ -23,11 +23,11 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
+# Alpine 3.9 is the last release of the alpine mongodb package under OS license
 RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/main' >> /etc/apk/repositories
 RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/community' >> /etc/apk/repositories
 RUN apk update
 RUN apk add mongodb=4.0.5-r0
-
 
 RUN mkdir -p /data/db /data/configdb && \
     fix-permissions /data/db && \

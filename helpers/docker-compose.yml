@@ -251,30 +251,30 @@ services:
       - LAGOON_TEST_VAR=all-images
     << : *default-user # uses the defined user from top
 
-  dotnet-6-sdk:
-    image: testlagoon/dotnet-6-sdk:pr-550
-    volumes:
-    - ./test_resources/dotnet-6:/app
+  dotnet-6:
+    image: testlagoon/dotnet-6-sdk:pr-550 
     working_dir: /app
-    environment:
-      - ASPNETCORE_URLS=http://+:80
-      - DOTNET_USE_POLLING_FILE_WATCHER=1
+    networks:
+      - default
     labels:
-      lando.type: basic
+      lagoon.type: basic
     ports:
-      - "5000:80"
-    command: ["sh", "-c", "dotnet restore && dotnet watch run --no-launch-profile"]
+      - "3000"
+    command: ["sh", "-c", "
+        dotnet new web -n myWebApp -o /app --kestrelHttpPort 3000 --no-https;
+        dotnet run --project /app
+        "]
 
-  dotnet-7-sdk:
-    image: testlagoon/dotnet-7-sdk:pr-550
-    volumes:
-    - ./test_resources/dotnet-7:/app
+  dotnet-7:
+    image: testlagoon/dotnet-7-sdk:pr-550 
     working_dir: /app
-    environment:
-      - ASPNETCORE_URLS=http://+:80
-      - DOTNET_USE_POLLING_FILE_WATCHER=1
+    networks:
+      - default
     labels:
-      lando.type: basic
+      lagoon.type: basic
     ports:
-      - "5001:80"
-    command: ["sh", "-c", "dotnet restore && dotnet run --no-launch-profile"]
+      - "3000"
+    command: ["sh", "-c", "
+        dotnet new web -n myWebApp -o /app --kestrelHttpPort 3000 --no-https;
+        dotnet run --project /app
+        "]

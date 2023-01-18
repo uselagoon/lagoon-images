@@ -62,6 +62,8 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-8_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-7_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_dotnet-6_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_dotnet-7_1
 
 # commons should be running Alpine Linux
 docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
@@ -363,17 +365,17 @@ docker-compose exec -T commons sh -c "curl elasticsearch-7:9200" | grep number |
 # elasticsearch-7 should be healthy
 docker-compose exec -T commons sh -c "curl elasticsearch-7:9200/_cluster/health" | json_pp | grep status | grep green
 
-# dotnet-6-sdk should have Dotnet 6.0
-docker-compose exec -T dotnet-6-sdk sh -c "dotnet --version" | grep "6.0.404"
+# dotnet-6 should have Dotnet 6.0
+docker-compose exec -T dotnet-6 sh -c "dotnet --version" | grep "6.0"
 
-# dotnet-6-sdk should be serving content
-docker-compose exec -T commons sh -c "curl dotnet-6-sdk:80" | grep "dotnet_6"
+# dotnet-6 should be serving content
+docker-compose exec -T dotnet-6 sh -c "curl localhost:3000" | grep "Hello World!"
 
-# dotnet-7-sdk should have Dotnet 7.0
-docker-compose exec -T dotnet-7-sdk sh -c "dotnet --version" | grep "7.0.101"
+# dotnet-7 should have Dotnet 7.0
+docker-compose exec -T dotnet-7 sh -c "dotnet --version" | grep "7.0"
 
-# dotnet-7-sdk should be serving content
-docker-compose exec -T commons sh -c "curl dotnet-7-sdk:80" | grep "dotnet_7"
+# dotnet-7 should be serving content
+docker-compose exec -T dotnet-7 sh -c "curl localhost:3000" | grep "Hello World!"
 ```
 
 Destroy tests

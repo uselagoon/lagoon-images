@@ -252,8 +252,11 @@ services:
     << : *default-user # uses the defined user from top
 
   dotnet-6:
-    image: testlagoon/dotnet-6-sdk:pr-550 
+    image: testlagoon/dotnet-6-sdk:pr-550
     working_dir: /app
+    environment:
+      - ASPNETCORE_URLS=http://+:3000
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
     networks:
       - default
     labels:
@@ -261,13 +264,16 @@ services:
     ports:
       - "3000"
     command: ["sh", "-c", "
-        dotnet new web -n myWebApp -o /app --kestrelHttpPort 3000 --no-https;
-        dotnet run --project /app
+        dotnet new web -n myWebApp -o /app --no-https;
+        dotnet run /app --no-launch-profile
         "]
 
   dotnet-7:
-    image: testlagoon/dotnet-7-sdk:pr-550 
+    image: testlagoon/dotnet-7-sdk:pr-550
     working_dir: /app
+    environment:
+      - ASPNETCORE_URLS=http://+:3000
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
     networks:
       - default
     labels:
@@ -275,6 +281,6 @@ services:
     ports:
       - "3000"
     command: ["sh", "-c", "
-        dotnet new web -n myWebApp -o /app --kestrelHttpPort 3000 --no-https;
-        dotnet run --project /app
+        dotnet new web -n myWebApp -o /app --no-https;
+        dotnet run /app --no-launch-profile
         "]

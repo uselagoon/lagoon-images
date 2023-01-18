@@ -369,13 +369,13 @@ docker-compose exec -T commons sh -c "curl elasticsearch-7:9200/_cluster/health"
 docker-compose exec -T dotnet-6 sh -c "dotnet --version" | grep "6.0"
 
 # dotnet-6 should be serving content
-docker-compose exec -T dotnet-6 sh -c "curl localhost:3000" | grep "Hello World!"
+docker-compose exec -T commons sh -c "curl dotnet-6:3000" | grep "Hello World!"
 
 # dotnet-7 should have Dotnet 7.0
 docker-compose exec -T dotnet-7 sh -c "dotnet --version" | grep "7.0"
 
 # dotnet-7 should be serving content
-docker-compose exec -T dotnet-7 sh -c "curl localhost:3000" | grep "Hello World!"
+docker-compose exec -T commons sh -c "curl dotnet-7:3000" | grep "Hello World!"
 ```
 
 Destroy tests

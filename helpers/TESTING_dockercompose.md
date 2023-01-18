@@ -362,6 +362,18 @@ docker-compose exec -T commons sh -c "curl elasticsearch-7:9200" | grep number |
 
 # elasticsearch-7 should be healthy
 docker-compose exec -T commons sh -c "curl elasticsearch-7:9200/_cluster/health" | json_pp | grep status | grep green
+
+# dotnet-6-sdk should have Dotnet 6.0
+docker-compose exec -T dotnet-6-sdk sh -c "dotnet --version" | grep "6.0.404"
+
+# dotnet-6-sdk should be serving content
+docker-compose exec -T commons sh -c "curl dotnet-6-sdk:80" | grep "dotnet_6"
+
+# dotnet-7-sdk should have Dotnet 7.0
+docker-compose exec -T dotnet-7-sdk sh -c "dotnet --version" | grep "7.0.101"
+
+# dotnet-7-sdk should be serving content
+docker-compose exec -T commons sh -c "curl dotnet-7-sdk:80" | grep "dotnet_7"
 ```
 
 Destroy tests

@@ -311,12 +311,12 @@ docker-compose exec -T commons sh -c "curl python-3-10:3000/tmp/test" | grep "Py
 # python-3-11 should be version 3.11
 docker-compose exec -T python-3-11 sh -c "python -V" | grep "3.11"
 
-# python-3-10 should have basic tools installed
+# python-3-11 should have basic tools installed
 docker-compose exec -T python-3-11 sh -c "pip list --no-cache-dir" | grep "pip"
 docker-compose exec -T python-3-11 sh -c "pip list --no-cache-dir" | grep "setuptools"
 docker-compose exec -T python-3-11 sh -c "pip list --no-cache-dir" | grep "virtualenv"
 
-# python-3-10 should be serving content
+# python-3-11 should be serving content
 docker-compose exec -T commons sh -c "curl python-3-11:3000/tmp/test" | grep "Python 3.11"
 
 # node-14 should have Node 14

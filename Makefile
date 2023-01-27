@@ -229,6 +229,7 @@ versioned-images := 		php-8.0-fpm \
 							varnish-7-persistent-drupal \
 							ruby-3.0 \
 							ruby-3.1 \
+							ruby-3.2 \
 							opensearch-2
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
@@ -312,7 +313,7 @@ build/mariadb-10.4 build/mariadb-10.5 build/mariadb-10.6: build/commons
 build/mariadb-10.4-drupal: build/mariadb-10.4
 build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6
-build/ruby-3.0 build/ruby-3.1: build/commons
+build/ruby-3.0 build/ruby-3.1 build/ruby-3.2: build/commons
 build/opensearch-2: build/commons
 build/mongo-4: build/commons 
 

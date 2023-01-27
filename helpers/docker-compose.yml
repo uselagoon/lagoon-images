@@ -207,6 +207,16 @@ services:
         exec ruby -run -e httpd / -p 3000
         "]
 
+  ruby-3-2:
+    image: uselagoon/ruby-3.2:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        ruby -v | xargs > /tmp/index.html;
+        exec ruby -run -e httpd / -p 3000
+        "]
+
   varnish-6:
     image: uselagoon/varnish-6:latest
     labels:

@@ -58,6 +58,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_rabbitmq_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-7_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-8_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-6_1
@@ -100,6 +101,20 @@ docker-compose exec -T redis-6 sh -c "redis-cli dbsize"
 # redis-6 should be able to read/write data
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis-6" | grep "SERVICE_HOST=redis-6"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis-6" | grep "LAGOON_TEST_VAR=all-images"
+
+# redis-7 should be running Redis v7.0
+docker-compose exec -T redis-7 sh -c "redis-server --version" | grep v=7.
+
+# redis-7 should be able to see Redis databases
+docker-compose exec -T redis-7 sh -c "redis-cli CONFIG GET databases"
+
+# redis-7 should have initialized database
+docker-compose exec -T redis-7 sh -c "redis-cli dbsize"
+
+# redis-7 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis-7" | grep "SERVICE_HOST=redis-7"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis-7" | grep "LAGOON_TEST_VAR=all-images"
+
 
 # solr-7 should have a "mycore" Solr core
 docker-compose exec -T commons sh -c "curl solr-7:8983/solr/admin/cores?action=STATUS\&core=mycore"

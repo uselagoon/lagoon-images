@@ -215,6 +215,8 @@ versioned-images := 		php-8.0-fpm \
 							postgres-15-drupal \
 							redis-6 \
 							redis-6-persistent \
+							redis-7 \
+							redis-7-persistent \
 							mariadb-10.5 \
 							mariadb-10.5-drupal \
 							mariadb-10.6 \
@@ -297,9 +299,10 @@ build/postgres-12-drupal: build/postgres-12
 build/postgres-13-drupal: build/postgres-13
 build/postgres-14-drupal: build/postgres-14
 build/postgres-15-drupal: build/postgres-15
-build/redis-5 build/redis-6: build/commons
+build/redis-5 build/redis-6 build/redis-7: build/commons
 build/redis-5-persistent: build/redis-5
 build/redis-6-persistent: build/redis-6
+build/redis-7-persistent: build/redis-7
 build/varnish-6 build/varnish-7: build/commons
 build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal

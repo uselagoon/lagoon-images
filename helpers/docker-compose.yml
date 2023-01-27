@@ -176,7 +176,7 @@ services:
     << : *default-user # uses the defined user from top
 
   redis-7:
-    image: lagoon/redis-7:latest
+    image: uselagoon/redis-7:latest
     ports:
       - "6379"
     << : *default-user # uses the defined user from top

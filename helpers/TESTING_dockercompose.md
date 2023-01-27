@@ -62,6 +62,8 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-8_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-7_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_dotnet-6_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_dotnet-7_1
 
 # commons should be running Alpine Linux
 docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
@@ -309,12 +311,12 @@ docker-compose exec -T commons sh -c "curl python-3-10:3000/tmp/test" | grep "Py
 # python-3-11 should be version 3.11
 docker-compose exec -T python-3-11 sh -c "python -V" | grep "3.11"
 
-# python-3-10 should have basic tools installed
+# python-3-11 should have basic tools installed
 docker-compose exec -T python-3-11 sh -c "pip list --no-cache-dir" | grep "pip"
 docker-compose exec -T python-3-11 sh -c "pip list --no-cache-dir" | grep "setuptools"
 docker-compose exec -T python-3-11 sh -c "pip list --no-cache-dir" | grep "virtualenv"
 
-# python-3-10 should be serving content
+# python-3-11 should be serving content
 docker-compose exec -T commons sh -c "curl python-3-11:3000/tmp/test" | grep "Python 3.11"
 
 # node-14 should have Node 14
@@ -362,6 +364,18 @@ docker-compose exec -T commons sh -c "curl elasticsearch-7:9200" | grep number |
 
 # elasticsearch-7 should be healthy
 docker-compose exec -T commons sh -c "curl elasticsearch-7:9200/_cluster/health" | json_pp | grep status | grep green
+
+# dotnet-6 should have Dotnet 6.0
+docker-compose exec -T dotnet-6 sh -c "dotnet --version" | grep "6.0"
+
+# dotnet-6 should be serving content
+docker-compose exec -T commons sh -c "curl dotnet-6:3000" | grep "Hello World!"
+
+# dotnet-7 should have Dotnet 7.0
+docker-compose exec -T dotnet-7 sh -c "dotnet --version" | grep "7.0"
+
+# dotnet-7 should be serving content
+docker-compose exec -T commons sh -c "curl dotnet-7:3000" | grep "Hello World!"
 ```
 
 Destroy tests

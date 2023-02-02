@@ -118,7 +118,6 @@ docker-compose exec -T redis-7 sh -c "redis-cli dbsize"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis-7" | grep "SERVICE_HOST=redis-7"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis-7" | grep "LAGOON_TEST_VAR=all-images"
 
-
 # solr-7 should have a "mycore" Solr core
 docker-compose exec -T commons sh -c "curl solr-7:8983/solr/admin/cores?action=STATUS\&core=mycore"
 

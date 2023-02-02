@@ -59,6 +59,9 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_redis-7_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_ruby-3-0_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_ruby-3-1_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_ruby-3-2_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-7_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_solr-8_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_varnish-6_1
@@ -361,6 +364,12 @@ docker-compose exec -T ruby-3-1 sh -c "ruby -v" | grep "3.1"
 
 # ruby-3-1 should be serving content
 docker-compose exec -T commons sh -c "curl ruby-3-1:3000/tmp/" | grep "ruby 3.1"
+
+# ruby-3-2 should have Ruby 3.2
+docker-compose exec -T ruby-3-2 sh -c "ruby -v" | grep "3.2"
+
+# ruby-3-2 should be serving content
+docker-compose exec -T commons sh -c "curl ruby-3-2:3000/tmp/" | grep "ruby 3.2"
 
 # opensearch-2 should have opensearch 2
 docker-compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | grep "2."

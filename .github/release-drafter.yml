@@ -1,14 +1,16 @@
-name-template: 'v$NEXT_MINOR_VERSION'
+name-template: 'lagoon-images $NEXT_MINOR_VERSION'
 tag-template: '$NEXT_MINOR_VERSION'
 categories:
-  - title: 'Automated version updates'
+  - title: 'Package Updates'
     labels:
-      - 'Automated'
+      - 'dependencies'
 
 exclude-labels:
   - 'skip-changelog'
 
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
+  ## New Images
+
   ## Changes in this release
   $CHANGES

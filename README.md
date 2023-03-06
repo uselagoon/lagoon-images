@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/amazeeio/lagoon/main/docs/images/lagoon-logo.png" alt="The Lagoon logo is a blue hexagon split in two pieces with an L-shaped cut" width="40%">
+  <img src="https://raw.githubusercontent.com/uselagoon/lagoon/main/docs/images/lagoon-logo.png" alt="The Lagoon logo is a blue hexagon split in two pieces with an L-shaped cut" width="40%">
 </p>
 
 # Lagoon Base Images
 
-This repository contains [Dockerfiles](https://docs.docker.com/engine/reference/builder/) related to [Lagoon](https://github.com/amazeeio/lagoon/).
+This repository contains [Dockerfiles](https://docs.docker.com/engine/reference/builder/) related to [Lagoon](https://github.com/uselagoon/lagoon/).
 
 This repository was created with `git filter-repo` from the main Lagoon repository, in order to preserve commit history.
 
@@ -13,6 +13,14 @@ This repository was created with `git filter-repo` from the main Lagoon reposito
 These dockerfiles are used to create the base images for consumption in [Docker Compose](https://docs.docker.com/compose/) based projects.
 
 The images used to build Lagoon itself are stored in the Lagoon repository, and are built separately.
+
+## Experimental images
+
+From time to time, the Lagoon team may release images that are not suitable for use in production, but are ready for testing.
+
+These images will be available from the `testlagoon` organization on dockerhub, and be tagged with an `:experimental` tag instead of :latest
+
+The release notes will outline the status of experimental images
 
 ## Contribute
 

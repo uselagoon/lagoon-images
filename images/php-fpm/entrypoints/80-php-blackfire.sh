@@ -1,18 +1,10 @@
 #!/bin/bash
 
-# enable blackfire only if BLACKFIRE_ENABLED is set
-if [ ${BLACKFIRE_ENABLED+x} ]; then
+# enable blackfire only if BLACKFIRE_ENABLED is set to true or TRUE or True
+if expr "$BLACKFIRE_ENABLED" : '[Tt][Rr][Uu][Ee]' > /dev/null; then
 
-  # if BLACKFIRE_AGENT_SOCKET is not set already, check if we can access well known locations
-  if [ -z "${BLACKFIRE_AGENT_SOCKET}" ]; then
-    # check for blackfire running in cluster
-    if nc -z -w 1 blackfire.blackfire.svc.cluster.local 8707 &> /dev/null; then
-      export BLACKFIRE_AGENT_SOCKET=tcp://blackfire.blackfire.svc.cluster.local:8707
-    # check for blackfire running in same namespace
-    elif nc -z -w 1 blackfire 8707 &> /dev/null; then
-      export BLACKFIRE_AGENT_SOCKET=tcp://blackfire:8707
-    fi
-  fi
+  # start the blackfire-agent
+  /bin/blackfire agent --log-level="${BLACKFIRE_LOG_LEVEL:-3}" --socket="${BLACKFIRE_SOCKET:-"tcp://127.0.0.1:8307"}" &
 
   # envplate the blackfire ini file
   ep /usr/local/etc/php/conf.d/blackfire.disable

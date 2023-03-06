@@ -7,7 +7,7 @@ set -eo pipefail
 # $SOLR_DATA_DIR to another folder will make solr to not store the datadir across container restarts, while with this copy system
 # the data will be prefilled and persistent across container restarts.
 if [ -n "$SOLR_COPY_DATA_DIR_SOURCE" ]; then
-  echo "MARIADB_COPY_DATA_DIR_SOURCE is set, start copying from source location"
+  echo "SOLR_COPY_DATA_DIR_SOURCE is set, start copying from source location"
   for solrcorepath in $(ls -d $SOLR_COPY_DATA_DIR_SOURCE/*/ | grep -v lost+found) ; do
       corename=$(basename $solrcorepath)
       if [ -d ${SOLR_DATA_DIR:-/var/solr}/$corename ]; then
@@ -99,7 +99,7 @@ function fixConfig {
     SOLR_DATA_DIR=${SOLR_DATA_DIR:-/var/solr}
     SOLR_DATA_DIR_ESCAPED=${SOLR_DATA_DIR//\//\\/} # escapig the forward slashes with backslahes
     if [ -w $1/ ]; then
-      sed -ibak "s/<dataDir>.*/<dataDir>$SOLR_DATA_DIR_ESCAPED\/\${solr.core.name}<\/dataDir>/" $1/solrconfig.xml
+      sed -ibak "/<\!\-\-/!s/<dataDir>.*/<dataDir>$SOLR_DATA_DIR_ESCAPED\/\${solr.core.name}<\/dataDir>/" $1/solrconfig.xml
       echo "automagically updated to compatible config: "
       echo "  <dataDir>${SOLR_DATA_DIR:-/var/solr}/\${solr.core.name}</dataDir>"
       echo "Please update your solrconfig.xml to make this persistent."

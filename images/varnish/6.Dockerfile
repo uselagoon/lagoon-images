@@ -1,20 +1,36 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
-FROM varnish:6.5 as vmod
-ENV LIBVMOD_DYNAMIC_VERSION=6.5
-ENV VARNISH_MODULES_VERSION=6.5
-RUN apt-get update && apt-get -y install build-essential automake libtool python-docutils libpcre3-dev varnish-dev curl zip
+FROM varnish:6.6 as vmod
+ENV LIBVMOD_DYNAMIC_VERSION=6.6
+ENV VARNISH_MODULES_VERSION=6.6
 
-RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip && \
-  unzip ${LIBVMOD_DYNAMIC_VERSION}.zip && cd libvmod-dynamic-${LIBVMOD_DYNAMIC_VERSION} && \
-  ./autogen.sh && ./configure && make && make install
+USER root
+RUN apt-get update \
+    && apt-get -y install \
+                  build-essential \
+                  curl \
+                  zip
 
-RUN cd /tmp && curl -sSLO https://github.com/varnish/varnish-modules/archive/${VARNISH_MODULES_VERSION}.zip && \
-  unzip ${VARNISH_MODULES_VERSION}.zip && cd varnish-modules-${VARNISH_MODULES_VERSION} && \
-  ./bootstrap && ./configure && make && make install
+RUN  curl -L https://packagecloud.io/varnishcache/varnish66/gpgkey | apt-key add - \
+  && echo "deb https://packagecloud.io/varnishcache/varnish66/debian/ buster main" | tee /etc/apt/sources.list.d/varnish-cache.list \
+  && apt-get -q update \
+  && apt-get install -qq \
+              automake \
+              libpcre3-dev \
+              libtool \
+              python3-docutils \
+              varnish-dev
 
-FROM varnish:6.5
+RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip \
+  && unzip ${LIBVMOD_DYNAMIC_VERSION}.zip && cd libvmod-dynamic-${LIBVMOD_DYNAMIC_VERSION} \
+  && ./autogen.sh && ./configure && make && make install
+
+RUN cd /tmp && curl -sSLO https://github.com/varnish/varnish-modules/archive/${VARNISH_MODULES_VERSION}.zip \
+  && unzip ${VARNISH_MODULES_VERSION}.zip && cd varnish-modules-${VARNISH_MODULES_VERSION} \
+  && ./bootstrap && ./configure && make && make install
+
+FROM varnish:6.6
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -24,13 +40,9 @@ ENV LAGOON=varnish
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
 
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /sbin/tini
-
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
-#COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 ENV TMPDIR=/tmp \
@@ -40,6 +52,16 @@ ENV TMPDIR=/tmp \
     ENV=/home/.bashrc \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
+
+USER root
+RUN apt-get -y update \
+    && apt-get -y install \
+                  busybox \
+                  curl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini
 
 # Add varnish mod after the varnish package creates the directory.
 COPY --from=vmod /usr/lib/varnish/vmods/libvmod_dynamic.* /usr/lib/varnish/vmods/
@@ -59,13 +81,14 @@ RUN set -x \
 RUN echo "dash dash/sh boolean false" | debconf-set-selections
 RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
-RUN chmod +x /sbin/tini
-
 RUN fix-permissions /etc/varnish/ \
     && fix-permissions /var/run/ \
-    && fix-permissions /var/lib/varnish
+    && fix-permissions /var/lib/varnish \
+    && usermod -a -G root varnish
 
 COPY docker-entrypoint /lagoon/entrypoints/70-varnish-entrypoint
+
+USER varnish
 
 EXPOSE 8080
 

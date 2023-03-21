@@ -74,7 +74,7 @@ RUN apk add --no-cache --virtual .devdeps \
     && yes '' | pecl install -f apcu-5.1.22 \
     && yes '' | pecl install -f imagick-3.7.0 \
     && yes '' | pecl install -f redis-5.3.7 \
-    && yes '' | pecl install -f xdebug-3.2.0 \
+    && yes '' | pecl install -f xdebug-3.2.1 \
     && yes '' | pecl install -f yaml-2.2.3 \
     && docker-php-ext-enable apcu imagick redis xdebug yaml \
     && rm -rf /tmp/pear \

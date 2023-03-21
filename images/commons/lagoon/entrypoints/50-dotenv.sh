@@ -27,6 +27,8 @@ export -p > $TMPFILE
 set -a
 [ -f .env.defaults ] && . ./.env.defaults  || true
 [ -f .env ] && . ./.env  || true
+# Consume a .lagoon/.lagoon.env - this allows for templates to provide defaults with the ability to still override .lagoon.env in the root/application layer
+[ -f .lagoon/.lagoon.env ] && . ./.lagoon/.lagoon.env  || true
 # Provide a file that adds variables to all Lagoon envs, but is overridable in a specific env below
 [ -f .lagoon.env ] && . ./.lagoon.env  || true
 [ -f .lagoon.env.$LAGOON_GIT_BRANCH ] && . ./.lagoon.env.$LAGOON_GIT_BRANCH  || true

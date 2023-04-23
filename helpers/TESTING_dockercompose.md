@@ -45,6 +45,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-14_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-16_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-18_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-20_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-11_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-12_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_postgres-13_1
@@ -351,6 +352,12 @@ docker-compose exec -T node-18 sh -c "node -v" | grep "v18"
 
 # node-18 should be serving content
 docker-compose exec -T commons sh -c "curl node-18:3000/test" | grep "v18"
+
+# node-20 should have Node 20
+docker-compose exec -T node-20 sh -c "node -v" | grep "v20"
+
+# node-20 should be serving content
+docker-compose exec -T commons sh -c "curl node-20:3000/test" | grep "v20"
 
 # ruby-3-0 should have Ruby 3.0
 docker-compose exec -T ruby-3-0 sh -c "ruby -v" | grep "3.0"

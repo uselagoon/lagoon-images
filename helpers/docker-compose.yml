@@ -76,6 +76,17 @@ services:
         exec http-server -p 3000
         "]
 
+  node-20:
+    image: uselagoon/node-20:latest
+    ports:
+      - "3000"
+    user: root
+    command: ["sh", "-c", "
+        npm install -g http-server;
+        node -v | xargs > /app/test.html;
+        exec http-server -p 3000
+        "]
+
   postgres-11:
     image: uselagoon/postgres-11:latest
     ports:

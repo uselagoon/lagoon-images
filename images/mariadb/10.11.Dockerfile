@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 # Held at 3.17.x to ensure mariadb 10.6 whilst we evaluate upgrade path
-FROM alpine:3.17.3
+FROM alpine:3.18.0
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -38,10 +38,10 @@ RUN \
         bash \
         curl \
         gettext \
-        mariadb-client=~10.6 \
-        mariadb-common=~10.6 \
-        mariadb-server-utils=~10.6 \
-        mariadb=~10.6 \
+        mariadb-client=~10.11 \
+        mariadb-common=~10.11 \
+        mariadb-server-utils=~10.11 \
+        mariadb=~10.11 \
         net-tools \
         pwgen \
         tzdata \

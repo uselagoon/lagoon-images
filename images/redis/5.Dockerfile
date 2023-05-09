@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-# Alpine 3.17 image not available for Redis 5
+# Alpine 3.18 image not available for Redis 5
 FROM redis:5.0.14-alpine3.16
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"

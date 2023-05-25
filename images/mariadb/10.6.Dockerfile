@@ -12,7 +12,6 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
-COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 RUN fix-permissions /etc/passwd \
@@ -44,6 +43,7 @@ RUN \
         mariadb=~10.6 \
         net-tools \
         pwgen \
+        tini \
         tzdata \
         wget; \
     rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/*; \

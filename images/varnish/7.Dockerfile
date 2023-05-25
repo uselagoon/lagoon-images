@@ -14,7 +14,6 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
-COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 ENV TMPDIR=/tmp \
@@ -26,6 +25,10 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 USER root
+
+RUN apk update \
+    && apk add --no-cache tini \
+    && rm -rf /var/cache/apk/*
 
 RUN echo "${VARNISH_SECRET:-lagoon_default_secret}" >> /etc/varnish/secret
 

@@ -117,6 +117,30 @@ services:
       - "5432"
     << : *default-user # uses the defined user from top
 
+  php-8-1-dev:
+    image: uselagoon/php-8.1-cli:latest
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=development
+    << : *default-user # uses the defined user from top
+
+  php-8-1-prod:
+    image: uselagoon/php-8.1-cli:latest
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=production
+    << : *default-user # uses the defined user from top
+
+  php-8-2-dev:
+    image: uselagoon/php-8.2-cli:latest
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=development
+    << : *default-user # uses the defined user from top
+
+  php-8-2-prod:
+    image: uselagoon/php-8.2-cli:latest
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=production
+    << : *default-user # uses the defined user from top
+
   python-3-7:
     image: uselagoon/python-3.7:latest
     ports:

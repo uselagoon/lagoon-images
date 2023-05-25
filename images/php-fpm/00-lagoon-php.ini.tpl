@@ -27,8 +27,11 @@ sendmail_path = /usr/sbin/sendmail -t -i
 mail.add_x_header = On
 
 [Session]
-session.cookie_lifetime = 2000000
 session.gc_maxlifetime = 200000
+session.cookie_lifetime = 2000000
+session.cookie_secure = ${PHP_SESSION_COOKIE_SECURE:-0}
+session.cookie_httponly = ${PHP_SESSION_COOKIE_HTTPONLY:-0}
+session.cookie_samesite = ${PHP_SESSION_COOKIE_SAMESITE}
 
 [opcache]
 opcache.memory_consumption = 256
@@ -36,7 +39,7 @@ opcache.enable_file_override = 1
 opcache.huge_code_pages = 1
 
 [APC]
-apc.shm_size = ${PHP_APC_SHM_SIZE:-32m}
+apc.shm_size = ${PHP_APC_SHM_SIZE:-32M}
 apc.enabled = ${PHP_APC_ENABLED:-1}
 
 [xdebug]

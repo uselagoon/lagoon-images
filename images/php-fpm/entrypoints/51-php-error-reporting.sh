@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Suppress notices on production by default to avoid excessive logs.
+#
 # @see https://github.com/php/php-src/blob/PHP-8.2/php.ini-production#L107-L110
 
 if [[ -z "${PHP_ERROR_REPORTING}" ]]; then

@@ -386,12 +386,6 @@ docker-compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | 
 # opensearch-2 should be able to read/write data
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch-2" | grep "SERVICE_HOST=opensearch-2"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch-2" | grep "LAGOON_TEST_VAR=all"
-
-# elasticsearch-7 should have elasticsearch 7
-docker-compose exec -T commons sh -c "curl elasticsearch-7:9200" | grep number | grep "7."
-
-# elasticsearch-7 should be healthy
-docker-compose exec -T commons sh -c "curl elasticsearch-7:9200/_cluster/health" | json_pp | grep status | grep green
 ```
 
 Destroy tests

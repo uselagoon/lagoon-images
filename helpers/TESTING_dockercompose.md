@@ -42,7 +42,6 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10-6_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mongo-4_1
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-14_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-16_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-18_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-20_1
@@ -334,12 +333,6 @@ docker-compose exec -T python-3-11 sh -c "pip list --no-cache-dir" | grep "virtu
 
 # python-3-10 should be serving content
 docker-compose exec -T commons sh -c "curl python-3-11:3000/tmp/test" | grep "Python 3.11"
-
-# node-14 should have Node 14
-docker-compose exec -T node-14 sh -c "node -v" | grep "v14"
-
-# node-14 should be serving content
-docker-compose exec -T commons sh -c "curl node-14:3000/test" | grep "v14"
 
 # node-16 should have Node 16
 docker-compose exec -T node-16 sh -c "node -v" | grep "v16"

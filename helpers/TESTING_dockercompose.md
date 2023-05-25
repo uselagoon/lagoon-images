@@ -21,6 +21,7 @@ docker-compose build && docker-compose up -d
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-4:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-5:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-6:3306 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-11:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-11:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-12:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
@@ -41,6 +42,7 @@ Run the following commands to validate things are rolling as they should.
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10-4_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10-5_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10-6_1
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mariadb-10-11_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_mongo-4_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-16_1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep all-images_node-18_1
@@ -182,6 +184,19 @@ docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=
 # mariadb-10-6 should be able to read/write data
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb-10-6" | grep "SERVICE_HOST=10.6"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb-10-6" | grep "LAGOON_TEST_VAR=all-images"
+
+# mariadb-10-11 should be version 10.11 client
+docker-compose exec -T mariadb-10-11 sh -c "mysql -V" | grep "10.11"
+
+# mariadb-10-11 should be version 10.11 server
+docker-compose exec -T mariadb-10-11 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.11"
+
+# mariadb-10-11 should use default credentials
+docker-compose exec -T mariadb-10-11 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
+
+# mariadb-10-11 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb-10-11" | grep "SERVICE_HOST=10.11"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb-10-11" | grep "LAGOON_TEST_VAR=all-images"
 
 # mongo-4 should be version 4.0 client
 docker-compose exec -T mongo-4 sh -c "mongo --version" | grep "shell version" | grep "v4.0"

@@ -28,6 +28,12 @@ services:
       - "3306"
     << : *default-user # uses the defined user from top
 
+  mariadb-10-11:
+    image: uselagoon/mariadb-10.11:latest
+    ports:
+      - "3306"
+    << : *default-user # uses the defined user from top
+
   mongo-4:
     image: uselagoon/mongo-4:latest
     ports:

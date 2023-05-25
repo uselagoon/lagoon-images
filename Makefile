@@ -205,9 +205,6 @@ versioned-images := 		php-8.0-fpm \
 							solr-7-drupal \
 							solr-8 \
 							solr-8-drupal \
-							elasticsearch-7 \
-							kibana-7 \
-							logstash-7 \
 							postgres-12 \
 							postgres-12-drupal \
 							postgres-13 \
@@ -294,7 +291,6 @@ build/node-14-builder build/node-14-cli: build/node-14
 build/node-16-builder build/node-16-cli: build/node-16
 build/node-18-builder build/node-18-cli: build/node-18
 build/node-20-builder build/node-20-cli: build/node-20
-build/elasticsearch-7 build/kibana-7 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14 build/postgres-15: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
 build/postgres-12-drupal: build/postgres-12

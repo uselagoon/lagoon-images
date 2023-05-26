@@ -189,9 +189,6 @@ versioned-images := 		php-8.0-fpm \
 							python-3.9 \
 							python-3.10 \
 							python-3.11 \
-							node-14 \
-							node-14-builder \
-							node-14-cli \
 							node-16 \
 							node-16-builder \
 							node-16-cli \
@@ -205,9 +202,6 @@ versioned-images := 		php-8.0-fpm \
 							solr-7-drupal \
 							solr-8 \
 							solr-8-drupal \
-							elasticsearch-7 \
-							kibana-7 \
-							logstash-7 \
 							postgres-12 \
 							postgres-12-drupal \
 							postgres-13 \
@@ -224,6 +218,8 @@ versioned-images := 		php-8.0-fpm \
 							mariadb-10.5-drupal \
 							mariadb-10.6 \
 							mariadb-10.6-drupal \
+							mariadb-10.11 \
+							mariadb-10.11-drupal \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \
@@ -289,12 +285,10 @@ build/php-8.0-cli-drupal: build/php-8.0-cli
 build/php-8.1-cli-drupal: build/php-8.1-cli
 build/php-8.2-cli-drupal: build/php-8.2-cli
 build/python-3.7 build/python-3.8 build/python-3.9 build/python-3.10 build/python-3.11: build/commons
-build/node-14 build/node-16 build/node-18 build/node-20: build/commons
-build/node-14-builder build/node-14-cli: build/node-14
+build/node-16 build/node-18 build/node-20: build/commons
 build/node-16-builder build/node-16-cli: build/node-16
 build/node-18-builder build/node-18-cli: build/node-18
 build/node-20-builder build/node-20-cli: build/node-20
-build/elasticsearch-7 build/kibana-7 build/logstash-7: build/commons
 build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14 build/postgres-15: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
 build/postgres-12-drupal: build/postgres-12
@@ -313,10 +307,11 @@ build/varnish-7-persistent-drupal: build/varnish-7-drupal
 build/solr-7 build/solr-8: build/commons
 build/solr-7-drupal: build/solr-7
 build/solr-8-drupal: build/solr-8
-build/mariadb-10.4 build/mariadb-10.5 build/mariadb-10.6: build/commons
+build/mariadb-10.4 build/mariadb-10.5 build/mariadb-10.6 build/mariadb-10.11: build/commons
 build/mariadb-10.4-drupal: build/mariadb-10.4
 build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6
+build/mariadb-10.11-drupal: build/mariadb-10.11
 build/ruby-3.0 build/ruby-3.1 build/ruby-3.2: build/commons
 build/opensearch-2: build/commons
 build/mongo-4: build/commons 

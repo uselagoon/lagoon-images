@@ -117,29 +117,101 @@ services:
       - "5432"
     << : *default-user # uses the defined user from top
 
-  php-8-1-dev:
-    image: uselagoon/php-8.1-cli:latest
+  php-8-0-dev:
+    image: uselagoon/php-8.0-cli:latest
+    ports:
+      - "9000"
     environment:
       - LAGOON_ENVIRONMENT_TYPE=development
+      - XDEBUG_ENABLE=true
+      - XDEBUG_LOG=true
+      - NEWRELIC_ENABLED=true
+      - BLACKFIRE_ENABLED=true
     << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
+
+  php-8-0-prod:
+    image: uselagoon/php-8.0-cli:latest
+    ports:
+      - "9000"
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=production
+      - PHP_MAX_INPUT_VARS=4000
+      - PHP_MAX_FILE_UPLOADS=40
+      - PHP_SESSION_COOKIE_SAMESITE="Strict"
+      - PHP_UPLOAD_MAX_FILESIZE=1024M
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
+
+  php-8-1-dev:
+    image: uselagoon/php-8.1-cli:latest
+    ports:
+      - "9000"
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=development
+      - XDEBUG_ENABLE=true
+      - XDEBUG_LOG=true
+      - NEWRELIC_ENABLED=true
+      - BLACKFIRE_ENABLED=true
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
 
   php-8-1-prod:
     image: uselagoon/php-8.1-cli:latest
+    ports:
+      - "9000"
     environment:
       - LAGOON_ENVIRONMENT_TYPE=production
+      - PHP_MAX_INPUT_VARS=4000
+      - PHP_MAX_FILE_UPLOADS=40
+      - PHP_SESSION_COOKIE_SAMESITE="Strict"
+      - PHP_UPLOAD_MAX_FILESIZE=1024M
     << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
 
   php-8-2-dev:
     image: uselagoon/php-8.2-cli:latest
+    ports:
+      - "9000"
     environment:
       - LAGOON_ENVIRONMENT_TYPE=development
+      - XDEBUG_ENABLE=true
+      - XDEBUG_LOG=true
+      - NEWRELIC_ENABLED=true
+      - BLACKFIRE_ENABLED=true
     << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
 
   php-8-2-prod:
     image: uselagoon/php-8.2-cli:latest
+    ports:
+      - "9000"
     environment:
       - LAGOON_ENVIRONMENT_TYPE=production
+      - PHP_MAX_INPUT_VARS=4000
+      - PHP_MAX_FILE_UPLOADS=40
+      - PHP_SESSION_COOKIE_SAMESITE="Strict"
+      - PHP_UPLOAD_MAX_FILESIZE=1024M
     << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
 
   python-3-7:
     image: uselagoon/python-3.7:latest

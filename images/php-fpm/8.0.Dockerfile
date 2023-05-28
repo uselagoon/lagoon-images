@@ -38,7 +38,7 @@ ENV TMPDIR=/tmp \
 COPY check_fcgi /usr/sbin/
 COPY entrypoints /lagoon/entrypoints/
 
-RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY 00-lagoon-php.ini.tpl "$PHP_INI_DIR/conf.d/"
 COPY php-fpm.d/www.conf php-fpm.d/global.conf /usr/local/etc/php-fpm.d/
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf

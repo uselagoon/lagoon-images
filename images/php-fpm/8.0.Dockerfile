@@ -37,8 +37,8 @@ ENV TMPDIR=/tmp \
 COPY check_fcgi /usr/sbin/
 COPY entrypoints /lagoon/entrypoints/
 
-COPY php.ini /usr/local/etc/php/
-COPY 00-lagoon-php.ini.tpl /usr/local/etc/php/conf.d/
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+COPY 00-lagoon-php.ini.tpl "$PHP_INI_DIR/conf.d/"
 COPY php-fpm.d/www.conf php-fpm.d/global.conf /usr/local/etc/php-fpm.d/
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable

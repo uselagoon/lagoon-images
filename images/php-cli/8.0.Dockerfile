@@ -6,9 +6,6 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 ENV LAGOON=cli
 
-RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.5.7/composer.phar \
-    && chmod +x /usr/local/bin/composer
-
 RUN apk add --no-cache git \
         bash \
         coreutils \

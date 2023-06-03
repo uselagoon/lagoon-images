@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-# Alpine 3.17 image not available for Redis 5
+# Alpine 3.18 image not available for Redis 5
 FROM redis:5.0.14-alpine3.16
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
@@ -15,11 +15,14 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
-COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 RUN fix-permissions /etc/passwd \
     && mkdir -p /home
+
+RUN apk update \
+    && apk add --no-cache tini \
+    && rm -rf /var/cache/apk/*
 
 ENV TMPDIR=/tmp \
     TMP=/tmp \

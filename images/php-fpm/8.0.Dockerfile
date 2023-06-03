@@ -4,7 +4,7 @@ FROM ${IMAGE_REPO:-lagoon}/commons as commons
 FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
-# Alpine 3.17 image not available for PHP 8.0
+# Alpine 3.18 image not available for PHP 8.0
 FROM php:8.0.28-fpm-alpine3.16
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
@@ -18,7 +18,6 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
-COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 # Copy healthcheck files
@@ -101,6 +100,7 @@ RUN apk add --no-cache --virtual .devdeps \
            libzip \
            postgresql-libs \
            ssmtp \
+           tini \
            yaml
 
 

@@ -1,6 +1,5 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-# Held at 3.17.x to ensure mariadb 10.6 whilst we evaluate upgrade path
 FROM alpine:3.18.0
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"

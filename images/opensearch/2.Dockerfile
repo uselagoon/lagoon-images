@@ -12,15 +12,13 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
-COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
+COPY --from=commons /bin/fix-permissions /bin/fix-dir-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /home /home
 
 USER root
 
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /usr/sbin/tini && chmod a+x /usr/sbin/tini
-
-COPY docker-entrypoint.sh /lagoon/entrypoints/80-opensearch.sh
 
 RUN fix-permissions /etc/passwd \
     && mkdir -p /home
@@ -35,8 +33,6 @@ ENV TMPDIR=/tmp \
     ENV=/home/.bashrc \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
-
-RUN yum -y install hostname && yum -y clean all  && rm -rf /var/cache
 
 # Uninstall the unneded plugins
 RUN for plugin in \
@@ -57,7 +53,10 @@ ENV OPENSEARCH_JAVA_OPTS="-Xms512m -Xmx512m" \
 # Copy es-curl wrapper
 COPY es-curl /usr/share/opensearch/bin/es-curl
 
-RUN fix-permissions /usr/share/opensearch
+COPY docker-entrypoint.sh /lagoon/entrypoints/80-opensearch.sh
+
+RUN fix-permissions /usr/share/opensearch/config \
+    && fix-dir-permissions /usr/share/opensearch
 
 USER opensearch
 

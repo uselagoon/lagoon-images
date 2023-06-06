@@ -57,7 +57,9 @@ ENV OPENSEARCH_JAVA_OPTS="-Xms512m -Xmx512m" \
 # Copy es-curl wrapper
 COPY es-curl /usr/share/opensearch/bin/es-curl
 
-RUN fix-permissions /usr/share/opensearch
+RUN fix-permissions /usr/share/opensearch/config \
+      && find /usr/share/opensearch -type d -exec chgrp 0 {} + \
+      && find /usr/share/opensearch -type d -exec chmod g+rwX {} +
 
 USER opensearch
 

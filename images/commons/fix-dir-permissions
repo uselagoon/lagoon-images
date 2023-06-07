@@ -1,5 +1,5 @@
 #!/bin/sh
-# Fix permissions on the given directory to allow group read/write of
-# regular files and execute of directories.
+# Fix permissions on the given directory to allow group read/write
+# and execute of directories only.
 find -L "$1" -type d -exec chgrp 0 {} +
 find -L "$1" -type d -exec chmod g+rwX {} +

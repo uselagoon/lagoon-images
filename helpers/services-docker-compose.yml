@@ -7,109 +7,109 @@ x-user:
 
 services:
   commons:
-    image: testlagoon/commons:latest
+    image: uselagoon/commons:latest
     << : *default-user # uses the defined user from top
 
   mariadb-10-4:
-    image: testlagoon/mariadb-10.4:latest
+    image: uselagoon/mariadb-10.4:latest
     ports:
       - "3306"
     << : *default-user # uses the defined user from top
 
   mariadb-10-5:
-    image: testlagoon/mariadb-10.5:latest
+    image: uselagoon/mariadb-10.5:latest
     ports:
       - "3306"
     << : *default-user # uses the defined user from top
 
   mariadb-10-6:
-    image: testlagoon/mariadb-10.6:latest
+    image: uselagoon/mariadb-10.6:latest
     ports:
       - "3306"
     << : *default-user # uses the defined user from top
 
   mariadb-10-11:
-    image: testlagoon/mariadb-10.11:latest
+    image: uselagoon/mariadb-10.11:latest
     ports:
       - "3306"
     << : *default-user # uses the defined user from top
 
   mongo-4:
-    image: testlagoon/mongo-4:latest
+    image: uselagoon/mongo-4:latest
     ports:
       - "27017"
       - "28017"
     << : *default-user # uses the defined user from top
 
   postgres-11:
-    image: testlagoon/postgres-11:latest
+    image: uselagoon/postgres-11:latest
     ports:
       - "5432"
     << : *default-user # uses the defined user from top
 
   postgres-12:
-    image: testlagoon/postgres-12:latest
+    image: uselagoon/postgres-12:latest
     ports:
       - "5432"
     << : *default-user # uses the defined user from top
 
   postgres-13:
-    image: testlagoon/postgres-13:latest
+    image: uselagoon/postgres-13:latest
     ports:
       - "5432"
     << : *default-user # uses the defined user from top
 
   postgres-14:
-    image: testlagoon/postgres-14:latest
+    image: uselagoon/postgres-14:latest
     ports:
       - "5432"
     << : *default-user # uses the defined user from top
 
   postgres-15:
-    image: testlagoon/postgres-15:latest
+    image: uselagoon/postgres-15:latest
     ports:
       - "5432"
     << : *default-user # uses the defined user from top
 
   rabbitmq:
-    image: testlagoon/rabbitmq:latest
+    image: uselagoon/rabbitmq:latest
     ports:
       - "5672"
       - "15672"
     << : *default-user # uses the defined user from top
 
   redis-5:
-    image: testlagoon/redis-5:latest
+    image: uselagoon/redis-5:latest
     ports:
       - "6379"
     << : *default-user # uses the defined user from top
 
   redis-6:
-    image: testlagoon/redis-6:latest
+    image: uselagoon/redis-6:latest
     ports:
       - "6379"
     << : *default-user # uses the defined user from top
 
   redis-7:
-    image: testlagoon/redis-7:latest
+    image: uselagoon/redis-7:latest
     ports:
       - "6379"
     << : *default-user # uses the defined user from top
 
   solr-7:
-    image: testlagoon/solr-7:latest
+    image: uselagoon/solr-7:latest
     ports:
       - "8983"
     << : *default-user # uses the defined user from top
 
   solr-8:
-    image: testlagoon/solr-8:latest
+    image: uselagoon/solr-8:latest
     ports:
       - "8983"
     user: solr
 
   varnish-6:
-    image: testlagoon/varnish-6:latest
+    image: uselagoon/varnish-6:latest
     labels:
       lando.type: varnish
     ports:
@@ -119,7 +119,7 @@ services:
       - nginx
 
   nginx:
-    image: testlagoon/nginx:latest
+    image: uselagoon/nginx:latest
     labels:
       lando.type: nginx
     ports:
@@ -127,7 +127,7 @@ services:
     << : *default-user # uses the defined user from top
 
   varnish-7:
-    image: testlagoon/varnish-7:latest
+    image: uselagoon/varnish-7:latest
     labels:
       lando.type: varnish
     ports:
@@ -137,7 +137,7 @@ services:
       - nginx
 
   opensearch-2:
-    image: testlagoon/opensearch-2:latest
+    image: uselagoon/opensearch-2:latest
     labels:
       lando.type: opensearch
     ports:

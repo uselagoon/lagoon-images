@@ -7,11 +7,11 @@ x-user:
 
 services:
   commons:
-    image: testlagoon/commons:latest
+    image: uselagoon/commons:latest
     << : *default-user # uses the defined user from top
 
   node-16:
-    image: testlagoon/node-16:latest
+    image: uselagoon/node-16:latest
     ports:
       - "3000"
     user: root
@@ -22,7 +22,7 @@ services:
         "]
 
   node-18:
-    image: testlagoon/node-18:latest
+    image: uselagoon/node-18:latest
     ports:
       - "3000"
     user: root
@@ -33,7 +33,7 @@ services:
         "]
 
   node-20:
-    image: testlagoon/node-20:latest
+    image: uselagoon/node-20:latest
     ports:
       - "3000"
     user: root
@@ -44,7 +44,7 @@ services:
         "]
 
   php-8-0-dev:
-    image: testlagoon/php-8.0-cli:latest
+    image: uselagoon/php-8.0-cli:latest
     ports:
       - "9000"
     environment:
@@ -60,7 +60,7 @@ services:
         "] # runs a webserver with phpinfo output
 
   php-8-0-prod:
-    image: testlagoon/php-8.0-cli:latest
+    image: uselagoon/php-8.0-cli:latest
     ports:
       - "9000"
     environment:
@@ -76,7 +76,7 @@ services:
         "] # runs a webserver with phpinfo output
 
   php-8-1-dev:
-    image: testlagoon/php-8.1-cli:latest
+    image: uselagoon/php-8.1-cli:latest
     ports:
       - "9000"
     environment:
@@ -92,7 +92,7 @@ services:
         "] # runs a webserver with phpinfo output
 
   php-8-1-prod:
-    image: testlagoon/php-8.1-cli:latest
+    image: uselagoon/php-8.1-cli:latest
     ports:
       - "9000"
     environment:
@@ -108,7 +108,7 @@ services:
         "] # runs a webserver with phpinfo output
 
   php-8-2-dev:
-    image: testlagoon/php-8.2-cli:latest
+    image: uselagoon/php-8.2-cli:latest
     ports:
       - "9000"
     environment:
@@ -124,7 +124,7 @@ services:
         "] # runs a webserver with phpinfo output
 
   php-8-2-prod:
-    image: testlagoon/php-8.2-cli:latest
+    image: uselagoon/php-8.2-cli:latest
     ports:
       - "9000"
     environment:
@@ -140,7 +140,7 @@ services:
         "] # runs a webserver with phpinfo output
 
   python-3-7:
-    image: testlagoon/python-3.7:latest
+    image: uselagoon/python-3.7:latest
     ports:
       - "3000"
     << : *default-user # uses the defined user from top
@@ -150,7 +150,7 @@ services:
         "]
 
   python-3-8:
-    image: testlagoon/python-3.8:latest
+    image: uselagoon/python-3.8:latest
     ports:
       - "3000"
     << : *default-user # uses the defined user from top
@@ -160,7 +160,7 @@ services:
         "]
 
   python-3-9:
-    image: testlagoon/python-3.9:latest
+    image: uselagoon/python-3.9:latest
     ports:
       - "3000"
     << : *default-user # uses the defined user from top
@@ -170,7 +170,7 @@ services:
         "]
 
   python-3-10:
-    image: testlagoon/python-3.10:latest
+    image: uselagoon/python-3.10:latest
     ports:
       - "3000"
     << : *default-user # uses the defined user from top
@@ -180,7 +180,7 @@ services:
         "]
 
   python-3-11:
-    image: testlagoon/python-3.11:latest
+    image: uselagoon/python-3.11:latest
     ports:
       - "3000"
     << : *default-user # uses the defined user from top
@@ -190,7 +190,7 @@ services:
         "]
 
   ruby-3-0:
-    image: testlagoon/ruby-3.0:latest
+    image: uselagoon/ruby-3.0:latest
     ports:
       - "3000"
     << : *default-user # uses the defined user from top
@@ -200,7 +200,7 @@ services:
         "]
 
   ruby-3-1:
-    image: testlagoon/ruby-3.1:latest
+    image: uselagoon/ruby-3.1:latest
     ports:
       - "3000"
     << : *default-user # uses the defined user from top
@@ -210,7 +210,7 @@ services:
         "]
 
   ruby-3-2:
-    image: testlagoon/ruby-3.2:latest
+    image: uselagoon/ruby-3.2:latest
     ports:
       - "3000"
     << : *default-user # uses the defined user from top

@@ -276,7 +276,6 @@ docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:300
 
 # nginx should be served by openresty
 docker-compose exec -T commons sh -c "curl -kL http://nginx:8080" | grep "hr" | grep "openresty"
-docker-compose exec nginx sh -c "nginx -v" | grep "nginx version" | grep "openresty"
 
 # nginx should have correct headers
 docker-compose exec -T commons sh -c "curl -I nginx:8080" | grep -i "Server" | grep -i "openresty"

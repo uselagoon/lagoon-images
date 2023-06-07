@@ -17,10 +17,9 @@ else
   # Is running in Kubernetes/OpenShift, so find all other pods
   # belonging to the namespace
   echo "Opensearch: Running in Kubernetes, setting up for clustering"
-  K8S_SVC_NAME=$(hostname -f | cut -d"." -f2)
-  echo "Using service name: ${K8S_SVC_NAME}"
+  echo "Using service name: ${HOSTNAME}"
   sed -i 's/discovery.seed_hosts:.*//' /usr/share/opensearch/config/opensearch.yml
   sed -i 's/cluster.initial_cluster_manager_nodes:.*//' /usr/share/opensearch/config/opensearch.yml
-  echo "discovery.seed_hosts: ${K8S_SVC_NAME}" >> /usr/share/opensearch/config/opensearch.yml
-  echo "cluster.initial_cluster_manager_nodes: ${K8S_SVC_NAME}-0" >> /usr/share/opensearch/config/opensearch.yml
+  echo "discovery.seed_hosts: ${HOSTNAME}" >> /usr/share/opensearch/config/opensearch.yml
+  echo "cluster.initial_cluster_manager_nodes: ${HOSTNAME}-0" >> /usr/share/opensearch/config/opensearch.yml
 fi

@@ -95,8 +95,9 @@ node ('lagoon-images') {
               dir ('tests') {
                 sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/${CI_BUILD_TAG}/'"
                 sh script: "grep -rl uselagoon . | xargs sed -i '/image: uselagoon/ s/uselagoon/${CI_BUILD_TAG}/'"
-                sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
-                sh script: "yarn test test/docker*all-images*", label: "Run all-images tests"
+                sh script: "find . -maxdepth 2 -name *-docker-compose.yml | xargs sed -i -e '/###/d'"
+                sh script: "yarn test test/docker*base-images*", label: "Run base-images tests"
+                sh script: "yarn test test/docker*service-images*", label: "Run service-images tests"
                 sh script: "yarn test:simple", label: "Run simple Drupal tests"
                 sh script: "yarn test:advanced", label: "Run advanced Drupal tests"
                 sh script: "rm test/*.js"

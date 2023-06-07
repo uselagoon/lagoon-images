@@ -16,7 +16,7 @@ docker network inspect amazeeio-network >/dev/null || docker network create amaz
 docker-compose down
 
 # pull any required images
-docker-compose pull
+docker-compose pull || true
 
 # should start up our services successfully
 docker-compose build && docker-compose up -d

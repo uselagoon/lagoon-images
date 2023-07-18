@@ -19,7 +19,7 @@
 #
 # @see https://github.com/php/php-src/blob/PHP-8.2/php.ini-production
 
-mv "$PHP_INI_DIR/conf.d/00-lagoon-php.ini.tpl" "$PHP_INI_DIR/conf.d/00-lagoon-php.ini"
-ep "$PHP_INI_DIR/conf.d/00-lagoon-php.ini"
+ep -d "$PHP_INI_DIR/conf.d/00-lagoon-php.ini.tpl" > "$PHP_INI_DIR/conf.d/00-lagoon-php.ini"
 ep /usr/local/etc/php-fpm.conf
 ep /usr/local/etc/php-fpm.d/*
+echo "configured lagoon-php.ini"

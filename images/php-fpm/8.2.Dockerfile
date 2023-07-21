@@ -62,6 +62,8 @@ RUN apk add --no-cache --virtual .devdeps \
         libwebp-dev \
         # for soap
         libxml2-dev \
+        # for tidy
+        tidyhtml-dev \
         # for xdebug
         linux-headers \
         # for xsl
@@ -82,7 +84,7 @@ RUN apk add --no-cache --virtual .devdeps \
            .phpize-deps \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
-    && docker-php-ext-install -j4 bcmath gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets xsl zip \
+    && docker-php-ext-install -j4 bcmath gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets tidy xsl zip \
     && apk del -r \
            .devdeps \
     && apk add --no-cache \
@@ -101,6 +103,7 @@ RUN apk add --no-cache --virtual .devdeps \
            libzip \
            postgresql-libs \
            ssmtp \
+           tidyhtml \
            yaml
 
 # New Relic PHP Agent.

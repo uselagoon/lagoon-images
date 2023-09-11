@@ -12,6 +12,7 @@ RUN apk add --no-cache git \
         findutils \
         gzip  \
         mariadb-client \
+        mariadb-connector-c \
         mongodb-tools \
         nodejs=~18 \
         npm \

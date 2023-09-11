@@ -16,6 +16,7 @@ RUN apk add --no-cache git \
         procps \
         coreutils \
         mariadb-client \
+        mariadb-connector-c \
         postgresql-client \
         mongodb-tools \
         openssh-sftp-server \

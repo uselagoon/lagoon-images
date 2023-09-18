@@ -41,6 +41,7 @@ RUN \
         mariadb-common=~10.11 \
         mariadb-server-utils=~10.11 \
         mariadb=~10.11 \
+        mariadb-connector-c \
         net-tools \
         pwgen \
         tzdata \

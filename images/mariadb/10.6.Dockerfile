@@ -41,6 +41,7 @@ RUN \
         mariadb-common=~10.6 \
         mariadb-server-utils=~10.6 \
         mariadb=~10.6 \
+        mariadb-connector-c \
         net-tools \
         pwgen \
         tini \

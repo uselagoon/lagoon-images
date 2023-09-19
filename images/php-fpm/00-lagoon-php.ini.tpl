@@ -31,7 +31,7 @@ session.gc_maxlifetime = 200000
 session.cookie_lifetime = 2000000
 session.cookie_secure = ${PHP_SESSION_COOKIE_SECURE:-0}
 session.cookie_httponly = ${PHP_SESSION_COOKIE_HTTPONLY:-0}
-session.cookie_samesite = ${PHP_SESSION_COOKIE_SAMESITE:-"None"}
+session.cookie_samesite = ${PHP_SESSION_COOKIE_SAMESITE:-}
 
 [opcache]
 opcache.memory_consumption = 256

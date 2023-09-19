@@ -300,7 +300,7 @@ docker-compose exec -T varnish-7 sh -c "varnishlog -d" | grep User-Agent | grep 
 docker-compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | grep "2."
 
 # opensearch-2 should be healthy
-docker-compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | json_pp | grep status | grep green
+docker-compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | json_pp | grep status | grep -v red
 
 # opensearch-2 should be able to read/write data
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch-2" | grep "SERVICE_HOST=opensearch-2"

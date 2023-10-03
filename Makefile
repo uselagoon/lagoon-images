@@ -241,8 +241,6 @@ default-versioned-images := 	mariadb-10.4 \
 							postgres-11 \
 							postgres-11-ckan \
 							postgres-11-drupal \
-							redis-5 \
-							redis-5-persistent \
 							mongo-4
 
 #######
@@ -295,8 +293,7 @@ build/postgres-12-drupal: build/postgres-12
 build/postgres-13-drupal: build/postgres-13
 build/postgres-14-drupal: build/postgres-14
 build/postgres-15-drupal: build/postgres-15
-build/redis-5 build/redis-6 build/redis-7: build/commons
-build/redis-5-persistent: build/redis-5
+build/redis-6 build/redis-7: build/commons
 build/redis-6-persistent: build/redis-6
 build/redis-7-persistent: build/redis-7
 build/varnish-6 build/varnish-7: build/commons

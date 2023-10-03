@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM opensearchproject/opensearch:2.9.0
+FROM opensearchproject/opensearch:2.10.0
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -16,6 +16,8 @@ COPY --from=commons /bin/fix-permissions /bin/fix-dir-permissions /bin/ep /bin/d
 COPY --from=commons /home /home
 
 USER root
+
+RUN dnf update --releasever=latest -y && dnf install -y findutils && dnf clean all
 
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /usr/sbin/tini && chmod a+x /usr/sbin/tini

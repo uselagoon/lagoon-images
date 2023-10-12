@@ -176,7 +176,6 @@ def cleanup() {
     sh "cat build.*"
     sh "make docker-buildx-remove"
     sh "make clean"
-    sh "rm build.*"
   } catch (error) {
     echo "cleanup failed, ignoring this."
   }

@@ -565,7 +565,7 @@ $(s3-load):
 docker-buildx-remove:
 	docker stop registry || echo "no registry"
 	docker rm registry || echo "no registry"
-	docker buildx rm ci-local
+	docker buildx rm ci-local || echo "no buildx cache"
 	docker buildx ls
 	docker context ls
 

@@ -1,36 +1,37 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
-FROM varnish:6.6 as vmod
-ENV LIBVMOD_DYNAMIC_VERSION=6.6
-ENV VARNISH_MODULES_VERSION=6.6
+FROM varnish:6.0.11 as vmod
 
 USER root
 RUN apt-get update \
-    && apt-get -y install \
-                  build-essential \
-                  curl \
-                  zip
+  && apt-get -y install \
+    build-essential \
+    curl \
+    zip
 
-RUN  curl -L https://packagecloud.io/varnishcache/varnish66/gpgkey | apt-key add - \
-  && echo "deb https://packagecloud.io/varnishcache/varnish66/debian/ buster main" | tee /etc/apt/sources.list.d/varnish-cache.list \
+RUN curl -s https://packagecloud.io/install/repositories/varnishcache/varnish60lts/script.deb.sh | bash \
   && apt-get -q update \
-  && apt-get install -qq \
-              automake \
-              libpcre3-dev \
-              libtool \
-              python3-docutils \
-              varnish-dev
+  && apt search varnish \
+  && apt-get -y install \
+    automake \
+    libpcre3-dev \
+    libtool \
+    python3-docutils \
+    varnish=6.0.11-1~bullseye \
+    varnish-dev=6.0.11-1~bullseye
 
+ENV LIBVMOD_DYNAMIC_VERSION=6.0
 RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip \
   && unzip ${LIBVMOD_DYNAMIC_VERSION}.zip && cd libvmod-dynamic-${LIBVMOD_DYNAMIC_VERSION} \
   && ./autogen.sh && ./configure && make && make install
 
+ENV VARNISH_MODULES_VERSION=6.0-lts
 RUN cd /tmp && curl -sSLO https://github.com/varnish/varnish-modules/archive/${VARNISH_MODULES_VERSION}.zip \
   && unzip ${VARNISH_MODULES_VERSION}.zip && cd varnish-modules-${VARNISH_MODULES_VERSION} \
   && ./bootstrap && ./configure && make && make install
 
-FROM varnish:6.6
+FROM varnish:6.0.11
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"

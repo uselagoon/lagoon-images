@@ -82,6 +82,7 @@ docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--build-arg BUILDKIT_INLINE_CACHE=1 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
+						--pull \
 						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \
 						--push \
 						-t localhost:5000/testlagoon/$(1) \
@@ -94,6 +95,7 @@ docker_buildx_three = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--build-arg BUILDKIT_INLINE_CACHE=1 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=localhost:5000/uselagoon \
+						--pull \
 						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \
 						--push \
 						-t localhost:5000/uselagoon/$(1) \

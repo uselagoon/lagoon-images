@@ -106,6 +106,11 @@ RUN apk add --no-cache --virtual .devdeps \
            tidyhtml \
            yaml
 
+RUN apk update \
+    && apk add --no-cache \
+        curl=~8.4 \
+        libcurl=~8.4
+
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements

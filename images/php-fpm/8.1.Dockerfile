@@ -127,6 +127,9 @@ RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 |
         && sed -i -e "s/;newrelic.daemon.loglevel = .*/newrelic.daemon.loglevel = \"\${NEWRELIC_DAEMON_LOG_LEVEL:-warning}\"/" /usr/local/etc/php/conf.d/newrelic.ini \
         && sed -i -e "s/newrelic.logfile = .*/newrelic.logfile = \"\/dev\/stderr\"/" /usr/local/etc/php/conf.d/newrelic.ini \
         && sed -i -e "s/newrelic.daemon.logfile = .*/newrelic.daemon.logfile = \"\/dev\/stderr\"/" /usr/local/etc/php/conf.d/newrelic.ini \
+        && sed -i -e "s/;newrelic.application_logging.enabled = .*/newrelic.application_logging.enabled = \${NEWRELIC_APPLICATION_LOGGING_ENABLED:-true}/" /usr/local/etc/php/conf.d/newrelic.ini \
+        && sed -i -e "s/;newrelic.application_logging.metrics.enabled = .*/newrelic.application_logging.metrics.enabled = \${NEWRELIC_APPLICATION_LOGGING_METRICS_ENABLED:-true}/" /usr/local/etc/php/conf.d/newrelic.ini \
+        && sed -i -e "s/;newrelic.application_logging.forwarding.enabled = .*/newrelic.application_logging.forwarding.enabled = \${NEWRELIC_APPLICATION_LOGGING_FORWARDING_ENABLED:-true}/" /usr/local/etc/php/conf.d/newrelic.ini \
         && mv /usr/local/etc/php/conf.d/newrelic.ini /usr/local/etc/php/conf.d/newrelic.disable \
         && cd / && rm -rf /tmp/newrelic \
         && fix-permissions /usr/local/etc/; \

@@ -36,6 +36,7 @@ node ('lagoon-images') {
             sh script: "make docker-buildx-remove", label: "removing leftover buildx"
             sh script: "docker image prune -af", label: "Pruning images"
             sh script: "docker buildx prune -af", label: "Pruning builder cache"
+            sh script: "docker buildx use default", label: "Ensure to use default builder"
           }
         }
 

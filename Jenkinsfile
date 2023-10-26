@@ -36,7 +36,6 @@ node ('lagoon-images') {
             sh script: "make docker-buildx-remove", label: "removing leftover buildx"
             sh script: "docker image prune -af", label: "Pruning images"
             sh script: "docker buildx prune -af", label: "Pruning builder cache"
-            sh script: "docker buildx use default", label: "Ensure to use default builder"
           }
         }
 
@@ -96,6 +95,7 @@ node ('lagoon-images') {
           'Run all the tests on the local images': {
             stage ('running test suite') {
               dir ('tests') {
+                sh script: "docker buildx use default", label: "Ensure to use default builder"
                 sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/${CI_BUILD_TAG}/'"
                 sh script: "grep -rl uselagoon . | xargs sed -i '/image: uselagoon/ s/uselagoon/${CI_BUILD_TAG}/'"
                 sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"

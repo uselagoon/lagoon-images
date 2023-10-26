@@ -78,6 +78,7 @@ docker_build_local = DOCKER_BUILDKIT=1 docker build $(DOCKER_BUILD_PARAMS) \
 						-f $(2) $(3)
 
 docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
+						--builder ci-local \
 						--platform linux/amd64,linux/arm64/v8 \
 						--build-arg BUILDKIT_INLINE_CACHE=1 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
@@ -91,6 +92,7 @@ docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						-f $(2) $(3)
 
 docker_buildx_three = docker buildx build $(DOCKER_BUILD_PARAMS) \
+						--builder ci-local \
 						--platform linux/amd64,linux/arm64/v8 \
 						--build-arg BUILDKIT_INLINE_CACHE=1 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
@@ -354,7 +356,7 @@ scan-images:
 .PHONY: docker-buildx-configure
 docker-buildx-configure:
 	docker run -d -p 5000:5000 --restart always --name registry registry:2
-	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --use
+	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local
 	docker buildx ls
 	docker context ls
 

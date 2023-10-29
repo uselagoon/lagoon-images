@@ -31,9 +31,11 @@ node ('lagoon-images') {
         // in order to have the newest images from upstream (with all the security updates) we clean our local docker cache on tag deployments
         // we don't do this all the time to still profit from image layer caching
         // but we want this on tag deployments in order to ensure that we publish images always with the newest possible images.
-        if (env.TAG_NAME) {
+        if (env.TAG_NAME || env.SAFEBRANCH_NAME == 'main') {
           stage ('clean docker image cache') {
+            sh script: "make docker-buildx-remove", label: "removing leftover buildx"
             sh script: "docker image prune -af", label: "Pruning images"
+            sh script: "docker buildx prune -af", label: "Pruning builder cache"
           }
         }
 
@@ -93,6 +95,7 @@ node ('lagoon-images') {
           'Run all the tests on the local images': {
             stage ('running test suite') {
               dir ('tests') {
+                sh script: "docker buildx use default", label: "Ensure to use default builder"
                 sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/${CI_BUILD_TAG}/'"
                 sh script: "grep -rl uselagoon . | xargs sed -i '/image: uselagoon/ s/uselagoon/${CI_BUILD_TAG}/'"
                 sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
@@ -145,7 +148,7 @@ node ('lagoon-images') {
           )
         }
 
-        if (env.TAG_NAME || env.SAFEBRANCH_NAME == 'testing-scans') {
+        if (env.TAG_NAME || env.SAFEBRANCH_NAME == 'main' || env.SAFEBRANCH_NAME == 'testing-scans' ) {
           stage ('scan built images') {
             sh script: 'make scan-images', label: "perform scan routines"
             sh script:  'find ./scans/*trivy* -type f | xargs tail -n +1', label: "Show Trivy vulnerability scan results"
@@ -174,7 +177,6 @@ def cleanup() {
     sh "cat build.*"
     sh "make docker-buildx-remove"
     sh "make clean"
-    sh "rm build.*"
   } catch (error) {
     echo "cleanup failed, ignoring this."
   }

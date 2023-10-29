@@ -53,6 +53,7 @@ services:
       - XDEBUG_LOG=true
       - NEWRELIC_ENABLED=true
       - BLACKFIRE_ENABLED=true
+      - NEWRELIC_APPLICATION_LOGGING_METRICS_ENABLED=false
     << : *default-user # uses the defined user from top
     command: ["sh", "-c", "
         echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
@@ -85,6 +86,7 @@ services:
       - XDEBUG_LOG=true
       - NEWRELIC_ENABLED=true
       - BLACKFIRE_ENABLED=true
+      - NEWRELIC_APPLICATION_LOGGING_FORWARDING_ENABLED=false
     << : *default-user # uses the defined user from top
     command: ["sh", "-c", "
         echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
@@ -117,6 +119,7 @@ services:
       - XDEBUG_LOG=true
       - NEWRELIC_ENABLED=true
       - BLACKFIRE_ENABLED=true
+      - NEWRELIC_APPLICATION_LOGGING_ENABLED=false
     << : *default-user # uses the defined user from top
     command: ["sh", "-c", "
         echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;

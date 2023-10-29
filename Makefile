@@ -78,10 +78,12 @@ docker_build_local = DOCKER_BUILDKIT=1 docker build $(DOCKER_BUILD_PARAMS) \
 						-f $(2) $(3)
 
 docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
+						--builder ci-local \
 						--platform linux/amd64,linux/arm64/v8 \
 						--build-arg BUILDKIT_INLINE_CACHE=1 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
+						--pull \
 						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \
 						--push \
 						-t localhost:5000/testlagoon/$(1) \
@@ -90,10 +92,12 @@ docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						-f $(2) $(3)
 
 docker_buildx_three = docker buildx build $(DOCKER_BUILD_PARAMS) \
+						--builder ci-local \
 						--platform linux/amd64,linux/arm64/v8 \
 						--build-arg BUILDKIT_INLINE_CACHE=1 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=localhost:5000/uselagoon \
+						--pull \
 						--cache-from=type=registry,ref=localhost:5000/testlagoon/$(1) \
 						--push \
 						-t localhost:5000/uselagoon/$(1) \
@@ -348,7 +352,7 @@ scan-images:
 .PHONY: docker-buildx-configure
 docker-buildx-configure:
 	docker run -d -p 5000:5000 --restart always --name registry registry:2
-	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --use
+	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local
 	docker buildx ls
 	docker context ls
 
@@ -559,7 +563,7 @@ $(s3-load):
 docker-buildx-remove:
 	docker stop registry || echo "no registry"
 	docker rm registry || echo "no registry"
-	docker buildx rm ci-local
+	docker buildx rm ci-local || echo "no buildx cache"
 	docker buildx ls
 	docker context ls
 

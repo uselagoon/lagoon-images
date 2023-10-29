@@ -192,9 +192,6 @@ versioned-images := 		php-8.0-fpm \
 							python-3.9 \
 							python-3.10 \
 							python-3.11 \
-							node-16 \
-							node-16-builder \
-							node-16-cli \
 							node-18 \
 							node-18-builder \
 							node-18-cli \
@@ -286,8 +283,7 @@ build/php-8.0-cli-drupal: build/php-8.0-cli
 build/php-8.1-cli-drupal: build/php-8.1-cli
 build/php-8.2-cli-drupal: build/php-8.2-cli
 build/python-3.8 build/python-3.9 build/python-3.10 build/python-3.11: build/commons
-build/node-16 build/node-18 build/node-20: build/commons
-build/node-16-builder build/node-16-cli: build/node-16
+build/node-18 build/node-20: build/commons
 build/node-18-builder build/node-18-cli: build/node-18
 build/node-20-builder build/node-20-cli: build/node-20
 build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14 build/postgres-15: build/commons

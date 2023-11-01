@@ -192,6 +192,16 @@ services:
         exec python -m http.server 3000
         "]
 
+  python-3-12:
+    image: uselagoon/python-3.12:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
+
   ruby-3-0:
     image: uselagoon/ruby-3.0:latest
     ports:

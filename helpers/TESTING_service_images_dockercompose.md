@@ -31,6 +31,7 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-14:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-15:5432 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-16:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo-4:27017 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
@@ -54,6 +55,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-13
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-14
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-15
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-16
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep rabbitmq
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-5
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-6
@@ -261,9 +263,6 @@ docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:300
 # postgres-15 should be version 15 client
 docker-compose exec -T postgres-15 bash -c "psql --version" | grep "psql" | grep "15."
 
-# postgres-15 should be version 15 client
-docker-compose exec -T postgres-15 bash -c "psql --version" | grep "psql" | grep "15."
-
 # postgres-15 should be version 15 server
 docker-compose exec -T postgres-15 bash -c "psql -U lagoon -d lagoon -c \'SELECT version();\'" | grep "PostgreSQL" | grep "15."
 
@@ -273,6 +272,19 @@ docker-compose exec -T postgres-15 bash -c "psql -U lagoon -d lagoon -c \'\\l+ l
 # postgres-15 should be able to read/write data
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-15" | grep "SERVICE_HOST=PostgreSQL 15"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-15" | grep "LAGOON_TEST_VAR=all-images"
+
+# postgres-16 should be version 16 client
+docker-compose exec -T postgres-16 bash -c "psql --version" | grep "psql" | grep "16."
+
+# postgres-16 should be version 16 server
+docker-compose exec -T postgres-16 bash -c "psql -U lagoon -d lagoon -c \'SELECT version();\'" | grep "PostgreSQL" | grep "16."
+
+# postgres-16 should have lagoon database
+docker-compose exec -T postgres-16 bash -c "psql -U lagoon -d lagoon -c \'\\l+ lagoon\'" | grep "lagoon"
+
+# postgres-16 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-16" | grep "SERVICE_HOST=PostgreSQL 16"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres-16" | grep "LAGOON_TEST_VAR=all-images"
 
 # nginx should be served by openresty
 docker-compose exec -T commons sh -c "curl -kL http://nginx:8080" | grep "hr" | grep "openresty"

@@ -71,6 +71,12 @@ services:
       - "5432"
     << : *default-user # uses the defined user from top
 
+  postgres-16:
+    image: uselagoon/postgres-16:latest
+    ports:
+      - "5432"
+    << : *default-user # uses the defined user from top
+
   rabbitmq:
     image: uselagoon/rabbitmq:latest
     ports:

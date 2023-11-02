@@ -78,12 +78,6 @@ services:
       - "15672"
     << : *default-user # uses the defined user from top
 
-  redis-5:
-    image: uselagoon/redis-5:latest
-    ports:
-      - "6379"
-    << : *default-user # uses the defined user from top
-
   redis-6:
     image: uselagoon/redis-6:latest
     ports:

@@ -35,7 +35,6 @@ Run the following commands to validate things are rolling as they should.
 ```bash
 # should have all the services we expect
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep commons
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-16
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-18
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-20
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-0-dev
@@ -44,7 +43,6 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-1-prod
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-2-dev
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-2-prod
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-7
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-8
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-9
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-10
@@ -183,17 +181,6 @@ docker-compose exec -T commons sh -c "curl -kL http://php-8-2-prod:9000" | grep 
 docker-compose exec -T commons sh -c "curl -kL http://php-8-2-prod:9000" | grep "upload_max_filesize" | grep "1024M"
 docker-compose exec -T commons sh -c "curl -kL http://php-8-2-prod:9000" | grep "error_reporting" | grep "22519"
 
-# python-3-7 should be version 3.7
-docker-compose exec -T python-3-7 sh -c "python -V" | grep "3.7"
-
-# python-3-7 should have basic tools installed
-docker-compose exec -T python-3-7 sh -c "pip list --no-cache-dir" | grep "pip"
-docker-compose exec -T python-3-7 sh -c "pip list --no-cache-dir" | grep "setuptools"
-docker-compose exec -T python-3-7 sh -c "pip list --no-cache-dir" | grep "virtualenv" | grep "16.7.10"
-
-# python-3-7 should be serving content
-docker-compose exec -T commons sh -c "curl python-3-7:3000/tmp/test" | grep "Python 3.7"
-
 # python-3-8 should be version 3.8
 docker-compose exec -T python-3-8 sh -c "python -V" | grep "3.8"
 
@@ -241,19 +228,13 @@ docker-compose exec -T commons sh -c "curl python-3-11:3000/tmp/test" | grep "Py
 # python-3-12 should be version 3.12
 docker-compose exec -T python-3-12 sh -c "python -V" | grep "3.12"
 
-# python-3-10 should have basic tools installed
+# python-3-12 should have basic tools installed
 docker-compose exec -T python-3-12 sh -c "pip list --no-cache-dir" | grep "pip"
 docker-compose exec -T python-3-12 sh -c "pip list --no-cache-dir" | grep "setuptools"
 docker-compose exec -T python-3-12 sh -c "pip list --no-cache-dir" | grep "virtualenv"
 
-# python-3-10 should be serving content
+# python-3-12 should be serving content
 docker-compose exec -T commons sh -c "curl python-3-12:3000/tmp/test" | grep "Python 3.12"
-
-# node-16 should have Node 16
-docker-compose exec -T node-16 sh -c "node -v" | grep "v16"
-
-# node-16 should be serving content
-docker-compose exec -T commons sh -c "curl node-16:3000/test" | grep "v16"
 
 # node-18 should have Node 18
 docker-compose exec -T node-18 sh -c "node -v" | grep "v18"

@@ -17,7 +17,10 @@ COPY --from=commons /home /home
 
 USER root
 
-RUN dnf update --releasever=latest -y && dnf install -y findutils && dnf clean all
+RUN dnf update --releasever=latest -y \
+    && dnf install -y \
+        findutils \
+    && dnf clean all
 
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /usr/sbin/tini && chmod a+x /usr/sbin/tini

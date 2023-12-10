@@ -25,11 +25,13 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-RUN apk add --no-cache --virtual .build-deps \
+RUN apk update \
+    && apk add --no-cache --virtual .build-deps \
         build-base \
     && gem install webrick puma bundler \
     && apk del \
-           .build-deps
+        .build-deps \
+    && rm -rf /var/cache/apk/*
 
 # Make sure shells are not running forever
 COPY 80-shell-timeout.sh /lagoon/entrypoints/

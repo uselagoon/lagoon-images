@@ -18,8 +18,8 @@ COPY --from=envplate /usr/local/bin/ep /bin/ep
 
 RUN apk update \
     && apk add --no-cache \
-           curl \
-           tini \
+        curl \
+        tini \
     && rm -rf /var/cache/apk/* \
     && mkdir -p /lagoon/crontabs && fix-permissions /lagoon/crontabs \
     && ln -s /home/.bashrc /home/.profile

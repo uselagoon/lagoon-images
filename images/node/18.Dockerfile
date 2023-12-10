@@ -30,9 +30,6 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-RUN apk update \
-    && rm -rf /var/cache/apk/*
-
 # Make sure Bower and NPM are allowed to be running as root
 RUN echo '{ "allow_root": true }' > /home/.bowerrc \
     && echo 'unsafe-perm=true' > /home/.npmrc

@@ -30,9 +30,11 @@ USER root
 
 RUN apt-get -y update \
     && apt-get -y install \
-                  busybox \
-                  curl \
-                  zip \
+        busybox \
+        curl \
+        rsync \
+        tar \
+        zip \
     && rm -rf /var/lib/apt/lists/*
 
 # Mitigation for CVE-2021-45046 and CVE-2021-44228 - not needed in log4j-core 2.16.0

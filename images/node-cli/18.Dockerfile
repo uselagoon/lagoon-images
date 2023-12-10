@@ -6,23 +6,25 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 ENV LAGOON=node
 
-RUN apk add --no-cache git \
-        unzip \
-        gzip  \
-        bash \
-        openssh-client \
-        rsync \
-        patch \
-        procps \
+RUN apk update \
+    && apk add --no-cache bash \
         coreutils \
+        findutils \
+        git \
+        gzip  \
         mariadb-client \
         mariadb-connector-c \
-        postgresql-client \
         mongodb-tools \
+        openssh-client \
         openssh-sftp-server \
-        findutils \
-    && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
+        patch \
+        postgresql-client \
+        procps \
+        rsync \
+        tar \
+        unzip \
     && rm -rf /var/cache/apk/* \
+    && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/
 

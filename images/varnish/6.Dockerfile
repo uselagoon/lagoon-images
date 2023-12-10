@@ -5,31 +5,31 @@ FROM varnish:6.0.12 as vmod
 
 USER root
 RUN apt-get update \
-  && apt-get -y install \
-    build-essential \
-    curl \
-    zip
+    && apt-get -y install \
+        build-essential \
+        curl \
+        zip
 
 RUN curl -s https://packagecloud.io/install/repositories/varnishcache/varnish60lts/script.deb.sh | bash \
-  && apt-get -q update \
-  && apt search varnish \
-  && apt-get -y install \
-    automake \
-    libpcre3-dev \
-    libtool \
-    python3-docutils \
-    varnish=6.0.12-1~bullseye \
-    varnish-dev=6.0.12-1~bullseye
+    && apt-get -q update \
+    && apt search varnish \
+    && apt-get -y install \
+        automake \
+        libpcre3-dev \
+        libtool \
+        python3-docutils \
+        varnish=6.0.12-1~bullseye \
+        varnish-dev=6.0.12-1~bullseye
 
 ENV LIBVMOD_DYNAMIC_VERSION=6.0
 RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip \
-  && unzip ${LIBVMOD_DYNAMIC_VERSION}.zip && cd libvmod-dynamic-${LIBVMOD_DYNAMIC_VERSION} \
-  && ./autogen.sh && ./configure && make && make install
+    && unzip ${LIBVMOD_DYNAMIC_VERSION}.zip && cd libvmod-dynamic-${LIBVMOD_DYNAMIC_VERSION} \
+    && ./autogen.sh && ./configure && make && make install
 
 ENV VARNISH_MODULES_VERSION=6.0-lts
 RUN cd /tmp && curl -sSLO https://github.com/varnish/varnish-modules/archive/${VARNISH_MODULES_VERSION}.zip \
-  && unzip ${VARNISH_MODULES_VERSION}.zip && cd varnish-modules-${VARNISH_MODULES_VERSION} \
-  && ./bootstrap && ./configure && make && make install
+    && unzip ${VARNISH_MODULES_VERSION}.zip && cd varnish-modules-${VARNISH_MODULES_VERSION} \
+    && ./bootstrap && ./configure && make && make install
 
 FROM varnish:6.0.12
 
@@ -57,8 +57,8 @@ ENV TMPDIR=/tmp \
 USER root
 RUN apt-get -y update \
     && apt-get -y install \
-                  busybox \
-                  curl \
+        busybox \
+        curl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \

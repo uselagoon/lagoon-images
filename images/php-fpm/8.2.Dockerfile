@@ -44,7 +44,8 @@ COPY php-fpm.d/www.conf php-fpm.d/global.conf /usr/local/etc/php-fpm.d/
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 
-RUN apk add --no-cache --virtual .devdeps \
+RUN apk update \
+    && apk add --no-cache --virtual .devdeps \
         # for gd
         freetype-dev \
         # for gettext
@@ -81,30 +82,31 @@ RUN apk add --no-cache --virtual .devdeps \
     && docker-php-ext-enable apcu imagick redis xdebug yaml \
     && rm -rf /tmp/pear \
     && apk del -r \
-           .phpize-deps \
+        .phpize-deps \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
     && docker-php-ext-install -j4 bcmath gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets tidy xsl zip \
     && apk del -r \
-           .devdeps \
+        .devdeps \
     && apk add --no-cache \
-           fcgi \
-           gettext \
-           icu-libs \
-           imagemagick \
-           imagemagick-libs \
-           libgcrypt \
-           libjpeg-turbo \
-           libmcrypt \
-           libpng \
-           libwebp \
-           libxml2 \
-           libxslt \
-           libzip \
-           postgresql-libs \
-           ssmtp \
-           tidyhtml \
-           yaml
+        fcgi \
+        gettext \
+        icu-libs \
+        imagemagick \
+        imagemagick-libs \
+        libgcrypt \
+        libjpeg-turbo \
+        libmcrypt \
+        libpng \
+        libwebp \
+        libxml2 \
+        libxslt \
+        libzip \
+        postgresql-libs \
+        ssmtp \
+        tidyhtml \
+        yaml \
+    && rm -rf /var/cache/apk/*
 
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/

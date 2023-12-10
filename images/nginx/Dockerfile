@@ -27,8 +27,12 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-RUN apk add --no-cache \
-        openssl
+RUN apk update \
+    && apk add --no-cache \
+        openssl \
+        rsync \
+        tar \
+    && rm -rf /var/cache/apk/*
 
 RUN rm -Rf /etc/nginx && ln -s /usr/local/openresty/nginx/conf /etc/nginx
 

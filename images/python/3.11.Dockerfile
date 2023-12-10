@@ -32,6 +32,9 @@ RUN apk update \
     && pip install virtualenv \
     && apk del \
         .build-deps \
+    && apk add --no-cache \
+        rsync \
+        tar \
     && rm -rf /var/cache/apk/*
 
 # Make sure shells are not running forever

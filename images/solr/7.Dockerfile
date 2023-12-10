@@ -30,6 +30,8 @@ RUN apt-get -y update \
     && apt-get -y install \
         busybox \
         curl \
+        rsync \
+        tar \
         zip \
     && rm -rf /var/lib/apt/lists/*
 

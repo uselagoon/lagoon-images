@@ -31,6 +31,9 @@ RUN apk update \
     && gem install webrick puma bundler \
     && apk del \
         .build-deps \
+    && apk add --no-cache \
+        rsync \
+        tar \
     && rm -rf /var/cache/apk/*
 
 # Make sure shells are not running forever

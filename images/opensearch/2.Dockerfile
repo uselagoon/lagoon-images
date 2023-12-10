@@ -20,6 +20,8 @@ USER root
 RUN dnf update --releasever=latest -y \
     && dnf install -y \
         findutils \
+        rsync \
+        tar \
     && dnf clean all
 
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \

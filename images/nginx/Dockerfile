@@ -30,6 +30,8 @@ ENV TMPDIR=/tmp \
 RUN apk update \
     && apk add --no-cache \
         openssl \
+        rsync \
+        tar \
     && rm -rf /var/cache/apk/*
 
 RUN rm -Rf /etc/nginx && ln -s /usr/local/openresty/nginx/conf /etc/nginx

@@ -44,6 +44,9 @@ RUN apk update \
         mariadb-connector-c \
         net-tools \
         pwgen \
+        rsync \
+        tar \
+        tini \
         tzdata \
         wget \
     && rm -rf /var/cache/apk/* \

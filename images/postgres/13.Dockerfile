@@ -22,6 +22,12 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
+RUN apk update \
+    && apk add --no-cache \
+        rsync \
+        tar \
+    && rm -rf /var/cache/apk/*
+
 RUN fix-permissions /etc/passwd \
     && mkdir -p /home
 

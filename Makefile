@@ -182,12 +182,15 @@ build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 versioned-images := 		php-8.0-fpm \
 							php-8.1-fpm \
 							php-8.2-fpm \
+							php-8.3-fpm \
 							php-8.0-cli \
 							php-8.1-cli \
 							php-8.2-cli \
+							php-8.3-cli \
 							php-8.0-cli-drupal \
 							php-8.1-cli-drupal \
 							php-8.2-cli-drupal \
+							php-8.3-cli-drupal \
 							python-3.8 \
 							python-3.9 \
 							python-3.10 \
@@ -278,13 +281,15 @@ base-images-with-versions += $(experimental-images)
 s3-images += $(versioned-images)
 s3-images += $(experimental-images)
 
-build/php-8.0-fpm build/php-8.1-fpm build/php-8.2-fpm: build/commons
+build/php-8.0-fpm build/php-8.1-fpm build/php-8.2-fpm build/php-8.3-fpm: build/commons
 build/php-8.0-cli: build/php-8.0-fpm
 build/php-8.1-cli: build/php-8.1-fpm
 build/php-8.2-cli: build/php-8.2-fpm
+build/php-8.3-cli: build/php-8.3-fpm
 build/php-8.0-cli-drupal: build/php-8.0-cli
 build/php-8.1-cli-drupal: build/php-8.1-cli
 build/php-8.2-cli-drupal: build/php-8.2-cli
+build/php-8.3-cli-drupal: build/php-8.3-cli
 build/python-3.7 build/python-3.8 build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12: build/commons
 build/node-18 build/node-20: build/commons
 build/node-18-builder build/node-18-cli: build/node-18

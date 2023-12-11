@@ -75,12 +75,21 @@ RUN apk update \
         yaml-dev \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && yes '' | pecl install -f apcu-5.1.23 \
-    && yes '' | pecl install -f imagick-3.7.0 \
+    # && yes '' | pecl install -f imagick-3.7.0 \ # fix for https://github.com/Imagick/imagick/pull/641
     && yes '' | pecl install -f redis-5.3.7 \
     && yes '' | pecl install -f xdebug-3.3.0 \
     && yes '' | pecl install -f yaml-2.2.3 \
+    # fix for https://github.com/Imagick/imagick/pull/641
+    && cd /tmp \
+    && yes '' | pecl download -Z imagick-3.7.0 \
+    && tar -xf imagick-3.7.0.tar imagick-3.7.0/Imagick.stub.php \
+    && sed -i '$ i\#endif' imagick-3.7.0/Imagick.stub.php \
+    && tar -uvf imagick-3.7.0.tar imagick-3.7.0/Imagick.stub.php \
+    && yes '' | pecl install -f /tmp/imagick-3.7.0.tar \
     && docker-php-ext-enable apcu imagick redis xdebug yaml \
+    && rm -rf /tmp/imagick* \
     && rm -rf /tmp/pear \
+    && cd - \
     && apk del -r \
         .phpize-deps \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \

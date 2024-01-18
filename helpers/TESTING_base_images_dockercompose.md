@@ -22,7 +22,6 @@ docker-compose pull || true
 docker-compose build && docker-compose up -d
 
 # Ensure long-running pods are ready to connect
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://php-8-0-dev:9000 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://php-8-1-dev:9000 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://php-8-2-dev:9000 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://php-8-3-dev:9000 -timeout 1m
@@ -38,8 +37,6 @@ Run the following commands to validate things are rolling as they should.
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep commons
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-18
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-20
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-0-dev
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-0-prod
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-1-dev
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-1-prod
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-2-dev
@@ -57,48 +54,6 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 
 # commons should be running Alpine Linux
 docker-compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
-
-# PHP 8.0 development should have PHP installed
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "PHP Version" | grep "8.0"
-docker-compose exec -T php-8-0-dev bash -c "php -i" | grep "PHP Version" | grep "8.0"
-
-# PHP 8.0 development should have modules enabled
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "APCu Support" | grep "Enabled"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "LibYAML Support" | grep "enabled"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "Redis Support" | grep "enabled"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "imagick module" | grep "enabled"
-
-# PHP 8.0 development should have default configuration.
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "memory_limit" | grep "400M"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "short_open_tag" | grep "On"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "max_execution_time" | grep "900"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "max_input_time" | grep "900"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "post_max_size" | grep "2048M"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "max_input_vars" | grep "2000"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "max_file_uploads" | grep "20"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "session.cookie_samesite" | grep "no value"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "display_errors" | grep "Off"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "date.timezone" | grep "UTC"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "opcache.memory_consumption" | grep "256"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "error_reporting" | grep "22527"
-docker-compose exec -T php-8-0-dev bash -c "php -i" | grep "sendmail_path" | grep "/usr/sbin/sendmail -t -i"
-
-# PHP 8.0 development should have extensions enabled.
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "xdebug.client_port" | grep "9003"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "PHP_IDE_CONFIG" | grep "serverName=lagoon"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "xdebug.log" | grep "/tmp/xdebug.log"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "newrelic.appname" | grep "noproject-nobranch"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "newrelic.logfile" | grep "/dev/stderr"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "newrelic.application_logging.metrics.enabled" | grep "disabled"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "Blackfire" | grep "enabled"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-dev:9000" | grep "blackfire.agent_socket" | grep "tcp://127.0.0.1:8307"
-
-# PHP 8.0 production should have overridden configuration.
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-prod:9000" | grep "max_input_vars" | grep "4000"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-prod:9000" | grep "max_file_uploads" | grep "40"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-prod:9000" | grep "session.cookie_samesite" | grep "Strict"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-prod:9000" | grep "upload_max_filesize" | grep "1024M"
-docker-compose exec -T commons sh -c "curl -kL http://php-8-0-prod:9000" | grep "error_reporting" | grep "22519"
 
 # PHP 8.1 development should have PHP installed
 docker-compose exec -T commons sh -c "curl -kL http://php-8-1-dev:9000" | grep "PHP Version" | grep "8.1"

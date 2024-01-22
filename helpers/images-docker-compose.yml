@@ -139,8 +139,8 @@ services:
       - LAGOON_ENVIRONMENT_TYPE=development
       - XDEBUG_ENABLE=true
       - XDEBUG_LOG=true
-      # TODO - NEWRELIC_ENABLED=true
-      # TODO - BLACKFIRE_ENABLED=true
+      - NEWRELIC_ENABLED=true
+      - BLACKFIRE_ENABLED=true
       - NEWRELIC_APPLICATION_LOGGING_ENABLED=false
     << : *default-user # uses the defined user from top
     command: ["sh", "-c", "

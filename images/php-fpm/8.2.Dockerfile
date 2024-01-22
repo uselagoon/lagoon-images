@@ -133,7 +133,7 @@ RUN mkdir -p /tmp/newrelic && cd /tmp/newrelic \
     && fix-permissions /usr/local/etc/
 
 # Add blackfire probe and agent.
-ENV BLACKFIRE_VERSION=2.23.0
+ENV BLACKFIRE_VERSION=2.24.4
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && mkdir -p /blackfire \

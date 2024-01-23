@@ -179,15 +179,12 @@ build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 ####### Multi-version Images
 #######
 
-versioned-images := 		php-8.0-fpm \
-							php-8.1-fpm \
+versioned-images := 		php-8.1-fpm \
 							php-8.2-fpm \
 							php-8.3-fpm \
-							php-8.0-cli \
 							php-8.1-cli \
 							php-8.2-cli \
 							php-8.3-cli \
-							php-8.0-cli-drupal \
 							php-8.1-cli-drupal \
 							php-8.2-cli-drupal \
 							php-8.3-cli-drupal \
@@ -281,12 +278,10 @@ base-images-with-versions += $(experimental-images)
 s3-images += $(versioned-images)
 s3-images += $(experimental-images)
 
-build/php-8.0-fpm build/php-8.1-fpm build/php-8.2-fpm build/php-8.3-fpm: build/commons
-build/php-8.0-cli: build/php-8.0-fpm
+build/php-8.1-fpm build/php-8.2-fpm build/php-8.3-fpm: build/commons
 build/php-8.1-cli: build/php-8.1-fpm
 build/php-8.2-cli: build/php-8.2-fpm
 build/php-8.3-cli: build/php-8.3-fpm
-build/php-8.0-cli-drupal: build/php-8.0-cli
 build/php-8.1-cli-drupal: build/php-8.1-cli
 build/php-8.2-cli-drupal: build/php-8.2-cli
 build/php-8.3-cli-drupal: build/php-8.3-cli

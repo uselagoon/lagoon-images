@@ -163,6 +163,12 @@ docker-compose exec -T mariadb-10-6 sh -c "mysql -V" | grep "10.6"
 # mariadb-10-6 should be version 10.6 server
 docker-compose exec -T mariadb-10-6 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.6"
 
+# mariadb-10-6 should have performance schema and slow logging disabled
+docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "performance_schema" | grep "OFF"
+docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "slow_query_log" | grep "OFF"
+docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "long_query_time" | grep "10"
+docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "log_slow_rate_limit" | grep "1"
+
 # mariadb-10-6 should use default credentials
 docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
 
@@ -175,6 +181,12 @@ docker-compose exec -T mariadb-10-11 sh -c "mysql -V" | grep "10.11"
 
 # mariadb-10-11 should be version 10.11 server
 docker-compose exec -T mariadb-10-11 sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "10.11"
+
+# mariadb-10-11 should have performance schema and slow logging enabled
+docker-compose exec -T mariadb-10-11 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "performance_schema" | grep "ON"
+docker-compose exec -T mariadb-10-11 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "slow_query_log" | grep "ON"
+docker-compose exec -T mariadb-10-11 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "long_query_time" | grep "30"
+docker-compose exec -T mariadb-10-11 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "log_slow_rate_limit" | grep "5"
 
 # mariadb-10-11 should use default credentials
 docker-compose exec -T mariadb-10-11 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon

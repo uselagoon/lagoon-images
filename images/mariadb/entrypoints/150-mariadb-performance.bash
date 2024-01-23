@@ -11,3 +11,16 @@ if [ "$LAGOON_ENVIRONMENT_TYPE" == "production" ]; then
     export MARIADB_INNODB_LOG_FILE_SIZE=256M
   fi
 fi
+
+if [ -n "$MARIADB_PERFORMANCE_SCHEMA" ]; then
+  echo "Enabling performance schema"
+  cat <<EOF > /etc/mysql/conf.d/performance-schema.cnf
+[mysqld]
+performance_schema=ON
+performance-schema-instrument='stage/%=ON'
+performance-schema-consumer-events-stages-current=ON
+performance-schema-consumer-events-stages-history=ON
+performance-schema-consumer-events-stages-history-long=ON
+EOF
+
+fi

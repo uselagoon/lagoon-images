@@ -43,6 +43,7 @@ RUN apk update \
         mariadb=~10.6 \
         mariadb-connector-c \
         net-tools \
+        perl-doc \
         pwgen \
         rsync \
         tar \

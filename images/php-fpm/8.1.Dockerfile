@@ -5,6 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
+# php:8.1.26-fpm-alpine3.18 segfaults on alpine 3.19
 FROM php:8.1.27-fpm-alpine3.18
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"

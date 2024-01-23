@@ -15,7 +15,7 @@ RUN apk update \
         mariadb-client \
         mariadb-connector-c \
         mongodb-tools \
-        nodejs=~18 \
+        nodejs=~20 \
         npm \
         openssh-client \
         openssh-sftp-server \

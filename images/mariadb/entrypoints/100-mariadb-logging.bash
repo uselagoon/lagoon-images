@@ -10,7 +10,7 @@ log-output=file
 slow_query_log = 1
 slow_query_log_file = /var/log/mariadb-slow.log
 long_query_time = ${MARIADB_LONG_QUERY_TIME:-10}
-log_slow_rate_limit = ${MARIADB_LOG_SLOW_RATE_LIMIT:1}
+log_slow_rate_limit = ${MARIADB_LOG_SLOW_RATE_LIMIT:-1}
 EOF
 fi
 

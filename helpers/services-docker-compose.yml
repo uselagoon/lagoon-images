@@ -32,6 +32,11 @@ services:
     image: uselagoon/mariadb-10.11:latest
     ports:
       - "3306"
+    environment:
+      - MARIADB_PERFORMANCE_SCHEMA=true
+      - MARIADB_LOG_SLOW=true
+      - MARIADB_LONG_QUERY_TIME=30
+      - MARIADB_LOG_SLOW_RATE_LIMIT=5
     << : *default-user # uses the defined user from top
 
   mongo-4:

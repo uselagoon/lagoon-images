@@ -165,7 +165,7 @@ docker-compose exec -T mariadb-10-6 sh -c "mysql -e \'SHOW variables;\'" | grep 
 
 # mariadb-10-6 should have performance schema and slow logging disabled
 docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "performance_schema" | grep "OFF"
-docker-compose exec -T mariadb-10-11 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "slow_query_log" | grep "OFF"
+docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "slow_query_log" | grep "OFF"
 docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "long_query_time" | grep "10"
 docker-compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW GLOBAL VARIABLES;\'" | grep "log_slow_rate_limit" | grep "1"
 

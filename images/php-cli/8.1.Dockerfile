@@ -28,7 +28,7 @@ RUN apk update \
     && rm -rf /var/cache/apk/* \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server
 
-RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.6.6/composer.phar \
+RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.7.1/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/

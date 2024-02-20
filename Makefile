@@ -199,8 +199,6 @@ versioned-images := 		php-8.1-fpm \
 							node-20 \
 							node-20-builder \
 							node-20-cli \
-							solr-7 \
-							solr-7-drupal \
 							solr-8 \
 							solr-8-drupal \
 							postgres-12 \
@@ -304,8 +302,7 @@ build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal
 build/varnish-7-drupal build/varnish-7-persistent: build/varnish-7
 build/varnish-7-persistent-drupal: build/varnish-7-drupal
-build/solr-7 build/solr-8: build/commons
-build/solr-7-drupal: build/solr-7
+build/solr-8: build/commons
 build/solr-8-drupal: build/solr-8
 build/mariadb-10.4 build/mariadb-10.5 build/mariadb-10.6 build/mariadb-10.11: build/commons
 build/mariadb-10.4-drupal: build/mariadb-10.4

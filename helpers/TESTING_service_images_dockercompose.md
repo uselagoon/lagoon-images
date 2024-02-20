@@ -61,7 +61,6 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep rabbitmq
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-7
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-7
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-8
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep nginx
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-6
@@ -104,19 +103,6 @@ docker-compose exec -T redis-7 sh -c "redis-cli dbsize"
 # redis-7 should be able to read/write data
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-7" | grep "SERVICE_HOST=redis-7"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-7" |grep "LAGOON_TEST_VAR=all-images"
-
-# solr-7 should have a "mycore" Solr core
-docker-compose exec -T commons sh -c "curl solr-7:8983/solr/admin/cores?action=STATUS\&core=mycore"
-
-# solr-7 should be able to reload "mycore" Solr core
-docker-compose exec -T commons sh -c "curl solr-7:8983/solr/admin/cores?action=RELOAD\&core=mycore"
-
-# solr-7 should have solr 7.7 solrconfig in "mycore" core
-docker-compose exec -T solr-7 sh -c "cat /opt/solr/server/solr/mycores/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 7.7
-
-# solr-7 should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-7" | grep "SERVICE_HOST=solr-7"
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-7" | grep "LAGOON_TEST_VAR=all-images"
 
 # solr-8 should have a "mycore" Solr core
 docker-compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=STATUS\&core=mycore"

@@ -22,6 +22,7 @@ RUN apk add --no-cache git \
         postgresql-client \
         procps \
         rsync \
+        supervisor \
         unzip \
         yarn \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \

@@ -86,11 +86,13 @@ RUN apk update \
         .phpize-deps \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
-    && docker-php-ext-install -j4 bcmath gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets tidy xsl zip \
+    && docker-php-ext-install -j4 bcmath exif gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets tidy xsl zip \
     && apk del -r \
         .devdeps \
     && apk add --no-cache \
+        acl \
         fcgi \
+        file \
         gettext \
         icu-libs \
         imagemagick \
@@ -106,6 +108,7 @@ RUN apk update \
         postgresql-libs \
         ssmtp \
         tidyhtml \
+        unzip \
         yaml \
     && rm -rf /var/cache/apk/*
 

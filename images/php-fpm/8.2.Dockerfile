@@ -5,7 +5,7 @@ FROM composer:latest as healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:8.2.16-fpm-alpine3.19
+FROM php:8.2.16-fpm-alpine3.18
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -85,11 +85,13 @@ RUN apk update \
         .phpize-deps \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
-    && docker-php-ext-install -j4 bcmath gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets tidy xsl zip \
+    && docker-php-ext-install -j4 bcmath exif gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets tidy xsl zip \
     && apk del -r \
         .devdeps \
     && apk add --no-cache \
+        acl \
         fcgi \
+        file \
         gettext \
         icu-libs \
         imagemagick \
@@ -105,6 +107,7 @@ RUN apk update \
         postgresql-libs \
         ssmtp \
         tidyhtml \
+        unzip \
         yaml \
     && rm -rf /var/cache/apk/*
 

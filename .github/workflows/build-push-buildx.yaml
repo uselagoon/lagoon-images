@@ -111,6 +111,11 @@ jobs:
       -
         name: Build
         uses: docker/bake-action@v4
+        env:
+          IMAGE_REPO: ghcr.io/${{ github.repository_owner }}
+          IMAGE_TAG: testing--docker-buildx
+          PLATFORMS: linux/amd64,linux/arm64
+          TAG: testing--docker-buildx
         with:
           files: |
             ./docker-bake.hcl

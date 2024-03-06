@@ -298,7 +298,7 @@ jobs:
       - 
         name: Wait for dependent builds to succeed
         if: ${{ matrix.requires }}
-        uses: lewagon/wait-on-check-action@v1
+        uses: lewagon/wait-on-check-action@v1.3.1
         with:
           ref: ${{ github.ref }}
           check-regexp: 'build \(${{ matrix.requires }},.?'
@@ -321,6 +321,8 @@ jobs:
             org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/lagoon-images/tree/${{ github.ref_name }}/${{ matrix.context }}/${{ matrix.dockerfile }}
             org.opencontainers.image.title=${{ github.repository_owner }}/${{ matrix.image_name }}
             org.opencontainers.image.url=https://github.com/uselagoon/lagoon-images
+          tags: |
+            type=ref,event=branch
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3

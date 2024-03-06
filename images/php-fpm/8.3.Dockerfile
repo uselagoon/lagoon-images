@@ -104,7 +104,16 @@ RUN apk update \
         gettext \
         icu-libs \
         imagemagick \
+        imagemagick-heic \
         imagemagick-libs \
+        imagemagick-jpeg \
+        imagemagick-jxl \
+        imagemagick-pango \
+        imagemagick-pdf \
+        imagemagick-raw \
+        imagemagick-webp \
+        imagemagick-svg \
+        imagemagick-tiff \
         libgcrypt \
         libjpeg-turbo \
         libmcrypt \

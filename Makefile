@@ -293,7 +293,7 @@ build/php-8.3-cli: build/php-8.3-fpm
 build/php-8.1-cli-drupal: build/php-8.1-cli
 build/php-8.2-cli-drupal: build/php-8.2-cli
 build/php-8.3-cli-drupal: build/php-8.3-cli
-build/python-3.7 build/python-3.8 build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12: build/commons
+build/python-3.8 build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12: build/commons
 build/node-18 build/node-20: build/commons
 build/node-18-builder build/node-18-cli: build/node-18
 build/node-20-builder build/node-20-cli: build/node-20

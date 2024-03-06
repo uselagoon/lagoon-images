@@ -51,9 +51,6 @@ jobs:
             - '!images/**'
           others:
             - 'images/commons/**'
-            - 'images/elasticsearch-7/**'
-            - 'images/kibana-7/**'
-            - 'images/logstash-7/**'
             - 'images/mongo-4/**'
             - 'images/nginx/**'
             - 'images/nginx-drupal/**'
@@ -89,7 +86,7 @@ jobs:
       #     key: ${{ runner.os }}-buildx-${{ matrix.package_group }}
       -
         name: Cache Docker layers
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ matrix.package_group }}-${{ hashFiles('**/images') }}

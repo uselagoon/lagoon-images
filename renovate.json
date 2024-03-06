@@ -214,32 +214,6 @@
       ]
     },
     {
-      "groupName": "ELK Stack",
-      "allowedVersions": "<7.11.0",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "docker.elastic.co/elasticsearch/elasticsearch",
-        "docker.elastic.co/logstash/logstash",
-        "docker.elastic.co/kibana/kibana"
-      ]
-    },
-    {
-      "enabled": false,
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "matchPackageNames": [
-        "docker.elastic.co/elasticsearch/elasticsearch",
-        "docker.elastic.co/logstash/logstash",
-        "docker.elastic.co/kibana/kibana"
-      ]
-    },
-    {
       "enabled": false,
       "matchDatasources": [
         "docker"

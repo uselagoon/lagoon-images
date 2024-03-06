@@ -1,5 +1,4 @@
 # docker-bake.dev.hcl
-# docker-bake.dev.hcl
 variable "TAG" {
   default = "latest"
 }
@@ -70,15 +69,15 @@ group "default" {
     "node-20-builder",
     "node-20-cli",
     "opensearch-2",
-    "php-8-0-fpm",
-    "php-8-0-cli",
-    "php-8-0-cli-drupal",
     "php-8-1-fpm",
     "php-8-1-cli",
     "php-8-1-cli-drupal",
     "php-8-2-fpm",
     "php-8-2-cli",
     "php-8-2-cli-drupal",
+    "php-8-3-fpm",
+    "php-8-3-cli",
+    "php-8-3-cli-drupal",
     "postgres-11",
     "postgres-11-drupal",
     "postgres-12",
@@ -105,8 +104,6 @@ group "default" {
     "ruby-3-0",
     "ruby-3-1",
     "ruby-3-2",
-    "solr-7",
-    "solr-7-drupal",
     "solr-8",
     "solr-8-drupal",
     "varnish-6",
@@ -149,15 +146,15 @@ group "node" {
 group "php" {
   targets = [
     "commons", 
-    "php-8-0-fpm",
-    "php-8-0-cli",
-    "php-8-0-cli-drupal",
     "php-8-1-fpm",
     "php-8-1-cli",
     "php-8-1-cli-drupal",
     "php-8-2-fpm",
     "php-8-2-cli",
-    "php-8-2-cli-drupal"
+    "php-8-2-cli-drupal",
+    "php-8-3-fpm",
+    "php-8-3-cli",
+    "php-8-3-cli-drupal"
   ]
 }
 
@@ -212,8 +209,6 @@ group "ruby" {
 group "solr" {
   targets = [
     "commons", 
-    "solr-7",
-    "solr-7-drupal",
     "solr-8",
     "solr-8-drupal"
   ]
@@ -546,54 +541,6 @@ target "opensearch-2" {
   ]
 }
 
-target "php-8-0-fpm" {
-  inherits = ["default"]
-  context = "images/php-fpm"
-  contexts = {
-    "lagoon/commons": "target:commons"
-  }
-  dockerfile = "8.0.Dockerfile"
-  labels = {
-    "org.opencontainers.image.title": "lagoon-images/php-8.0-fpm"
-  }
-  tags = [
-    "${IMAGE_REPO}/php-8.0-fpm:${IMAGE_TAG}",
-    "${PUSH_REPO}/php-8.0-fpm:${PUSH_TAG}"
-  ]
-}
-
-target "php-8-0-cli" {
-  inherits = ["default"]
-  context = "images/php-cli"
-  contexts = {
-    "lagoon/php-8.0-fpm": "target:php-8-0-fpm"
-  }
-  dockerfile = "8.0.Dockerfile"
-  labels = {
-    "org.opencontainers.image.title": "lagoon-images/php-8.0-cli"
-  }
-  tags = [
-    "${IMAGE_REPO}/php-8.0-cli:${IMAGE_TAG}",
-    "${PUSH_REPO}/php-8.0-cli:${PUSH_TAG}"
-  ]
-}
-
-target "php-8-0-cli-drupal" {
-  inherits = ["default"]
-  context = "images/php-cli-drupal"
-  contexts = {
-    "lagoon/php-8.0-cli": "target:php-8-0-cli"
-  }
-  dockerfile = "8.0.Dockerfile"
-  labels = {
-    "org.opencontainers.image.title": "lagoon-images/php-8.0-cli-drupal"
-  }
-  tags = [
-    "${IMAGE_REPO}/php-8.0-cli-drupal:${IMAGE_TAG}",
-    "${PUSH_REPO}/php-8.0-cli-drupal:${PUSH_TAG}"
-  ]
-}
-
 target "php-8-1-fpm" {
   inherits = ["default"]
   context = "images/php-fpm"
@@ -687,6 +634,54 @@ target "php-8-2-cli-drupal" {
   tags = [
     "${IMAGE_REPO}/php-8.2-cli-drupal:${IMAGE_TAG}",
     "${PUSH_REPO}/php-8.2-cli-drupal:${PUSH_TAG}"
+  ]
+}
+
+target "php-8-3-fpm" {
+  inherits = ["default"]
+  context = "images/php-fpm"
+  contexts = {
+    "lagoon/commons": "target:commons"
+  }
+  dockerfile = "8.3.Dockerfile"
+  labels = {
+    "org.opencontainers.image.title": "lagoon-images/php-8.3-fpm"
+  }
+  tags = [
+    "${IMAGE_REPO}/php-8.3-fpm:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.3-fpm:${PUSH_TAG}"
+  ]
+}
+
+target "php-8-3-cli" {
+  inherits = ["default"]
+  context = "images/php-cli"
+  contexts = {
+    "lagoon/php-8.3-fpm": "target:php-8-3-fpm"
+  }
+  dockerfile = "8.3.Dockerfile"
+  labels = {
+    "org.opencontainers.image.title": "lagoon-images/php-8.3-cli"
+  }
+  tags = [
+    "${IMAGE_REPO}/php-8.3-cli:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.3-cli:${PUSH_TAG}"
+  ]
+}
+
+target "php-8-3-cli-drupal" {
+  inherits = ["default"]
+  context = "images/php-cli-drupal"
+  contexts = {
+    "lagoon/php-8.3-cli": "target:php-8-3-cli"
+  }
+  dockerfile = "8.3.Dockerfile"
+  labels = {
+    "org.opencontainers.image.title": "lagoon-images/php-8.3-cli-drupal"
+  }
+  tags = [
+    "${IMAGE_REPO}/php-8.3-cli-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.3-cli-drupal:${PUSH_TAG}"
   ]
 }
 
@@ -1119,38 +1114,6 @@ target "ruby-3-2" {
   tags = [
     "${IMAGE_REPO}/ruby-3.2:${IMAGE_TAG}",
     "${PUSH_REPO}/ruby-3.2:${PUSH_TAG}"
-  ]
-}
-
-target "solr-7" {
-  inherits = ["default"]
-  context = "images/solr"
-  contexts = {
-    "lagoon/commons": "target:commons"
-  }
-  dockerfile = "7.Dockerfile"
-  labels = {
-    "org.opencontainers.image.title": "lagoon-images/solr-7"
-  }
-  tags = [
-    "${IMAGE_REPO}/solr-7:${IMAGE_TAG}",
-    "${PUSH_REPO}/solr-7:${PUSH_TAG}"
-  ]
-}
-
-target "solr-7-drupal" {
-  inherits = ["default"]
-  context = "images/solr-drupal"
-  contexts = {
-    "lagoon/solr-7": "target:solr-7"
-  }
-  dockerfile = "7.Dockerfile"
-  labels = {
-    "org.opencontainers.image.title": "lagoon-images/solr-7-drupal"
-  }
-  tags = [
-    "${IMAGE_REPO}/solr-7-drupal:${IMAGE_TAG}",
-    "${PUSH_REPO}/solr-7-drupal:${PUSH_TAG}"
   ]
 }
 

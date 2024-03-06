@@ -77,6 +77,16 @@ docker_build_local = DOCKER_BUILDKIT=1 docker build $(DOCKER_BUILD_PARAMS) \
 						-t $(CI_BUILD_TAG)/$(1) \
 						-f $(2) $(3)
 
+docker_buildx_local = docker buildx build $(DOCKER_BUILD_PARAMS) \
+						--builder ci-local \
+						--platform linux/amd64 \
+						--build-arg BUILDKIT_INLINE_CACHE=1 \
+						--cache-from testlagoon/$(1):main \
+						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
+						--build-arg IMAGE_REPO=$(CI_BUILD_TAG) \
+						-t $(CI_BUILD_TAG)/$(1) \
+						-f $(2) $(3)
+
 docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--builder ci-local \
 						--platform linux/amd64,linux/arm64/v8 \

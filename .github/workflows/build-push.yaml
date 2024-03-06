@@ -1,0 +1,470 @@
+name: Lagoon Image Build
+
+on:
+  push:
+    branches:
+      - 'testing/docker_buildx'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image_name: commons
+            context: images/commons
+            dockerfile: Dockerfile
+          - image_name: nginx
+            context: images/nginx
+            dockerfile: Dockerfile
+            requires: commons
+          - image_name: nginx-drupal
+            context: images/nginx-drupal
+            dockerfile: Dockerfile
+            requires: nginx
+          - image_name: mariadb-10.4
+            context: images/mariadb
+            dockerfile: 10.4.Dockerfile
+            requires: commons
+          - image_name: mariadb-10.4-drupal
+            context: images/mariadb-drupal
+            dockerfile: 10.4.Dockerfile
+            requires: mariadb-10.4
+          - image_name: mariadb-10.5
+            context: images/mariadb
+            dockerfile: 10.5.Dockerfile
+            requires: commons
+          - image_name: mariadb-10.5-drupal
+            context: images/mariadb-drupal
+            dockerfile: 10.5.Dockerfile
+            requires: mariadb-10.5
+          - image_name: mariadb-10.6
+            context: images/mariadb
+            dockerfile: 10.6.Dockerfile
+            requires: commons
+          - image_name: mariadb-10.6-drupal
+            context: images/mariadb-drupal
+            dockerfile: 10.6.Dockerfile
+            requires: mariadb-10.6
+          - image_name: elasticsearch-7
+            context: images/elasticsearch
+            dockerfile: 7.Dockerfile
+            requires: commons
+          - image_name: logstash-7
+            context: images/logstash
+            dockerfile: 7.Dockerfile
+            requires: commons
+          - image_name: kibana-7
+            context: images/kibana
+            dockerfile: 7.Dockerfile
+            requires: commons
+          - image_name: mongo-4
+            context: images/mongo
+            dockerfile: 4.Dockerfile
+            requires: commons
+          - image_name: node-14
+            context: images/node
+            dockerfile: 14.Dockerfile
+            requires: commons
+          - image_name: node-14-builder
+            context: images/node-builder
+            dockerfile: 14.Dockerfile
+            requires: node-14
+          - image_name: node-16
+            context: images/node
+            dockerfile: 16.Dockerfile
+            requires: commons
+          - image_name: node-16-builder
+            context: images/node-builder
+            dockerfile: 16.Dockerfile
+            requires: node-16
+          - image_name: node-18
+            context: images/node
+            dockerfile: 18.Dockerfile
+            requires: commons
+          - image_name: node-18-builder
+            context: images/node-builder
+            dockerfile: 18.Dockerfile
+            requires: node-18
+          - image_name: python-3.7
+            context: images/python
+            dockerfile: 3.7.Dockerfile
+            requires: commons
+          - image_name: python-3.8
+            context: images/python
+            dockerfile: 3.8.Dockerfile
+            requires: commons
+          - image_name: python-3.9
+            context: images/python
+            dockerfile: 3.9.Dockerfile
+            requires: commons
+          - image_name: python-3.10
+            context: images/python
+            dockerfile: 3.10.Dockerfile
+            requires: commons
+          - image_name: python-3.11
+            context: images/python
+            dockerfile: 3.11.Dockerfile
+            requires: commons
+          - image_name: php-8.0-fpm
+            context: images/php-fpm
+            dockerfile: 8.0.Dockerfile
+            requires: commons
+          - image_name: php-8.0-cli
+            context: images/php-cli
+            dockerfile: 8.0.Dockerfile
+            requires: php-8.0-fpm
+          - image_name: php-8.0-cli-drupal
+            context: images/php-cli-drupal
+            dockerfile: 8.0.Dockerfile
+            requires: php-8.0-cli
+          - image_name: php-8.1-fpm
+            context: images/php-fpm
+            dockerfile: 8.1.Dockerfile
+            requires: commons
+          - image_name: php-8.1-cli
+            context: images/php-cli
+            dockerfile: 8.1.Dockerfile
+            requires: php-8.1-fpm
+          - image_name: php-8.1-cli-drupal
+            context: images/php-cli-drupal
+            dockerfile: 8.1.Dockerfile
+            requires: php-8.1-cli
+          - image_name: php-8.2-fpm
+            context: images/php-fpm
+            dockerfile: 8.2.Dockerfile
+            requires: commons
+          - image_name: php-8.2-cli
+            context: images/php-cli
+            dockerfile: 8.2.Dockerfile
+            requires: php-8.2-fpm
+          - image_name: php-8.2-cli-drupal
+            context: images/php-cli-drupal
+            dockerfile: 8.2.Dockerfile
+            requires: php-8.2-cli
+          - image_name: postgres-11
+            context: images/postgres
+            dockerfile: 11.Dockerfile
+            requires: commons
+          - image_name: postgres-11-drupal
+            context: images/postgres-drupal
+            dockerfile: 11.Dockerfile
+            requires: postgres-11
+          - image_name: postgres-11-ckan
+            context: images/postgres-ckan
+            dockerfile: 11.Dockerfile
+            requires: postgres-11
+          - image_name: postgres-12
+            context: images/postgres
+            dockerfile: 12.Dockerfile
+            requires: commons
+          - image_name: postgres-12-drupal
+            context: images/postgres-drupal
+            dockerfile: 12.Dockerfile
+            requires: postgres-12
+          - image_name: postgres-13
+            context: images/postgres
+            dockerfile: 13.Dockerfile
+            requires: commons
+          - image_name: postgres-13-drupal
+            context: images/postgres-drupal
+            dockerfile: 13.Dockerfile
+            requires: postgres-13
+          - image_name: postgres-14
+            context: images/postgres
+            dockerfile: 14.Dockerfile
+            requires: commons
+          - image_name: postgres-14-drupal
+            context: images/postgres-drupal
+            dockerfile: 14.Dockerfile
+            requires: postgres-14
+          - image_name: postgres-15
+            context: images/postgres
+            dockerfile: 15.Dockerfile
+            requires: commons
+          - image_name: postgres-15-drupal
+            context: images/postgres-drupal
+            dockerfile: 15.Dockerfile
+            requires: postgres-15
+          - image_name: rabbitmq
+            context: images/rabbitmq
+            dockerfile: Dockerfile
+            requires: commons
+          - image_name: rabbitmq-cluster
+            context: images/rabbitmq-cluster
+            dockerfile: Dockerfile
+            requires: rabbitmq
+          - image_name: varnish-6
+            context: images/varnish
+            dockerfile: 6.Dockerfile
+            requires: commons
+          - image_name: varnish-6-drupal
+            context: images/varnish-drupal
+            dockerfile: 6.Dockerfile
+            requires: varnish-6
+          - image_name: varnish-6-persistent
+            context: images/varnish-persistent
+            dockerfile: 6.Dockerfile
+            requires: varnish-6
+          - image_name: varnish-6-persistent-drupal
+            context: images/varnish-persistent-drupal
+            dockerfile: 6.Dockerfile
+            requires: varnish-6-drupal
+          - image_name: varnish-7
+            context: images/varnish
+            dockerfile: 7.Dockerfile
+            requires: commons
+          - image_name: varnish-7-drupal
+            context: images/varnish-drupal
+            dockerfile: 7.Dockerfile
+            requires: varnish-7
+          - image_name: varnish-7-persistent
+            context: images/varnish-persistent
+            dockerfile: 7.Dockerfile
+            requires: varnish-7
+          - image_name: varnish-7-persistent-drupal
+            context: images/varnish-persistent-drupal
+            dockerfile: 7.Dockerfile
+            requires: varnish-7-drupal
+          - image_name: solr-7
+            context: images/solr
+            dockerfile: 7.Dockerfile
+            requires: commons
+          - image_name: solr-7-drupal
+            context: images/solr-drupal
+            dockerfile: 7.Dockerfile
+            requires: solr-7
+          - image_name: solr-8
+            context: images/solr
+            dockerfile: 8.Dockerfile
+            requires: commons
+          - image_name: solr-8-drupal
+            context: images/solr-drupal
+            dockerfile: 8.Dockerfile
+            requires: solr-8
+          - image_name: redis-5
+            context: images/redis
+            dockerfile: 5.Dockerfile
+            requires: commons
+          - image_name: redis-5-persistent
+            context: images/redis-persistent
+            dockerfile: 5.Dockerfile
+            requires: redis-5
+          - image_name: redis-6
+            context: images/redis
+            dockerfile: 6.Dockerfile
+            requires: commons
+          - image_name: redis-6-persistent
+            context: images/redis-persistent
+            dockerfile: 6.Dockerfile
+            requires: redis-6
+          - image_name: redis-7
+            context: images/redis
+            dockerfile: 7.Dockerfile
+            requires: commons
+          - image_name: redis-7-persistent
+            context: images/redis-persistent
+            dockerfile: 7.Dockerfile
+            requires: redis-7
+          - image_name: ruby-3.0
+            context: images/ruby
+            dockerfile: 3.0.Dockerfile
+            requires: commons
+          - image_name: ruby-3.1
+            context: images/ruby
+            dockerfile: 3.1.Dockerfile
+            requires: commons
+          - image_name: ruby-3.2
+            context: images/ruby
+            dockerfile: 3.2.Dockerfile
+            requires: commons
+          - image_name: opensearch-2
+            context: images/opensearch
+            dockerfile: 2.Dockerfile
+            requires: commons
+
+    steps:
+      - 
+        name: Wait for commons upstream
+        if: ${{ matrix.requires == 'commons' }}
+        run: sleep 60s
+        shell: bash
+      - 
+        name: Wait for non-commons upstream
+        if: ${{ matrix.image_name != 'commons' && matrix.requires != 'commons' }}
+        run: sleep 180s
+        shell: bash
+      - 
+        name: Wait for dependent builds to succeed
+        if: ${{ matrix.requires }}
+        uses: lewagon/wait-on-check-action@v1
+        with:
+          ref: ${{ github.ref }}
+          check-regexp: 'build \(${{ matrix.requires }},.?'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 60
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.image_name }}
+          labels: |
+            org.opencontainers.image.authors=The Lagoon Authors
+            org.opencontainers.image.description=${{ matrix.image_name }} image built for Lagoon
+            org.opencontainers.image.source=https://github.com/${{ github.repository_owner }}/lagoon-images/tree/${{ github.ref_name }}/${{ matrix.context }}/${{ matrix.dockerfile }}
+            org.opencontainers.image.title=${{ github.repository_owner }}/${{ matrix.image_name }}
+            org.opencontainers.image.url=https://github.com/uselagoon/lagoon-images
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      # -
+      #   name: Login to DockerHub
+      #   uses: docker/login-action@v3
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.context }}/${{ matrix.dockerfile }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: |
+            type=registry,ref=docker.io/testlagoon/${{ matrix.image_name }}:main
+            type=registry,ref=ghcr.io/tobybellwood/${{ matrix.image_name }}:${{ github.ref_name }}
+          build-args: |
+            IMAGE_REPO=ghcr.io/${{ github.repository_owner }}
+            IMAGE_TAG=${{ github.ref_name }}
+            BUILDKIT_INLINE_CACHE=1
+      -
+        uses: anchore/sbom-action@v0
+        with:
+          image: ghcr.io/${{ github.repository_owner }}/${{ matrix.image_name }}:${{ github.ref_name }}
+          artifact-name: ${{ matrix.image_name }}.cyclonedx
+          format: cyclonedx
+      -
+        name: view SBOM
+        run: |
+          cat /tmp/sbom-action-*/${{ matrix.image_name }}.cyclonedx
+
+  app_test:
+    runs-on: ubuntu-latest
+    needs: build
+    defaults:
+      run:
+        working-directory: ./tests
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v4
+    - 
+      name: Checkout
+      uses: actions/checkout@v4
+      with:
+        repository: uselagoon/lagoon-examples
+        path: tests
+    -
+      name: Add additional tests
+      run: |
+        git submodule add -b php74 https://github.com/lagoon-examples/drupal9-postgres drupal9-postgres-php74
+        git submodule add -b php81 https://github.com/lagoon-examples/drupal9-base drupal9-base-php81
+    - 
+      name: Update git submodules
+      run: |
+        git submodule sync
+        git submodule update --init
+    - 
+      name: Use built images to test
+      run: |
+        grep -rl uselagoon . | xargs sed -i '/^FROM/ s#latest#${{ github.ref_name }}#'
+        grep -rl uselagoon . | xargs sed -i '/^FROM/ s#uselagoon#ghcr.io/${{ github.repository_owner }}#'
+        grep -rl uselagoon . | xargs sed -i '/image:/ s#latest#${{ github.ref_name }}#'
+        grep -rl uselagoon . | xargs sed -i '/image:/ s#uselagoon#ghcr.io/${{ github.repository_owner }}#'
+        find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'
+    -
+      name: check replacements
+      run: |
+        find . -maxdepth 2 -name docker-compose.yml | xargs grep image: 
+        find . -maxdepth 3 -name *.dockerfile | xargs grep ^FROM
+    - 
+      name: Install test harness
+      run: |
+        yarn install
+    - 
+      name: Generate test files
+      run: |
+        yarn generate-tests
+    - 
+      name: Run docker-compose tests
+      run: |
+        yarn test:dockercompose
+
+  image_test:
+    runs-on: ubuntu-latest
+    needs: build
+    defaults:
+      run:
+        working-directory: ./tests
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v4
+    - 
+      name: Checkout
+      uses: actions/checkout@v4
+      with:
+        repository: uselagoon/lagoon-examples
+        path: tests
+    -
+      name: Add additional tests
+      run: |
+        mkdir -p ./all-images && cp ../helpers/docker-compose.yml ./all-images/ && cp ../helpers/TESTING_dockercompose.md ./all-images/
+    - 
+      name: Use built images to test
+      run: |
+        grep -rl uselagoon . | xargs sed -i '/image:/ s#latest#${{ github.ref_name }}#'
+        grep -rl uselagoon . | xargs sed -i '/image:/ s#uselagoon#ghcr.io/${{ github.repository_owner }}#'
+        find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'
+    -
+      name: check replacements
+      run: |
+        find . -maxdepth 2 -name docker-compose.yml | xargs cat
+    -
+      name: check dc builds
+      run: |
+        cd ./all-images
+        docker-compose up -d
+        docker-compose logs
+    - 
+      name: Install test harness
+      run: |
+        yarn install
+    - 
+      name: Generate test files
+      run: |
+        yarn generate-tests
+    - 
+      name: Run docker-compose tests
+      run: |
+        yarn test:dockercompose

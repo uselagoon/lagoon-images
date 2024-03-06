@@ -1,10 +1,9 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons as commons
-# Held at 3.12.x to ensure mariadb 10.4 whilst we evaluate upgrade path
-FROM alpine:3.12.12
+ARG IMAGE_TAG
+FROM ${IMAGE_REPO:-lagoon}/commons:${IMAGE_TAG:-latest} as commons
 
-LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+# Held at 3.12.x to ensure mariadb 10.4
+FROM alpine:3.12.12
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

@@ -3,9 +3,6 @@ FROM amazeeio/envplate:v1.0.3 AS envplate
 
 FROM alpine:3.19.1
 
-LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
-
 ENV LAGOON=commons
 
 COPY lagoon/ /lagoon/

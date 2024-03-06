@@ -1,9 +1,5 @@
 # docker-bake.dev.hcl
 # docker-bake.dev.hcl
-variable "CI_BUILD_TAG" {
-  default = "lagoon"
-}
-
 variable "TAG" {
   default = "latest"
 }
@@ -17,7 +13,15 @@ variable "IMAGE_REPO" {
 }
 
 variable "IMAGE_TAG" {
-  default = "latest"
+  default = "newest"
+}
+
+variable "PUSH_REPO" {
+  default = "lagoon"
+}
+
+variable "PUSH_TAG" {
+  default = "newest"
 }
 
 variable "PLATFORMS" {
@@ -38,6 +42,8 @@ target "default"{
   }
   args = {
     LAGOON_VERSION = "${LAGOON_VERSION}"
+    PUSH_REPO = "${PUSH_REPO}"
+    PUSH_TAG = "${PUSH_TAG}"
     IMAGE_REPO = "${IMAGE_REPO}"
     IMAGE_TAG = "${IMAGE_TAG}"
   }
@@ -246,7 +252,10 @@ target "commons" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/commons"
   }
-  tags = ["${IMAGE_REPO}/commons:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/commons:${IMAGE_TAG}",
+    "${PUSH_REPO}/commons:${PUSH_TAG}"
+  ]
 }
 
 target "mariadb-10-4" {
@@ -259,7 +268,10 @@ target "mariadb-10-4" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/mariadb-10.4"
   }
-  tags = ["${IMAGE_REPO}/mariadb-10.4:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/mariadb-10.4:${IMAGE_TAG}",
+    "${PUSH_REPO}/mariadb-10.4:${PUSH_TAG}"
+  ]
 }
 
 target "mariadb-10-4-drupal" {
@@ -272,7 +284,10 @@ target "mariadb-10-4-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/mariadb-10.4-drupal"
   }
-  tags = ["${IMAGE_REPO}/mariadb-10.4-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/mariadb-10.4-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/mariadb-10.4-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "mariadb-10-5" {
@@ -285,7 +300,10 @@ target "mariadb-10-5" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/mariadb-10.5"
   }
-  tags = ["${IMAGE_REPO}/mariadb-10.5:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/mariadb-10.5:${IMAGE_TAG}",
+    "${PUSH_REPO}/mariadb-10.5:${PUSH_TAG}"
+  ]
 }
 
 target "mariadb-10-5-drupal" {
@@ -298,7 +316,10 @@ target "mariadb-10-5-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/mariadb-10.4-drupal"
   }
-  tags = ["${IMAGE_REPO}/mariadb-10.5-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/mariadb-10.5-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/mariadb-10.5-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "mariadb-10-6" {
@@ -311,7 +332,10 @@ target "mariadb-10-6" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/mariadb-10.6"
   }
-  tags = ["${IMAGE_REPO}/mariadb-10.6:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/mariadb-10.6:${IMAGE_TAG}",
+    "${PUSH_REPO}/mariadb-10.6:${PUSH_TAG}"
+  ]
 }
 
 target "mariadb-10-6-drupal" {
@@ -324,7 +348,10 @@ target "mariadb-10-6-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/mariadb-10.6-drupal"
   }
-  tags = ["${IMAGE_REPO}/mariadb-10.6-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/mariadb-10.6-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/mariadb-10.6-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "mariadb-10-11" {
@@ -337,7 +364,10 @@ target "mariadb-10-11" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/mariadb-10.11"
   }
-  tags = ["${IMAGE_REPO}/mariadb-10.11:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/mariadb-10.11:${IMAGE_TAG}",
+    "${PUSH_REPO}/mariadb-10.11:${PUSH_TAG}"
+  ]
 }
 
 target "mariadb-10-11-drupal" {
@@ -350,7 +380,10 @@ target "mariadb-10-11-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/mariadb-10.11-drupal"
   }
-  tags = ["${IMAGE_REPO}/mariadb-10.11-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/mariadb-10.11-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/mariadb-10.11-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "mongo-4" {
@@ -363,7 +396,10 @@ target "mongo-4" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/mongo-4"
   }
-  tags = ["${IMAGE_REPO}/mongo-4:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/mongo-4:${IMAGE_TAG}",
+    "${PUSH_REPO}/mongo-4:${PUSH_TAG}"
+  ]
 }
 
 target "nginx" {
@@ -376,7 +412,10 @@ target "nginx" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/nginx"
   }
-  tags = ["${IMAGE_REPO}/nginx:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/nginx:${IMAGE_TAG}",
+    "${PUSH_REPO}/nginx:${PUSH_TAG}"
+  ]
 }
 
 target "nginx-drupal" {
@@ -389,7 +428,10 @@ target "nginx-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/nginx-drupal"
   }
-  tags = ["${IMAGE_REPO}/nginx:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/nginx-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/nginx-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "node-18" {
@@ -402,7 +444,10 @@ target "node-18" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/node-18"
   }
-  tags = ["${IMAGE_REPO}/node-18:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/node-18:${IMAGE_TAG}",
+    "${PUSH_REPO}/node-18:${PUSH_TAG}"
+  ]
 }
 
 target "node-18-builder" {
@@ -415,7 +460,10 @@ target "node-18-builder" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/node-18-builder"
   }
-  tags = ["${IMAGE_REPO}/node-18-builder:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/node-18-builder:${IMAGE_TAG}",
+    "${PUSH_REPO}/node-18-builder:${PUSH_TAG}"
+  ]
 }
 
 target "node-18-cli" {
@@ -428,7 +476,10 @@ target "node-18-cli" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/node-18-cli"
   }
-  tags = ["${IMAGE_REPO}/node-18-cli:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/node-18-cli:${IMAGE_TAG}",
+    "${PUSH_REPO}/node-18-cli:${PUSH_TAG}"
+  ]
 }
 
 target "node-20" {
@@ -441,7 +492,10 @@ target "node-20" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/node-20"
   }
-  tags = ["${IMAGE_REPO}/node-20:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/node-20:${IMAGE_TAG}",
+    "${PUSH_REPO}/node-20:${PUSH_TAG}"
+  ]
 }
 
 target "node-20-builder" {
@@ -454,7 +508,10 @@ target "node-20-builder" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/node-20-builder"
   }
-  tags = ["${IMAGE_REPO}/node-20-builder:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/node-20-builder:${IMAGE_TAG}",
+    "${PUSH_REPO}/node-20-builder:${PUSH_TAG}"
+  ]
 }
 
 target "node-20-cli" {
@@ -467,7 +524,10 @@ target "node-20-cli" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/node-20-cli"
   }
-  tags = ["${IMAGE_REPO}/node-20-cli:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/node-20-cli:${IMAGE_TAG}",
+    "${PUSH_REPO}/node-20-cli:${PUSH_TAG}"
+  ]
 }
 
 target "opensearch-2" {
@@ -480,7 +540,10 @@ target "opensearch-2" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/opensearch-2"
   }
-  tags = ["${IMAGE_REPO}/opensearch-2:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/opensearch-2:${IMAGE_TAG}",
+    "${PUSH_REPO}/opensearch-2:${PUSH_TAG}"
+  ]
 }
 
 target "php-8-0-fpm" {
@@ -493,7 +556,10 @@ target "php-8-0-fpm" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/php-8.0-fpm"
   }
-  tags = ["${IMAGE_REPO}/php-8.0-fpm:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/php-8.0-fpm:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.0-fpm:${PUSH_TAG}"
+  ]
 }
 
 target "php-8-0-cli" {
@@ -506,7 +572,10 @@ target "php-8-0-cli" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/php-8.0-cli"
   }
-  tags = ["${IMAGE_REPO}/php-8.0-cli:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/php-8.0-cli:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.0-cli:${PUSH_TAG}"
+  ]
 }
 
 target "php-8-0-cli-drupal" {
@@ -519,7 +588,10 @@ target "php-8-0-cli-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/php-8.0-cli-drupal"
   }
-  tags = ["${IMAGE_REPO}/php-8.0-cli-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/php-8.0-cli-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.0-cli-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "php-8-1-fpm" {
@@ -532,7 +604,10 @@ target "php-8-1-fpm" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/php-8.1-fpm"
   }
-  tags = ["${IMAGE_REPO}/php-8.1-fpm:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/php-8.1-fpm:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.1-fpm:${PUSH_TAG}"
+  ]
 }
 
 target "php-8-1-cli" {
@@ -545,7 +620,10 @@ target "php-8-1-cli" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/php-8.1-cli"
   }
-  tags = ["${IMAGE_REPO}/php-8.1-cli:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/php-8.1-cli:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.1-cli:${PUSH_TAG}"
+  ]
 }
 
 target "php-8-1-cli-drupal" {
@@ -558,7 +636,10 @@ target "php-8-1-cli-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/php-8.1-cli-drupal"
   }
-  tags = ["${IMAGE_REPO}/php-8.1-cli-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/php-8.1-cli-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.1-cli-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "php-8-2-fpm" {
@@ -571,7 +652,10 @@ target "php-8-2-fpm" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/php-8.2-fpm"
   }
-  tags = ["${IMAGE_REPO}/php-8.2-fpm:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/php-8.2-fpm:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.2-fpm:${PUSH_TAG}"
+  ]
 }
 
 target "php-8-2-cli" {
@@ -584,7 +668,10 @@ target "php-8-2-cli" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/php-8.2-cli"
   }
-  tags = ["${IMAGE_REPO}/php-8.2-cli:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/php-8.2-cli:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.2-cli:${PUSH_TAG}"
+  ]
 }
 
 target "php-8-2-cli-drupal" {
@@ -597,7 +684,10 @@ target "php-8-2-cli-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/php-8.2-cli-drupal"
   }
-  tags = ["${IMAGE_REPO}/php-8.2-cli-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/php-8.2-cli-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/php-8.2-cli-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-11" {
@@ -610,7 +700,10 @@ target "postgres-11" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-11"
   }
-  tags = ["${IMAGE_REPO}/postgres-11:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-11:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-11:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-11-drupal" {
@@ -623,7 +716,10 @@ target "postgres-11-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-11-drupal"
   }
-  tags = ["${IMAGE_REPO}/postgres-11-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-11-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-11-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-11-ckan" {
@@ -636,7 +732,10 @@ target "postgres-11-ckan" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-11-ckan"
   }
-  tags = ["${IMAGE_REPO}/postgres-11-ckan:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-11-ckan:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-11-ckan:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-12" {
@@ -649,7 +748,10 @@ target "postgres-12" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-12"
   }
-  tags = ["${IMAGE_REPO}/postgres-12:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-12:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-12:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-12-drupal" {
@@ -662,7 +764,10 @@ target "postgres-12-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-12-drupal"
   }
-  tags = ["${IMAGE_REPO}/postgres-12-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-12-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-12-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-13" {
@@ -675,7 +780,10 @@ target "postgres-13" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-13"
   }
-  tags = ["${IMAGE_REPO}/postgres-13:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-13:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-13:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-13-drupal" {
@@ -688,7 +796,10 @@ target "postgres-13-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-13-drupal"
   }
-  tags = ["${IMAGE_REPO}/postgres-13-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-13-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-13-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-14" {
@@ -701,7 +812,10 @@ target "postgres-14" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-14"
   }
-  tags = ["${IMAGE_REPO}/postgres-14:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-14:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-14:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-14-drupal" {
@@ -714,7 +828,10 @@ target "postgres-14-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-14-drupal"
   }
-  tags = ["${IMAGE_REPO}/postgres-14-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-14-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-14-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-15" {
@@ -727,7 +844,10 @@ target "postgres-15" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-15"
   }
-  tags = ["${IMAGE_REPO}/postgres-15:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-15:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-15:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-15-drupal" {
@@ -740,7 +860,10 @@ target "postgres-15-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-15-drupal"
   }
-  tags = ["${IMAGE_REPO}/postgres-15-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-15-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-15-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-16" {
@@ -753,7 +876,10 @@ target "postgres-16" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-16"
   }
-  tags = ["${IMAGE_REPO}/postgres-16:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-16:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-16:${PUSH_TAG}"
+  ]
 }
 
 target "postgres-16-drupal" {
@@ -766,7 +892,10 @@ target "postgres-16-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/postgres-16-drupal"
   }
-  tags = ["${IMAGE_REPO}/postgres-16-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/postgres-16-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/postgres-16-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "python-3-8" {
@@ -779,7 +908,10 @@ target "python-3-8" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/python-3.8"
   }
-  tags = ["${IMAGE_REPO}/python-3.8:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/python-3.8:${IMAGE_TAG}",
+    "${PUSH_REPO}/python-3.8:${PUSH_TAG}"
+  ]
 }
 
 target "python-3-9" {
@@ -792,7 +924,10 @@ target "python-3-9" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/python-3.9"
   }
-  tags = ["${IMAGE_REPO}/python-3.9:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/python-3.9:${IMAGE_TAG}",
+    "${PUSH_REPO}/python-3.9:${PUSH_TAG}"
+  ]
 }
 
 target "python-3-10" {
@@ -805,7 +940,10 @@ target "python-3-10" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/python-3.10"
   }
-  tags = ["${IMAGE_REPO}/python-3.10:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/python-3.10:${IMAGE_TAG}",
+    "${PUSH_REPO}/python-3.10:${PUSH_TAG}"
+  ]
 }
 
 target "python-3-11" {
@@ -818,7 +956,10 @@ target "python-3-11" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/python-3.11"
   }
-  tags = ["${IMAGE_REPO}/python-3.11:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/python-3.11:${IMAGE_TAG}",
+    "${PUSH_REPO}/python-3.11:${PUSH_TAG}"
+  ]
 }
 
 target "python-3-12" {
@@ -831,7 +972,10 @@ target "python-3-12" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/python-3.12"
   }
-  tags = ["${IMAGE_REPO}/python-3.12:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/python-3.12:${IMAGE_TAG}",
+    "${PUSH_REPO}/python-3.12:${PUSH_TAG}"
+  ]
 }
 
 target "rabbitmq" {
@@ -844,7 +988,10 @@ target "rabbitmq" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/rabbitmq"
   }
-  tags = ["${IMAGE_REPO}/rabbitmq:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/rabbitmq:${IMAGE_TAG}",
+    "${PUSH_REPO}/rabbitmq:${PUSH_TAG}"
+  ]
 }
 
 target "rabbitmq-cluster" {
@@ -857,7 +1004,10 @@ target "rabbitmq-cluster" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/rabbitmq-cluster"
   }
-  tags = ["${IMAGE_REPO}/rabbitmq-cluster:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/rabbitmq-cluster:${IMAGE_TAG}",
+    "${PUSH_REPO}/rabbitmq-cluster:${PUSH_TAG}"
+  ]
 }
 
 target "redis-6" {
@@ -870,7 +1020,10 @@ target "redis-6" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/redis-6"
   }
-  tags = ["${IMAGE_REPO}/redis-6:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/redis-6:${IMAGE_TAG}",
+    "${PUSH_REPO}/redis-6:${PUSH_TAG}"
+  ]
 }
 
 target "redis-6-persistent" {
@@ -883,7 +1036,10 @@ target "redis-6-persistent" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/redis-6-persistent"
   }
-  tags = ["${IMAGE_REPO}/redis-6-persistent:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/redis-6-persistent:${IMAGE_TAG}",
+    "${PUSH_REPO}/redis-6-persistent:${PUSH_TAG}"
+  ]
 }
 
 target "redis-7" {
@@ -896,7 +1052,10 @@ target "redis-7" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/redis-7"
   }
-  tags = ["${IMAGE_REPO}/redis-7:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/redis-7:${IMAGE_TAG}",
+    "${PUSH_REPO}/redis-7:${PUSH_TAG}"
+  ]
 }
 
 target "redis-7-persistent" {
@@ -909,7 +1068,10 @@ target "redis-7-persistent" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/redis-7-persistent"
   }
-  tags = ["${IMAGE_REPO}/redis-7-persistent:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/redis-7-persistent:${IMAGE_TAG}",
+    "${PUSH_REPO}/redis-7-persistent:${PUSH_TAG}"
+  ]
 }
 
 target "ruby-3-0" {
@@ -922,7 +1084,10 @@ target "ruby-3-0" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/ruby-3.0"
   }
-  tags = ["${IMAGE_REPO}/ruby-3.0:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/ruby-3.0:${IMAGE_TAG}",
+    "${PUSH_REPO}/ruby-3.0:${PUSH_TAG}"
+  ]
 }
 
 target "ruby-3-1" {
@@ -935,7 +1100,10 @@ target "ruby-3-1" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/ruby-3.1"
   }
-  tags = ["${IMAGE_REPO}/ruby-3.1:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/ruby-3.1:${IMAGE_TAG}",
+    "${PUSH_REPO}/ruby-3.1:${PUSH_TAG}"
+  ]
 }
 
 target "ruby-3-2" {
@@ -948,7 +1116,10 @@ target "ruby-3-2" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/ruby-3.2"
   }
-  tags = ["${IMAGE_REPO}/ruby-3.2:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/ruby-3.2:${IMAGE_TAG}",
+    "${PUSH_REPO}/ruby-3.2:${PUSH_TAG}"
+  ]
 }
 
 target "solr-7" {
@@ -961,7 +1132,10 @@ target "solr-7" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/solr-7"
   }
-  tags = ["${IMAGE_REPO}/solr-7:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/solr-7:${IMAGE_TAG}",
+    "${PUSH_REPO}/solr-7:${PUSH_TAG}"
+  ]
 }
 
 target "solr-7-drupal" {
@@ -974,7 +1148,10 @@ target "solr-7-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/solr-7-drupal"
   }
-  tags = ["${IMAGE_REPO}/solr-7-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/solr-7-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/solr-7-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "solr-8" {
@@ -987,7 +1164,10 @@ target "solr-8" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/solr-8"
   }
-  tags = ["${IMAGE_REPO}/solr-8:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/solr-8:${IMAGE_TAG}",
+    "${PUSH_REPO}/solr-8:${PUSH_TAG}"
+  ]
 }
 
 target "solr-8-drupal" {
@@ -1000,7 +1180,10 @@ target "solr-8-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/solr-8-drupal"
   }
-  tags = ["${IMAGE_REPO}/solr-8-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/solr-8-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/solr-8-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "varnish-6" {
@@ -1013,7 +1196,10 @@ target "varnish-6" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/varnish-6"
   }
-  tags = ["${IMAGE_REPO}/varnish-6:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/varnish-6:${IMAGE_TAG}",
+    "${PUSH_REPO}/varnish-6:${PUSH_TAG}"
+  ]
 }
 
 target "varnish-6-drupal" {
@@ -1026,7 +1212,10 @@ target "varnish-6-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/varnish-6-drupal"
   }
-  tags = ["${IMAGE_REPO}/varnish-6-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/varnish-6-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/varnish-6-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "varnish-6-persistent" {
@@ -1039,7 +1228,10 @@ target "varnish-6-persistent" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/varnish-6-persistent"
   }
-  tags = ["${IMAGE_REPO}/varnish-6-persistent:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/varnish-6-persistent:${IMAGE_TAG}",
+    "${PUSH_REPO}/varnish-6-persistent:${PUSH_TAG}"
+  ]
 }
 
 target "varnish-6-persistent-drupal" {
@@ -1052,7 +1244,10 @@ target "varnish-6-persistent-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/varnish-6-persistent-drupal"
   }
-  tags = ["${IMAGE_REPO}/varnish-6-persistent-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/varnish-6-persistent-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/varnish-6-persistent-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "varnish-7" {
@@ -1065,7 +1260,10 @@ target "varnish-7" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/varnish-7"
   }
-  tags = ["${IMAGE_REPO}/varnish-7:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/varnish-7:${IMAGE_TAG}",
+    "${PUSH_REPO}/varnish-7:${PUSH_TAG}"
+  ]
 }
 
 target "varnish-7-drupal" {
@@ -1078,7 +1276,10 @@ target "varnish-7-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/varnish-7-drupal"
   }
-  tags = ["${IMAGE_REPO}/varnish-7-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/varnish-7-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/varnish-7-drupal:${PUSH_TAG}"
+  ]
 }
 
 target "varnish-7-persistent" {
@@ -1091,7 +1292,10 @@ target "varnish-7-persistent" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/varnish-7-persistent"
   }
-  tags = ["${IMAGE_REPO}/varnish-7-persistent:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/varnish-7-persistent:${IMAGE_TAG}",
+    "${PUSH_REPO}/varnish-7-persistent:${PUSH_TAG}"
+  ]
 }
 
 target "varnish-7-persistent-drupal" {
@@ -1104,5 +1308,8 @@ target "varnish-7-persistent-drupal" {
   labels = {
     "org.opencontainers.image.title": "lagoon-images/varnish-7-persistent-drupal"
   }
-  tags = ["${IMAGE_REPO}/varnish-7-persistent-drupal:${TAG}"]
+  tags = [
+    "${IMAGE_REPO}/varnish-7-persistent-drupal:${IMAGE_TAG}",
+    "${PUSH_REPO}/varnish-7-persistent-drupal:${PUSH_TAG}"
+  ]
 }

@@ -3,10 +3,10 @@ name: Lagoon Image Build - buildx
 on:
   push:
     branches:
-      - 'testing/docker_buildx**'
+      - 'testing-docker_buildx**'
   pull_request:
     branches:
-      - 'testing/docker_buildx**'
+      - 'testing-docker_buildx**'
 
 jobs:
   changes:

@@ -359,16 +359,16 @@ jobs:
             IMAGE_REPO=ghcr.io/${{ github.repository_owner }}
             IMAGE_TAG=${{ github.ref_name }}
             BUILDKIT_INLINE_CACHE=1
-      -
-        uses: anchore/sbom-action@v0
-        with:
-          image: ghcr.io/${{ github.repository_owner }}/${{ matrix.image_name }}:${{ github.ref_name }}
-          artifact-name: ${{ matrix.image_name }}.cyclonedx
-          format: cyclonedx
-      -
-        name: view SBOM
-        run: |
-          cat /tmp/sbom-action-*/${{ matrix.image_name }}.cyclonedx
+      # -
+      #   uses: anchore/sbom-action@v0
+      #   with:
+      #     image: ghcr.io/${{ github.repository_owner }}/${{ matrix.image_name }}:${{ github.ref_name }}
+      #     artifact-name: ${{ matrix.image_name }}.cyclonedx
+      #     format: cyclonedx
+      # -
+      #   name: view SBOM
+      #   run: |
+      #     cat /tmp/sbom-action-*/${{ matrix.image_name }}.cyclonedx
 
   app_test:
     runs-on: ubuntu-latest

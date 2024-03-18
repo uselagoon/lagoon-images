@@ -17,15 +17,25 @@ if [[ "${VERBOSE:-}" == "yes" ]]; then
     set -x
 fi
 
+if [ -d /opt/docker-solr/scripts ]; then
+    echo "Solr 8 scripts directory detected"
+    SCRIPTS_DIR=${SOLR8_SCRIPTS_DIR:-/opt/docker-solr/scripts}
+elif [ -d /opt/solr/docker/scripts ]; then
+    echo "Solr 9 scripts directory detected"
+    SCRIPTS_DIR=${SOLR9_SCRIPTS_DIR:-/opt/solr/docker/scripts}
+else 
+    echo "No scripts directory detected"
+fi
+
 # init script for handling an empty /var/solr
-/opt/docker-solr/scripts/init-var-solr
+$SCRIPTS_DIR/init-var-solr
 
 # ensure that the target core directory is empty prior to recreation
 rm -rf /var/solr/data/$1
 echo "Removed $1 core prior to recreation"
 
 # run the precreate-core script again to bring in any new config
-/opt/docker-solr/scripts/precreate-core "$@"
+$SCRIPTS_DIR/precreate-core "$@"
 
 # set correct solr.lock.type for Lagoon
 grep -rl solr.lock.type /var/solr/data/$1 | xargs sed -i '/solr.lock.type/ s/native/none/'

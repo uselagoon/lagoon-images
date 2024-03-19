@@ -14,17 +14,18 @@ set -e
 echo "Executing $0" "$@"
 
 if [[ "${VERBOSE:-}" == "yes" ]]; then
-    set -x
+  set -x
 fi
 
 if [ -d /opt/docker-solr/scripts ]; then
-    echo "Solr 8 scripts directory detected"
-    SCRIPTS_DIR=${SOLR8_SCRIPTS_DIR:-/opt/docker-solr/scripts}
+  echo "Solr 8 scripts directory detected"
+  SCRIPTS_DIR=${SOLR8_SCRIPTS_DIR:-/opt/docker-solr/scripts}
 elif [ -d /opt/solr/docker/scripts ]; then
-    echo "Solr 9 scripts directory detected"
-    SCRIPTS_DIR=${SOLR9_SCRIPTS_DIR:-/opt/solr/docker/scripts}
+  echo "Solr 9 scripts directory detected"
+  SCRIPTS_DIR=${SOLR9_SCRIPTS_DIR:-/opt/solr/docker/scripts}
 else 
-    echo "No scripts directory detected"
+  echo "No scripts directory detected"
+  exit 1
 fi
 
 # init script for handling an empty /var/solr

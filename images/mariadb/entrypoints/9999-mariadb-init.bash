@@ -147,5 +147,6 @@ EOF
   fi
 
   echo "done, now starting daemon"
+  touch /tmp/mariadb-init-complete
 
 fi

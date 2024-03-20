@@ -126,13 +126,14 @@ EOF
     echo "[mysql]" >> ${MARIADB_DATA_DIR:-/var/lib/mysql}/.my.cnf
     echo "database=${MARIADB_DATABASE}" >> ${MARIADB_DATA_DIR:-/var/lib/mysql}/.my.cnf
 
-    for f in `ls /docker-entrypoint-initdb.d/*`; do
-      case "$f" in
-        *.sh)     echo "$0: running $f"; . "$f" ;;
-        *.sql)    echo "$0: running $f"; cat $f| envsubst | tee | mysql -u root -p${MARIADB_ROOT_PASSWORD}; echo ;;
-        *)        echo "$0: ignoring $f" ;;
-      esac
-    echo
+    for f in /docker-entrypoint-initdb.d/*; do
+      if [ -e "$f" ]; then
+        case "$f" in
+          *.sh)     echo "$0: running $f"; . "$f" ;;
+          *.sql)    echo "$0: running $f"; cat $f| envsubst | tee | mysql -u root -p${MARIADB_ROOT_PASSWORD}; echo ;;
+          *)        echo "$0: ignoring $f" ;;
+        esac
+      fi
     done
 
     if ! kill -s TERM "$pid" || ! wait "$pid"; then

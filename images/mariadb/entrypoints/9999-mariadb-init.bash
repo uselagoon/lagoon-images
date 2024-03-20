@@ -2,9 +2,6 @@
 
 set -eo pipefail
 
-# Locations
-CONTAINER_SCRIPTS_DIR="/usr/share/container-scripts/mysql"
-
 if [ "$(ls -A /etc/mysql/conf.d/)" ]; then
    ep /etc/mysql/conf.d/*
 fi

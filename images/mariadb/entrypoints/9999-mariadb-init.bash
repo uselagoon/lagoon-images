@@ -105,6 +105,8 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 DROP DATABASE IF EXISTS test;
 USE mysql;
 ALTER USER root@localhost IDENTIFIED VIA mysql_native_password USING PASSWORD("$MARIADB_ROOT_PASSWORD");
+DELETE FROM global_priv WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+DELETE FROM proxies_priv WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 FLUSH PRIVILEGES;
 
 EOF

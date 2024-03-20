@@ -44,6 +44,9 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
     chown -R mysql:mysql /run/mysqld
   fi
 
+  MARIADB_INIT_WAIT_SECONDS=${MARIADB_INIT_WAIT_SECONDS:-30}
+  MARIADB_INIT_PERIOD_SECONDS=${MARIADB_INIT_PERIOD_SECONDS:-1}
+
   if [ -d ${MARIADB_DATA_DIR:-/var/lib/mysql}/mysql ]; then
     echo "MySQL directory already present, skipping creation"
 
@@ -52,12 +55,12 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
     pid="$!"
     echo "pid is $pid"
 
-    for i in {30..0}; do
+    for i in $(seq 0 $MARIADB_INIT_WAIT_SECONDS); do
       if echo 'SELECT 1' | mysql -u root; then
         break
       fi
       echo 'MySQL init process in progress...'
-      sleep 1
+      sleep $MARIADB_INIT_PERIOD_SECONDS
     done
 
     mysql_upgrade --force
@@ -76,12 +79,12 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
     pid="$!"
     echo "pid is $pid"
 
-    for i in {30..0}; do
+    for i in $(seq 0 $MARIADB_INIT_WAIT_SECONDS); do
       if echo 'SELECT 1' | mysql -u root; then
         break
       fi
       echo 'MySQL init process in progress...'
-      sleep 1
+      sleep $MARIADB_INIT_PERIOD_SECONDS
     done
 
     if [ "$MARIADB_ROOT_PASSWORD" = "" ]; then

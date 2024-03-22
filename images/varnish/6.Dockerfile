@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
-FROM varnish:6.0.12 as vmod
+FROM varnish:6.0.13 as vmod
 
 USER root
 RUN apt-get update \
@@ -18,8 +18,8 @@ RUN curl -s https://packagecloud.io/install/repositories/varnishcache/varnish60l
         libpcre3-dev \
         libtool \
         python3-docutils \
-        varnish=6.0.12-1~bullseye \
-        varnish-dev=6.0.12-1~bullseye
+        varnish=6.0.13-1~bullseye \
+        varnish-dev=6.0.13-1~bullseye
 
 ENV LIBVMOD_DYNAMIC_VERSION=6.0
 RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip \
@@ -31,7 +31,7 @@ RUN cd /tmp && curl -sSLO https://github.com/varnish/varnish-modules/archive/${V
     && unzip ${VARNISH_MODULES_VERSION}.zip && cd varnish-modules-${VARNISH_MODULES_VERSION} \
     && ./bootstrap && ./configure && make && make install
 
-FROM varnish:6.0.12
+FROM varnish:6.0.13
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"

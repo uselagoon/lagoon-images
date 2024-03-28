@@ -33,10 +33,12 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-15:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-16:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo-4:27017 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-6:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-7:6379 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://solr-8:8983 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://solr-9:8983 -timeout 1m
 ```
 
 Verification commands
@@ -62,6 +64,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-7
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-8
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-9
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep nginx
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-7
@@ -116,6 +119,19 @@ docker-compose exec -T solr-8 sh -c "cat /var/solr/data/mycore/conf/solrconfig.x
 # solr-8 should be able to read/write data
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-8" | grep "SERVICE_HOST=solr-8"
 docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-8" | grep "LAGOON_TEST_VAR=all-images"
+
+# solr-9 should have a "mycore" Solr core
+docker-compose exec -T commons sh -c "curl solr-9:8983/solr/admin/cores?action=STATUS\&core=mycore"
+
+# solr-9 should be able to reload "mycore" Solr core
+docker-compose exec -T commons sh -c "curl solr-9:8983/solr/admin/cores?action=RELOAD\&core=mycore"
+
+# solr-9 should have solr 9 solrconfig in "mycore" core
+docker-compose exec -T solr-9 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 9.
+
+# solr-9 should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-9" | grep "SERVICE_HOST=solr-9"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-9" | grep "LAGOON_TEST_VAR=all-images"
 
 # mariadb-10-4 should be version 10.4 client
 docker-compose exec -T mariadb-10-4 sh -c "mysql -V" | grep "10.4"

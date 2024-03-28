@@ -107,6 +107,12 @@ services:
       - "8983"
     user: solr
 
+  solr-9:
+    image: uselagoon/solr-9:latest
+    ports:
+      - "8983"
+    user: solr
+
   varnish-6:
     image: uselagoon/varnish-6:latest
     labels:

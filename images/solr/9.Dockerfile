@@ -65,13 +65,11 @@ USER solr
 
 ENV SOLR_OPTS="-Dlog4j2.formatMsgNoLookups=true"
 
-COPY 10-solr-port.sh /lagoon/entrypoints/
-# currently, there is no smart upgrade path from 7 to 8 - no autoremediation etc
-# and whilst sites may work, upgrading from 7 to 8, they won't work downgrading...
-# COPY 20-solr-datadir.sh /lagoon/entrypoints/
-
 # Define Volume so locally we get persistent cores
 VOLUME /var/solr
+
+# Define provided solr-docker entrypoint to append
+ENV APPEND_NATIVE_ENTRYPOINT=/opt/solr/docker/scripts/docker-entrypoint.sh
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
 

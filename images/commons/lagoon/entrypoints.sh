@@ -12,7 +12,7 @@ if [ -d /lagoon/entrypoints ]; then
   unset i
 fi
 
-# If the image provides a native endpoint that can, or should, be run after the lagoon endpoints are set, it's path can be
+# If the image provides a native entrypoint that can, or should, be run after the lagoon endpoints are set, it's path can be
 # set in the APPEND_NATIVE_ENTRYPOINT variable.
 if [ -n "$APPEND_NATIVE_ENTRYPOINT" ] && [ -f $APPEND_NATIVE_ENTRYPOINT ]; then
   echo "running defined endpoint"

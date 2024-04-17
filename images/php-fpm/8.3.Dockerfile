@@ -103,6 +103,7 @@ RUN apk update \
         file \
         gettext \
         icu-libs \
+        icu-data-full \
         imagemagick \
         imagemagick-heic \
         imagemagick-libs \

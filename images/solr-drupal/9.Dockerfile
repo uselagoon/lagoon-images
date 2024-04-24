@@ -11,6 +11,5 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 COPY --from=jumpstart /search_api_solr/jump-start/solr9/config-set /solr-conf/conf
 ENV SOLR_INSTALL_DIR=/opt/solr
-RUN mkdir -p /var/solr/data
 
 CMD ["solr-precreate", "drupal", "/solr-conf"]

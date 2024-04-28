@@ -37,6 +37,7 @@ Run the following commands to validate things are rolling as they should.
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep commons
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-18
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-20
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-22
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-1-dev
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-1-prod
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-2-dev
@@ -247,6 +248,12 @@ docker-compose exec -T node-20 sh -c "node -v" | grep "v20"
 
 # node-20 should be serving content
 docker-compose exec -T commons sh -c "curl node-20:3000/test" | grep "v20"
+
+# node-22 should have Node 22
+docker-compose exec -T node-22 sh -c "node -v" | grep "v22"
+
+# node-22 should be serving content
+docker-compose exec -T commons sh -c "curl node-22:3000/test" | grep "v22"
 
 # ruby-3-0 should have Ruby 3.0
 docker-compose exec -T ruby-3-0 sh -c "ruby -v" | grep "3.0"

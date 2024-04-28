@@ -199,6 +199,9 @@ versioned-images := 		php-8.1-fpm \
 							node-20 \
 							node-20-builder \
 							node-20-cli \
+							node-22 \
+							node-22-builder \
+							node-22-cli \
 							solr-8 \
 							solr-8-drupal \
 							solr-9 \
@@ -286,9 +289,10 @@ build/php-8.1-cli-drupal: build/php-8.1-cli
 build/php-8.2-cli-drupal: build/php-8.2-cli
 build/php-8.3-cli-drupal: build/php-8.3-cli
 build/python-3.7 build/python-3.8 build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12: build/commons
-build/node-18 build/node-20: build/commons
+build/node-18 build/node-20 build/node-22: build/commons
 build/node-18-builder build/node-18-cli: build/node-18
 build/node-20-builder build/node-20-cli: build/node-20
+build/node-22-builder build/node-22-cli: build/node-22
 build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14 build/postgres-15 build/postgres-16: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
 build/postgres-12-drupal: build/postgres-12

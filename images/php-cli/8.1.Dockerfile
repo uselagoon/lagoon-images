@@ -6,6 +6,8 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 ENV LAGOON=cli
 
+STOPSIGNAL SIGTERM
+
 RUN apk update \
     && apk add --no-cache git \
         bash \

@@ -20,6 +20,7 @@ if [ ! -z "$APPEND_NATIVE_ENTRYPOINT" ]; then
     . $APPEND_NATIVE_ENTRYPOINT
   else
     echo "provided native entrypoint file doesn't exist"
+  fi
 fi
 
 exec "$@"

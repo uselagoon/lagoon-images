@@ -14,9 +14,12 @@ fi
 
 # If the image provides a native entrypoint that can, or should, be run after the lagoon endpoints are set, it's path can be
 # set in the APPEND_NATIVE_ENTRYPOINT variable.
-if [ -n "$APPEND_NATIVE_ENTRYPOINT" ] && [ -f $APPEND_NATIVE_ENTRYPOINT ]; then
-  echo "running defined endpoint"
-  . $APPEND_NATIVE_ENTRYPOINT
+if [ ! -z "$APPEND_NATIVE_ENTRYPOINT" ]; then
+  if [ -f $APPEND_NATIVE_ENTRYPOINT ]; then
+    echo "running defined endpoint"
+    . $APPEND_NATIVE_ENTRYPOINT
+  else
+    echo "provided native entrypoint file doesn't exist"
 fi
 
 exec "$@"

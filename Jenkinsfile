@@ -55,13 +55,10 @@ node ('lagoon-images') {
         stage ('Copy examples down') {
           sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
           dir ('tests') {
-            // sh script: "git submodule add -b php74 https://github.com/lagoon-examples/drupal9-postgres drupal9-postgres-php74"
-            // sh script: "git submodule add -b php81 https://github.com/lagoon-examples/drupal9-base drupal9-base-php81"
             sh script: "git submodule sync && git submodule update --init"
             sh script: "mkdir -p ./all-images && cp ../helpers/*docker-compose.yml ./all-images/ && cp ../helpers/TESTING_*_dockercompose.md ./all-images/"
             sh script: "sed -i '/image: uselagoon/ s/uselagoon/${CI_BUILD_TAG}/' ./all-images/*-docker-compose.yml"
             sh script: "yarn install"
-            sh script: "yarn generate-tests"
             sh script: "docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network"
           }
         }
@@ -99,11 +96,10 @@ node ('lagoon-images') {
                 sh script: "grep -rl uselagoon . | xargs sed -i '/^FROM/ s/uselagoon/${CI_BUILD_TAG}/'"
                 sh script: "grep -rl uselagoon . | xargs sed -i '/image: uselagoon/ s/uselagoon/${CI_BUILD_TAG}/'"
                 sh script: "find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'"
-                sh script: "yarn test test/docker*base-images*", label: "Run base-images tests"
-                sh script: "yarn test test/docker*service-images*", label: "Run service-images tests"
+                sh script: "yarn test test/all-images/TESTING_base_images*", label: "Run base-images tests"
+                sh script: "yarn test test/all-images/TESTING_service_images**", label: "Run service-images tests"
                 sh script: "yarn test:simple", label: "Run simple Drupal tests"
                 sh script: "yarn test:advanced", label: "Run advanced Drupal tests"
-                sh script: "rm test/*.js"
               }
             }
           }

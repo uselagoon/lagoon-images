@@ -73,7 +73,7 @@ RUN touch /var/log/mariadb-slow.log && /bin/fix-permissions /var/log/mariadb-slo
 
 # We cannot start mysql as root, we add the user mysql to the group root and
 # change the user of the Docker Image to this user.
-RUN addgroup mysql root
+RUN adduser mysql root
 USER mysql
 ENV USER_NAME mysql
 

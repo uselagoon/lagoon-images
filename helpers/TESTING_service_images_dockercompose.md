@@ -26,6 +26,7 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-5:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-6:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-11:3306 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mysql-8-0:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-11:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-12:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
@@ -53,6 +54,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-5
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-11
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mysql-8-0
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mongo-4
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-11
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-12
@@ -221,6 +223,19 @@ docker compose exec -T mongo-4 sh -c "mongo < /tmp/dbstats.sql" | grep "db" | gr
 # mongo-4 should be able to read/write data
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo?service=mongo-4" | grep "SERVICE_HOST="
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo?service=mongo-4" | grep "LAGOON_TEST_VAR=all"
+
+# mysql-8-0 should be version 8.0 client
+docker-compose exec -T mysql-8-0  sh -c "mysql -V" | grep "8.0"
+
+# mysql-8-0  should be version 10.11 server
+docker-compose exec -T mysql-8-0  sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "8.0"
+
+# mysql-8-0  should use default credentials
+docker-compose exec -T mysql-8-0  sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
+
+# mysql-8-0  should be able to read/write data
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mysql-8-0 " | grep "SERVICE_HOST=8.0"
+docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mysql-8-0 " | grep "LAGOON_TEST_VAR=all-images"
 
 # postgres-11 should be version 11 client
 docker compose exec -T postgres-11 bash -c "psql --version" | grep "psql" | grep "11."

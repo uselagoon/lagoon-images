@@ -52,6 +52,12 @@ services:
       - "3306"
     << : *default-user # uses the defined user from top
 
+  mysql-8-4:
+    image: uselagoon/mysql-8.4:latest
+    ports:
+      - "3306"
+    << : *default-user # uses the defined user from top
+
   postgres-11:
     image: uselagoon/postgres-11:latest
     ports:

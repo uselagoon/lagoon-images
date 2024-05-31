@@ -225,17 +225,17 @@ docker compose exec -T commons sh -c "curl -kL http://internal-services-test:300
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mongo?service=mongo-4" | grep "LAGOON_TEST_VAR=all"
 
 # mysql-8-0 should be version 8.0 client
-docker-compose exec -T mysql-8-0  sh -c "mysql -V" | grep "8.0"
+docker compose exec -T mysql-8-0  sh -c "mysql -V" | grep "8.0"
 
-# mysql-8-0  should be version 10.11 server
-docker-compose exec -T mysql-8-0  sh -c "mysql -e \'SHOW variables;\'" | grep "version" | grep "8.0"
+# mysql-8-0  should be version 8.0 server
+docker compose exec -T mysql-8-0  sh -c "mysql -e 'SHOW variables;'" | grep "version" | grep "8.0"
 
 # mysql-8-0  should use default credentials
-docker-compose exec -T mysql-8-0  sh -c "mysql -D lagoon -u lagoon --password=lagoon -e \'SHOW databases;\'" | grep lagoon
+docker compose exec -T mysql-8-0  sh -c "mysql -D lagoon -u lagoon --password=lagoon -e 'SHOW databases;'" | grep lagoon
 
 # mysql-8-0  should be able to read/write data
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mysql-8-0 " | grep "SERVICE_HOST=8.0"
-docker-compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mysql-8-0 " | grep "LAGOON_TEST_VAR=all-images"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mysql-8-0" | grep "SERVICE_HOST=8.0"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mysql-8-0" | grep "LAGOON_TEST_VAR=all-images"
 
 # postgres-11 should be version 11 client
 docker compose exec -T postgres-11 bash -c "psql --version" | grep "psql" | grep "11."

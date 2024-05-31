@@ -63,8 +63,6 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
       sleep $MYSQL_INIT_PERIOD_SECONDS
     done
 
-    mysql_upgrade --force
-
     if ! kill -s TERM "$pid" || ! wait "$pid"; then
       echo >&2 'MySQL init process failed.'
       exit 1
@@ -105,7 +103,6 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 DROP DATABASE IF EXISTS test;
 USE mysql;
 ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
-DELETE FROM global_priv WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 DELETE FROM proxies_priv WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
 FLUSH PRIVILEGES;
 

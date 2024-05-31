@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM mysql:8.0.37-debian
+FROM mysql:8.0.37-oracle
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -12,15 +12,6 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /home /home
-
-# needed to fix dash upgrade - man files are removed from slim images
-RUN set -x \
-    && mkdir -p /usr/share/man/man1 \
-    && touch /usr/share/man/man1/sh.distrib.1.gz
-
-# replace default dash shell with bash to allow for bashisms
-RUN echo "dash dash/sh boolean false" | debconf-set-selections
-RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 
 RUN fix-permissions /etc/passwd \
     && mkdir -p /home
@@ -40,21 +31,16 @@ ENV MYSQL_DATABASE=lagoon \
     MYSQL_PASSWORD=lagoon \
     MYSQL_ROOT_PASSWORD=Lag00n
 
-RUN \
-    apt-get update && apt-get -y install \
-    bash \
-    curl \
-    net-tools \
-    pwgen \
-    tzdata \
-    wget \
-    gettext; \
+RUN microdnf install -y epel-release \
+    && microdnf update -y \
+    && microdnf install -y \
+        gettext \
+        net-tools \
+        pwgen \
+        tini \
+        wget; \
     rm -rf /var/lib/mysql/* /etc/mysql/ /etc/my.cnf*; \
     curl -sSL https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl -o mysqltuner.pl
-
-RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
-    && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini \
-    && chmod +x /sbin/tini
 
 COPY entrypoints/ /lagoon/entrypoints/
 COPY mysql-backup.sh /lagoon/
@@ -73,12 +59,12 @@ RUN touch /var/log/mariadb-slow.log && /bin/fix-permissions /var/log/mariadb-slo
 
 # We cannot start mysql as root, we add the user mysql to the group root and
 # change the user of the Docker Image to this user.
-RUN adduser mysql root
+RUN usermod -a -G root mysql
 USER mysql
 ENV USER_NAME mysql
 
 WORKDIR /var/lib/mysql
 EXPOSE 3306
 
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/lagoon/entrypoints.bash"]
 CMD ["mysqld"]

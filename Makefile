@@ -316,7 +316,7 @@ build/mariadb-10.4-drupal: build/mariadb-10.4
 build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6
 build/mariadb-10.11-drupal: build/mariadb-10.11
-build/ruby-3.0 build/ruby-3.1 build/ruby-3.2: build/commons
+build/ruby-3.1 build/ruby-3.2 build/ruby-3.3: build/commons
 build/opensearch-2: build/commons
 build/mongo-4: build/commons 
 

@@ -234,9 +234,9 @@ versioned-images := 		php-8.1-fpm \
 							varnish-7-drupal \
 							varnish-7-persistent \
 							varnish-7-persistent-drupal \
-							ruby-3.0 \
 							ruby-3.1 \
 							ruby-3.2 \
+							ruby-3.3 \
 							opensearch-2
 
 # default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.

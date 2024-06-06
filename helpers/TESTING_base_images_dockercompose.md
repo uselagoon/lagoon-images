@@ -49,9 +49,9 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-10
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-11
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-12
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-0
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-2
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-3
 
 # commons should be running Alpine Linux
 docker compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
@@ -255,12 +255,6 @@ docker compose exec -T node-22 sh -c "node -v" | grep "v22"
 # node-22 should be serving content
 docker compose exec -T commons sh -c "curl node-22:3000/test" | grep "v22"
 
-# ruby-3-0 should have Ruby 3.0
-docker compose exec -T ruby-3-0 sh -c "ruby -v" | grep "3.0"
-
-# ruby-3-0 should be serving content
-docker compose exec -T commons sh -c "curl ruby-3-0:3000/tmp/" | grep "ruby 3.0"
-
 # ruby-3-1 should have Ruby 3.1
 docker compose exec -T ruby-3-1 sh -c "ruby -v" | grep "3.1"
 
@@ -272,6 +266,12 @@ docker compose exec -T ruby-3-2 sh -c "ruby -v" | grep "3.2"
 
 # ruby-3-2 should be serving content
 docker compose exec -T commons sh -c "curl ruby-3-2:3000/tmp/" | grep "ruby 3.2"
+
+# ruby-3-3 should have Ruby 3.3
+docker compose exec -T ruby-3-3 sh -c "ruby -v" | grep "3.3"
+
+# ruby-3-3 should be serving content
+docker compose exec -T commons sh -c "curl ruby-3-3:3000/tmp/" | grep "ruby 3.3"
 ```
 
 Destroy tests

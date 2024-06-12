@@ -37,10 +37,10 @@ RUN apk update \
         bash \
         curl \
         gettext \
-        mariadb-client=~10.11 \
-        mariadb-common=~10.11 \
-        mariadb-server-utils=~10.11 \
-        mariadb=~10.11 \
+        mariadb-client=10.11.6-r0 \
+        mariadb-common=10.11.6-r0 \
+        mariadb-server-utils=10.11.6-r0 \
+        mariadb=10.11.6-r0 \
         mariadb-connector-c \
         net-tools \
         perl-doc \

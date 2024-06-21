@@ -61,7 +61,8 @@ pipeline {
       steps {
         sh script: "docker run --privileged --rm tonistiigi/binfmt --install all", label: "setting binfmt correctly"
         sh script: "make docker_pull", label: "Ensuring fresh upstream images"
-        sh script: "make -O${SYNC_MAKE_OUTPUT} build", label: "Building images"
+        sh script: "make docker_buildx_create", label: "Creating builder"
+        sh script: "make -O${SYNC_MAKE_OUTPUT} -j$NPROC build", label: "Building images"
         retry(3) {
           sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
           sh script: "make -O${SYNC_MAKE_OUTPUT} publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built amd64 images to testlagoon/*"

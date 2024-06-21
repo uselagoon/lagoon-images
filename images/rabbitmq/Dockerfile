@@ -1,5 +1,7 @@
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons as commons
+ARG UPSTREAM_REPO
+ARG UPSTREAM_TAG
+FROM ${UPSTREAM_REPO:-lagoon}/commons:${UPSTREAM_TAG:-latest} as commons
+
 FROM rabbitmq:3.10.25-management-alpine
 
 ARG LAGOON_VERSION

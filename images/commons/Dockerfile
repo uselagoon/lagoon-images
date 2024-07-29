@@ -1,4 +1,4 @@
-FROM webdevops/go-crond:23.10.0-beta-alpine AS go-crond
+FROM webdevops/go-crond:23.12.0-alpine AS go-crond
 FROM amazeeio/envplate:v1.0.3 AS envplate
 
 FROM alpine:3.19.3

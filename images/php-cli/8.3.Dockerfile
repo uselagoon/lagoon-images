@@ -1,4 +1,6 @@
 ARG IMAGE_REPO
+FROM docker.io/testlagoon/cli-base:latest AS cli-base
+
 FROM ${IMAGE_REPO:-lagoon}/php-8.3-fpm
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
@@ -8,12 +10,12 @@ ENV LAGOON=cli
 
 STOPSIGNAL SIGTERM
 
-RUN apk add --no-cache git \
+RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing libcrypto1.1 libssl1.1 \
+    && apk add --no-cache git \
         bash \
         coreutils \
         findutils \
         gzip  \
-        mariadb-client \
         mariadb-connector-c \
         mongodb-tools \
         nodejs=~20 \
@@ -26,19 +28,20 @@ RUN apk add --no-cache git \
         rsync \
         unzip \
         yarn \
-    && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/cache/apk/* \
+    && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server
 
 RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.7.7/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/
 
+COPY --from=cli-base /bin/mysql* /usr/bin/
+
 # Adding Composer vendor bin directories to $PATH.
 ENV PATH="$PATH:/app/vendor/bin:/home/.composer/vendor/bin"
 # We not only use "export $PATH" as this could be overwritten again
 # like it happens in /etc/profile of alpine Images.
-
 COPY entrypoints /lagoon/entrypoints/
 
 # Remove warning about running as root in composer

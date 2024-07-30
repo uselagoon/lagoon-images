@@ -1,4 +1,6 @@
 ARG IMAGE_REPO
+FROM docker.io/testlagoon/cli-base:latest AS cli-base
+
 FROM ${IMAGE_REPO:-lagoon}/node-22
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
@@ -6,13 +8,12 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 ENV LAGOON=node
 
-RUN apk update \
-    && apk add --no-cache bash \
+RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing libcrypto1.1 libssl1.1 \
+    && apk add --no-cache git \
+        bash \
         coreutils \
         findutils \
-        git \
         gzip  \
-        mariadb-client \
         mariadb-connector-c \
         mongodb-tools \
         openssh-client \
@@ -27,6 +28,8 @@ RUN apk update \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/
+
+COPY --from=cli-base /bin/mysql* /usr/bin/
 
 # We not only use "export $PATH" as this could be overwritten again
 # like it happens in /etc/profile of alpine Images.

@@ -1,4 +1,6 @@
 ARG IMAGE_REPO
+FROM docker.io/testlagoon/cli-base:latest AS cli-base
+
 FROM ${IMAGE_REPO:-lagoon}/php-8.1-fpm
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
@@ -8,13 +10,12 @@ ENV LAGOON=cli
 
 STOPSIGNAL SIGTERM
 
-RUN apk update \
+RUN apk add -U --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing libcrypto1.1 libssl1.1 \
     && apk add --no-cache git \
         bash \
         coreutils \
         findutils \
         gzip  \
-        mariadb-client \
         mariadb-connector-c \
         mongodb-tools \
         nodejs=~20 \
@@ -34,6 +35,8 @@ RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/rele
     && chmod +x /usr/local/bin/composer \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/
+
+COPY --from=cli-base /bin/mysql* /usr/bin/
 
 # Adding Composer vendor bin path to $PATH.
 ENV PATH="/home/.composer/vendor/bin:${PATH}"

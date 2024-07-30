@@ -137,7 +137,8 @@ docker_pull:
 #######
 ####### Base Images are the base for all other images and are also published for clients to use during local development
 
-unversioned-images :=		commons \
+unversioned-images :=		cli-base \
+							commons \
 							nginx \
 							nginx-drupal \
 							rabbitmq \
@@ -169,6 +170,7 @@ $(build-images):
 #    if the parent has been built
 # 2. Dockerfiles of the Images itself, will cause make to rebuild the images if something has
 #    changed on the Dockerfiles
+build/cli-base: images/cli-base/Dockerfile
 build/commons: images/commons/Dockerfile
 build/nginx: build/commons images/nginx/Dockerfile
 build/nginx-drupal: build/nginx images/nginx-drupal/Dockerfile
@@ -283,6 +285,7 @@ base-images-with-versions += $(experimental-images)
 s3-images += $(versioned-images)
 s3-images += $(experimental-images)
 
+build/php-8.1-cli build/php-8.2-cli build/php-8.3-cli: build/cli-base
 build/php-8.1-fpm build/php-8.2-fpm build/php-8.3-fpm: build/commons
 build/php-8.1-cli: build/php-8.1-fpm
 build/php-8.2-cli: build/php-8.2-fpm
@@ -292,6 +295,7 @@ build/php-8.2-cli-drupal: build/php-8.2-cli
 build/php-8.3-cli-drupal: build/php-8.3-cli
 build/python-3.7 build/python-3.8 build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12: build/commons
 build/node-18 build/node-20 build/node-22: build/commons
+build/node-18-cli build/node-20-cli build/node-22-cli: build/cli-base
 build/node-18-builder build/node-18-cli: build/node-18
 build/node-20-builder build/node-20-cli: build/node-20
 build/node-22-builder build/node-22-cli: build/node-22

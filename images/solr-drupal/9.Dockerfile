@@ -1,5 +1,5 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons as jumpstart
+FROM ${IMAGE_REPO:-lagoon}/commons AS jumpstart
 
 ADD https://git.drupalcode.org/project/search_api_solr.git#4.3.3 /search_api_solr
 

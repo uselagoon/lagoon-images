@@ -3,8 +3,17 @@ FROM amazeeio/envplate:v1.0.3 AS envplate
 
 FROM alpine:3.19.3
 
-LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+ARG LAGOON_VERSION=$LAGOON_VERSION
+ARG IMAGE_REPO=$IMAGE_REPO
+
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" 
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/${LAGOON_VERSION}/images/commons/Dockerfile"
+LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
+LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
+LABEL org.opencontainers.image.description="Base image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="${IMAGE_REPO}/commons"
+LABEL org.opencontainers.image.base.name="docker.io/alpine:3.19"
 
 ENV LAGOON=commons
 

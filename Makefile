@@ -50,11 +50,10 @@ DESTINATION_TAG ?= latest
 
 # Local environment
 ARCH := $(shell uname | tr '[:upper:]' '[:lower:]')
-LAGOON_VERSION := $(shell git describe --tags --exact-match 2>/dev/null || echo development )
-DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
-
 # Name of the Branch we are currently in
-BRANCH_NAME :=
+BRANCH_NAME := $(shell git branch --show-current)
+LAGOON_VERSION := $(shell git describe --tags --exact-match 2>/dev/null || echo ${BRANCH_NAME} )
+DOCKER_DRIVER := $(shell docker info -f '{{.Driver}}')
 
 # Only set this to false when ready to push images to dockerhub
 PUBLISH_IMAGES ?= false

@@ -1,5 +1,5 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons as commons
+FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 FROM solr:9.6.1
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"

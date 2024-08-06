@@ -1,5 +1,5 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons as commons
+FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 
 FROM python:3.12.3-alpine3.18
 

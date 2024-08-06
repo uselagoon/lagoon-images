@@ -1,5 +1,5 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons as commons
+FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 # Held at 3.12.x to ensure mariadb 10.4 whilst we evaluate upgrade path
 FROM alpine:3.12.12
 

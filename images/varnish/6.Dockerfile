@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons as commons
+FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 
-FROM varnish:6.0.13 as vmod
+FROM varnish:6.0.13 AS vmod
 
 USER root
 RUN apt-get update \

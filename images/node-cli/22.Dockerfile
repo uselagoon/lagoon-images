@@ -6,14 +6,12 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 ENV LAGOON=node
 
-RUN apk update \
+RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/v3.19/main mariadb-client=10.11.6-r0 mariadb-connector-c \
     && apk add --no-cache bash \
         coreutils \
         findutils \
         git \
         gzip  \
-        mariadb-client \
-        mariadb-connector-c \
         mongodb-tools \
         openssh-client \
         openssh-sftp-server \

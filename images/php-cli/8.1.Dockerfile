@@ -6,14 +6,18 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 
 ENV LAGOON=cli
 
-RUN apk add --no-cache git \
+STOPSIGNAL SIGTERM
+
+RUN apk update \
+    && apk add --no-cache git \
         bash \
         coreutils \
         findutils \
         gzip  \
         mariadb-client \
+        mariadb-connector-c \
         mongodb-tools \
-        nodejs-dev=~18 \
+        nodejs=~20 \
         npm \
         openssh-client \
         openssh-sftp-server \
@@ -23,10 +27,10 @@ RUN apk add --no-cache git \
         rsync \
         unzip \
         yarn \
-    && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/cache/apk/* \
+    && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server
 
-RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.5.1/composer.phar \
+RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.7.7/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/

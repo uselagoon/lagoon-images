@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM solr:8.11.2-slim
+FROM solr:8.11.3-slim
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -30,9 +30,11 @@ USER root
 
 RUN apt-get -y update \
     && apt-get -y install \
-                  busybox \
-                  curl \
-                  zip \
+        busybox \
+        curl \
+        rsync \
+        tar \
+        zip \
     && rm -rf /var/lib/apt/lists/*
 
 # Mitigation for CVE-2021-45046 and CVE-2021-44228 - not needed in log4j-core 2.16.0

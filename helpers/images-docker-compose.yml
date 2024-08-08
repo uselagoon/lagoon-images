@@ -1,0 +1,231 @@
+version: '2.3'
+
+x-user:
+  &default-user
+    # The default user under which the containers should run. Change this if you are on linux and run with another user than id `1000`
+    user: '1000'
+
+services:
+  commons:
+    image: uselagoon/commons:latest
+    << : *default-user # uses the defined user from top
+
+  node-18:
+    image: uselagoon/node-18:latest
+    ports:
+      - "3000"
+    user: root
+    command: ["sh", "-c", "
+        npm install -g http-server;
+        node -v | xargs > /app/test.html;
+        exec http-server -p 3000
+        "]
+
+  node-20:
+    image: uselagoon/node-20:latest
+    ports:
+      - "3000"
+    user: root
+    command: ["sh", "-c", "
+        npm install -g http-server;
+        node -v | xargs > /app/test.html;
+        exec http-server -p 3000
+        "]
+
+  node-22:
+    image: uselagoon/node-22:latest
+    ports:
+      - "3000"
+    user: root
+    command: ["sh", "-c", "
+        npm install -g http-server;
+        node -v | xargs > /app/test.html;
+        exec http-server -p 3000
+        "]
+
+  php-8-1-dev:
+    image: uselagoon/php-8.1-cli:latest
+    ports:
+      - "9000"
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=development
+      - XDEBUG_ENABLE=true
+      - XDEBUG_LOG=true
+      - NEWRELIC_ENABLED=true
+      - BLACKFIRE_ENABLED=true
+      - NEWRELIC_APPLICATION_LOGGING_FORWARDING_ENABLED=false
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
+
+  php-8-1-prod:
+    image: uselagoon/php-8.1-cli:latest
+    ports:
+      - "9000"
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=production
+      - PHP_MAX_INPUT_VARS=4000
+      - PHP_MAX_FILE_UPLOADS=40
+      - PHP_SESSION_COOKIE_SAMESITE="Strict"
+      - PHP_UPLOAD_MAX_FILESIZE=1024M
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
+
+  php-8-2-dev:
+    image: uselagoon/php-8.2-cli:latest
+    ports:
+      - "9000"
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=development
+      - XDEBUG_ENABLE=true
+      - XDEBUG_LOG=true
+      - NEWRELIC_ENABLED=true
+      - BLACKFIRE_ENABLED=true
+      - NEWRELIC_APPLICATION_LOGGING_ENABLED=false
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
+
+  php-8-2-prod:
+    image: uselagoon/php-8.2-cli:latest
+    ports:
+      - "9000"
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=production
+      - PHP_MAX_INPUT_VARS=4000
+      - PHP_MAX_FILE_UPLOADS=40
+      - PHP_SESSION_COOKIE_SAMESITE="Strict"
+      - PHP_UPLOAD_MAX_FILESIZE=1024M
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
+
+  php-8-3-dev:
+    image: uselagoon/php-8.3-cli:latest
+    ports:
+      - "9000"
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=development
+      - XDEBUG_ENABLE=true
+      - XDEBUG_LOG=true
+      - NEWRELIC_ENABLED=true
+      - BLACKFIRE_ENABLED=true
+      - NEWRELIC_APPLICATION_LOGGING_ENABLED=false
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
+
+  php-8-3-prod:
+    image: uselagoon/php-8.3-cli:latest
+    ports:
+      - "9000"
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=production
+      - PHP_MAX_INPUT_VARS=4000
+      - PHP_MAX_FILE_UPLOADS=40
+      - PHP_SESSION_COOKIE_SAMESITE="Strict"
+      - PHP_UPLOAD_MAX_FILESIZE=1024M
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
+
+  python-3-8:
+    image: uselagoon/python-3.8:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
+
+  python-3-9:
+    image: uselagoon/python-3.9:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
+
+  python-3-10:
+    image: uselagoon/python-3.10:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
+
+  python-3-11:
+    image: uselagoon/python-3.11:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
+
+  python-3-12:
+    image: uselagoon/python-3.12:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        python -V | xargs > tmp/test;
+        exec python -m http.server 3000
+        "]
+
+  ruby-3-1:
+    image: uselagoon/ruby-3.1:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        ruby -v | xargs > /tmp/index.html;
+        exec ruby -run -e httpd / -p 3000
+        "]
+
+  ruby-3-2:
+    image: uselagoon/ruby-3.2:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        ruby -v | xargs > /tmp/index.html;
+        exec ruby -run -e httpd / -p 3000
+        "]
+
+  ruby-3-3:
+    image: uselagoon/ruby-3.3:latest
+    ports:
+      - "3000"
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        ruby -v | xargs > /tmp/index.html;
+        exec ruby -run -e httpd / -p 3000
+        "]
+
+  internal-services-test:
+    image: docker.io/uselagoon/internal-services-test:main
+    ports:
+      - "3000"
+    environment:
+      - LAGOON_TEST_VAR=all-images
+    << : *default-user # uses the defined user from top

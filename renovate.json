@@ -150,6 +150,7 @@
         "patch"
       ],
       "matchPackageNames": [
+        "mysql",
         "php",
         "python",
         "ruby"
@@ -174,6 +175,7 @@
         "minor"
       ],
       "matchPackageNames": [
+        "mysql",
         "php",
         "python",
         "ruby"

@@ -1,7 +1,7 @@
-FROM webdevops/go-crond:22.9.1-alpine AS go-crond
-FROM amazeeio/envplate:v1.0.0-rc.3 AS envplate
+FROM webdevops/go-crond:23.12.0-alpine AS go-crond
+FROM amazeeio/envplate:v1.0.3 AS envplate
 
-FROM alpine:3.17.1
+FROM alpine:3.19.3
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -10,7 +10,7 @@ ENV LAGOON=commons
 
 COPY lagoon/ /lagoon/
 RUN mkdir -p /lagoon/bin
-COPY fix-permissions docker-sleep entrypoint-readiness wait-for /bin/
+COPY fix-permissions fix-dir-permissions docker-sleep entrypoint-readiness wait-for /bin/
 COPY .bashrc /home/.bashrc
 
 COPY --from=go-crond /usr/local/bin/go-crond /lagoon/bin/cron
@@ -18,8 +18,10 @@ COPY --from=envplate /usr/local/bin/ep /bin/ep
 
 RUN apk update \
     && apk add --no-cache \
-           curl \
-           tini \
+        curl \
+        rsync \
+        tar \
+        tini \
     && rm -rf /var/cache/apk/* \
     && mkdir -p /lagoon/crontabs && fix-permissions /lagoon/crontabs \
     && ln -s /home/.bashrc /home/.profile

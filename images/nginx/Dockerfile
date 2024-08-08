@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM openresty/openresty:1.21.4.1-4-alpine
+FROM openresty/openresty:1.25.3.2-0-alpine
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -27,8 +27,12 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-RUN apk add --no-cache \
-        openssl
+RUN apk update \
+    && apk add --no-cache \
+        openssl \
+        rsync \
+        tar \
+    && rm -rf /var/cache/apk/*
 
 RUN rm -Rf /etc/nginx && ln -s /usr/local/openresty/nginx/conf /etc/nginx
 
@@ -37,6 +41,7 @@ COPY fastcgi.conf /etc/nginx/fastcgi.conf
 COPY fastcgi.conf /etc/nginx/fastcgi_params
 COPY helpers/ /etc/nginx/helpers/
 COPY static-files.conf /etc/nginx/conf.d/app.conf
+COPY basic_auth.conf /etc/nginx/conf.d/basic_auth.conf
 COPY redirects-map.conf /etc/nginx/redirects-map.conf
 COPY healthcheck/healthz.locations healthcheck/healthz.locations.php.disable /etc/nginx/conf.d/
 

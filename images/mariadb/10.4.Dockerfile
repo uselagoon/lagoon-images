@@ -12,7 +12,6 @@ ENV LAGOON_VERSION=$LAGOON_VERSION
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
-COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 RUN fix-permissions /etc/passwd \
@@ -33,22 +32,28 @@ ENV MARIADB_DATABASE=lagoon \
     MARIADB_PASSWORD=lagoon \
     MARIADB_ROOT_PASSWORD=Lag00n
 
-RUN \
-    apk add --no-cache --virtual .common-run-deps \
+RUN apk update \
+    && apk add --no-cache --virtual .common-run-deps \
         bash \
         curl \
         gettext \
-        mariadb-client=~10.4 \
-        mariadb-common=~10.4 \
-        mariadb-server-utils=~10.4 \
-        mariadb=~10.4 \
+        mariadb-client=10.4.25-r0 \
+        mariadb-common=10.4.25-r0 \
+        mariadb-server-utils=10.4.25-r0 \
+        mariadb=10.4.25-r0 \
+        mariadb-connector-c \
         net-tools \
+        perl-doc \
         pwgen \
+        rsync \
+        tar \
+        tini \
         tzdata \
-        wget; \
-    rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/*; \
-    rm -rf /var/lib/mysql/* /etc/mysql/ /etc/my.cnf*; \
-    curl -sSL https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl -o mysqltuner.pl
+        wget \
+    && rm -rf /var/cache/apk/* \
+    && rm -rf /tmp/* /var/tmp/* /var/cache/distfiles/* \
+    && rm -rf /var/lib/mysql/* /etc/mysql/ /etc/my.cnf* \
+    && curl -sSL https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl -o mysqltuner.pl
 
 COPY entrypoints/ /lagoon/entrypoints/
 COPY mysql-backup.sh /lagoon/

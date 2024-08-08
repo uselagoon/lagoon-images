@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
-FROM alpine:3.17.1
+FROM alpine:3.19.3
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
@@ -26,8 +26,10 @@ ENV TMPDIR=/tmp \
 # Alpine 3.9 is the last release of the alpine mongodb package under OS license
 RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/main' >> /etc/apk/repositories
 RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/community' >> /etc/apk/repositories
-RUN apk update
-RUN apk add mongodb=4.0.5-r0
+RUN apk update \
+    && apk add --no-cache \
+        mongodb=4.0.5-r0 \
+    && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /data/db /data/configdb && \
     fix-permissions /data/db && \

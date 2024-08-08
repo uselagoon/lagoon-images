@@ -1,12 +1,12 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons as commons
 
-FROM mcr.microsoft.com/dotnet/runtime:6.0.12-alpine3.17
+FROM mcr.microsoft.com/dotnet/runtime:6.0.32-alpine3.20
 
 LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
 
-ENV LAGOON=dotnet-6-sdk
+ENV LAGOON=dotnet-6-runtime
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon

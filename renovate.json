@@ -216,6 +216,16 @@
       ]
     },
     {
+      "groupName": "Redis Images",
+      "allowedVersions": "<7.4.0",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "redis"
+      ]
+    },
+    {
       "groupName": "ELK Stack",
       "allowedVersions": "<7.11.0",
       "matchDatasources": [

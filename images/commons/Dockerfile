@@ -3,13 +3,21 @@ FROM amazeeio/envplate:v1.0.3 AS envplate
 
 FROM alpine:3.20.2
 
-LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/commons/Dockerfile"
+LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
+LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
+LABEL org.opencontainers.image.description="Base image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/commons"
+LABEL org.opencontainers.image.base.name="docker.io/alpine:3.20"
 
 ENV LAGOON=commons
 
 COPY lagoon/ /lagoon/
-RUN mkdir -p /lagoon/bin
+RUN mkdir -p /lagoon/bin \
+    && echo $LAGOON_VERSION > /lagoon/version
 COPY fix-permissions fix-dir-permissions docker-sleep entrypoint-readiness wait-for /bin/
 COPY .bashrc /home/.bashrc
 
@@ -27,10 +35,6 @@ RUN apk update \
     && ln -s /home/.bashrc /home/.profile
 
 RUN fix-permissions /etc/passwd
-
-ARG LAGOON_VERSION
-RUN echo $LAGOON_VERSION > /lagoon/version
-ENV LAGOON_VERSION=$LAGOON_VERSION
 
 ENV TMPDIR=/tmp \
     TMP=/tmp \

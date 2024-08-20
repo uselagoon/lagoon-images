@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons as commons
+FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 
-FROM varnish:6.0.13 as vmod
+FROM varnish:6.0.13 AS vmod
 
 USER root
 RUN apt-get update \
@@ -33,17 +33,21 @@ RUN cd /tmp && curl -sSLO https://github.com/varnish/varnish-modules/archive/${V
 
 FROM varnish:6.0.13
 
-LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/varnish/6.Dockerfile"
+LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
+LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
+LABEL org.opencontainers.image.description="Varnish 6 image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/varnish-6"
+LABEL org.opencontainers.image.base.name="docker.io/varnish:6.0"
 
 ENV LAGOON=varnish
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
-
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
-COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
+COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /home /home
 
 ENV TMPDIR=/tmp \

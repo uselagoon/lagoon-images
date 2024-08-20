@@ -1,15 +1,20 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons as commons
+FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 FROM redis:6.2.14-alpine3.20
-
-LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
-
-ENV LAGOON=redis
-ENV FLAVOR=ephemeral
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/redis/6.Dockerfile"
+LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
+LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
+LABEL org.opencontainers.image.description="Redis 6 image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/redis-6"
+LABEL org.opencontainers.image.base.name="docker.io/redis:6-alpine3.20"
+
+ENV LAGOON=redis
+
+ENV FLAVOR=ephemeral
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon

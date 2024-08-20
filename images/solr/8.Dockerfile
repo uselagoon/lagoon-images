@@ -1,20 +1,25 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons as commons
+FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 FROM solr:8.11.3-slim
-
-LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
-
-ENV LAGOON=solr
-ENV SOLR_DATA_HOME=/var/solr
-ENV SOLR_LOGS_DIR=/opt/solr/server/logs
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/solr/8.Dockerfile"
+LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
+LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
+LABEL org.opencontainers.image.description="Solr 8 image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/solr-8"
+LABEL org.opencontainers.image.base.name="docker.io/solr:8"
+
+ENV LAGOON=solr
+
+ENV SOLR_DATA_HOME=/var/solr
+ENV SOLR_LOGS_DIR=/opt/solr/server/logs
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
-COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/
+COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
 COPY --from=commons /home/.bashrc /home/.bashrc
 
 ENV TMPDIR=/tmp \

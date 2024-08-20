@@ -1,10 +1,15 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/node-20
 
-LABEL org.opencontainers.image.authors="The Lagoon Authors" maintainer="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images" repository="https://github.com/uselagoon/lagoon-images"
-
-ENV LAGOON=node
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/node-cli/20.Dockerfile"
+LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
+LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
+LABEL org.opencontainers.image.description="Node.js 20 cli image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/node-20-cli"
+LABEL org.opencontainers.image.base.name="docker.io/uselagoon/node-20"
 
 RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/v3.19/main mariadb-client=10.11.6-r0 mariadb-connector-c \
     && apk add --no-cache bash \

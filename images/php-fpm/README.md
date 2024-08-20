@@ -1,1 +1,1 @@
-Please reference the [Lagoon Docs](https://lagoon.readthedocs.io/en/latest/using_lagoon/docker_images/php-fpm/)
+Please reference the [Lagoon Docs](https://docs.lagoon.sh/docker-images/php-fpm/)

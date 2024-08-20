@@ -1,5 +1,3 @@
-version: '2.3'
-
 x-user:
   &default-user
     # The default user under which the containers should run. Change this if you are on linux and run with another user than id `1000`

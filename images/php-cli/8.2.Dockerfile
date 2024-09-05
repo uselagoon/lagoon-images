@@ -35,7 +35,7 @@ RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/v3.19/main mari
     && rm -rf /var/cache/apk/* \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server
 
-RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.7.8/composer.phar \
+RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.7.9/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/

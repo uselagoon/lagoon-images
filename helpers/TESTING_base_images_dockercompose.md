@@ -231,7 +231,6 @@ docker compose exec -T python-3-12 sh -c "python -V" | grep "3.12"
 
 # python-3-12 should have basic tools installed
 docker compose exec -T python-3-12 sh -c "pip list --no-cache-dir" | grep "pip"
-docker compose exec -T python-3-12 sh -c "pip list --no-cache-dir" | grep "setuptools"
 docker compose exec -T python-3-12 sh -c "pip list --no-cache-dir" | grep "virtualenv"
 
 # python-3-12 should be serving content

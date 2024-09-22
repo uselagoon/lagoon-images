@@ -78,7 +78,7 @@ RUN apk update \
         # for yaml
         yaml-dev \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-    && yes '' | pecl install -f apcu-5.1.23 \
+    && yes '' | pecl install -f apcu-5.1.24 \
     && yes '' | pecl install -f imagick-3.7.0 \
     && yes '' | pecl install -f redis-5.3.7 \
     && yes '' | pecl install -f xdebug-3.3.2 \

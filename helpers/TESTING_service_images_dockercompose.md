@@ -356,8 +356,8 @@ docker compose exec -T valkey-8 sh -c "valkey-server --version" | grep v=8.
 docker compose exec -T valkey-8 sh -c "redis-server --version" | grep v=8.
 
 # valkey-8 should be running Valkey v8 cli and Redis compatible
-docker compose exec -T valkey-8 sh -c "valkey-cli --version" | grep v=8.
-docker compose exec -T valkey-8 sh -c "redis-cli --version" | grep v=8.
+docker compose exec -T valkey-8 sh -c "valkey-cli --version" | grep 8.
+docker compose exec -T valkey-8 sh -c "redis-cli --version" | grep 8.
 
 # valkey-8 should be Redis 7.2.4 compatible
 docker compose exec -T valkey-8 sh -c "redis-cli INFO" | grep valkey_version | grep :8.

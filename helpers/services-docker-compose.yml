@@ -123,6 +123,12 @@ services:
       - "8983"
     user: solr
 
+  valkey-8:
+    image: uselagoon/valkey-8:latest
+    ports:
+      - "6379"
+    << : *default-user # uses the defined user from top
+
   varnish-6:
     image: uselagoon/varnish-6:latest
     labels:

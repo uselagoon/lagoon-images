@@ -1,0 +1,26 @@
+#!/bin/sh
+
+if [[ -n "${REDIS_PASSWORD}" ]]; then
+  echo "You should not use the REDIS_PASSWORD environment variable, use VALKEY_PASSWORD instead"
+  export VALKEY_PASSWORD=${REDIS_PASSWORD}
+fi
+
+if [[ -n "${VALKEY_PASSWORD}" ]]; then
+  export REQUIREPASS_CONF="# Enable basic/simple authentication
+# Warning: since Valkey is pretty fast an outside user can try up to
+# 150k passwords per second against a good box. This means that you should
+# use a very strong password otherwise it will be very easy to break.
+requirepass ${VALKEY_PASSWORD}"
+fi
+
+# Check if VALKEY_FLAVOR or FLAVOR is set and has the value "persistent"
+if [ "${VALKEY_FLAVOR}" = "persistent" ] || [ "${FLAVOR}" = "persistent" ]; then
+    FLAVOR="persistent"
+else
+    FLAVOR="ephemeral"
+fi
+echo "FLAVOR is set to: $FLAVOR"
+
+ep /etc/valkey/*
+
+exec "$@"

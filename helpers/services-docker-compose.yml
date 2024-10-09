@@ -56,12 +56,6 @@ services:
       - "3306"
     << : *default-user # uses the defined user from top
 
-  postgres-11:
-    image: uselagoon/postgres-11:latest
-    ports:
-      - "5432"
-    << : *default-user # uses the defined user from top
-
   postgres-12:
     image: uselagoon/postgres-12:latest
     ports:
@@ -88,6 +82,12 @@ services:
 
   postgres-16:
     image: uselagoon/postgres-16:latest
+    ports:
+      - "5432"
+    << : *default-user # uses the defined user from top
+
+  postgres-17:
+    image: uselagoon/postgres-17:latest
     ports:
       - "5432"
     << : *default-user # uses the defined user from top

@@ -1,16 +1,16 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM postgres:11.22-alpine3.19
+FROM postgres:17.0-alpine3.20
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.authors="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/postgres/11.Dockerfile"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/postgres/17.Dockerfile"
 LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
 LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
-LABEL org.opencontainers.image.description="PostgreSQL 11 image optimised for running in Lagoon in production and locally"
-LABEL org.opencontainers.image.title="uselagoon/postgres-11"
-LABEL org.opencontainers.image.base.name="docker.io/postgres:11-alpine3.20"
+LABEL org.opencontainers.image.description="PostgreSQL 17 image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/postgres-17"
+LABEL org.opencontainers.image.base.name="docker.io/postgres:17-alpine3.20"
 
 ENV LAGOON=postgres
 

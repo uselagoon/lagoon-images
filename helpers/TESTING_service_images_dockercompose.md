@@ -28,12 +28,12 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-11:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mysql-8-0:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mysql-8-4:3306 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-11:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-12:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-14:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-15:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-16:5432 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-17:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo-4:27017 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
@@ -58,12 +58,12 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mysql-8-0
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mysql-8-4
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mongo-4
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-11
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-12
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-13
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-14
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-15
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-16
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-17
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep rabbitmq
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-7
@@ -252,21 +252,6 @@ docker compose exec -T mysql-8-4  sh -c "mysql -D lagoon -u lagoon --password=la
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mysql-8-4" | grep "SERVICE_HOST=8.4"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mysql-8-4" | grep "LAGOON_TEST_VAR=all-images"
 
-# postgres-11 should be version 11 client
-docker compose exec -T postgres-11 bash -c "psql --version" | grep "psql" | grep "11."
-
-# postgres-11 should be version 11 server
-docker compose exec -T postgres-11 bash -c "echo U0VMRUNUIHZlcnNpb24oKTs= | base64 -d > /tmp/selectversion.sql"
-docker compose exec -T postgres-11 bash -c "psql -U lagoon -d lagoon < /tmp/selectversion.sql" | grep "PostgreSQL" | grep "11."
-
-# postgres-11 should have lagoon database
-docker compose exec -T postgres-11 bash -c "echo XGwrIGxhZ29vbg== | base64 -d > /tmp/listlagoon.sql"
-docker compose exec -T postgres-11 bash -c "psql -U lagoon -d lagoon < /tmp/listlagoon.sql" | grep "lagoon"
-
-# postgres-11 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-11" | grep "SERVICE_HOST=PostgreSQL 11"
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-11" | grep "LAGOON_TEST_VAR=all-images"
-
 # postgres-12 should be version 12 client
 docker compose exec -T postgres-12 bash -c "psql --version" | grep "psql" | grep "12."
 
@@ -341,6 +326,21 @@ docker compose exec -T postgres-16 bash -c "psql -U lagoon -d lagoon < /tmp/list
 # postgres-16 should be able to read/write data
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-16" | grep "SERVICE_HOST=PostgreSQL 16"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-16" | grep "LAGOON_TEST_VAR=all-images"
+
+# postgres-17 should be version 17 client
+docker compose exec -T postgres-17 bash -c "psql --version" | grep "psql" | grep "17."
+
+# postgres-17 should be version 17 server
+docker compose exec -T postgres-17 bash -c "echo U0VMRUNUIHZlcnNpb24oKTs= | base64 -d > /tmp/selectversion.sql"
+docker compose exec -T postgres-17 bash -c "psql -U lagoon -d lagoon < /tmp/selectversion.sql" | grep "PostgreSQL" | grep "17."
+
+# postgres-17 should have lagoon database
+docker compose exec -T postgres-17 bash -c "echo XGwrIGxhZ29vbg== | base64 -d > /tmp/listlagoon.sql"
+docker compose exec -T postgres-17 bash -c "psql -U lagoon -d lagoon < /tmp/listlagoon.sql" | grep "lagoon"
+
+# postgres-17 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-17" | grep "SERVICE_HOST=PostgreSQL 17"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-17" | grep "LAGOON_TEST_VAR=all-images"
 
 # nginx should be served by openresty
 docker compose exec -T commons sh -c "curl -kL http://nginx:8080" | grep "hr" | grep "openresty"

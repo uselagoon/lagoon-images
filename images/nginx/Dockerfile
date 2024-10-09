@@ -47,6 +47,7 @@ COPY helpers/ /etc/nginx/helpers/
 COPY static-files.conf /etc/nginx/conf.d/app.conf
 COPY basic_auth.conf /etc/nginx/conf.d/basic_auth.conf
 COPY redirects-map.conf /etc/nginx/redirects-map.conf
+COPY redirects-map-args.conf /etc/nginx/redirects-map-args.conf
 COPY healthcheck/healthz.locations healthcheck/healthz.locations.php.disable /etc/nginx/conf.d/
 
 RUN mkdir -p /app \

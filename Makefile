@@ -216,6 +216,8 @@ versioned-images := 		php-8.1-fpm \
 							postgres-15-drupal \
 							postgres-16 \
 							postgres-16-drupal \
+							postgres-17 \
+							postgres-17-drupal \
 							redis-6 \
 							redis-6-persistent \
 							redis-7 \
@@ -295,13 +297,14 @@ build/node-18 build/node-20 build/node-22: build/commons
 build/node-18-builder build/node-18-cli: build/node-18
 build/node-20-builder build/node-20-cli: build/node-20
 build/node-22-builder build/node-22-cli: build/node-22
-build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14 build/postgres-15 build/postgres-16: build/commons
+build/postgres-11 build/postgres-12 build/postgres-13 build/postgres-14 build/postgres-15 build/postgres-16 build/postgres-17: build/commons
 build/postgres-11-ckan build/postgres-11-drupal: build/postgres-11
 build/postgres-12-drupal: build/postgres-12
 build/postgres-13-drupal: build/postgres-13
 build/postgres-14-drupal: build/postgres-14
 build/postgres-15-drupal: build/postgres-15
 build/postgres-16-drupal: build/postgres-16
+build/postgres-17-drupal: build/postgres-17
 build/redis-6 build/redis-7: build/commons
 build/redis-6-persistent: build/redis-6
 build/redis-7-persistent: build/redis-7

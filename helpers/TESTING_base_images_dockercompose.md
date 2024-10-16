@@ -49,6 +49,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-10
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-11
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-12
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-13
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-1
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-2
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-3
@@ -235,6 +236,16 @@ docker compose exec -T python-3-12 sh -c "pip list --no-cache-dir" | grep "virtu
 
 # python-3-12 should be serving content
 docker compose exec -T commons sh -c "curl python-3-12:3000/tmp/test" | grep "Python 3.12"
+
+# python-3-13 should be version 3.13
+docker compose exec -T python-3-13 sh -c "python -V" | grep "3.13"
+
+# python-3-13 should have basic tools installed
+docker compose exec -T python-3-13 sh -c "pip list --no-cache-dir" | grep "pip"
+docker compose exec -T python-3-13 sh -c "pip list --no-cache-dir" | grep "virtualenv"
+
+# python-3-13 should be serving content
+docker compose exec -T commons sh -c "curl python-3-13:3000/tmp/test" | grep "Python 3.13"
 
 # node-18 should have Node 18
 docker compose exec -T node-18 sh -c "node -v" | grep "v18"

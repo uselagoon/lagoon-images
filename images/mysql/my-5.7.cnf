@@ -1,0 +1,42 @@
+# The following options will be passed to all mysql clients
+[client]
+port            = 3306
+socket          = /var/run/mysqld/mysqld.sock
+
+# Here follows entries for some specific programs
+
+# The mysql server
+[mysqld]
+character_set_server = ${MYSQL_CHARSET:-utf8mb4}
+collation_server = ${MYSQL_COLLATION:-utf8mb4_bin}
+datadir = ${MYSQL_DATA_DIR:-/var/lib/mysql}
+innodb_buffer_pool_size = ${MYSQL_INNODB_BUFFER_POOL_SIZE:-256M}
+innodb_force_recovery = ${{MYSQL_INNODB_FORCE_RECOVER:-0}
+innodb_flush_log_at_trx_commit = 0
+innodb_log_buffer_size = 32M
+join_buffer_size = 2M
+key_buffer_size = 16M
+max_allowed_packet = ${MYSQL_MAX_ALLOWED_PACKET:-64M}
+max_connections = 400
+max_heap_table_size = 512M
+myisam_recover_options = BACKUP
+optimizer_search_depth = 0
+port = 3306
+secure_file_priv = ""
+skip_external_locking = 1
+skip_name_resolve = 1
+socket = /var/run/mysqld/mysqld.sock
+# This setting has impacts on the number of open file descriptors. The mysqld
+# `open_files_limit` should not exceed the OS `max_open_files` of 1,048,576. The
+# formula for `open_files_limit` is:
+# (table_open_cache * 2) * table_open_cache_instances + (max_connections + ?)
+# ? is a "head room" number. A fresh db requires 51, below will allow for 208.
+table_open_cache = 65498
+thread_cache_size = 8
+thread_stack = 256K
+tmp_table_size = 512M
+tmpdir = /tmp
+transaction_isolation = READ-COMMITTED
+wait_timeout = ${MYSQL_WAIT_TIMEOUT:-28800}
+
+!includedir /etc/mysql/conf.d

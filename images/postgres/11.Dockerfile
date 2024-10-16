@@ -10,7 +10,10 @@ LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
 LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="PostgreSQL 11 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/postgres-11"
-LABEL org.opencontainers.image.base.name="docker.io/postgres:11-alpine3.20"
+LABEL org.opencontainers.image.base.name="docker.io/postgres:11-alpine3.19"
+
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/postgres-16"
 
 ENV LAGOON=postgres
 

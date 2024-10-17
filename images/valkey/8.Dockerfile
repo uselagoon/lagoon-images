@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM valkey/valkey:8.0.0-alpine3.20
+FROM valkey/valkey:8.0.1-alpine3.20
 
 
 ARG LAGOON_VERSION

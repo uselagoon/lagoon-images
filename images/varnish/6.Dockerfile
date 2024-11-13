@@ -18,8 +18,8 @@ RUN curl -s https://packagecloud.io/install/repositories/varnishcache/varnish60l
         libpcre3-dev \
         libtool \
         python3-docutils \
-        varnish=6.0.13-1~bullseye \
-        varnish-dev=6.0.13-1~bullseye
+        varnish=6.0.13-1~bookworm \
+        varnish-dev=6.0.13-1~bookworm
 
 ENV LIBVMOD_DYNAMIC_VERSION=6.0
 RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip \
@@ -75,16 +75,7 @@ COPY --from=vmod /usr/lib/varnish/vmods/libvmod_bodyaccess.* /usr/lib/varnish/vm
 RUN echo "${VARNISH_SECRET:-lagoon_default_secret}" >> /etc/varnish/secret
 
 COPY default.vcl /etc/varnish/default.vcl
-COPY varnish-start.sh /varnish-start.sh
-
-# needed to fix dash upgrade - man files are removed from slim images
-RUN set -x \
-    && mkdir -p /usr/share/man/man1 \
-    && touch /usr/share/man/man1/sh.distrib.1.gz
-
-# replace default dash shell with bash to allow for bashisms
-RUN echo "dash dash/sh boolean false" | debconf-set-selections
-RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+COPY varnish-start.bash /varnish-start.sh
 
 RUN fix-permissions /etc/varnish/ \
     && fix-permissions /var/run/ \
@@ -108,5 +99,5 @@ ENV HTTP_RESP_HDR_LEN=8k \
     LISTEN=":8080" \
     MANAGEMENT_LISTEN=":6082"
 
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash"]
 CMD ["/varnish-start.sh"]

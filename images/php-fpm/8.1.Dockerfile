@@ -80,7 +80,7 @@ RUN apk update \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && yes '' | pecl install -f apcu-5.1.24 \
     && yes '' | pecl install -f imagick-3.7.0 \
-    && yes '' | pecl install -f redis-5.3.7 \
+    && yes '' | pecl install -f redis-6.1.0 \
     && yes '' | pecl install -f xdebug-3.3.2 \
     && yes '' | pecl install -f yaml-2.2.4 \
     && docker-php-ext-enable apcu imagick redis xdebug yaml \

@@ -47,6 +47,7 @@ COPY 00-lagoon-php.ini.tpl "$PHP_INI_DIR/conf.d/"
 COPY php-fpm.d/www.conf php-fpm.d/global.conf /usr/local/etc/php-fpm.d/
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
+COPY --from=docker.io/mlocati/php-extension-installer:2.6.4 /usr/bin/install-php-extensions /usr/local/bin/
 
 RUN apk update \
     && apk add --no-cache --virtual .devdeps \
@@ -78,22 +79,11 @@ RUN apk update \
         # for yaml
         yaml-dev \
     && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-    && yes '' | pecl install -f apcu-5.1.24 \
-    # && yes '' | pecl install -f imagick-3.7.0 \ # fix for https://github.com/Imagick/imagick/pull/641
-    && yes '' | pecl install -f redis-5.3.7 \
-    && yes '' | pecl install -f xdebug-3.3.2 \
-    && yes '' | pecl install -f yaml-2.2.4 \
-    # fix for https://github.com/Imagick/imagick/pull/641
-    && cd /tmp \
-    && yes '' | pecl download -Z imagick-3.7.0 \
-    && tar -xf imagick-3.7.0.tar imagick-3.7.0/Imagick.stub.php \
-    && sed -i '$ i\#endif' imagick-3.7.0/Imagick.stub.php \
-    && tar -uvf imagick-3.7.0.tar imagick-3.7.0/Imagick.stub.php \
-    && yes '' | pecl install -f /tmp/imagick-3.7.0.tar \
-    && docker-php-ext-enable apcu imagick redis xdebug yaml \
-    && rm -rf /tmp/imagick* \
-    && rm -rf /tmp/pear \
-    && cd - \
+    && install-php-extensions apcu-5.1.24 \
+    && install-php-extensions https://codeload.github.com/amazeeio/imagick/tar.gz/refs/heads/php84 \
+    && install-php-extensions redis-5.3.7 \
+    && install-php-extensions xdebug-3.3.2 \
+    && install-php-extensions yaml-2.2.4 \
     && apk del -r \
         .phpize-deps \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \

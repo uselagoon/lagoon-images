@@ -68,18 +68,20 @@ node ('lagoon-images') {
             stage ('push branch images to testlagoon/*') {
               withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
                 try {
-                  if (env.SKIP_IMAGE_PUBLISH != 'true') {
-                    sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
-                    if (env.SAFEBRANCH_NAME == 'main') {
-                      sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest", label: "Publishing built images to testlagoon main&latest images"
-                    } else if (env.SAFEBRANCH_NAME == 'arm64-images') {
-                      sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch", label: "Publishing built images to testlagoon arm images"
+                  retry(3) {
+                    if (env.SKIP_IMAGE_PUBLISH != 'true') {
+                      sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+                      sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
+                      if (env.SAFEBRANCH_NAME == 'main') {
+                        sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest", label: "Publishing built images to testlagoon main&latest images"
+                      } else if (env.SAFEBRANCH_NAME == 'arm64-images') {
+                        sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch", label: "Publishing built images to testlagoon arm images"
+                      } else {
+                        sh script: 'echo "No multi-arch images required for this build"', label: "Skipping image publishing"
+                      }
                     } else {
-                      sh script: 'echo "No multi-arch images required for this build"', label: "Skipping image publishing"
+                      sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
                     }
-                  } else {
-                    sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
                   }
                 } catch (e) {
                   echo "Something went wrong, trying to cleanup"
@@ -119,11 +121,13 @@ node ('lagoon-images') {
                 stage ('push branch images to uselagoon/*') {
                   withCredentials([string(credentialsId: 'amazeeiojenkins-dockerhub-password', variable: 'PASSWORD')]) {
                     try {
-                      if (env.SKIP_IMAGE_PUBLISH != 'true') {
-                        sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                        sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=uselagoon TAG_ONE=${TAG_NAME} REGISTRY_TWO=uselagoon TAG_TWO=latest", label: "Publishing built images to uselagoon"
-                      } else {
-                        sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
+                      retry(3) {
+                        if (env.SKIP_IMAGE_PUBLISH != 'true') {
+                          sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+                          sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=uselagoon TAG_ONE=${TAG_NAME} REGISTRY_TWO=uselagoon TAG_TWO=latest", label: "Publishing built images to uselagoon"
+                        } else {
+                          sh script: 'echo "skipped because of SKIP_IMAGE_PUBLISH env variable"', label: "Skipping image publishing"
+                        }
                       }
                     } catch (e) {
                       echo "Something went wrong, trying to cleanup"

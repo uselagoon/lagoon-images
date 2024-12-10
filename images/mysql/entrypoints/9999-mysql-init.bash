@@ -126,8 +126,11 @@ EOF
     echo "[client]" >> ${MYSQL_DATA_DIR:-/var/lib/mysql}/.my.cnf
     echo "user=root" >> ${MYSQL_DATA_DIR:-/var/lib/mysql}/.my.cnf
     echo "password=${MYSQL_ROOT_PASSWORD}"  >> ${MYSQL_DATA_DIR:-/var/lib/mysql}/.my.cnf
+    echo "socket=/run/mysqld/mysqld.sock" >> ${MYSQL_DATA_DIR:-/var/lib/mysql}/.my.cnf
     echo "[mysql]" >> ${MYSQL_DATA_DIR:-/var/lib/mysql}/.my.cnf
     echo "database=${MYSQL_DATABASE}" >> ${MYSQL_DATA_DIR:-/var/lib/mysql}/.my.cnf
+    echo "[mysqld]" >> ${MYSQL_DATA_DIR:-/var/lib/mysql}/.my.cnf
+    echo "socket=/run/mysqld/mysqld.sock" >> ${MYSQL_DATA_DIR:-/var/lib/mysql}/.my.cnf
 
     for f in /docker-entrypoint-initdb.d/*; do
       if [ -e "$f" ]; then
@@ -147,6 +150,7 @@ EOF
   fi
 
   echo "done, now starting daemon"
+  touch /tmp/startup-init-complete
   touch /tmp/mysql-init-complete
 
 fi

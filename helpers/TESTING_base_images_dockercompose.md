@@ -251,6 +251,7 @@ docker compose exec -T commons sh -c "curl node-20:3000/test" | grep "v20"
 docker compose exec -T node-22 sh -c "node -v" | grep "v22"
 
 # node-22 should be serving content
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://node-22:3000 -timeout 1m
 docker compose exec -T commons sh -c "curl node-22:3000/test" | grep "v22"
 
 # ruby-3-1 should have Ruby 3.1

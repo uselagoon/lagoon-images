@@ -148,7 +148,7 @@ docker compose exec -T php-8-3-dev bash -c "php -i" | grep "PHP Version" | grep 
 docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "APCu Support" | grep "Enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "LibYAML Support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "Redis Support" | grep "enabled"
-# TODO  docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "imagick module" | grep "enabled"
+docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "imagick module" | grep "enabled"
 
 # PHP 8.3 development should have default configuration.
 docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "memory_limit" | grep "400M"

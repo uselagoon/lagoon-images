@@ -15,7 +15,7 @@ LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
 LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="PHP 8.1 FPM image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/php-8.1-fpm"
-LABEL org.opencontainers.image.base.name="docker.io/php:8.1-fpm-alpine3.20"
+LABEL org.opencontainers.image.base.name="docker.io/php:8.1-fpm-alpine3.21"
 
 ENV LAGOON=php
 

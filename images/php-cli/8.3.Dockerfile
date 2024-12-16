@@ -22,7 +22,7 @@ RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/v3.19/main mari
         git \
         gzip  \
         mongodb-tools \
-        nodejs=~20 \
+        nodejs=~22 \
         npm \
         openssh-client \
         openssh-sftp-server \

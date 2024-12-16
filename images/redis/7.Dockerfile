@@ -16,6 +16,10 @@ ENV LAGOON=redis
 
 ENV FLAVOR=ephemeral
 
+RUN apk add --no-cache \
+        rsync \
+        tar
+
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/

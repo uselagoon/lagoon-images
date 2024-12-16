@@ -43,6 +43,8 @@ RUN microdnf install -y epel-release \
         gettext \
         net-tools \
         pwgen \
+        rsync \
+        tar \
         wget; \
     rm -rf /var/lib/mysql/* /etc/mysql/ /etc/my.cnf*; \
     curl -sSL https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl -o mysqltuner.pl

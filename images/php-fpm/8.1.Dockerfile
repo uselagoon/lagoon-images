@@ -115,7 +115,9 @@ RUN apk update \
         libxslt \
         libzip \
         postgresql-libs \
+        rsync \
         ssmtp \
+        tar \
         tidyhtml \
         unzip \
         yaml \

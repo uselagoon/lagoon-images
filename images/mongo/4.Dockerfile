@@ -33,6 +33,8 @@ RUN echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/community' >> /etc/apk/repos
 RUN apk update \
     && apk add --no-cache \
         mongodb=4.0.5-r0 \
+        rsync \
+        tar \
     && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /data/db /data/configdb && \

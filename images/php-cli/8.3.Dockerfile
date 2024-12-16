@@ -29,7 +29,6 @@ RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/v3.19/main mari
         patch \
         postgresql-client \
         procps \
-        rsync \
         unzip \
         yarn \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server \

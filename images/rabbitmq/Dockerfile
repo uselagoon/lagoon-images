@@ -14,6 +14,10 @@ LABEL org.opencontainers.image.base.name="docker.io/rabbitmq:3-management-alpine
 
 ENV LAGOON=rabbitmq
 
+RUN apk add --no-cache \
+        rsync \
+        tar
+
 ENV RABBITMQ_DEFAULT_USER='guest' \
     RABBITMQ_DEFAULT_PASS='guest'\
     RABBITMQ_DEFAULT_HA_PATTERN='^$'\

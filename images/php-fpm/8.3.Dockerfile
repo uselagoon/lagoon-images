@@ -81,7 +81,7 @@ RUN apk update \
     && install-php-extensions apcu-5.1.24 \
     && install-php-extensions https://codeload.github.com/amazeeio/imagick/tar.gz/refs/heads/php84 \
     && install-php-extensions redis-6.1.0 \
-    && install-php-extensions xdebug-3.4.0 \
+    && install-php-extensions xdebug-3.4.1 \
     && install-php-extensions yaml-2.2.4 \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \

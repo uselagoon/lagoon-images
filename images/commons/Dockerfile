@@ -1,7 +1,7 @@
 FROM webdevops/go-crond:23.12.0-alpine AS go-crond
 FROM amazeeio/envplate:v1.0.3 AS envplate
 
-FROM alpine:3.20.3
+FROM alpine:3.20.5
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

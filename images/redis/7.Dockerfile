@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM redis:7.2.5-alpine3.20
+FROM redis:7.2.7-alpine3.21
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -10,7 +10,7 @@ LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
 LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="Redis 7 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/redis-7"
-LABEL org.opencontainers.image.base.name="docker.io/redis:7-alpine3.20"
+LABEL org.opencontainers.image.base.name="docker.io/redis:7-alpine3.21"
 
 ENV LAGOON=redis
 

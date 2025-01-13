@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 
-FROM ruby:3.1.6-alpine3.20
+FROM ruby:3.1.6-alpine3.21
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -11,7 +11,7 @@ LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
 LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="Ruby 3.1 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/ruby-3.1"
-LABEL org.opencontainers.image.base.name="docker.io/ruby:3.1-alpine3.20"
+LABEL org.opencontainers.image.base.name="docker.io/ruby:3.1-alpine3.21"
 
 ENV LAGOON=ruby
 

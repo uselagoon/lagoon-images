@@ -214,9 +214,9 @@ docker compose exec -T php-8-4-dev bash -c "php -i" | grep "sendmail_path" | gre
 docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "xdebug.client_port" | grep "9003"
 docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "PHP_IDE_CONFIG" | grep "serverName=lagoon"
 docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "xdebug.log" | grep "/tmp/xdebug.log"
-# docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "newrelic.appname" | grep "noproject-nobranch"
-# docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "newrelic.application_logging.enabled" | grep "disabled"
-# docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "newrelic.logfile" | grep "/dev/stderr"
+docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "newrelic.appname" | grep "noproject-nobranch"
+docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "newrelic.application_logging.enabled" | grep "disabled"
+docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "newrelic.logfile" | grep "/dev/stderr"
 docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "Blackfire" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "blackfire.agent_socket" | grep "tcp://127.0.0.1:8307"
 

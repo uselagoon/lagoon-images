@@ -148,9 +148,9 @@ services:
       - LAGOON_ENVIRONMENT_TYPE=development
       - XDEBUG_ENABLE=true
       - XDEBUG_LOG=true
-      # - NEWRELIC_ENABLED=true
+      - NEWRELIC_ENABLED=true
       - BLACKFIRE_ENABLED=true
-      # - NEWRELIC_APPLICATION_LOGGING_ENABLED=false
+      - NEWRELIC_APPLICATION_LOGGING_ENABLED=false
     << : *default-user # uses the defined user from top
     command: ["sh", "-c", "
         echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;

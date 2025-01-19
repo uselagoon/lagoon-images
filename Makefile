@@ -125,9 +125,6 @@ docker_publish_testlagoon = docker tag $(CI_BUILD_TAG)/$(1) testlagoon/$(2) && d
 # Tags an image with the `uselagoon` repository and pushes it
 docker_publish_uselagoon = docker tag $(CI_BUILD_TAG)/$(1) uselagoon/$(2) && docker push uselagoon/$(2) | cat
 
-# Tags an image with the `amazeeio` repository and pushes it
-docker_publish_amazeeio = docker tag $(CI_BUILD_TAG)/$(1) amazeeio/$(2) && docker push amazeeio/$(2) | cat
-
 .PHONY: docker_pull
 docker_pull:
 	grep -Eh 'FROM' $$(find . -type f -name *Dockerfile) | grep -Ev 'IMAGE_REPO' | sed 's/\-\-platform\=linux\/amd64//g' | awk '{print $$2}' | sort --unique | xargs -tn1 -P8 docker pull -q
@@ -145,7 +142,6 @@ unversioned-images :=		commons \
 
 # base-images is a variable that will be constantly filled with all base image there are
 base-images += $(unversioned-images)
-s3-images += $(unversioned-images)
 
 # List with all images prefixed with `build/`. Which are the commands to actually build images
 build-images = $(foreach image,$(unversioned-images),build/$(image))
@@ -287,8 +283,6 @@ $(build-versioned-images):
 base-images-with-versions += $(versioned-images)
 base-images-with-versions += $(default-versioned-images)
 base-images-with-versions += $(experimental-images)
-s3-images += $(versioned-images)
-s3-images += $(experimental-images)
 
 build/php-8.1-fpm build/php-8.2-fpm build/php-8.3-fpm build/php-8.4-fpm: build/commons
 build/php-8.1-cli: build/php-8.1-fpm
@@ -483,96 +477,6 @@ $(publish-uselagoon-baseimages-with-versions):
 #	Publish images with version tag
 		$(call docker_publish_uselagoon,$(image),$(image):$(LAGOON_VERSION))
 
-
-#######
-####### All tagged releases are also pushed to amazeeio repository with legacy tags
-#######
-
-# Publish command to amazeeio docker hub, this should probably only be done during a master deployments
-publish-amazeeio-baseimages = $(foreach image,$(base-images),[publish-amazeeio-baseimages]-$(image))
-publish-amazeeio-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-amazeeio-baseimages-with-versions]-$(image))
-# Special handler for the previously unversioned images that now have versions
-publish-amazeeio-baseimages-without-versions = $(foreach image,$(default-versioned-images),[publish-amazeeio-baseimages-without-versions]-$(image))
-
-# tag and push all images
-.PHONY: publish-amazeeio-baseimages
-publish-amazeeio-baseimages: $(publish-amazeeio-baseimages) $(publish-amazeeio-baseimages-with-versions) $(publish-amazeeio-baseimages-without-versions)
-
-# tag and push of each image
-.PHONY: $(publish-amazeeio-baseimages)
-$(publish-amazeeio-baseimages):
-#   Calling docker_publish for image, but remove the prefix '[publish-amazeeio-baseimages]-' first
-		$(eval image = $(subst [publish-amazeeio-baseimages]-,,$@))
-# 	Publish images as :latest
-		$(call docker_publish_amazeeio,$(image),$(image):latest)
-# 	Publish images with version tag
-		$(call docker_publish_amazeeio,$(image),$(image):$(LAGOON_VERSION))
-
-# tag and push of base image with version
-.PHONY: $(publish-amazeeio-baseimages-with-versions)
-$(publish-amazeeio-baseimages-with-versions):
-#   Calling docker_publish for image, but remove the prefix '[publish-amazeeio-baseimages-with-versions]-' first
-		$(eval image = $(subst [publish-amazeeio-baseimages-with-versions]-,,$@))
-		$(eval variant = $(word 1,$(subst -, ,$(image))))
-		$(eval version = $(word 2,$(subst -, ,$(image))))
-		$(eval type = $(word 3,$(subst -, ,$(image))))
-		$(eval subtype = $(word 4,$(subst -, ,$(image))))
-#   Construct a "legacy" tag of the form `amazeeio/variant:version-type-subtype` e.g. `amazeeio/php:8.2-cli-drupal`
-		$(eval legacytag = $(shell echo $(variant)$(if $(version),:$(version))$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
-#	These images already use a tag to differentiate between different versions of the service itself (like node:9 and node:10)
-#	We push a version without the `-latest` suffix
-		$(call docker_publish_amazeeio,$(image),$(legacytag))
-#	Plus a version with the `-latest` suffix, this makes it easier for people with automated testing
-		$(call docker_publish_amazeeio,$(image),$(legacytag)-latest)
-#	We add the Lagoon Version just as a dash
-		$(call docker_publish_amazeeio,$(image),$(legacytag)-$(LAGOON_VERSION))
-
-# tag and push of unversioned base images
-.PHONY: $(publish-amazeeio-baseimages-without-versions)
-$(publish-amazeeio-baseimages-without-versions):
-#   Calling docker_publish for image, but remove the prefix '[publish-amazeeio-baseimages-with-versions]-' first
-		$(eval image = $(subst [publish-amazeeio-baseimages-without-versions]-,,$@))
-		$(eval variant = $(word 1,$(subst -, ,$(image))))
-		$(eval version = $(word 2,$(subst -, ,$(image))))
-		$(eval type = $(word 3,$(subst -, ,$(image))))
-		$(eval subtype = $(word 4,$(subst -, ,$(image))))
-#   Construct a "legacy" tag of the form `amazeeio/variant-type-subtype` e.g. `amazeeio/postgres-ckan`
-		$(eval legacytag = $(shell echo $(variant)$(if $(type),-$(type))$(if $(subtype),-$(subtype))))
-#	These images previously had no version tracking, publish them for legacy compatibility only
-		$(call docker_publish_amazeeio,$(image),$(legacytag):latest)
-		$(call docker_publish_uselagoon,$(image),$(legacytag):latest)
-#	These images previously had no version tracking, publish them for legacy compatibility only
-		$(call docker_publish_amazeeio,$(image),$(legacytag):$(LAGOON_VERSION))
-		$(call docker_publish_uselagoon,$(image),$(legacytag):$(LAGOON_VERSION))
-
-
-#######
-####### Transferring Images to S3
-#######
-
-s3-save = $(foreach image,$(s3-images),[s3-save]-$(image))
-# save all images to s3
-.PHONY: s3-save
-s3-save: $(s3-save)
-# tag and push of each image
-.PHONY: $(s3-save)
-$(s3-save):
-#   remove the prefix '[s3-save]-' first
-		$(eval image = $(subst [s3-save]-,,$@))
-		$(eval image = $(subst __,:,$(image)))
-		docker save $(CI_BUILD_TAG)/$(image) $$(docker history -q $(CI_BUILD_TAG)/$(image) | grep -v missing) | gzip -9 | aws s3 cp - s3://lagoon-images/$(image).tar.gz
-
-s3-load = $(foreach image,$(s3-images),[s3-load]-$(image))
-# save all images to s3
-.PHONY: s3-load
-s3-load: $(s3-load)
-# tag and push of each image
-.PHONY: $(s3-load)
-$(s3-load):
-#   remove the prefix '[s3-load]-' first
-		$(eval image = $(subst [s3-load]-,,$@))
-		$(eval image = $(subst __,:,$(image)))
-		curl -s https://s3.us-east-2.amazonaws.com/lagoon-images/$(image).tar.gz | gunzip -c | docker load
 
 # Clean all build touches, which will case make to rebuild the Docker Images (Layer caching is
 # still active, so this is a very safe command)

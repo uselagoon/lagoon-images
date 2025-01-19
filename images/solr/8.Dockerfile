@@ -37,9 +37,10 @@ RUN apt-get -y update \
     && apt-get -y install \
         busybox \
         curl \
-        rsync \
         tar \
         zip \
+    # Temp fix for rsync RCE vulnerability https://ubuntu.com/blog/rsync-remote-code-execution
+    && apt satisfy -y "rsync (>= 3.1.3-8ubuntu0.8)" \
     && rm -rf /var/lib/apt/lists/*
 
 # Mitigation for CVE-2021-45046 and CVE-2021-44228 - not needed in log4j-core 2.16.0

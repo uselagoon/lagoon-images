@@ -191,7 +191,6 @@ versioned-images := 		php-8.1-fpm \
 							php-8.2-cli-drupal \
 							php-8.3-cli-drupal \
 							php-8.4-cli-drupal \
-							python-3.8 \
 							python-3.9 \
 							python-3.10 \
 							python-3.11 \
@@ -299,7 +298,7 @@ build/php-8.1-cli-drupal: build/php-8.1-cli
 build/php-8.2-cli-drupal: build/php-8.2-cli
 build/php-8.3-cli-drupal: build/php-8.3-cli
 build/php-8.4-cli-drupal: build/php-8.4-cli
-build/python-3.7 build/python-3.8 build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12 build/python-3.13: build/commons
+build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12 build/python-3.13: build/commons
 build/node-18 build/node-20 build/node-22: build/commons
 build/node-18-builder build/node-18-cli: build/node-18
 build/node-20-builder build/node-20-cli: build/node-20

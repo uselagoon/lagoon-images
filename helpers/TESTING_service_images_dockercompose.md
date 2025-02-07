@@ -13,13 +13,13 @@ Run the following commands to get up and running with this example.
 sed -i -e "/###/d" *-docker-compose.yml
 cp services-docker-compose.yml docker-compose.yml
 docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network
-docker-compose down
+docker compose down
 
 # pull any required images
-docker-compose pull || true
+docker compose pull || true
 
 # should start up our services successfully
-docker-compose build && docker-compose up -d
+docker compose build && docker compose up -d
 
 # Ensure database pods are ready to connect
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-4:3306 -timeout 1m
@@ -406,6 +406,6 @@ Run the following commands to trash this app like nothing ever happened.
 
 ```bash
 # should be able to destroy our services with success
-docker-compose down --volumes --remove-orphans
+docker compose down --volumes --remove-orphans
 rm docker-compose.yml
 ```

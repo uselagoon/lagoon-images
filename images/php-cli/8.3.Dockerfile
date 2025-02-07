@@ -16,6 +16,7 @@ ENV LAGOON=cli
 STOPSIGNAL SIGTERM
 
 RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/v3.19/main mariadb-client=10.11.6-r0 mariadb-connector-c \
+    && apk upgrade --available musl \
     && apk add --no-cache bash \
         coreutils \
         findutils \

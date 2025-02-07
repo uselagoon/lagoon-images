@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 
-FROM python:3.13.1-alpine3.21
+FROM python:3.13.2-alpine3.21
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

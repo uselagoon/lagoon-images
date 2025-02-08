@@ -50,6 +50,7 @@ COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 COPY --from=docker.io/mlocati/php-extension-installer:2.7 /usr/bin/install-php-extensions /usr/local/bin/
 
 RUN apk update \
+    && apk upgrade --available musl \
     && apk add --no-cache --virtual .devdeps \
         # for gd
         freetype-dev \

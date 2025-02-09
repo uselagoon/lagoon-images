@@ -68,11 +68,15 @@ node ('lagoon-images') {
               try {
                 if (env.SKIP_IMAGE_PUBLISH != 'true') {
                   sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-                  sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images to testlagoon"
+                  sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME} PLATFORM='linux/amd64'", label: "Publishing built images to testlagoon"
                   if (env.SAFEBRANCH_NAME == 'main') {
-                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest", label: "Publishing built images to testlagoon main&latest images"
+                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest PLATFORM='linux/amd64'", label: "Publishing built amd64 images to testlagoon main&latest images"
+                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest PLATFORM='linux/arm64/v8'", label: "Publishing built arm64 images to testlagoon main&latest images"
+                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest PLATFORM='linux/amd64,linux/arm64/v8'", label: "Publishing built digest to testlagoon main&latest images"
                   } else if (env.SAFEBRANCH_NAME == 'arm64-images') {
-                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch", label: "Publishing built images to testlagoon arm images"
+                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch PLATFORM='linux/amd64'", label: "Publishing built amd64 images to testlagoon multiarch images"
+                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch PLATFORM='linux/arm64/v8'", label: "Publishing built arm64 images to testlagoon multiarch images"
+                    sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch PLATFORM='linux/amd64,linux/arm64/v8'", label: "Publishing built digest to testlagoon multiarch images"
                   } else {
                     sh script: 'echo "No multi-arch images required for this build"', label: "Skipping image publishing"
                   }

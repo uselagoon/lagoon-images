@@ -59,6 +59,8 @@ BRANCH_NAME :=
 # Only set this to false when ready to push images to dockerhub
 PUBLISH_IMAGES ?= false
 
+PLATFORM ?= linux/amd64
+
 # Init the file that is used to hold the image tag cross-reference table
 $(shell >build.txt)
 $(shell >scan.txt)
@@ -79,7 +81,7 @@ docker_build_local = DOCKER_BUILDKIT=1 docker build $(DOCKER_BUILD_PARAMS) \
 
 docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--builder ci-local \
-						--platform linux/amd64,linux/arm64/v8 \
+						--platform $(PLATFORM) \
 						--build-arg BUILDKIT_INLINE_CACHE=1 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=localhost:5000/testlagoon \
@@ -93,7 +95,7 @@ docker_buildx_two = docker buildx build $(DOCKER_BUILD_PARAMS) \
 
 docker_buildx_three = docker buildx build $(DOCKER_BUILD_PARAMS) \
 						--builder ci-local \
-						--platform linux/amd64,linux/arm64/v8 \
+						--platform $(PLATFORM) \
 						--build-arg BUILDKIT_INLINE_CACHE=1 \
 						--build-arg LAGOON_VERSION=$(LAGOON_VERSION) \
 						--build-arg IMAGE_REPO=localhost:5000/uselagoon \

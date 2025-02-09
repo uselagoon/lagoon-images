@@ -51,22 +51,21 @@ pipeline {
       }
     }
 
-    stage ('Copy examples down') {
-      steps {
-        sh script: "rm -rf tests || echo 'no tests directory to remove'"
-        sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
-        dir ('tests') {
-          sh script: "git submodule sync && git submodule update --init"
-          sh script: "mkdir -p ./all-images && cp ../helpers/*docker-compose.yml ./all-images/ && cp ../helpers/TESTING_*_dockercompose.md ./all-images/"
-          sh script: "sed -i '/image: uselagoon/ s/uselagoon/${CI_BUILD_TAG}/' ./all-images/*-docker-compose.yml"
-          sh script: "yarn install"
-          sh script: "docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network"
-        }
-      }
-    }
-
-    stage ('test and push images') {
+    stage ('prepare tests and images') {
       parallel {
+        stage ('Copy examples down') {
+          steps {
+            sh script: "rm -rf tests || echo 'no tests directory to remove'"
+            sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
+            dir ('tests') {
+              sh script: "git submodule sync && git submodule update --init"
+              sh script: "mkdir -p ./all-images && cp ../helpers/*docker-compose.yml ./all-images/ && cp ../helpers/TESTING_*_dockercompose.md ./all-images/"
+              sh script: "sed -i '/image: uselagoon/ s/uselagoon/${CI_BUILD_TAG}/' ./all-images/*-docker-compose.yml"
+              sh script: "yarn install"
+              sh script: "docker network inspect amazeeio-network >/dev/null || docker network create amazeeio-network"
+            }
+          }
+        }
         stage ('push amd64 branch images to testlagoon/*') {
           environment {
             PASSWORD = credentials('amazeeiojenkins-dockerhub-password')
@@ -81,6 +80,11 @@ pipeline {
             sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 publish-testlagoon-baseimages BRANCH_NAME=${SAFEBRANCH_NAME} PLATFORM='linux/amd64'", label: "Publishing built amd64 images to testlagoon"
           }
         }
+      }
+    }
+
+    stage ('test and push images') {
+      parallel {
         stage ('push main branch images to testlagoon/*') {
           environment {
             PASSWORD = credentials('amazeeiojenkins-dockerhub-password')
@@ -133,7 +137,6 @@ pipeline {
         }
       }
     }
-
 
     stage ('push branch images to uselagoon/*') {
       environment {

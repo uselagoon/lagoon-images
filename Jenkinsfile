@@ -53,6 +53,7 @@ pipeline {
 
     stage ('Copy examples down') {
       steps {
+        sh script: "rm -rf tests || echo 'no tests directory to remove'"
         sh script: "git clone https://github.com/uselagoon/lagoon-examples.git tests"
         dir ('tests') {
           sh script: "git submodule sync && git submodule update --init"
@@ -140,7 +141,6 @@ pipeline {
       }
       when {
         anyOf {
-          branch 'main'
           buildingTag()
         }
         not {
@@ -175,19 +175,16 @@ pipeline {
   post {
     always {
       cleanup()
+      deleteDir()
     }
     success {
       notifySlack('SUCCESS')
-      cleanup()
-      deleteDir()
     }
     failure {
       notifySlack('FAILURE')
-      cleanup()
     }
     aborted {
       notifySlack('ABORTED')
-      cleanup()
     }
   }
 }

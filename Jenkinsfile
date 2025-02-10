@@ -100,7 +100,10 @@ pipeline {
               sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
               sh script: "timeout 60m make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest PLATFORM='linux/arm64/v8'", label: "Publishing built arm64 images to testlagoon main&latest images"
             }
-            sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest PLATFORM='linux/amd64,linux/arm64/v8'", label: "Publishing built digest to testlagoon main&latest images"
+            retry(3) {
+              sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+              sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=latest PLATFORM='linux/amd64,linux/arm64/v8'", label: "Publishing built digest to testlagoon main&latest images"
+            }
           }
         }
         stage ('push arm64-images branch images to testlagoon/*') {
@@ -118,7 +121,10 @@ pipeline {
               sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
               sh script: "timeout 60m make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch PLATFORM='linux/arm64/v8'", label: "Publishing built arm64 images to testlagoon multiarch images"
             }
-            sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch PLATFORM='linux/amd64,linux/arm64/v8'", label: "Publishing built digest to testlagoon multiarch images"
+            retry(3) {
+              sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+              sh script: "make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=testlagoon TAG_ONE=${SAFEBRANCH_NAME} REGISTRY_TWO=testlagoon TAG_TWO=multiarch PLATFORM='linux/amd64,linux/arm64/v8'", label: "Publishing built digest to testlagoon multiarch images"
+            }
           }
         }
         stage ('running test suite') {

@@ -45,8 +45,9 @@ ENV TMPDIR=/tmp \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
 
-# Uninstall the unneded plugins
+# Uninstall the unneeded plugins
 RUN for plugin in \
+  opensearch-security-analytics \
   opensearch-alerting \
   opensearch-cross-cluster-replication \
   opensearch-index-management \

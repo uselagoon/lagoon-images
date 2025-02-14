@@ -5,7 +5,7 @@ FROM composer:latest AS healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.6
 
-FROM php:8.3.16-fpm-alpine3.21
+FROM php:8.3.17-fpm-alpine3.21
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

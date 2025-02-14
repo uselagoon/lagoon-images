@@ -26,6 +26,7 @@ RUN dnf update --releasever=latest -y \
         findutils \
         rsync \
         tar \
+        util-linux-core \
     && dnf clean all
 
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \

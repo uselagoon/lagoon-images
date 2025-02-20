@@ -157,7 +157,11 @@ pipeline {
       steps {
         retry(3) {
           sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-          sh script: "timeout 30m make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=uselagoon TAG_ONE=${TAG_NAME} REGISTRY_TWO=uselagoon TAG_TWO=latest PLATFORM='linux/arm64/v8'", label: "Publishing built arm64 images to uselagoon"
+          sh script: "timeout 60m make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=uselagoon TAG_ONE=${TAG_NAME}-amd64 REGISTRY_TWO=uselagoon TAG_TWO=latest-amd64 PLATFORM='linux/amd64'", label: "Publishing built amd64 images to uselagoon"
+        }
+        retry(3) {
+          sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+          sh script: "timeout 60m make -O${SYNC_MAKE_OUTPUT} -j8 build PUBLISH_IMAGES=true REGISTRY_ONE=uselagoon TAG_ONE=${TAG_NAME}-arm64 REGISTRY_TWO=uselagoon TAG_TWO=latest-arm64 PLATFORM='linux/arm64/v8'", label: "Publishing built arm64 images to uselagoon"
         }
         retry(3) {
           sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"

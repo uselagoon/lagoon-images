@@ -15,13 +15,18 @@ ENV LAGOON=cli
 
 STOPSIGNAL SIGTERM
 
-RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/v3.19/main mariadb-client=10.11.6-r0 mariadb-connector-c \
+COPY mariadb-client-10.11.6-apk/ /tmp/
+
+RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && apk add --allow-untrusted --no-cache \
+        /tmp/$architecture-mariadb-client-10.11.6-r0.apk \
+        /tmp/$architecture-mariadb-common-10.11.6-r0.apk \
     && apk add --no-cache bash \
         coreutils \
         findutils \
         git \
         gzip  \
-        mongodb-tools \
+        mariadb-connector-c \
         nodejs=~22 \
         npm \
         openssh-client \

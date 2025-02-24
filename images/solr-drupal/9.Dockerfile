@@ -19,4 +19,6 @@ LABEL org.opencontainers.image.base.name="docker.io/uselagoon/solr-9"
 COPY --from=jumpstart /search_api_solr/jump-start/solr9/config-set /solr-conf/conf
 ENV SOLR_INSTALL_DIR=/opt/solr
 
+ENV SOLR_MODULES="extraction,langid,ltr,analysis-extras"
+
 CMD ["solr-precreate", "drupal", "/solr-conf"]

@@ -38,15 +38,19 @@ ENV MARIADB_DATABASE=lagoon \
     MARIADB_PASSWORD=lagoon \
     MARIADB_ROOT_PASSWORD=Lag00n
 
-RUN apk update \
+COPY mariadb-server-10.11.6-apk/ /tmp/
+
+RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && apk add --allow-untrusted --no-cache \
+        /tmp/$architecture-mariadb-10.11.6-r0.apk \
+        /tmp/$architecture-mariadb-client-10.11.6-r0.apk \
+        /tmp/$architecture-mariadb-common-10.11.6-r0.apk \
+        /tmp/$architecture-mariadb-server-utils-10.11.6-r0.apk \
+    && apk update \
     && apk add --no-cache --virtual .common-run-deps \
         bash \
         curl \
         gettext \
-        mariadb-client=10.11.6-r0 \
-        mariadb-common=10.11.6-r0 \
-        mariadb-server-utils=10.11.6-r0 \
-        mariadb=10.11.6-r0 \
         mariadb-connector-c \
         net-tools \
         perl-doc \

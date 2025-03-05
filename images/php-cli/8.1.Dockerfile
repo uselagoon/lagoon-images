@@ -27,6 +27,7 @@ RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 |
         git \
         gzip  \
         mariadb-connector-c \
+        mongodb-tools \
         nodejs=~22 \
         npm \
         openssh-client \

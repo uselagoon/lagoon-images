@@ -11,13 +11,9 @@ LABEL org.opencontainers.image.description="Node.js 22 cli image optimised for r
 LABEL org.opencontainers.image.title="uselagoon/node-22-cli"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/node-22"
 
-COPY mariadb-client-10.11.6-apk/ /tmp/
+COPY --from=amazeeio/mysql-alpine:dev /src/bin /usr/bin
 
-RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
-    && apk add --allow-untrusted --no-cache \
-        /tmp/$architecture-mariadb-client-10.11.6-r0.apk \
-        /tmp/$architecture-mariadb-common-10.11.6-r0.apk \
-    && apk add --no-cache bash \
+RUN apk add --no-cache bash \
         coreutils \
         findutils \
         git \

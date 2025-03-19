@@ -4,3 +4,12 @@
 options:
   root: '/app/${env.WEBROOT}'
   uri: '${env.LAGOON_ROUTE}'
+
+command:
+  sql:
+    cli:
+      options:
+        extra: '--disable-ssl'
+    dump:
+      options:
+        extra-dump: '--disable-ssl'

@@ -1,2 +1,5 @@
 [client]
 max_allowed_packet = ${MARIADB_MAX_ALLOWED_PACKET:-64M}
+
+[client-mariadb]
+ssl=0

@@ -11,12 +11,14 @@ LABEL org.opencontainers.image.description="Node.js 18 cli image optimised for r
 LABEL org.opencontainers.image.title="uselagoon/node-18-cli"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/node-18"
 
-RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/v3.19/main mariadb-client=10.11.6-r0 mariadb-connector-c \
-    && apk add --no-cache bash \
+COPY --from=amazeeio/mysql-alpine:dev /src/bin /usr/bin
+
+RUN apk add --no-cache bash \
         coreutils \
         findutils \
         git \
         gzip  \
+        mariadb-connector-c \
         mongodb-tools \
         openssh-client \
         openssh-sftp-server \

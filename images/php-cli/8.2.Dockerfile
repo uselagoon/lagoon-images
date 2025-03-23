@@ -15,12 +15,13 @@ ENV LAGOON=cli
 
 STOPSIGNAL SIGTERM
 
-RUN apk add -U --repository http://dl-cdn.alpinelinux.org/alpine/v3.19/main mariadb-client=10.11.6-r0 mariadb-connector-c \
-    && apk add --no-cache bash \
+RUN apk add --no-cache bash \
         coreutils \
         findutils \
         git \
         gzip  \
+        mariadb-client=11.4.5-r0 \
+        mariadb-connector-c \
         mongodb-tools \
         nodejs=~22 \
         npm \

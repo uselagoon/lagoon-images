@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM alpine:3.19.7
+FROM alpine:3.20.6
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -43,10 +43,10 @@ RUN apk update \
         bash \
         curl \
         gettext \
-        mariadb-client=10.11.6-r0 \
-        mariadb-common=10.11.6-r0 \
-        mariadb-server-utils=10.11.6-r0 \
-        mariadb=10.11.6-r0 \
+        mariadb-client=10.11.11-r0 \
+        mariadb-common=10.11.11-r0 \
+        mariadb-server-utils=10.11.11-r0 \
+        mariadb=10.11.11-r0 \
         mariadb-connector-c \
         net-tools \
         perl-doc \

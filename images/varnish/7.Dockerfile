@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 
-FROM varnish:7.6-alpine
+FROM varnish:7.7-alpine
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

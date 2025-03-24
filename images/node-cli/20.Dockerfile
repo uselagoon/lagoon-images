@@ -30,8 +30,6 @@ RUN apk add --no-cache bash \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/
 
-# We not only use "export $PATH" as this could be overwritten again
-# like it happens in /etc/profile of alpine Images.
 COPY entrypoints /lagoon/entrypoints/
 
 # Make sure shells are not running forever

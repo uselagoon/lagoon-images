@@ -7,10 +7,9 @@ add_to_PATH () {
   for d; do
     case ":$PATH:" in
       *":$d:"*) :;;
-      *) PATH=$PATH:$d;;
+      *) PATH=$d:$PATH;;
     esac
   done
 }
 
-add_to_PATH /app/vendor/bin
 add_to_PATH /home/.composer/vendor/bin

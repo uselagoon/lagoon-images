@@ -13,6 +13,9 @@ LABEL org.opencontainers.image.description="MariaDB 10.5 image optimised for run
 LABEL org.opencontainers.image.title="uselagoon/mariadb-10.5"
 LABEL org.opencontainers.image.base.name="docker.io/alpine:3.14"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/mariadb-10.11"
+
 ENV LAGOON=mariadb
 
 # Copy commons files

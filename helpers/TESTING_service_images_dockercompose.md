@@ -192,12 +192,12 @@ docker compose exec -T mariadb-10-6 sh -c "mysql -D lagoon -u lagoon --password=
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-10-6" | grep "SERVICE_HOST=10.6"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-10-6" | grep "LAGOON_TEST_VAR=all-images"
 
-# mariadb-10-11 should be version 11.4 client
-docker compose exec -T mariadb-10-11 sh -c "mysql -V" | grep "11.4"
+# mariadb-10-11 should be version 10.11 client
+docker compose exec -T mariadb-10-11 sh -c "mysql -V" | grep "10.11"
 
-# mariadb-10-11 should be version 11.4 server
+# mariadb-10-11 should be version 10.11 server
 docker compose exec -T mariadb-10-11 sh -c "echo U0hPVyB2YXJpYWJsZXM7 | base64 -d > /tmp/showvariables.sql"
-docker compose exec -T mariadb-10-11 sh -c "mysql < /tmp/showvariables.sql" | grep "version" | grep "11.4"
+docker compose exec -T mariadb-10-11 sh -c "mysql < /tmp/showvariables.sql" | grep "version" | grep "10.11"
 
 # mariadb-10-11 should have performance schema and slow logging enabled
 docker compose exec -T mariadb-10-11 sh -c "echo U0hPVyBHTE9CQUwgVkFSSUFCTEVTOw== | base64 -d > /tmp/showglobalvars.sql"
@@ -211,18 +211,15 @@ docker compose exec -T mariadb-10-11 sh -c "echo U0hPVyBkYXRhYmFzZXM7 | base64 -
 docker compose exec -T mariadb-10-11 sh -c "mysql -D lagoon -u lagoon --password=lagoon < /tmp/showdatabases.sql" | grep lagoon
 
 # mariadb-10-11 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-10-11" | grep "SERVICE_HOST=11.4"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-10-11" | grep "SERVICE_HOST=10.11"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-10-11" | grep "LAGOON_TEST_VAR=all-images"
-
-
-
 
 # mariadb-11-4 should be version 11.4 client
 docker compose exec -T mariadb-11-4 sh -c "mysql -V" | grep "11.4"
 
-# mariadb-11-4 should be version 10.11 server
+# mariadb-11-4 should be version 11.4 server
 docker compose exec -T mariadb-11-4 sh -c "echo U0hPVyB2YXJpYWJsZXM7 | base64 -d > /tmp/showvariables.sql"
-docker compose exec -T mariadb-11-4 sh -c "mysql < /tmp/showvariables.sql" | grep "version" | grep "10.11"
+docker compose exec -T mariadb-11-4 sh -c "mysql < /tmp/showvariables.sql" | grep "version" | grep "11.4"
 
 # mariadb-11-4 should have performance schema and slow logging enabled
 docker compose exec -T mariadb-11-4 sh -c "echo U0hPVyBHTE9CQUwgVkFSSUFCTEVTOw== | base64 -d > /tmp/showglobalvars.sql"
@@ -236,11 +233,8 @@ docker compose exec -T mariadb-11-4 sh -c "echo U0hPVyBkYXRhYmFzZXM7 | base64 -d
 docker compose exec -T mariadb-11-4 sh -c "mysql -D lagoon -u lagoon --password=lagoon < /tmp/showdatabases.sql" | grep lagoon
 
 # mariadb-11-4 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-11-4" | grep "SERVICE_HOST=10.11"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-11-4" | grep "SERVICE_HOST=11.4"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-11-4" | grep "LAGOON_TEST_VAR=all-images"
-
-
-
 
 # mongo-4 should be version 4.0 client
 docker compose exec -T mongo-4 sh -c "mongo --version" | grep "shell version" | grep "v4.0"

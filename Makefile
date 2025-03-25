@@ -229,6 +229,7 @@ versioned-images := 		php-8.1-fpm \
 							mariadb-10.6-drupal \
 							mariadb-10.11 \
 							mariadb-10.11-drupal \
+							mariadb-11.4 \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \
@@ -320,6 +321,7 @@ build/solr-8 build/solr-9: build/commons
 build/solr-8-drupal: build/solr-8
 build/solr-9-drupal: build/solr-9
 build/mariadb-10.4 build/mariadb-10.5 build/mariadb-10.6 build/mariadb-10.11: build/commons
+build/mariadb-11.4: build/commons
 build/mariadb-10.4-drupal: build/mariadb-10.4
 build/mariadb-10.5-drupal: build/mariadb-10.5
 build/mariadb-10.6-drupal: build/mariadb-10.6

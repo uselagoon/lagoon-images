@@ -44,8 +44,7 @@ RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/rele
 ENV PATH="/home/.composer/vendor/bin:${PATH}"
 
 COPY entrypoints /lagoon/entrypoints/
-COPY legacy-entrypoints /lagoon/entrypoints/90-composer-path.sh
-
+COPY legacy-entrypoints /lagoon/entrypoints/
 
 # Remove warning about running as root in composer
 ENV COMPOSER_ALLOW_SUPERUSER=1

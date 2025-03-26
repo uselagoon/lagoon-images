@@ -11,6 +11,9 @@ LABEL org.opencontainers.image.description="MariaDB 10.5 image optimised for Dru
 LABEL org.opencontainers.image.title="uselagoon/mariadb-10.5-drupal"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/mariadb-10.5"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/mariadb-10.11-drupal"
+
 ENV MARIADB_DATABASE=drupal \
     MARIADB_USER=drupal \
     MARIADB_PASSWORD=drupal

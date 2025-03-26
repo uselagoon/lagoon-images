@@ -7,17 +7,15 @@ socket          = /run/mariadb/mysqld.sock
 
 # The MariaDB server
 [mysqld]
-authentication_policy = "${MARIADB_AUTHENTICATION_PLUGIN:-mysql_native_password},,"
 binlog_expire_logs_seconds = 864000
 character_set_server = ${MARIADB_CHARSET:-utf8mb4}
 collation_server = ${MARIADB_COLLATION:-utf8mb4_bin}
 datadir = ${MARIADB_DATA_DIR:-/var/lib/mysql}
 ignore_db_dirs=backup
 innodb_buffer_pool_size = ${MARIADB_INNODB_BUFFER_POOL_SIZE:-256M}
-innodb_force_recovery = ${{MARIADB_INNODB_FORCE_RECOVER:-0}
+innodb_force_recovery = ${MARIADB_INNODB_FORCE_RECOVER:-0}
 innodb_flush_log_at_trx_commit = 0
 innodb_log_buffer_size = 32M
-innodb_redo_log_capacity = 134217728
 join_buffer_size = 2M
 key_buffer_size = 16M
 max_allowed_packet = ${MARIADB_MAX_ALLOWED_PACKET:-64M}

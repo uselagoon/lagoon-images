@@ -60,7 +60,8 @@ COPY mysql-backup.sh /lagoon/
 COPY my.11.cnf /etc/mysql/my.cnf
 
 RUN rm /lagoon/entrypoints/9999-mariadb-init.10.bash \
-    && mv /lagoon/entrypoints/9999-mariadb-init.11.bash /lagoon/entrypoints/9999-mariadb-init.bash
+    && mv /lagoon/entrypoints/9999-mariadb-init.11.bash /lagoon/entrypoints/9999-mariadb-init.bash \
+    && echo "!include /etc/mysql/my.cnf" >> /etc/my.cnf
 
 RUN for i in /var/run/mysqld /run/mysqld /var/lib/mysql /etc/mysql/conf.d /docker-entrypoint-initdb.d /home; \
     do mkdir -p $i; chown mysql $i; /bin/fix-permissions $i; \

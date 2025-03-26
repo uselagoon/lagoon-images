@@ -40,11 +40,11 @@ RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/rele
     && mkdir -p /home/.ssh \
     && fix-permissions /home/
 
-# Adding Composer vendor bin path to $PATH.
+# Changes to $PATH MUST be duplicated in /lagoon/entrypoints/90-composer-paths.sh
 ENV PATH="/home/.composer/vendor/bin:${PATH}"
-# We not only use "export $PATH" as this could be overwritten again
-# like it happens in /etc/profile of alpine Images.
+
 COPY entrypoints /lagoon/entrypoints/
+COPY legacy-entrypoints /lagoon/entrypoints/
 
 # Remove warning about running as root in composer
 ENV COMPOSER_ALLOW_SUPERUSER=1

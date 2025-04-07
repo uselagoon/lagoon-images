@@ -12,6 +12,9 @@ LABEL org.opencontainers.image.description="PostgreSQL 12 image optimised for ru
 LABEL org.opencontainers.image.title="uselagoon/postgres-12"
 LABEL org.opencontainers.image.base.name="docker.io/postgres:12-alpine3.21"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/postgres-17"
+
 ENV LAGOON=postgres
 
 # Copy commons files

@@ -13,6 +13,9 @@ LABEL org.opencontainers.image.description="Ruby 3.1 image optimised for running
 LABEL org.opencontainers.image.title="uselagoon/ruby-3.1"
 LABEL org.opencontainers.image.base.name="docker.io/ruby:3.1-alpine3.21"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/ruby-3.4"
+
 ENV LAGOON=ruby
 
 # Copy commons files

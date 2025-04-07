@@ -246,23 +246,7 @@ versioned-images := 		php-8.1-fpm \
 							mysql-8.4 \
 							valkey-8
 
-# default-versioned-images are images that formerly had no versioning, and are made backwards-compatible.
-# the below versions are the ones that map to the unversioned namespace
-
-default-versioned-images := 	mariadb-10.4 \
-							mariadb-10.4-drupal \
-							postgres-11 \
-							postgres-11-ckan \
-							postgres-11-drupal \
-							mongo-4
-
-#######
-####### Experimental Images
-#######
-
-experimental-images := 
-
-build-versioned-images = $(foreach image,$(versioned-images) $(default-versioned-images) $(experimental-images),build/$(image))
+build-versioned-images = $(foreach image,$(versioned-images),build/$(image))
 
 # Define the make recipe for all multi images
 $(build-versioned-images):
@@ -283,8 +267,6 @@ $(build-versioned-images):
 #	touch $@
 
 base-images-with-versions += $(versioned-images)
-base-images-with-versions += $(default-versioned-images)
-base-images-with-versions += $(experimental-images)
 
 build/php-8.1-fpm build/php-8.2-fpm build/php-8.3-fpm build/php-8.4-fpm: build/commons
 build/php-8.1-cli: build/php-8.1-fpm
@@ -319,9 +301,7 @@ build/varnish-7-persistent-drupal: build/varnish-7-drupal
 build/solr-8 build/solr-9: build/commons
 build/solr-8-drupal: build/solr-8
 build/solr-9-drupal: build/solr-9
-build/mariadb-10.4 build/mariadb-10.5 build/mariadb-10.6 build/mariadb-10.11: build/commons
-build/mariadb-10.4-drupal: build/mariadb-10.4
-build/mariadb-10.5-drupal: build/mariadb-10.5
+build/mariadb-10.6 build/mariadb-10.11: build/commons
 build/mariadb-10.6-drupal: build/mariadb-10.6
 build/mariadb-10.11-drupal: build/mariadb-10.11
 build/ruby-3.1 build/ruby-3.2 build/ruby-3.3 build/ruby-3.4: build/commons
@@ -373,9 +353,6 @@ docker-buildx-configure:
 # Publish command to testlagoon docker hub, done on any main branch or PR
 publish-testlagoon-baseimages = $(foreach image,$(base-images),[publish-testlagoon-baseimages]-$(image))
 publish-testlagoon-baseimages-with-versions = $(foreach image,$(base-images-with-versions),[publish-testlagoon-baseimages-with-versions]-$(image))
-# Special handler for the previously unversioned images that now have versions
-publish-testlagoon-baseimages-without-versions = $(foreach image,$(default-versioned-images),[publish-testlagoon-baseimages-without-versions]-$(image))
-publish-testlagoon-experimental-baseimages = $(foreach image,$(experimental-images),[publish-testlagoon-experimental-baseimages]-$(image))
 
 # tag and push all images
 .PHONY: publish-testlagoon-baseimages

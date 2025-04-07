@@ -11,4 +11,7 @@ LABEL org.opencontainers.image.description="Redis 6 image optimised for persiste
 LABEL org.opencontainers.image.title="uselagoon/redis-6-persistent"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/redis-6"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/valkey-8"
+
 ENV FLAVOR=persistent

@@ -8,18 +8,6 @@ services:
     image: uselagoon/commons:latest
     << : *default-user # uses the defined user from top
 
-  mariadb-10-4:
-    image: uselagoon/mariadb-10.4:latest
-    ports:
-      - "3306"
-    << : *default-user # uses the defined user from top
-
-  mariadb-10-5:
-    image: uselagoon/mariadb-10.5:latest
-    ports:
-      - "3306"
-    << : *default-user # uses the defined user from top
-
   mariadb-10-6:
     image: uselagoon/mariadb-10.6:latest
     ports:

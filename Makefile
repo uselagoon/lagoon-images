@@ -223,8 +223,6 @@ versioned-images := 		php-8.1-fpm \
 							redis-6-persistent \
 							redis-7 \
 							redis-7-persistent \
-							mariadb-10.5 \
-							mariadb-10.5-drupal \
 							mariadb-10.6 \
 							mariadb-10.6-drupal \
 							mariadb-10.11 \

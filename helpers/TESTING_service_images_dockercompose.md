@@ -22,8 +22,6 @@ docker compose pull || true
 docker compose build && docker compose up -d
 
 # Ensure database pods are ready to connect
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-4:3306 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-5:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-6:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-11:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mysql-8-0:3306 -timeout 1m
@@ -52,8 +50,6 @@ Run the following commands to validate things are rolling as they should.
 ```bash
 # should have all the services we expect
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep commons
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-4
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-5
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-11
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mysql-8-0
@@ -138,36 +134,6 @@ docker compose exec -T solr-9 sh -c "cat /var/solr/data/mycore/conf/solrconfig.x
 # solr-9 should be able to read/write data
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-9" | grep "SERVICE_HOST=solr-9"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-9" | grep "LAGOON_TEST_VAR=all-images"
-
-# mariadb-10-4 should be version 10.4 client
-docker compose exec -T mariadb-10-4 sh -c "mysql -V" | grep "10.4"
-
-# mariadb-10-4 should be version 10.4 server
-docker compose exec -T mariadb-10-4 sh -c "echo U0hPVyB2YXJpYWJsZXM7 | base64 -d > /tmp/showvariables.sql"
-docker compose exec -T mariadb-10-4 sh -c "mysql < /tmp/showvariables.sql" | grep "version" | grep "10.4"
-
-# mariadb-10-4 should use default credentials
-docker compose exec -T mariadb-10-4 sh -c "echo U0hPVyBkYXRhYmFzZXM7 | base64 -d > /tmp/showdatabases.sql"
-docker compose exec -T mariadb-10-4 sh -c "mysql -D lagoon -u lagoon --password=lagoon < /tmp/showdatabases.sql" | grep lagoon
-
-# mariadb-10-4 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-10-4" | grep "SERVICE_HOST=10.4"
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-10-4" | grep "LAGOON_TEST_VAR=all-images"
-
-# mariadb-10-5 should be version 10.5 client
-docker compose exec -T mariadb-10-5 sh -c "mysql -V" | grep "10.5"
-
-# mariadb-10-5 should be version 10.5 server
-docker compose exec -T mariadb-10-5 sh -c "echo U0hPVyB2YXJpYWJsZXM7 | base64 -d > /tmp/showvariables.sql"
-docker compose exec -T mariadb-10-5 sh -c "mysql < /tmp/showvariables.sql" | grep "version" | grep "10.5"
-
-# mariadb-10-5 should use default credentials
-docker compose exec -T mariadb-10-5 sh -c "echo U0hPVyBkYXRhYmFzZXM7 | base64 -d > /tmp/showdatabases.sql"
-docker compose exec -T mariadb-10-5 sh -c "mysql -D lagoon -u lagoon --password=lagoon < /tmp/showdatabases.sql" | grep lagoon
-
-# mariadb-10-5 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-10-5" | grep "SERVICE_HOST=10.5"
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-10-5" | grep "LAGOON_TEST_VAR=all-images"
 
 # mariadb-10-6 should be version 10.6 client
 docker compose exec -T mariadb-10-6 sh -c "mysql -V" | grep "10.6"

@@ -227,6 +227,7 @@ versioned-images := 		php-8.1-fpm \
 							mariadb-10.6-drupal \
 							mariadb-10.11 \
 							mariadb-10.11-drupal \
+							mongo-4 \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \

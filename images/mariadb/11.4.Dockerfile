@@ -1,23 +1,25 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM alpine:3.20.6
+FROM mariadb:11.4.5-ubi9
+
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.authors="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/mariadb/10.11.Dockerfile"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/mariadb/11.4.Dockerfile"
 LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
 LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
-LABEL org.opencontainers.image.description="MariaDB 10.11 image optimised for running in Lagoon in production and locally"
-LABEL org.opencontainers.image.title="uselagoon/mariadb-10.11"
-LABEL org.opencontainers.image.base.name="docker.io/alpine:3.19"
+LABEL org.opencontainers.image.description="MariaDB 11.4 image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/mariadb-11.4"
+LABEL org.opencontainers.image.base.name="docker.io/mariadb:11.4-ubi9"
 
 ENV LAGOON=mariadb
+
+USER root
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon
 COPY --from=commons /bin/fix-permissions /bin/ep /bin/docker-sleep /bin/wait-for /bin/
-COPY --from=commons /sbin/tini /sbin/
 COPY --from=commons /home /home
 
 RUN fix-permissions /etc/passwd \
@@ -38,37 +40,31 @@ ENV MARIADB_DATABASE=lagoon \
     MARIADB_PASSWORD=lagoon \
     MARIADB_ROOT_PASSWORD=Lag00n
 
-RUN apk update \
-    && apk add --no-cache --virtual .common-run-deps \
-        bash \
-        curl \
+RUN microdnf install -y epel-release \
+    && microdnf update -y \
+    && microdnf install -y \
         gettext \
-        mariadb-client=10.11.11-r0 \
-        mariadb-common=10.11.11-r0 \
-        mariadb-server-utils=10.11.11-r0 \
-        mariadb=10.11.11-r0 \
-        mariadb-connector-c \
         net-tools \
-        perl-doc \
         pwgen \
         rsync \
         tar \
-        tini \
-        tzdata \
         wget \
-    && rm -rf /var/cache/apk/* \
-    && rm -rf /tmp/* /var/tmp/* /var/cache/distfiles/* \
+    && microdnf clean all \
     && rm -rf /var/lib/mysql/* /etc/mysql/ /etc/my.cnf* \
     && curl -sSL https://raw.githubusercontent.com/major/MySQLTuner-perl/master/mysqltuner.pl -o mysqltuner.pl
 
+RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini
+
 COPY entrypoints/ /lagoon/entrypoints/
 COPY mysql-backup.sh /lagoon/
-COPY my.10.cnf /etc/mysql/my.cnf
+COPY my.11.cnf /etc/mysql/my.cnf
 
-RUN rm /lagoon/entrypoints/9999-mariadb-init.11.bash \
-    && mv /lagoon/entrypoints/9999-mariadb-init.10.bash /lagoon/entrypoints/9999-mariadb-init.bash
+RUN rm /lagoon/entrypoints/9999-mariadb-init.10.bash \
+    && mv /lagoon/entrypoints/9999-mariadb-init.11.bash /lagoon/entrypoints/9999-mariadb-init.bash \
+    && echo "!include /etc/mysql/my.cnf" >> /etc/my.cnf
 
-RUN for i in /var/run/mysqld /var/lib/mysql /etc/mysql/conf.d /docker-entrypoint-initdb.d/ "${BACKUPS_DIR}" /home; \
+RUN for i in /var/run/mysqld /run/mysqld /var/lib/mysql /etc/mysql/conf.d /docker-entrypoint-initdb.d /home; \
     do mkdir -p $i; chown mysql $i; /bin/fix-permissions $i; \
     done
 
@@ -81,13 +77,12 @@ RUN touch /var/log/mariadb-slow.log && /bin/fix-permissions /var/log/mariadb-slo
 
 # We cannot start mysql as root, we add the user mysql to the group root and
 # change the user of the Docker Image to this user.
-RUN addgroup mysql root
+RUN usermod -a -G root mysql
 USER mysql
-ENV USER_NAME mysql
+ENV USER_NAME=mysql
 
 WORKDIR /var/lib/mysql
-VOLUME /var/lib/mysql
 EXPOSE 3306
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash"]
-CMD ["mysqld"]
+CMD ["mariadbd"]

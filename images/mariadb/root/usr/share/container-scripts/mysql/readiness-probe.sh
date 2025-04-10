@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# openshift-mariadb: mysqld readinessProbe
+# mysqld readinessProbe for use in kubernetes
 #
 
 mysql --defaults-file=${MARIADB_DATA_DIR:-/var/lib/mysql}/.my.cnf -e"SHOW DATABASES;"

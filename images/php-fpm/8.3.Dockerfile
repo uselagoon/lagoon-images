@@ -80,7 +80,7 @@ RUN apk update \
         # for yaml
         yaml-dev \
     && install-php-extensions apcu-5.1.24 \
-    && install-php-extensions https://codeload.github.com/amazeeio/imagick/tar.gz/refs/heads/php84 \
+    && install-php-extensions imagick-3.8.0 \
     && install-php-extensions redis-6.2.0 \
     && install-php-extensions xdebug-3.4.2 \
     && install-php-extensions yaml-2.2.4 \

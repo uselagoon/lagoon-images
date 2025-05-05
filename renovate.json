@@ -246,6 +246,7 @@
       ],
       "matchPackageNames": [
         "node",
+        "opensearch",
         "postgres",
         "redis",
         "solr",
@@ -263,6 +264,7 @@
       ],
       "matchPackageNames": [
         "node",
+        "opensearch",
         "postgres",
         "redis",
         "solr",

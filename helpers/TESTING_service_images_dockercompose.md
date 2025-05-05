@@ -24,16 +24,19 @@ docker compose build && docker compose up -d
 # Ensure database pods are ready to connect
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-6:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-11:3306 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo-4:27017 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mysql-8-0:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mysql-8-4:3306 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://nginx:8080 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-3:9200 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-3:9200 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-12:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-14:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-15:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-16:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-17:5432 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo-4:27017 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-6:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-7:6379 -timeout 1m
@@ -52,9 +55,12 @@ Run the following commands to validate things are rolling as they should.
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep commons
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-11
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mongo-4
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mysql-8-0
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mysql-8-4
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mongo-4
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep nginx
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep opensearch-2
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep opensearch-3
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-12
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-13
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-14
@@ -66,74 +72,12 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-7
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-8
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-9
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep nginx
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep valkey-8
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-7
 
 # commons should be running Alpine Linux
 docker compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
-
-# rabbitmq should have RabbitMQ running 3.10
-docker compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.10
-
-# rabbitmq should have delayed_message_exchange plugin enabled
-docker compose exec -T rabbitmq sh -c "rabbitmq-plugins list" | grep "E" | grep "delayed_message_exchange"
-
-# rabbitmq should have a running RabbitMQ management page running on 15672
-docker compose exec -T commons sh -c "curl -kL http://rabbitmq:15672" | grep "RabbitMQ Management"
-
-# redis-6 should be running Redis v6.0
-docker compose exec -T redis-6 sh -c "redis-server --version" | grep v=6.
-
-# redis-6 should be able to see Redis databases
-docker compose exec -T redis-6 sh -c "redis-cli CONFIG GET databases"
-
-# redis-6 should have initialized database
-docker compose exec -T redis-6 sh -c "redis-cli dbsize"
-
-# redis-6 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-6" | grep "SERVICE_HOST=redis-6"
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-6" | grep "LAGOON_TEST_VAR=all-images"
-
-# redis-7 should be running Redis v7.0
-docker compose exec -T redis-7 sh -c "redis-server --version" | grep v=7.
-
-# redis-7 should be able to see Redis databases
-docker compose exec -T redis-7 sh -c "redis-cli CONFIG GET databases"
-
-# redis-7 should have initialized database
-docker compose exec -T redis-7 sh -c "redis-cli dbsize"
-
-# redis-7 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-7" | grep "SERVICE_HOST=redis-7"
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-7" |grep "LAGOON_TEST_VAR=all-images"
-
-# solr-8 should have a "mycore" Solr core
-docker compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=STATUS\&core=mycore"
-
-# solr-8 should be able to reload "mycore" Solr core
-docker compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=RELOAD\&core=mycore"
-
-# solr-8 should have solr 8 solrconfig in "mycore" core
-docker compose exec -T solr-8 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 8.
-
-# solr-8 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-8" | grep "SERVICE_HOST=solr-8"
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-8" | grep "LAGOON_TEST_VAR=all-images"
-
-# solr-9 should have a "mycore" Solr core
-docker compose exec -T commons sh -c "curl solr-9:8983/solr/admin/cores?action=STATUS\&core=mycore"
-
-# solr-9 should be able to reload "mycore" Solr core
-docker compose exec -T commons sh -c "curl solr-9:8983/solr/admin/cores?action=RELOAD\&core=mycore"
-
-# solr-9 should have solr 9 solrconfig in "mycore" core
-docker compose exec -T solr-9 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 9.
-
-# solr-9 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-9" | grep "SERVICE_HOST=solr-9"
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-9" | grep "LAGOON_TEST_VAR=all-images"
 
 # mariadb-10-6 should be version 10.6 client
 docker compose exec -T mariadb-10-6 sh -c "mysql -V" | grep "10.6"
@@ -219,6 +163,33 @@ docker compose exec -T mysql-8-4  sh -c "mysql -D lagoon -u lagoon --password=la
 # mysql-8-4  should be able to read/write data
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mysql-8-4" | grep "SERVICE_HOST=8.4"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mysql-8-4" | grep "LAGOON_TEST_VAR=all-images"
+
+# nginx should be served by openresty
+docker compose exec -T commons sh -c "curl -kL http://nginx:8080" | grep "hr" | grep "openresty"
+
+# nginx should have correct headers
+docker compose exec -T commons sh -c "curl -I nginx:8080" | grep -i "Server" | grep -i "openresty"
+docker compose exec -T commons sh -c "curl -I nginx:8080" | grep -i "X-Lagoon"
+
+# opensearch-2 should have opensearch 2
+docker compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | grep "2."
+
+# opensearch-2 should be healthy
+docker compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | json_pp | grep status | grep -v red
+
+# opensearch-2 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch?service=opensearch-2" | grep "SERVICE_HOST=opensearch-2"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch?service=opensearch-2" | grep "LAGOON_TEST_VAR=all"
+
+# opensearch-3 should have opensearch 3
+docker compose exec -T commons sh -c "curl opensearch-3:9200" | grep number | grep "3."
+
+# opensearch-3 should be healthy
+docker compose exec -T commons sh -c "curl opensearch-3:9200/_cluster/health" | json_pp | grep status | grep -v red
+
+# opensearch-3 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch?service=opensearch-3" | grep "SERVICE_HOST=opensearch-3"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch?service=opensearch-3" | grep "LAGOON_TEST_VAR=all"
 
 # postgres-12 should be version 12 client
 docker compose exec -T postgres-12 bash -c "psql --version" | grep "psql" | grep "12."
@@ -310,12 +281,66 @@ docker compose exec -T postgres-17 bash -c "psql -U lagoon -d lagoon < /tmp/list
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-17" | grep "SERVICE_HOST=PostgreSQL 17"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-17" | grep "LAGOON_TEST_VAR=all-images"
 
-# nginx should be served by openresty
-docker compose exec -T commons sh -c "curl -kL http://nginx:8080" | grep "hr" | grep "openresty"
+# rabbitmq should have RabbitMQ running 3.10
+docker compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.10
 
-# nginx should have correct headers
-docker compose exec -T commons sh -c "curl -I nginx:8080" | grep -i "Server" | grep -i "openresty"
-docker compose exec -T commons sh -c "curl -I nginx:8080" | grep -i "X-Lagoon"
+# rabbitmq should have delayed_message_exchange plugin enabled
+docker compose exec -T rabbitmq sh -c "rabbitmq-plugins list" | grep "E" | grep "delayed_message_exchange"
+
+# rabbitmq should have a running RabbitMQ management page running on 15672
+docker compose exec -T commons sh -c "curl -kL http://rabbitmq:15672" | grep "RabbitMQ Management"
+
+# redis-6 should be running Redis v6.0
+docker compose exec -T redis-6 sh -c "redis-server --version" | grep v=6.
+
+# redis-6 should be able to see Redis databases
+docker compose exec -T redis-6 sh -c "redis-cli CONFIG GET databases"
+
+# redis-6 should have initialized database
+docker compose exec -T redis-6 sh -c "redis-cli dbsize"
+
+# redis-6 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-6" | grep "SERVICE_HOST=redis-6"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-6" | grep "LAGOON_TEST_VAR=all-images"
+
+# redis-7 should be running Redis v7.0
+docker compose exec -T redis-7 sh -c "redis-server --version" | grep v=7.
+
+# redis-7 should be able to see Redis databases
+docker compose exec -T redis-7 sh -c "redis-cli CONFIG GET databases"
+
+# redis-7 should have initialized database
+docker compose exec -T redis-7 sh -c "redis-cli dbsize"
+
+# redis-7 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-7" | grep "SERVICE_HOST=redis-7"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-7" |grep "LAGOON_TEST_VAR=all-images"
+
+# solr-8 should have a "mycore" Solr core
+docker compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=STATUS\&core=mycore"
+
+# solr-8 should be able to reload "mycore" Solr core
+docker compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=RELOAD\&core=mycore"
+
+# solr-8 should have solr 8 solrconfig in "mycore" core
+docker compose exec -T solr-8 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 8.
+
+# solr-8 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-8" | grep "SERVICE_HOST=solr-8"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-8" | grep "LAGOON_TEST_VAR=all-images"
+
+# solr-9 should have a "mycore" Solr core
+docker compose exec -T commons sh -c "curl solr-9:8983/solr/admin/cores?action=STATUS\&core=mycore"
+
+# solr-9 should be able to reload "mycore" Solr core
+docker compose exec -T commons sh -c "curl solr-9:8983/solr/admin/cores?action=RELOAD\&core=mycore"
+
+# solr-9 should have solr 9 solrconfig in "mycore" core
+docker compose exec -T solr-9 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 9.
+
+# solr-9 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-9" | grep "SERVICE_HOST=solr-9"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-9" | grep "LAGOON_TEST_VAR=all-images"
 
 # valkey-8 should be running Valkey v8 server and Redis compatible
 docker compose exec -T valkey-8 sh -c "valkey-server --version" | grep v=8.
@@ -353,16 +378,6 @@ docker compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep li
 # varnish-7 should be serving pages as version 7
 docker compose exec -T commons sh -c "curl -I varnish-7:8080" | grep -i "Varnish" | grep -i "7."
 docker compose exec -T varnish-7 sh -c "varnishlog -d" | grep User-Agent | grep curl 
-
-# opensearch-2 should have opensearch 2
-docker compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | grep "2."
-
-# opensearch-2 should be healthy
-docker compose exec -T commons sh -c "curl opensearch-2:9200/_cluster/health" | json_pp | grep status | grep -v red
-
-# opensearch-2 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch?service=opensearch-2" | grep "SERVICE_HOST=opensearch-2"
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch?service=opensearch-2" | grep "LAGOON_TEST_VAR=all"
 ```
 
 Destroy tests

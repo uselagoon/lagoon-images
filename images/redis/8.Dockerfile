@@ -16,9 +16,21 @@ ENV LAGOON=redis
 
 ENV FLAVOR=ephemeral
 
-RUN apk add --no-cache \
-        rsync \
-        tar
+# Temp workaround for https://github.com/redis/docker-library-redis/issues/444
+COPY apk-tools-static-2.14.6-r3/* /tmp/
+RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
+    && mkdir -p /usr/bin \
+    && mv /tmp/apk.${architecture}.static /usr/bin/apk.static \
+    && rm /tmp/apk.*.static \
+    && apk.static -X http://dl-cdn.alpinelinux.org/alpine/v3.21/main -U --allow-untrusted --initdb add apk-tools-static \
+    && apk.static update \
+    && apk.static -X http://dl-cdn.alpinelinux.org/alpine/v3.21/main -U --allow-untrusted add apk-tools
+RUN apk update \
+    && apk --repository http://dl-cdn.alpinelinux.org/alpine/v3.21/main/ --allow-untrusted --no-cache add rsync tar
+
+# RUN apk add --no-cache \
+#         rsync \
+#         tar
 
 # Copy commons files
 COPY --from=commons /lagoon /lagoon

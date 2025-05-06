@@ -177,23 +177,13 @@ build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 ####### Multi-version Images
 #######
 
-versioned-images := 		php-8.1-fpm \
-							php-8.2-fpm \
-							php-8.3-fpm \
-							php-8.4-fpm \
-							php-8.1-cli \
-							php-8.2-cli \
-							php-8.3-cli \
-							php-8.4-cli \
-							php-8.1-cli-drupal \
-							php-8.2-cli-drupal \
-							php-8.3-cli-drupal \
-							php-8.4-cli-drupal \
-							python-3.9 \
-							python-3.10 \
-							python-3.11 \
-							python-3.12 \
-							python-3.13 \
+versioned-images := 		mariadb-10.6 \
+							mariadb-10.6-drupal \
+							mariadb-10.11 \
+							mariadb-10.11-drupal \
+							mongo-4 \
+							mysql-8.0 \
+							mysql-8.4 \
 							node-18 \
 							node-18-builder \
 							node-18-cli \
@@ -203,10 +193,20 @@ versioned-images := 		php-8.1-fpm \
 							node-22 \
 							node-22-builder \
 							node-22-cli \
-							solr-8 \
-							solr-8-drupal \
-							solr-9 \
-							solr-9-drupal \
+							opensearch-2 \
+							opensearch-3 \
+							php-8.1-fpm \
+							php-8.1-cli \
+							php-8.1-cli-drupal \
+							php-8.2-fpm \
+							php-8.2-cli \
+							php-8.2-cli-drupal \
+							php-8.3-fpm \
+							php-8.3-cli \
+							php-8.3-cli-drupal \
+							php-8.4-fpm \
+							php-8.4-cli \
+							php-8.4-cli-drupal \
 							postgres-12 \
 							postgres-12-drupal \
 							postgres-13 \
@@ -219,15 +219,24 @@ versioned-images := 		php-8.1-fpm \
 							postgres-16-drupal \
 							postgres-17 \
 							postgres-17-drupal \
+							python-3.9 \
+							python-3.10 \
+							python-3.11 \
+							python-3.12 \
+							python-3.13 \
 							redis-6 \
 							redis-6-persistent \
 							redis-7 \
 							redis-7-persistent \
-							mariadb-10.6 \
-							mariadb-10.6-drupal \
-							mariadb-10.11 \
-							mariadb-10.11-drupal \
-							mongo-4 \
+							ruby-3.1 \
+							ruby-3.2 \
+							ruby-3.3 \
+							ruby-3.4 \
+							solr-8 \
+							solr-8-drupal \
+							solr-9 \
+							solr-9-drupal \
+							valkey-8 \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \
@@ -235,15 +244,7 @@ versioned-images := 		php-8.1-fpm \
 							varnish-7 \
 							varnish-7-drupal \
 							varnish-7-persistent \
-							varnish-7-persistent-drupal \
-							ruby-3.1 \
-							ruby-3.2 \
-							ruby-3.3 \
-							ruby-3.4 \
-							opensearch-2 \
-							mysql-8.0 \
-							mysql-8.4 \
-							valkey-8
+							varnish-7-persistent-drupal
 
 build-versioned-images = $(foreach image,$(versioned-images),build/$(image))
 
@@ -267,20 +268,26 @@ $(build-versioned-images):
 
 base-images-with-versions += $(versioned-images)
 
-build/php-8.1-fpm build/php-8.2-fpm build/php-8.3-fpm build/php-8.4-fpm: build/commons
-build/php-8.1-cli: build/php-8.1-fpm
-build/php-8.2-cli: build/php-8.2-fpm
-build/php-8.3-cli: build/php-8.3-fpm
-build/php-8.4-cli: build/php-8.4-fpm
-build/php-8.1-cli-drupal: build/php-8.1-cli
-build/php-8.2-cli-drupal: build/php-8.2-cli
-build/php-8.3-cli-drupal: build/php-8.3-cli
-build/php-8.4-cli-drupal: build/php-8.4-cli
-build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12 build/python-3.13: build/commons
+build/mariadb-10.6 build/mariadb-10.11: build/commons
+build/mariadb-10.6-drupal: build/mariadb-10.6
+build/mariadb-10.11-drupal: build/mariadb-10.11
+build/mongo-4: build/commons
+build/mysql-8.0 build/mysql-8.4: build/commons
 build/node-18 build/node-20 build/node-22: build/commons
 build/node-18-builder build/node-18-cli: build/node-18
 build/node-20-builder build/node-20-cli: build/node-20
 build/node-22-builder build/node-22-cli: build/node-22
+build/opensearch-2: build/commons
+build/opensearch-3: build/commons
+build/php-8.1-fpm build/php-8.2-fpm build/php-8.3-fpm build/php-8.4-fpm: build/commons
+build/php-8.1-cli: build/php-8.1-fpm
+build/php-8.1-cli-drupal: build/php-8.1-cli
+build/php-8.2-cli: build/php-8.2-fpm
+build/php-8.2-cli-drupal: build/php-8.2-cli
+build/php-8.3-cli: build/php-8.3-fpm
+build/php-8.3-cli-drupal: build/php-8.3-cli
+build/php-8.4-cli: build/php-8.4-fpm
+build/php-8.4-cli-drupal: build/php-8.4-cli
 build/postgres-12 build/postgres-13 build/postgres-14 build/postgres-15 build/postgres-16 build/postgres-17: build/commons
 build/postgres-12-drupal: build/postgres-12
 build/postgres-13-drupal: build/postgres-13
@@ -288,25 +295,20 @@ build/postgres-14-drupal: build/postgres-14
 build/postgres-15-drupal: build/postgres-15
 build/postgres-16-drupal: build/postgres-16
 build/postgres-17-drupal: build/postgres-17
+build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12 build/python-3.13: build/commons
 build/redis-6 build/redis-7: build/commons
 build/redis-6-persistent: build/redis-6
 build/redis-7-persistent: build/redis-7
+build/ruby-3.1 build/ruby-3.2 build/ruby-3.3 build/ruby-3.4: build/commons
+build/solr-8 build/solr-9: build/commons
+build/solr-8-drupal: build/solr-8
+build/solr-9-drupal: build/solr-9
+build/valkey-8: build/commons
 build/varnish-6 build/varnish-7: build/commons
 build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal
 build/varnish-7-drupal build/varnish-7-persistent: build/varnish-7
 build/varnish-7-persistent-drupal: build/varnish-7-drupal
-build/solr-8 build/solr-9: build/commons
-build/solr-8-drupal: build/solr-8
-build/solr-9-drupal: build/solr-9
-build/mariadb-10.6 build/mariadb-10.11: build/commons
-build/mariadb-10.6-drupal: build/mariadb-10.6
-build/mariadb-10.11-drupal: build/mariadb-10.11
-build/ruby-3.1 build/ruby-3.2 build/ruby-3.3 build/ruby-3.4: build/commons
-build/opensearch-2: build/commons
-build/mongo-4: build/commons 
-build/mysql-8.0 build/mysql-8.4: build/commons
-build/valkey-8: build/commons
 
 #######
 ####### Building Images

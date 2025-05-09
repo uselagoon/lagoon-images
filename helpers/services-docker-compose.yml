@@ -6,13 +6,21 @@ x-user:
 services:
   commons:
     image: uselagoon/commons:latest
-    << : *default-user # uses the defined user from top
+    << : *default-user
+
+  internal-services-test:
+    image: docker.io/uselagoon/internal-services-test:main
+    ports:
+      - "3000"
+    environment:
+      - LAGOON_TEST_VAR=all-images
+    << : *default-user
 
   mariadb-10-6:
     image: uselagoon/mariadb-10.6:latest
     ports:
       - "3306"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   mariadb-10-11:
     image: uselagoon/mariadb-10.11:latest
@@ -23,81 +31,105 @@ services:
       - MARIADB_LOG_SLOW=true
       - MARIADB_LONG_QUERY_TIME=30
       - MARIADB_LOG_SLOW_RATE_LIMIT=5
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   mongo-4:
     image: uselagoon/mongo-4:latest
     ports:
       - "27017"
       - "28017"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   mysql-8-0:
     image: uselagoon/mysql-8.0:latest
     ports:
       - "3306"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   mysql-8-4:
     image: uselagoon/mysql-8.4:latest
     ports:
       - "3306"
-    << : *default-user # uses the defined user from top
+    << : *default-user
+
+  nginx:
+    image: uselagoon/nginx:latest
+    labels:
+      lando.type: nginx
+    ports:
+      - "8080"
+    << : *default-user
+
+  opensearch-2:
+    image: uselagoon/opensearch-2:latest
+    labels:
+      lando.type: opensearch
+    ports:
+      - "9200"
+    << : *default-user
+
+  opensearch-3:
+    image: uselagoon/opensearch-3:latest
+    labels:
+      lando.type: opensearch
+    ports:
+      - "9200"
+    << : *default-user
 
   postgres-12:
     image: uselagoon/postgres-12:latest
     ports:
       - "5432"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   postgres-13:
     image: uselagoon/postgres-13:latest
     ports:
       - "5432"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   postgres-14:
     image: uselagoon/postgres-14:latest
     ports:
       - "5432"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   postgres-15:
     image: uselagoon/postgres-15:latest
     ports:
       - "5432"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   postgres-16:
     image: uselagoon/postgres-16:latest
     ports:
       - "5432"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   postgres-17:
     image: uselagoon/postgres-17:latest
     ports:
       - "5432"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   rabbitmq:
     image: uselagoon/rabbitmq:latest
     ports:
       - "5672"
       - "15672"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   redis-6:
     image: uselagoon/redis-6:latest
     ports:
       - "6379"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   redis-7:
     image: uselagoon/redis-7:latest
     ports:
       - "6379"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   solr-8:
     image: uselagoon/solr-8:latest
@@ -115,48 +147,24 @@ services:
     image: uselagoon/valkey-8:latest
     ports:
       - "6379"
-    << : *default-user # uses the defined user from top
+    << : *default-user
 
   varnish-6:
     image: uselagoon/varnish-6:latest
     labels:
       lando.type: varnish
     ports:
-      - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port varnish-6 8080`
-    << : *default-user # uses the defined user from top
+      - "8080"
+    << : *default-user
     depends_on:
       - nginx
-
-  nginx:
-    image: uselagoon/nginx:latest
-    labels:
-      lando.type: nginx
-    ports:
-      - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port nginx 8080`
-    << : *default-user # uses the defined user from top
 
   varnish-7:
     image: uselagoon/varnish-7:latest
     labels:
       lando.type: varnish
     ports:
-      - "8080" # exposes the port 8080 with a random local port, find it with `docker-compose port varnish-7 8080`
-    << : *default-user # uses the defined user from top
+      - "8080"
+    << : *default-user
     depends_on:
       - nginx
-
-  opensearch-2:
-    image: uselagoon/opensearch-2:latest
-    labels:
-      lando.type: opensearch
-    ports:
-      - "9200" # exposes the port 8080 with a random local port, find it with `docker-compose port nginx 8080`
-    << : *default-user # uses the defined user from top
-
-  internal-services-test:
-    image: docker.io/uselagoon/internal-services-test:main
-    ports:
-      - "3000"
-    environment:
-      - LAGOON_TEST_VAR=all-images
-    << : *default-user # uses the defined user from top

@@ -8,6 +8,14 @@ if [[ -n "${REDIS_PASSWORD}" ]]; then
 requirepass ${REDIS_PASSWORD}"
 fi
 
+# Check if REDIS_FLAVOR or FLAVOR is set and has the value "persistent"
+if [ "${REDIS_FLAVOR}" = "persistent" ] || [ "${FLAVOR}" = "persistent" ]; then
+    FLAVOR="persistent"
+else
+    FLAVOR="ephemeral"
+fi
+echo "FLAVOR is set to: $FLAVOR"
+
 ep /etc/redis/*
 
 exec "$@"

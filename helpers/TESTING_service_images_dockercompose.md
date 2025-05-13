@@ -40,6 +40,7 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-6:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-7:6379 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-8:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://solr-8:8983 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://solr-9:8983 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://valkey-8:6379 -timeout 1m
@@ -70,6 +71,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep rabbitmq
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-7
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-8
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-8
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-9
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep valkey-8
@@ -315,6 +317,19 @@ docker compose exec -T redis-7 sh -c "redis-cli dbsize"
 # redis-7 should be able to read/write data
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-7" | grep "SERVICE_HOST=redis-7"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-7" |grep "LAGOON_TEST_VAR=all-images"
+
+# redis-8 should be running Redis v8.0
+docker compose exec -T redis-8 sh -c "redis-server --version" | grep v=8.
+
+# redis-8 should be able to see Redis databases
+docker compose exec -T redis-8 sh -c "redis-cli CONFIG GET databases"
+
+# redis-8 should have initialized database
+docker compose exec -T redis-8 sh -c "redis-cli dbsize"
+
+# redis-8 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-8" | grep "SERVICE_HOST=redis-8"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-8" |grep "LAGOON_TEST_VAR=all-images"
 
 # solr-8 should have a "mycore" Solr core
 docker compose exec -T commons sh -c "curl solr-8:8983/solr/admin/cores?action=STATUS\&core=mycore"

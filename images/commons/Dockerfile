@@ -26,6 +26,7 @@ COPY --from=envplate /usr/local/bin/ep /bin/ep
 
 RUN apk update \
     && apk add --no-cache \
+        apk-tools-static \
         curl \
         rsync \
         tar \

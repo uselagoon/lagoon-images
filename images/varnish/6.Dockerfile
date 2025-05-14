@@ -18,8 +18,8 @@ RUN curl -s https://packagecloud.io/install/repositories/varnishcache/varnish60l
         libpcre3-dev \
         libtool \
         python3-docutils \
-        varnish=6.0.13-1~bookworm \
-        varnish-dev=6.0.13-1~bookworm
+        varnish=6.0.14-1~bookworm \
+        varnish-dev=6.0.14-1~bookworm
 
 ENV LIBVMOD_DYNAMIC_VERSION=6.0
 RUN cd /tmp && curl -sSLO https://github.com/nigoroll/libvmod-dynamic/archive/${LIBVMOD_DYNAMIC_VERSION}.zip \

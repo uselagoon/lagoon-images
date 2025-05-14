@@ -1,7 +1,7 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 
-FROM varnish:6.0.13 AS vmod
+FROM varnish:6.0.14 AS vmod
 
 USER root
 RUN apt-get update \
@@ -31,7 +31,7 @@ RUN cd /tmp && curl -sSLO https://github.com/varnish/varnish-modules/archive/${V
     && unzip ${VARNISH_MODULES_VERSION}.zip && cd varnish-modules-${VARNISH_MODULES_VERSION} \
     && ./bootstrap && ./configure && make && make install
 
-FROM varnish:6.0.13
+FROM varnish:6.0.14
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

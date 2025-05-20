@@ -272,8 +272,9 @@
       ]
     },
     {
-      "groupName": "Redis Images",
-      "allowedVersions": "<7.4.0 || >=8.0.0",
+      "groupName": "Excluded Redis Images",
+      "enabled": false,
+      "allowedVersions": "~7.4",
       "matchDatasources": [
         "docker"
       ],

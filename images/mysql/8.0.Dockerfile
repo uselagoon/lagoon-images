@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM mysql:8.0.42-oracle
+FROM mysql:9.3.0-oracle
 
 
 ARG LAGOON_VERSION

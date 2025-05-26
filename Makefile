@@ -181,6 +181,7 @@ versioned-images := 		mariadb-10.6 \
 							mariadb-10.6-drupal \
 							mariadb-10.11 \
 							mariadb-10.11-drupal \
+							mariadb-11.4 \
 							mongo-4 \
 							mysql-8.0 \
 							mysql-8.4 \
@@ -269,7 +270,7 @@ $(build-versioned-images):
 
 base-images-with-versions += $(versioned-images)
 
-build/mariadb-10.6 build/mariadb-10.11: build/commons
+build/mariadb-10.6 build/mariadb-10.11 build/mariadb-11.4: build/commons
 build/mariadb-10.6-drupal: build/mariadb-10.6
 build/mariadb-10.11-drupal: build/mariadb-10.11
 build/mongo-4: build/commons

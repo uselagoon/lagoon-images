@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM mariadb:11.4.5-ubi9
+FROM mariadb:11.4.7-ubi9
 
 
 ARG LAGOON_VERSION
@@ -45,6 +45,7 @@ RUN microdnf install -y epel-release \
     && microdnf install -y \
         gettext \
         net-tools \
+        openssh-clients \
         pwgen \
         rsync \
         tar \
@@ -76,8 +77,12 @@ RUN touch /var/log/mariadb-slow.log && /bin/fix-permissions /var/log/mariadb-slo
     && touch /var/log/mariadb-queries.log && /bin/fix-permissions /var/log/mariadb-queries.log
 
 # We cannot start mysql as root, we add the user mysql to the group root and
+# ensure that the gid and uid match the previous image releases and then we
 # change the user of the Docker Image to this user.
-RUN usermod -a -G root mysql
+RUN groupmod -o -g 101 mysql \
+    && usermod -u 100 mysql \
+    && usermod -a -G root mysql
+
 USER mysql
 ENV USER_NAME=mysql
 

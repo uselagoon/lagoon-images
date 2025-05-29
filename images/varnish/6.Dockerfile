@@ -4,6 +4,13 @@ FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 FROM varnish:6.0.14 AS vmod
 
 USER root
+
+RUN <<EOF
+echo 'Acquire::http::Timeout "60";' >> /etc/apt/apt.conf.d/99timeouts
+echo 'Acquire::ftp::Timeout "60";' >> /etc/apt/apt.conf.d/99timeouts
+echo 'Acquire::Retries "5";' >> /etc/apt/apt.conf.d/99timeouts
+EOF
+
 RUN apt-get update \
     && apt-get -y install \
         build-essential \
@@ -59,6 +66,13 @@ ENV TMPDIR=/tmp \
     BASH_ENV=/home/.bashrc
 
 USER root
+
+RUN <<EOF
+echo 'Acquire::http::Timeout "60";' >> /etc/apt/apt.conf.d/99timeouts
+echo 'Acquire::ftp::Timeout "60";' >> /etc/apt/apt.conf.d/99timeouts
+echo 'Acquire::Retries "5";' >> /etc/apt/apt.conf.d/99timeouts
+EOF
+
 RUN apt-get -y update \
     && apt-get -y install \
         busybox \

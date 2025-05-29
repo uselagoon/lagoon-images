@@ -208,8 +208,6 @@ versioned-images := 		mariadb-10.6 \
 							php-8.4-fpm \
 							php-8.4-cli \
 							php-8.4-cli-drupal \
-							postgres-12 \
-							postgres-12-drupal \
 							postgres-13 \
 							postgres-13-drupal \
 							postgres-14 \
@@ -230,7 +228,6 @@ versioned-images := 		mariadb-10.6 \
 							redis-7 \
 							redis-7-persistent \
 							redis-8 \
-							ruby-3.1 \
 							ruby-3.2 \
 							ruby-3.3 \
 							ruby-3.4 \
@@ -290,8 +287,7 @@ build/php-8.3-cli: build/php-8.3-fpm
 build/php-8.3-cli-drupal: build/php-8.3-cli
 build/php-8.4-cli: build/php-8.4-fpm
 build/php-8.4-cli-drupal: build/php-8.4-cli
-build/postgres-12 build/postgres-13 build/postgres-14 build/postgres-15 build/postgres-16 build/postgres-17: build/commons
-build/postgres-12-drupal: build/postgres-12
+build/postgres-13 build/postgres-14 build/postgres-15 build/postgres-16 build/postgres-17: build/commons
 build/postgres-13-drupal: build/postgres-13
 build/postgres-14-drupal: build/postgres-14
 build/postgres-15-drupal: build/postgres-15
@@ -301,7 +297,7 @@ build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12 build/pyt
 build/redis-6 build/redis-7 build/redis-8: build/commons
 build/redis-6-persistent: build/redis-6
 build/redis-7-persistent: build/redis-7
-build/ruby-3.1 build/ruby-3.2 build/ruby-3.3 build/ruby-3.4: build/commons
+build/ruby-3.2 build/ruby-3.3 build/ruby-3.4: build/commons
 build/solr-8 build/solr-9: build/commons
 build/solr-8-drupal: build/solr-8
 build/solr-9-drupal: build/solr-9

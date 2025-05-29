@@ -33,6 +33,12 @@ ENV TMPDIR=/tmp \
 # we need root for the fix-permissions to work
 USER root
 
+RUN <<EOF
+echo 'Acquire::http::Timeout "60";' >> /etc/apt/apt.conf.d/99timeouts
+echo 'Acquire::ftp::Timeout "60";' >> /etc/apt/apt.conf.d/99timeouts
+echo 'Acquire::Retries "5";' >> /etc/apt/apt.conf.d/99timeouts
+EOF
+
 RUN apt-get -y update \
     && apt-get -y install \
         busybox \

@@ -1,10 +1,10 @@
 # docker-bake.dev.hcl
 variable "IMAGE_REPO" {
-  default = "ghcr.io/tobybellwood"
+  default = "lagoon"
 }
 
 variable "TAG" {
-  default = "bake"
+  default = "latest"
 }
 
 variable "LAGOON_VERSION" {
@@ -21,7 +21,7 @@ variable "UPSTREAM_TAG" {
 
 variable "PLATFORMS" {
   // use PLATFORMS=linux/amd64,linux/arm64 to override default single architecture on the cli
-  default = "linux/amd64"
+  default = "linux/arm64"
 }
 
 variable "NO_CACHE" {
@@ -293,7 +293,7 @@ target "mariadb-10-6" {
   inherits = ["default"]
   context = "images/mariadb"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "10.6.Dockerfile"
   tags = ["${IMAGE_REPO}/mariadb-10.6:${TAG}"]
@@ -303,7 +303,7 @@ target "mariadb-10-6-drupal" {
   inherits = ["default"]
   context = "images/mariadb-drupal"
   contexts = {
-    "lagoon/mariadb-10.6": "target:mariadb-10-6"
+    "${IMAGE_REPO}/mariadb-10.6": "target:mariadb-10-6"
   }
   dockerfile = "10.6.Dockerfile"
   tags = ["${IMAGE_REPO}/mariadb-10.6-drupal:${TAG}"]
@@ -313,7 +313,7 @@ target "mariadb-10-11" {
   inherits = ["default"]
   context = "images/mariadb"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "10.11.Dockerfile"
   tags = ["${IMAGE_REPO}/mariadb-10.11:${TAG}"]
@@ -323,7 +323,7 @@ target "mariadb-10-11-drupal" {
   inherits = ["default"]
   context = "images/mariadb-drupal"
   contexts = {
-    "lagoon/mariadb-10.11": "target:mariadb-10-11"
+    "${IMAGE_REPO}/mariadb-10.11": "target:mariadb-10-11"
   }
   dockerfile = "10.11.Dockerfile"
   tags = ["${IMAGE_REPO}/mariadb-10.11-drupal:${TAG}"]
@@ -333,7 +333,7 @@ target "mariadb-11-4" {
   inherits = ["default"]
   context = "images/mariadb"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "11.4.Dockerfile"
   tags = ["${IMAGE_REPO}/mariadb-11.4:${TAG}"]
@@ -344,7 +344,7 @@ target "mongo-4" {
   inherits = ["default"]
   context = "images/mongo"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "4.Dockerfile"
   tags = ["${IMAGE_REPO}/mongo-4:${TAG}"]
@@ -354,7 +354,7 @@ target "mysql-8-0" {
   inherits = ["default"]
   context = "images/mysql"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "8.0.Dockerfile"
   tags = ["${IMAGE_REPO}/mysql-8.0:${TAG}"]
@@ -364,7 +364,7 @@ target "mysql-8-4" {
   inherits = ["default"]
   context = "images/mysql"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "8.4.Dockerfile"
   tags = ["${IMAGE_REPO}/mysql-8.4:${TAG}"]
@@ -374,7 +374,7 @@ target "nginx" {
   inherits = ["default"]
   context = "images/nginx"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "Dockerfile"
   tags = ["${IMAGE_REPO}/nginx:${TAG}"]
@@ -384,7 +384,7 @@ target "nginx-drupal" {
   inherits = ["default"]
   context = "images/nginx-drupal"
   contexts = {
-    "lagoon/nginx": "target:nginx"
+    "${IMAGE_REPO}/nginx": "target:nginx"
   }
   dockerfile = "Dockerfile"
   tags = ["${IMAGE_REPO}/nginx-drupal:${TAG}"]
@@ -394,7 +394,7 @@ target "node-18" {
   inherits = ["default"]
   context = "images/node"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "18.Dockerfile"
   tags = ["${IMAGE_REPO}/node-18:${TAG}"]
@@ -404,7 +404,7 @@ target "node-18-builder" {
   inherits = ["default"]
   context = "images/node-builder"
   contexts = {
-    "lagoon/node-18": "target:node-18"
+    "${IMAGE_REPO}/node-18": "target:node-18"
   }
   dockerfile = "18.Dockerfile"
   tags = ["${IMAGE_REPO}/node-18-builder:${TAG}"]
@@ -414,7 +414,7 @@ target "node-18-cli" {
   inherits = ["default"]
   context = "images/node-cli"
   contexts = {
-    "lagoon/node-18": "target:node-18"
+    "${IMAGE_REPO}/node-18": "target:node-18"
   }
   dockerfile = "18.Dockerfile"
   tags = ["${IMAGE_REPO}/node-18-cli:${TAG}"]
@@ -424,7 +424,7 @@ target "node-20" {
   inherits = ["default"]
   context = "images/node"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "20.Dockerfile"
   tags = ["${IMAGE_REPO}/node-20:${TAG}"]
@@ -434,7 +434,7 @@ target "node-20-builder" {
   inherits = ["default"]
   context = "images/node-builder"
   contexts = {
-    "lagoon/node-20": "target:node-20"
+    "${IMAGE_REPO}/node-20": "target:node-20"
   }
   dockerfile = "20.Dockerfile"
   tags = ["${IMAGE_REPO}/node-20-builder:${TAG}"]
@@ -444,7 +444,7 @@ target "node-20-cli" {
   inherits = ["default"]
   context = "images/node-cli"
   contexts = {
-    "lagoon/node-20": "target:node-20"
+    "${IMAGE_REPO}/node-20": "target:node-20"
   }
   dockerfile = "20.Dockerfile"
   tags = ["${IMAGE_REPO}/node-20-cli:${TAG}"]
@@ -454,7 +454,7 @@ target "node-22" {
   inherits = ["default"]
   context = "images/node"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "22.Dockerfile"
   tags = ["${IMAGE_REPO}/node-22:${TAG}"]
@@ -464,7 +464,7 @@ target "node-22-builder" {
   inherits = ["default"]
   context = "images/node-builder"
   contexts = {
-    "lagoon/node-22": "target:node-22"
+    "${IMAGE_REPO}/node-22": "target:node-22"
   }
   dockerfile = "22.Dockerfile"
   tags = ["${IMAGE_REPO}/node-22-builder:${TAG}"]
@@ -474,7 +474,7 @@ target "node-22-cli" {
   inherits = ["default"]
   context = "images/node-cli"
   contexts = {
-    "lagoon/node-22": "target:node-22"
+    "${IMAGE_REPO}/node-22": "target:node-22"
   }
   dockerfile = "22.Dockerfile"
   tags = ["${IMAGE_REPO}/node-22-cli:${TAG}"]
@@ -484,7 +484,7 @@ target "opensearch-2" {
   inherits = ["default"]
   context = "images/opensearch"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "2.Dockerfile"
   tags = ["${IMAGE_REPO}/opensearch-2:${TAG}"]
@@ -494,7 +494,7 @@ target "opensearch-3" {
   inherits = ["default"]
   context = "images/opensearch"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "3.Dockerfile"
   tags = ["${IMAGE_REPO}/opensearch-3:${TAG}"]
@@ -504,7 +504,7 @@ target "php-8-1-fpm" {
   inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "8.1.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.1-fpm:${TAG}"]
@@ -514,7 +514,7 @@ target "php-8-1-cli" {
   inherits = ["default"]
   context = "images/php-cli"
   contexts = {
-    "lagoon/php-8.1-fpm": "target:php-8-1-fpm"
+    "${IMAGE_REPO}/php-8.1-fpm": "target:php-8-1-fpm"
   }
   dockerfile = "8.1.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.1-cli:${TAG}"]
@@ -524,7 +524,7 @@ target "php-8-1-cli-drupal" {
   inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
-    "lagoon/php-8.1-cli": "target:php-8-1-cli"
+    "${IMAGE_REPO}/php-8.1-cli": "target:php-8-1-cli"
   }
   dockerfile = "8.1.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.1-cli-drupal:${TAG}"]
@@ -534,7 +534,7 @@ target "php-8-2-fpm" {
   inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "8.2.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.2-fpm:${TAG}"]
@@ -544,7 +544,7 @@ target "php-8-2-cli" {
   inherits = ["default"]
   context = "images/php-cli"
   contexts = {
-    "lagoon/php-8.2-fpm": "target:php-8-2-fpm"
+    "${IMAGE_REPO}/php-8.2-fpm": "target:php-8-2-fpm"
   }
   dockerfile = "8.2.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.2-cli:${TAG}"]
@@ -554,7 +554,7 @@ target "php-8-2-cli-drupal" {
   inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
-    "lagoon/php-8.2-cli": "target:php-8-2-cli"
+    "${IMAGE_REPO}/php-8.2-cli": "target:php-8-2-cli"
   }
   dockerfile = "8.2.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.2-cli-drupal:${TAG}"]
@@ -564,7 +564,7 @@ target "php-8-3-fpm" {
   inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "8.3.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.3-fpm:${TAG}"]
@@ -574,7 +574,7 @@ target "php-8-3-cli" {
   inherits = ["default"]
   context = "images/php-cli"
   contexts = {
-    "lagoon/php-8.3-fpm": "target:php-8-3-fpm"
+    "${IMAGE_REPO}/php-8.3-fpm": "target:php-8-3-fpm"
   }
   dockerfile = "8.3.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.3-cli:${TAG}"]
@@ -584,7 +584,7 @@ target "php-8-3-cli-drupal" {
   inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
-    "lagoon/php-8.3-cli": "target:php-8-3-cli"
+    "${IMAGE_REPO}/php-8.3-cli": "target:php-8-3-cli"
   }
   dockerfile = "8.3.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.3-cli-drupal:${TAG}"]
@@ -594,7 +594,7 @@ target "php-8-4-fpm" {
   inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "8.4.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.4-fpm:${TAG}"]
@@ -604,7 +604,7 @@ target "php-8-4-cli" {
   inherits = ["default"]
   context = "images/php-cli"
   contexts = {
-    "lagoon/php-8.4-fpm": "target:php-8-4-fpm"
+    "${IMAGE_REPO}/php-8.4-fpm": "target:php-8-4-fpm"
   }
   dockerfile = "8.4.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.4-cli:${TAG}"]
@@ -614,7 +614,7 @@ target "php-8-4-cli-drupal" {
   inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
-    "lagoon/php-8.4-cli": "target:php-8-4-cli"
+    "${IMAGE_REPO}/php-8.4-cli": "target:php-8-4-cli"
   }
   dockerfile = "8.4.Dockerfile"
   tags = ["${IMAGE_REPO}/php-8.4-cli-drupal:${TAG}"]
@@ -624,7 +624,7 @@ target "postgres-13" {
   inherits = ["default"]
   context = "images/postgres"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "13.Dockerfile"
   tags = ["${IMAGE_REPO}/postgres-13:${TAG}"]
@@ -634,7 +634,7 @@ target "postgres-13-drupal" {
   inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
-    "lagoon/postgres-13": "target:postgres-13"
+    "${IMAGE_REPO}/postgres-13": "target:postgres-13"
   }
   dockerfile = "13.Dockerfile"
   tags = ["${IMAGE_REPO}/postgres-13-drupal:${TAG}"]
@@ -644,7 +644,7 @@ target "postgres-14" {
   inherits = ["default"]
   context = "images/postgres"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "14.Dockerfile"
   tags = ["${IMAGE_REPO}/postgres-14:${TAG}"]
@@ -654,7 +654,7 @@ target "postgres-14-drupal" {
   inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
-    "lagoon/postgres-14": "target:postgres-14"
+    "${IMAGE_REPO}/postgres-14": "target:postgres-14"
   }
   dockerfile = "14.Dockerfile"
   tags = ["${IMAGE_REPO}/postgres-14-drupal:${TAG}"]
@@ -664,7 +664,7 @@ target "postgres-15" {
   inherits = ["default"]
   context = "images/postgres"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "15.Dockerfile"
   tags = ["${IMAGE_REPO}/postgres-15:${TAG}"]
@@ -674,7 +674,7 @@ target "postgres-15-drupal" {
   inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
-    "lagoon/postgres-15": "target:postgres-15"
+    "${IMAGE_REPO}/postgres-15": "target:postgres-15"
   }
   dockerfile = "15.Dockerfile"
   tags = ["${IMAGE_REPO}/postgres-15-drupal:${TAG}"]
@@ -684,7 +684,7 @@ target "postgres-16" {
   inherits = ["default"]
   context = "images/postgres"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "16.Dockerfile"
   tags = ["${IMAGE_REPO}/postgres-16:${TAG}"]
@@ -694,7 +694,7 @@ target "postgres-16-drupal" {
   inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
-    "lagoon/postgres-16": "target:postgres-16"
+    "${IMAGE_REPO}/postgres-16": "target:postgres-16"
   }
   dockerfile = "16.Dockerfile"
   tags = ["${IMAGE_REPO}/postgres-16-drupal:${TAG}"]
@@ -704,7 +704,7 @@ target "postgres-17" {
   inherits = ["default"]
   context = "images/postgres"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "17.Dockerfile"
   tags = ["${IMAGE_REPO}/postgres-17:${TAG}"]
@@ -714,7 +714,7 @@ target "postgres-17-drupal" {
   inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
-    "lagoon/postgres-17": "target:postgres-17"
+    "${IMAGE_REPO}/postgres-17": "target:postgres-17"
   }
   dockerfile = "17.Dockerfile"
   tags = ["${IMAGE_REPO}/postgres-17-drupal:${TAG}"]
@@ -724,7 +724,7 @@ target "python-3-9" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "3.9.Dockerfile"
   tags = ["${IMAGE_REPO}/python-3.9:${TAG}"]
@@ -734,7 +734,7 @@ target "python-3-10" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "3.10.Dockerfile"
   tags = ["${IMAGE_REPO}/python-3.10:${TAG}"]
@@ -744,7 +744,7 @@ target "python-3-11" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "3.11.Dockerfile"
   tags = ["${IMAGE_REPO}/python-3.11:${TAG}"]
@@ -754,7 +754,7 @@ target "python-3-12" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "3.12.Dockerfile"
   tags = ["${IMAGE_REPO}/python-3.12:${TAG}"]
@@ -764,7 +764,7 @@ target "python-3-13" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "3.13.Dockerfile"
   tags = ["${IMAGE_REPO}/python-3.13:${TAG}"]
@@ -774,7 +774,7 @@ target "rabbitmq" {
   inherits = ["default"]
   context = "images/rabbitmq"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "Dockerfile"
   tags = ["${IMAGE_REPO}/rabbitmq:${TAG}"]
@@ -784,7 +784,7 @@ target "rabbitmq-cluster" {
   inherits = ["default"]
   context = "images/rabbitmq-cluster"
   contexts = {
-    "lagoon/rabbitmq": "target:rabbitmq"
+    "${IMAGE_REPO}/rabbitmq": "target:rabbitmq"
   }
   dockerfile = "Dockerfile"
   tags = ["${IMAGE_REPO}/rabbitmq-cluster:${TAG}"]
@@ -794,7 +794,7 @@ target "redis-6" {
   inherits = ["default"]
   context = "images/redis"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "6.Dockerfile"
   tags = ["${IMAGE_REPO}/redis-6:${TAG}"]
@@ -804,7 +804,7 @@ target "redis-6-persistent" {
   inherits = ["default"]
   context = "images/redis-persistent"
   contexts = {
-    "lagoon/redis-6": "target:commons"
+    "${IMAGE_REPO}/redis-6": "target:commons"
   }
   dockerfile = "6.Dockerfile"
   tags = ["${IMAGE_REPO}/redis-6-persistent:${TAG}"]
@@ -814,7 +814,7 @@ target "redis-7" {
   inherits = ["default"]
   context = "images/redis"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "7.Dockerfile"
   tags = ["${IMAGE_REPO}/redis-7:${TAG}"]
@@ -824,7 +824,7 @@ target "redis-7-persistent" {
   inherits = ["default"]
   context = "images/redis-persistent"
   contexts = {
-    "lagoon/redis-7": "target:commons"
+    "${IMAGE_REPO}/redis-7": "target:commons"
   }
   dockerfile = "7.Dockerfile"
   tags = ["${IMAGE_REPO}/redis-7-persistent:${TAG}"]
@@ -834,7 +834,7 @@ target "redis-8" {
   inherits = ["default"]
   context = "images/redis"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
   tags = ["${IMAGE_REPO}/redis-8:${TAG}"]
@@ -844,7 +844,7 @@ target "ruby-3-2" {
   inherits = ["default"]
   context = "images/ruby"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "3.2.Dockerfile"
   tags = ["${IMAGE_REPO}/ruby-3.2:${TAG}"]
@@ -854,7 +854,7 @@ target "ruby-3-3" {
   inherits = ["default"]
   context = "images/ruby"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "3.3.Dockerfile"
   tags = ["${IMAGE_REPO}/ruby-3.3:${TAG}"]
@@ -864,7 +864,7 @@ target "ruby-3-4" {
   inherits = ["default"]
   context = "images/ruby"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "3.4.Dockerfile"
   tags = ["${IMAGE_REPO}/ruby-3.4:${TAG}"]
@@ -874,7 +874,7 @@ target "solr-8" {
   inherits = ["default"]
   context = "images/solr"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
   tags = ["${IMAGE_REPO}/solr-8:${TAG}"]
@@ -884,8 +884,8 @@ target "solr-8-drupal" {
   inherits = ["default"]
   context = "images/solr-drupal"
   contexts = {
-    "lagoon/commons": "target:commons",
-    "lagoon/solr-8": "target:solr-8"
+    "${IMAGE_REPO}/commons": "target:commons",
+    "${IMAGE_REPO}/solr-8": "target:solr-8"
   }
   dockerfile = "8.Dockerfile"
   tags = ["${IMAGE_REPO}/solr-8-drupal:${TAG}"]
@@ -895,7 +895,7 @@ target "solr-9" {
   inherits = ["default"]
   context = "images/solr"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "9.Dockerfile"
   tags = ["${IMAGE_REPO}/solr-9:${TAG}"]
@@ -905,8 +905,8 @@ target "solr-9-drupal" {
   inherits = ["default"]
   context = "images/solr-drupal"
   contexts = {
-    "lagoon/commons": "target:commons",
-    "lagoon/solr-9": "target:solr-9"
+    "${IMAGE_REPO}/commons": "target:commons",
+    "${IMAGE_REPO}/solr-9": "target:solr-9"
   }
   dockerfile = "9.Dockerfile"
   tags = ["${IMAGE_REPO}/solr-9-drupal:${TAG}"]
@@ -915,7 +915,7 @@ target "valkey-8" {
   inherits = ["default"]
   context = "images/valkey"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
   tags = ["${IMAGE_REPO}/valkey-8:${TAG}"]
@@ -925,7 +925,7 @@ target "varnish-6" {
   inherits = ["default"]
   context = "images/varnish"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "6.Dockerfile"
   tags = ["${IMAGE_REPO}/varnish-6:${TAG}"]
@@ -935,7 +935,7 @@ target "varnish-6-drupal" {
   inherits = ["default"]
   context = "images/varnish-drupal"
   contexts = {
-    "lagoon/varnish-6": "target:varnish-6"
+    "${IMAGE_REPO}/varnish-6": "target:varnish-6"
   }
   dockerfile = "6.Dockerfile"
   tags = ["${IMAGE_REPO}/varnish-6-drupal:${TAG}"]
@@ -945,7 +945,7 @@ target "varnish-6-persistent" {
   inherits = ["default"]
   context = "images/varnish-persistent"
   contexts = {
-    "lagoon/varnish-6": "target:varnish-6"
+    "${IMAGE_REPO}/varnish-6": "target:varnish-6"
   }
   dockerfile = "6.Dockerfile"
   tags = ["${IMAGE_REPO}/varnish-6-persistent:${TAG}"]
@@ -955,7 +955,7 @@ target "varnish-6-persistent-drupal" {
   inherits = ["default"]
   context = "images/varnish-persistent-drupal"
   contexts = {
-    "lagoon/varnish-6-drupal": "target:varnish-6-drupal"
+    "${IMAGE_REPO}/varnish-6-drupal": "target:varnish-6-drupal"
   }
   dockerfile = "6.Dockerfile"
   tags = ["${IMAGE_REPO}/varnish-6-persistent-drupal:${TAG}"]
@@ -965,7 +965,7 @@ target "varnish-7" {
   inherits = ["default"]
   context = "images/varnish"
   contexts = {
-    "lagoon/commons": "target:commons"
+    "${IMAGE_REPO}/commons": "target:commons"
   }
   dockerfile = "7.Dockerfile"
   tags = ["${IMAGE_REPO}/varnish-7:${TAG}"]
@@ -975,7 +975,7 @@ target "varnish-7-drupal" {
   inherits = ["default"]
   context = "images/varnish-drupal"
   contexts = {
-    "lagoon/varnish-7": "target:varnish-7"
+    "${IMAGE_REPO}/varnish-7": "target:varnish-7"
   }
   dockerfile = "7.Dockerfile"
   tags = ["${IMAGE_REPO}/varnish-7-drupal:${TAG}"]
@@ -985,7 +985,7 @@ target "varnish-7-persistent" {
   inherits = ["default"]
   context = "images/varnish-persistent"
   contexts = {
-    "lagoon/varnish-7": "target:varnish-7"
+    "${IMAGE_REPO}/varnish-7": "target:varnish-7"
   }
   dockerfile = "7.Dockerfile"
   tags = ["${IMAGE_REPO}/varnish-7-persistent:${TAG}"]
@@ -995,7 +995,7 @@ target "varnish-7-persistent-drupal" {
   inherits = ["default"]
   context = "images/varnish-persistent-drupal"
   contexts = {
-    "lagoon/varnish-7-drupal": "target:varnish-7-drupal"
+    "${IMAGE_REPO}/varnish-7-drupal": "target:varnish-7-drupal"
   }
   dockerfile = "7.Dockerfile"
   tags = ["${IMAGE_REPO}/varnish-7-persistent-drupal:${TAG}"]

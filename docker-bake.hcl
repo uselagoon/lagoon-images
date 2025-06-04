@@ -1,3 +1,51 @@
+# docker-bake.dev.hcl
+variable "IMAGE_REPO" {
+  default = "ghcr.io/tobybellwood"
+}
+
+variable "TAG" {
+  default = "bake"
+}
+
+variable "LAGOON_VERSION" {
+  default = "development"
+}
+
+variable "UPSTREAM_REPO" {
+  default = "uselagoon"
+}
+
+variable "UPSTREAM_TAG" {
+  default = "latest"
+}
+
+variable "PLATFORMS" {
+  // use PLATFORMS=linux/amd64,linux/arm64 to override default single architecture on the cli
+  default = "linux/amd64"
+}
+
+variable "NO_CACHE" {
+  default = "true"
+}
+
+target "default"{
+  no-cache = "${NO_CACHE}"
+  platforms = ["${PLATFORMS}"]
+  labels = {
+    "org.opencontainers.image.authors": "The Lagoon Authors"
+    "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+    "org.opencontainers.image.licenses": "Apache 2.0",
+    "org.opencontainers.image.version": "${LAGOON_VERSION}",
+    "repository": "https://github.com/uselagoon/lagoon-images"
+  }
+  args = {
+    LAGOON_VERSION = "${LAGOON_VERSION}"
+    UPSTREAM_REPO = "${UPSTREAM_REPO}"
+    UPSTREAM_TAG = "${UPSTREAM_TAG}"
+    IMAGE_REPO = "${IMAGE_REPO}"
+  }
+}
+
 group "default" {
   targets = [
     "commons", 
@@ -235,720 +283,720 @@ group "varnish" {
 }
 
 target "commons" {
+  inherits = ["default"]
   context = "images/commons"
   dockerfile = "Dockerfile"
-  tags = ["ghcr.io/tobybellwood/commons:bake"]
-  platforms = ["linux/amd64","linux/arm64"]
+  tags = ["${IMAGE_REPO}/commons:${TAG}"]
 }
 
 target "mariadb-10-6" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/mariadb"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "10.6.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/mariadb-10.6:bake"]
+  tags = ["${IMAGE_REPO}/mariadb-10.6:${TAG}"]
 }
 
 target "mariadb-10-6-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/mariadb-drupal"
   contexts = {
     "lagoon/mariadb-10.6": "target:mariadb-10-6"
   }
   dockerfile = "10.6.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/mariadb-10.6-drupal:bake"]
+  tags = ["${IMAGE_REPO}/mariadb-10.6-drupal:${TAG}"]
 }
 
 target "mariadb-10-11" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/mariadb"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "10.11.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/mariadb-10.11:bake"]
+  tags = ["${IMAGE_REPO}/mariadb-10.11:${TAG}"]
 }
 
 target "mariadb-10-11-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/mariadb-drupal"
   contexts = {
-    "lagoon/mariadb-10.11": "target:mariadb-10-6"
+    "lagoon/mariadb-10.11": "target:mariadb-10-11"
   }
   dockerfile = "10.11.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/mariadb-10.11-drupal:bake"]
+  tags = ["${IMAGE_REPO}/mariadb-10.11-drupal:${TAG}"]
 }
 
 target "mariadb-11-4" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/mariadb"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "11.4.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/mariadb-11.4:bake"]
+  tags = ["${IMAGE_REPO}/mariadb-11.4:${TAG}"]
 }
 
 
 target "mongo-4" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/mongo"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "4.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/mongo-4:bake"]
+  tags = ["${IMAGE_REPO}/mongo-4:${TAG}"]
 }
 
 target "mysql-8-0" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/mysql"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "8.0.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/mysql-8.0:bake"]
+  tags = ["${IMAGE_REPO}/mysql-8.0:${TAG}"]
 }
 
 target "mysql-8-4" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/mysql"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/mysql-8.4:bake"]
+  tags = ["${IMAGE_REPO}/mysql-8.4:${TAG}"]
 }
 
 target "nginx" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/nginx"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "Dockerfile"
-  tags = ["ghcr.io/tobybellwood/nginx:bake"]
+  tags = ["${IMAGE_REPO}/nginx:${TAG}"]
 }
 
 target "nginx-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/nginx-drupal"
   contexts = {
     "lagoon/nginx": "target:nginx"
   }
   dockerfile = "Dockerfile"
-  tags = ["ghcr.io/tobybellwood/nginx-drupal:bake"]
+  tags = ["${IMAGE_REPO}/nginx-drupal:${TAG}"]
 }
 
 target "node-18" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/node"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "18.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/node-18:bake"]
+  tags = ["${IMAGE_REPO}/node-18:${TAG}"]
 }
 
 target "node-18-builder" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/node-builder"
   contexts = {
     "lagoon/node-18": "target:node-18"
   }
   dockerfile = "18.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/node-18-builder:bake"]
+  tags = ["${IMAGE_REPO}/node-18-builder:${TAG}"]
 }
 
 target "node-18-cli" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/node-cli"
   contexts = {
     "lagoon/node-18": "target:node-18"
   }
   dockerfile = "18.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/node-18-cli:bake"]
+  tags = ["${IMAGE_REPO}/node-18-cli:${TAG}"]
 }
 
 target "node-20" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/node"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "20.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/node-20:bake"]
+  tags = ["${IMAGE_REPO}/node-20:${TAG}"]
 }
 
 target "node-20-builder" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/node-builder"
   contexts = {
     "lagoon/node-20": "target:node-20"
   }
   dockerfile = "20.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/node-20-builder:bake"]
+  tags = ["${IMAGE_REPO}/node-20-builder:${TAG}"]
 }
 
 target "node-20-cli" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/node-cli"
   contexts = {
     "lagoon/node-20": "target:node-20"
   }
   dockerfile = "20.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/node-20-cli:bake"]
+  tags = ["${IMAGE_REPO}/node-20-cli:${TAG}"]
 }
 
 target "node-22" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/node"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "22.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/node-22:bake"]
+  tags = ["${IMAGE_REPO}/node-22:${TAG}"]
 }
 
 target "node-22-builder" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/node-builder"
   contexts = {
     "lagoon/node-22": "target:node-22"
   }
   dockerfile = "22.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/node-22-builder:bake"]
+  tags = ["${IMAGE_REPO}/node-22-builder:${TAG}"]
 }
 
 target "node-22-cli" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/node-cli"
   contexts = {
     "lagoon/node-22": "target:node-22"
   }
   dockerfile = "22.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/node-22-cli:bake"]
+  tags = ["${IMAGE_REPO}/node-22-cli:${TAG}"]
 }
 
 target "opensearch-2" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/opensearch"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "2.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/opensearch-2:bake"]
+  tags = ["${IMAGE_REPO}/opensearch-2:${TAG}"]
 }
 
 target "opensearch-3" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/opensearch"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "3.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/opensearch-3:bake"]
+  tags = ["${IMAGE_REPO}/opensearch-3:${TAG}"]
 }
 
 target "php-8-1-fpm" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "8.1.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.1-fpm:bake"]
+  tags = ["${IMAGE_REPO}/php-8.1-fpm:${TAG}"]
 }
 
 target "php-8-1-cli" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-cli"
   contexts = {
     "lagoon/php-8.1-fpm": "target:php-8-1-fpm"
   }
   dockerfile = "8.1.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.1-cli:bake"]
+  tags = ["${IMAGE_REPO}/php-8.1-cli:${TAG}"]
 }
 
 target "php-8-1-cli-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
     "lagoon/php-8.1-cli": "target:php-8-1-cli"
   }
   dockerfile = "8.1.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.1-cli-drupal:bake"]
+  tags = ["${IMAGE_REPO}/php-8.1-cli-drupal:${TAG}"]
 }
 
 target "php-8-2-fpm" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "8.2.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.2-fpm:bake"]
+  tags = ["${IMAGE_REPO}/php-8.2-fpm:${TAG}"]
 }
 
 target "php-8-2-cli" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-cli"
   contexts = {
     "lagoon/php-8.2-fpm": "target:php-8-2-fpm"
   }
   dockerfile = "8.2.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.2-cli:bake"]
+  tags = ["${IMAGE_REPO}/php-8.2-cli:${TAG}"]
 }
 
 target "php-8-2-cli-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
     "lagoon/php-8.2-cli": "target:php-8-2-cli"
   }
   dockerfile = "8.2.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.2-cli-drupal:bake"]
+  tags = ["${IMAGE_REPO}/php-8.2-cli-drupal:${TAG}"]
 }
 
 target "php-8-3-fpm" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "8.3.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.3-fpm:bake"]
+  tags = ["${IMAGE_REPO}/php-8.3-fpm:${TAG}"]
 }
 
 target "php-8-3-cli" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-cli"
   contexts = {
     "lagoon/php-8.3-fpm": "target:php-8-3-fpm"
   }
   dockerfile = "8.3.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.3-cli:bake"]
+  tags = ["${IMAGE_REPO}/php-8.3-cli:${TAG}"]
 }
 
 target "php-8-3-cli-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
     "lagoon/php-8.3-cli": "target:php-8-3-cli"
   }
   dockerfile = "8.3.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.3-cli-drupal:bake"]
+  tags = ["${IMAGE_REPO}/php-8.3-cli-drupal:${TAG}"]
 }
 
 target "php-8-4-fpm" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.4-fpm:bake"]
+  tags = ["${IMAGE_REPO}/php-8.4-fpm:${TAG}"]
 }
 
 target "php-8-4-cli" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-cli"
   contexts = {
     "lagoon/php-8.4-fpm": "target:php-8-4-fpm"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.4-cli:bake"]
+  tags = ["${IMAGE_REPO}/php-8.4-cli:${TAG}"]
 }
 
 target "php-8-4-cli-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
     "lagoon/php-8.4-cli": "target:php-8-4-cli"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/php-8.4-cli-drupal:bake"]
+  tags = ["${IMAGE_REPO}/php-8.4-cli-drupal:${TAG}"]
 }
 
 target "postgres-13" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/postgres"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "13.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/postgres-13:bake"]
+  tags = ["${IMAGE_REPO}/postgres-13:${TAG}"]
 }
 
 target "postgres-13-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
     "lagoon/postgres-13": "target:postgres-13"
   }
   dockerfile = "13.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/postgres-13-drupal:bake"]
+  tags = ["${IMAGE_REPO}/postgres-13-drupal:${TAG}"]
 }
 
 target "postgres-14" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/postgres"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "14.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/postgres-14:bake"]
+  tags = ["${IMAGE_REPO}/postgres-14:${TAG}"]
 }
 
 target "postgres-14-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
     "lagoon/postgres-14": "target:postgres-14"
   }
   dockerfile = "14.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/postgres-14-drupal:bake"]
+  tags = ["${IMAGE_REPO}/postgres-14-drupal:${TAG}"]
 }
 
 target "postgres-15" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/postgres"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "15.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/postgres-15:bake"]
+  tags = ["${IMAGE_REPO}/postgres-15:${TAG}"]
 }
 
 target "postgres-15-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
     "lagoon/postgres-15": "target:postgres-15"
   }
   dockerfile = "15.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/postgres-15-drupal:bake"]
+  tags = ["${IMAGE_REPO}/postgres-15-drupal:${TAG}"]
 }
 
 target "postgres-16" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/postgres"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "16.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/postgres-16:bake"]
+  tags = ["${IMAGE_REPO}/postgres-16:${TAG}"]
 }
 
 target "postgres-16-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
     "lagoon/postgres-16": "target:postgres-16"
   }
   dockerfile = "16.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/postgres-16-drupal:bake"]
+  tags = ["${IMAGE_REPO}/postgres-16-drupal:${TAG}"]
 }
 
 target "postgres-17" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/postgres"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "17.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/postgres-17:bake"]
+  tags = ["${IMAGE_REPO}/postgres-17:${TAG}"]
 }
 
 target "postgres-17-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
     "lagoon/postgres-17": "target:postgres-17"
   }
   dockerfile = "17.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/postgres-17-drupal:bake"]
+  tags = ["${IMAGE_REPO}/postgres-17-drupal:${TAG}"]
 }
 
 target "python-3-9" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/python"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "3.9.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/python-3.9:bake"]
+  tags = ["${IMAGE_REPO}/python-3.9:${TAG}"]
 }
 
 target "python-3-10" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/python"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "3.10.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/python-3.10:bake"]
+  tags = ["${IMAGE_REPO}/python-3.10:${TAG}"]
 }
 
 target "python-3-11" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/python"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "3.11.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/python-3.11:bake"]
+  tags = ["${IMAGE_REPO}/python-3.11:${TAG}"]
 }
 
 target "python-3-12" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/python"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "3.12.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/python-3.12:bake"]
+  tags = ["${IMAGE_REPO}/python-3.12:${TAG}"]
 }
 
 target "python-3-13" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/python"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "3.13.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/python-3.13:bake"]
+  tags = ["${IMAGE_REPO}/python-3.13:${TAG}"]
 }
 
 target "rabbitmq" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/rabbitmq"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "Dockerfile"
-  tags = ["ghcr.io/tobybellwood/rabbitmq:bake"]
+  tags = ["${IMAGE_REPO}/rabbitmq:${TAG}"]
 }
 
 target "rabbitmq-cluster" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/rabbitmq-cluster"
   contexts = {
     "lagoon/rabbitmq": "target:rabbitmq"
   }
   dockerfile = "Dockerfile"
-  tags = ["ghcr.io/tobybellwood/rabbitmq-cluster:bake"]
+  tags = ["${IMAGE_REPO}/rabbitmq-cluster:${TAG}"]
 }
 
 target "redis-6" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/redis"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/redis-6:bake"]
+  tags = ["${IMAGE_REPO}/redis-6:${TAG}"]
 }
 
 target "redis-6-persistent" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/redis-persistent"
   contexts = {
     "lagoon/redis-6": "target:commons"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/redis-6-persistent:bake"]
+  tags = ["${IMAGE_REPO}/redis-6-persistent:${TAG}"]
 }
 
 target "redis-7" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/redis"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/redis-7:bake"]
+  tags = ["${IMAGE_REPO}/redis-7:${TAG}"]
 }
 
 target "redis-7-persistent" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/redis-persistent"
   contexts = {
     "lagoon/redis-7": "target:commons"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/redis-7-persistent:bake"]
+  tags = ["${IMAGE_REPO}/redis-7-persistent:${TAG}"]
 }
 
 target "redis-8" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/redis"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/redis-8:bake"]
+  tags = ["${IMAGE_REPO}/redis-8:${TAG}"]
 }
 
 target "ruby-3-2" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/ruby"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "3.2.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/ruby-3.2:bake"]
+  tags = ["${IMAGE_REPO}/ruby-3.2:${TAG}"]
 }
 
 target "ruby-3-3" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/ruby"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "3.3.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/ruby-3.3:bake"]
+  tags = ["${IMAGE_REPO}/ruby-3.3:${TAG}"]
 }
 
 target "ruby-3-4" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/ruby"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "3.4.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/ruby-3.4:bake"]
+  tags = ["${IMAGE_REPO}/ruby-3.4:${TAG}"]
 }
 
 target "solr-8" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/solr"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/solr-8:bake"]
+  tags = ["${IMAGE_REPO}/solr-8:${TAG}"]
 }
 
 target "solr-8-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/solr-drupal"
   contexts = {
     "lagoon/commons": "target:commons",
     "lagoon/solr-8": "target:solr-8"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/solr-8-drupal:bake"]
+  tags = ["${IMAGE_REPO}/solr-8-drupal:${TAG}"]
 }
 
 target "solr-9" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/solr"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "9.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/solr-9:bake"]
+  tags = ["${IMAGE_REPO}/solr-9:${TAG}"]
 }
 
 target "solr-9-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/solr-drupal"
   contexts = {
     "lagoon/commons": "target:commons",
     "lagoon/solr-9": "target:solr-9"
   }
   dockerfile = "9.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/solr-9-drupal:bake"]
+  tags = ["${IMAGE_REPO}/solr-9-drupal:${TAG}"]
 }
 target "valkey-8" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/valkey"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/valkey-8:bake"]
+  tags = ["${IMAGE_REPO}/valkey-8:${TAG}"]
 }
 
 target "varnish-6" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/varnish"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/varnish-6:bake"]
+  tags = ["${IMAGE_REPO}/varnish-6:${TAG}"]
 }
 
 target "varnish-6-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/varnish-drupal"
   contexts = {
     "lagoon/varnish-6": "target:varnish-6"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/varnish-6-drupal:bake"]
+  tags = ["${IMAGE_REPO}/varnish-6-drupal:${TAG}"]
 }
 
 target "varnish-6-persistent" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/varnish-persistent"
   contexts = {
     "lagoon/varnish-6": "target:varnish-6"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/varnish-6-persistent:bake"]
+  tags = ["${IMAGE_REPO}/varnish-6-persistent:${TAG}"]
 }
 
 target "varnish-6-persistent-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/varnish-persistent-drupal"
   contexts = {
     "lagoon/varnish-6-drupal": "target:varnish-6-drupal"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/varnish-6-persistent-drupal:bake"]
+  tags = ["${IMAGE_REPO}/varnish-6-persistent-drupal:${TAG}"]
 }
 
 target "varnish-7" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/varnish"
   contexts = {
     "lagoon/commons": "target:commons"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/varnish-7:bake"]
+  tags = ["${IMAGE_REPO}/varnish-7:${TAG}"]
 }
 
 target "varnish-7-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/varnish-drupal"
   contexts = {
     "lagoon/varnish-7": "target:varnish-7"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/varnish-7-drupal:bake"]
+  tags = ["${IMAGE_REPO}/varnish-7-drupal:${TAG}"]
 }
 
 target "varnish-7-persistent" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/varnish-persistent"
   contexts = {
     "lagoon/varnish-7": "target:varnish-7"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/varnish-7-persistent:bake"]
+  tags = ["${IMAGE_REPO}/varnish-7-persistent:${TAG}"]
 }
 
 target "varnish-7-persistent-drupal" {
-  inherits = ["commons"]
+  inherits = ["default"]
   context = "images/varnish-persistent-drupal"
   contexts = {
     "lagoon/varnish-7-drupal": "target:varnish-7-drupal"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["ghcr.io/tobybellwood/varnish-7-persistent-drupal:bake"]
+  tags = ["${IMAGE_REPO}/varnish-7-persistent-drupal:${TAG}"]
 }

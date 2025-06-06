@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM openresty/openresty:1.25.3.2-3-alpine
+FROM openresty/openresty:1.25.3.2-5-alpine
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

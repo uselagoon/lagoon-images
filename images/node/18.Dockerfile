@@ -12,6 +12,9 @@ LABEL org.opencontainers.image.description="Node.js 18 image optimised for runni
 LABEL org.opencontainers.image.title="uselagoon/node-18"
 LABEL org.opencontainers.image.base.name="docker.io/node:18-alpine3.21"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/node-24"
+
 ENV LAGOON=node
 
 RUN apk add --no-cache \

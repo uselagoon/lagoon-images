@@ -11,6 +11,9 @@ LABEL org.opencontainers.image.description="Node.js 18 builder image optimised f
 LABEL org.opencontainers.image.title="uselagoon/node-18-builder"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/node-18"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/node-24-builder"
+
 RUN apk update \
     && apk add --no-cache \
        libstdc++ \

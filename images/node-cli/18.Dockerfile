@@ -11,6 +11,9 @@ LABEL org.opencontainers.image.description="Node.js 18 cli image optimised for r
 LABEL org.opencontainers.image.title="uselagoon/node-18-cli"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/node-18"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/node-24-cli"
+
 RUN apk add --no-cache bash \
         coreutils \
         findutils \

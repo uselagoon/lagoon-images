@@ -194,6 +194,9 @@ versioned-images := 		mariadb-10.6 \
 							node-22 \
 							node-22-builder \
 							node-22-cli \
+							node-24 \
+							node-24-builder \
+							node-24-cli \
 							opensearch-2 \
 							opensearch-3 \
 							php-8.1-fpm \
@@ -272,10 +275,11 @@ build/mariadb-10.6-drupal: build/mariadb-10.6
 build/mariadb-10.11-drupal: build/mariadb-10.11
 build/mongo-4: build/commons
 build/mysql-8.0 build/mysql-8.4: build/commons
-build/node-18 build/node-20 build/node-22: build/commons
+build/node-18 build/node-20 build/node-22 build/node-24: build/commons
 build/node-18-builder build/node-18-cli: build/node-18
 build/node-20-builder build/node-20-cli: build/node-20
 build/node-22-builder build/node-22-cli: build/node-22
+build/node-24-builder build/node-24-cli: build/node-24
 build/opensearch-2: build/commons
 build/opensearch-3: build/commons
 build/php-8.1-fpm build/php-8.2-fpm build/php-8.3-fpm build/php-8.4-fpm: build/commons

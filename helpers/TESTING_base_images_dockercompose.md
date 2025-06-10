@@ -39,6 +39,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-18
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-20
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-22
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-24
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-1-dev
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-1-prod
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-2-dev
@@ -297,6 +298,12 @@ docker compose exec -T node-22 sh -c "node -v" | grep "v22"
 
 # node-22 should be serving content
 docker compose exec -T commons sh -c "curl node-22:3000/test" | grep "v22"
+
+# node-24 should have Node 24
+docker compose exec -T node-24 sh -c "node -v" | grep "v24"
+
+# node-24 should be serving content
+docker compose exec -T commons sh -c "curl node-24:3000/test" | grep "v24"
 
 # ruby-3-2 should have Ruby 3.2
 docker compose exec -T ruby-3-2 sh -c "ruby -v" | grep "3.2"

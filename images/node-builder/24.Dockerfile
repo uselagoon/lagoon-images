@@ -1,18 +1,15 @@
 ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/node-18
+FROM ${IMAGE_REPO:-lagoon}/node-24
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.authors="The Lagoon Authors"
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/node-builder/18.Dockerfile"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/node-builder/24.Dockerfile"
 LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
 LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
-LABEL org.opencontainers.image.description="Node.js 18 builder image optimised for running in Lagoon in production and locally"
-LABEL org.opencontainers.image.title="uselagoon/node-18-builder"
-LABEL org.opencontainers.image.base.name="docker.io/uselagoon/node-18"
-
-LABEL sh.lagoon.image.deprecated.status="endoflife"
-LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/node-24-builder"
+LABEL org.opencontainers.image.description="Node.js 24 builder image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/node-24-builder"
+LABEL org.opencontainers.image.base.name="docker.io/uselagoon/node-24"
 
 RUN apk update \
     && apk add --no-cache \

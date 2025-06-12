@@ -38,7 +38,6 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-16:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-17:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-6:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-7:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-8:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://solr-8:8983 -timeout 1m
@@ -68,7 +67,6 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-16
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-17
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep rabbitmq
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-7
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-8
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-8
@@ -297,19 +295,6 @@ docker compose exec -T rabbitmq sh -c "rabbitmq-plugins list" | grep "E" | grep 
 
 # rabbitmq should have a running RabbitMQ management page running on 15672
 docker compose exec -T commons sh -c "curl -kL http://rabbitmq:15672" | grep "RabbitMQ Management"
-
-# redis-6 should be running Redis v6.0
-docker compose exec -T redis-6 sh -c "redis-server --version" | grep v=6.
-
-# redis-6 should be able to see Redis databases
-docker compose exec -T redis-6 sh -c "redis-cli CONFIG GET databases"
-
-# redis-6 should have initialized database
-docker compose exec -T redis-6 sh -c "redis-cli dbsize"
-
-# redis-6 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-6" | grep "SERVICE_HOST=redis-6"
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=redis-6" | grep "LAGOON_TEST_VAR=all-images"
 
 # redis-7 should be running Redis v7.0
 docker compose exec -T redis-7 sh -c "redis-server --version" | grep v=7.

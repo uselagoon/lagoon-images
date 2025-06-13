@@ -124,12 +124,6 @@ services:
       - "15672"
     << : *default-user
 
-  redis-6:
-    image: uselagoon/redis-6:latest
-    ports:
-      - "6379"
-    << : *default-user
-
   redis-7:
     image: uselagoon/redis-7:latest
     ports:

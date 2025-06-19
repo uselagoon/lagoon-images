@@ -88,7 +88,6 @@ COPY redirects-map.conf /etc/nginx/redirects-map.conf
 COPY healthcheck/healthz.locations healthcheck/healthz.locations.php.disable /etc/nginx/conf.d/
 
 RUN mkdir -p /app \
-    && mkdir -p /var/run/openresty/nginx-client-body \
     && rm -f /etc/nginx/conf.d/default.conf \
     && fix-permissions /usr/local/openresty/nginx \
     && fix-permissions /var/run/

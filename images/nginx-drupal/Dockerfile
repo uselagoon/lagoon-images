@@ -11,7 +11,8 @@ LABEL org.opencontainers.image.description="OpenResty (Nginx) image optimised fo
 LABEL org.opencontainers.image.title="uselagoon/nginx-drupal"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/nginx"
 
-RUN mkdir -p /etc/nginx/conf.d/drupal
+RUN mkdir -p /etc/nginx/conf.d/drupal \
+    && mkdir -p /var/run/openresty/nginx-client-body
 
 COPY drupal /etc/nginx/conf.d/drupal/
 COPY drupal.conf /etc/nginx/conf.d/app.conf

@@ -1,10 +1,11 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 
+# Brotli module compilation stage.
 FROM openresty/openresty:1.25.3.2-5-alpine AS brotli-module
 ENV OPENRESTY_VERSION=1.25.3.2
 
-# Install build dependencies
+# Install build dependencies.
 RUN apk add --no-cache \
     brotli-libs \
     brotli-dev \
@@ -17,20 +18,21 @@ RUN apk add --no-cache \
     zlib-dev \
     perl
 
-# Clone and prepare the Brotli module
+# Clone and prepare the Brotli module.
+# There are no tags, so we'll checkout a specific hash.
 RUN git clone --recursive https://github.com/google/ngx_brotli.git /tmp/ngx_brotli && \
     cd /tmp/ngx_brotli && git checkout a71f9312c2deb28875acc7bacfdd5695a111aa53
 
-# Download the OpenResty source for the same version
+# Download the OpenResty source.
 RUN wget -O /tmp/openresty-${OPENRESTY_VERSION}.tar.gz https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz && \
     tar -xzvf /tmp/openresty-${OPENRESTY_VERSION}.tar.gz -C /tmp/
 
-# Configure and build OpenResty with Brotli module
+# Configure and build OpenResty with Brotli module.
 WORKDIR /tmp/openresty-${OPENRESTY_VERSION}
 RUN ./configure --with-compat --add-dynamic-module=/tmp/ngx_brotli \
     && make
 
-# Copy the compiled Brotli module to the installed OpenResty modules directory
+# Copy the compiled Brotli modules to the installed OpenResty modules directory
 RUN cp ./build/nginx-*/objs/ngx_http_brotli_filter_module.so /usr/local/openresty/nginx/modules/
 RUN cp ./build/nginx-*/objs/ngx_http_brotli_static_module.so /usr/local/openresty/nginx/modules/
 
@@ -90,8 +92,7 @@ COPY healthcheck/healthz.locations healthcheck/healthz.locations.php.disable /et
 RUN mkdir -p /app \
     && rm -f /etc/nginx/conf.d/default.conf \
     && fix-permissions /usr/local/openresty/nginx \
-    && fix-permissions /var/run/ \
-    && fix-permissions /usr/lib/nginx/modules/
+    && fix-permissions /var/run/
 
 COPY docker-entrypoint /lagoon/entrypoints/70-nginx-entrypoint
 COPY matomo/80-nginx-matomo-config /lagoon/entrypoints/

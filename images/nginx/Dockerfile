@@ -102,5 +102,9 @@ EXPOSE 8080
 # tells the local development environment on which port we are running
 ENV LAGOON_LOCALDEV_HTTP_PORT=8080
 
+# Volume for temporary files as prescribed in
+# https://github.com/openresty/docker-openresty/commit/b978e948adb0ca65fe12189bec61ecb5546c0a11
+VOLUME ["/var/run/openresty"]
+
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
 CMD ["nginx", "-g", "daemon off;"]

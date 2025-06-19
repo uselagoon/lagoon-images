@@ -11,10 +11,13 @@ LABEL org.opencontainers.image.description="OpenResty (Nginx) image optimised fo
 LABEL org.opencontainers.image.title="uselagoon/nginx-drupal"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/nginx"
 
-RUN mkdir -p /etc/nginx/conf.d/drupal \
-    && mkdir -p /var/run/openresty/nginx-client-body
+RUN mkdir -p /etc/nginx/conf.d/drupal
 
 COPY drupal /etc/nginx/conf.d/drupal/
 COPY drupal.conf /etc/nginx/conf.d/app.conf
 
 RUN fix-permissions /etc/nginx
+
+# Volume for temporary files as prescribed in
+# https://github.com/openresty/docker-openresty/commit/b978e948adb0ca65fe12189bec61ecb5546c0a11
+VOLUME ["/var/run/openresty"]

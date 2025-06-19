@@ -169,9 +169,9 @@ $(build-images):
 # 2. Dockerfiles of the Images itself, will cause make to rebuild the images if something has
 #    changed on the Dockerfiles
 build/commons: images/commons/Dockerfile
-build/nginx: build/commons images/nginx-brotli/Dockerfile images/nginx/Dockerfile
 build/nginx-brotli: build/commons images/nginx-brotli/Dockerfile
-build/nginx-drupal: images/nginx-brotli/Dockerfile build/nginx images/nginx-drupal/Dockerfile
+build/nginx: build/commons build/nginx-brotli images/nginx/Dockerfile
+build/nginx-drupal: build/nginx-brotli build/nginx images/nginx-drupal/Dockerfile
 build/rabbitmq: build/commons images/rabbitmq/Dockerfile
 build/rabbitmq-cluster: build/rabbitmq images/rabbitmq-cluster/Dockerfile
 

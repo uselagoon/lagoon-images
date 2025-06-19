@@ -18,6 +18,3 @@ COPY drupal.conf /etc/nginx/conf.d/app.conf
 
 RUN fix-permissions /etc/nginx
 
-# Volume for temporary files as prescribed in
-# https://github.com/openresty/docker-openresty/commit/b978e948adb0ca65fe12189bec61ecb5546c0a11
-VOLUME ["/var/run/openresty"]

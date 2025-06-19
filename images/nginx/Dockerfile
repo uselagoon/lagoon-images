@@ -90,7 +90,8 @@ COPY healthcheck/healthz.locations healthcheck/healthz.locations.php.disable /et
 RUN mkdir -p /app \
     && rm -f /etc/nginx/conf.d/default.conf \
     && fix-permissions /usr/local/openresty/nginx \
-    && fix-permissions /var/run/
+    && fix-permissions /var/run/ \
+    && fix-permissions /usr/lib/nginx/modules/
 
 COPY docker-entrypoint /lagoon/entrypoints/70-nginx-entrypoint
 COPY matomo/80-nginx-matomo-config /lagoon/entrypoints/
@@ -101,10 +102,6 @@ EXPOSE 8080
 
 # tells the local development environment on which port we are running
 ENV LAGOON_LOCALDEV_HTTP_PORT=8080
-
-# Volume for temporary files as prescribed in
-# https://github.com/openresty/docker-openresty/commit/b978e948adb0ca65fe12189bec61ecb5546c0a11
-VOLUME ["/var/run/openresty"]
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
 CMD ["nginx", "-g", "daemon off;"]

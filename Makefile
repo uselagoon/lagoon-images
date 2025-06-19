@@ -138,7 +138,6 @@ docker_pull:
 
 unversioned-images :=		commons \
 							nginx \
-							nginx-brotli \
 							nginx-drupal \
 							rabbitmq \
 							rabbitmq-cluster

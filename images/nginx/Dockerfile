@@ -30,6 +30,10 @@ WORKDIR /tmp/openresty-${OPENRESTY_VERSION}
 RUN ./configure --with-compat --add-dynamic-module=/tmp/ngx_brotli \
     && make
 
+# Copy the compiled Brotli module to the installed OpenResty modules directory
+RUN cp ./build/nginx-*/objs/ngx_http_brotli_filter_module.so /usr/local/openresty/nginx/modules/
+RUN cp ./build/nginx-*/objs/ngx_http_brotli_static_module.so /usr/local/openresty/nginx/modules/
+
 FROM openresty/openresty:1.25.3.2-5-alpine
 
 ARG LAGOON_VERSION

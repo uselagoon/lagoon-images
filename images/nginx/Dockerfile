@@ -1,5 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
+FROM ${IMAGE_REPO:-lagoon}/nginx-brotli:latest AS brotli-module
 FROM openresty/openresty:1.25.3.2-5-alpine
 
 ARG LAGOON_VERSION
@@ -39,6 +40,10 @@ RUN apk update \
     && rm -rf /var/cache/apk/*
 
 RUN rm -Rf /etc/nginx && ln -s /usr/local/openresty/nginx/conf /etc/nginx
+
+# Copy Brotli module
+COPY --from=brotli-module "/usr/local/openresty/nginx/modules/ngx_http_brotli_filter_module.so" "/usr/lib/nginx/modules/ngx_http_brotli_filter_module.so"
+COPY --from=brotli-module "/usr/local/openresty/nginx/modules/ngx_http_brotli_static_module.so" "/usr/lib/nginx/modules/ngx_http_brotli_static_module.so"
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY fastcgi.conf /etc/nginx/fastcgi.conf

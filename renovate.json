@@ -248,10 +248,11 @@
       ],
       "matchPackageNames": [
         "node",
-        "opensearch",
+        "opensearchproject/opensearch",
         "postgres",
         "redis",
         "solr",
+        "valkey/valkey",
         "varnish"
       ]
     },
@@ -266,10 +267,11 @@
       ],
       "matchPackageNames": [
         "node",
-        "opensearch",
+        "opensearchproject/opensearch",
         "postgres",
         "redis",
         "solr",
+        "valkey/valkey",
         "varnish"
       ]
     },

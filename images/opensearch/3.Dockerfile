@@ -50,6 +50,7 @@ ENV TMPDIR=/tmp \
 RUN for plugin in \
   opensearch-security-analytics \
   opensearch-alerting \
+  opensearch-anomaly-detection \
   opensearch-cross-cluster-replication \
   opensearch-index-management \
   opensearch-notifications \

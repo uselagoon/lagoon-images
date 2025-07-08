@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM opensearchproject/opensearch:3.0.0
+FROM opensearchproject/opensearch:3.1.0
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -50,6 +50,7 @@ ENV TMPDIR=/tmp \
 RUN for plugin in \
   opensearch-security-analytics \
   opensearch-alerting \
+  opensearch-anomaly-detection \
   opensearch-cross-cluster-replication \
   opensearch-index-management \
   opensearch-notifications \

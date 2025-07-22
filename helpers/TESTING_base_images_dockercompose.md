@@ -36,7 +36,6 @@ Run the following commands to validate things are rolling as they should.
 ```bash
 # should have all the services we expect
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep commons
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-18
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-20
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-22
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-24
@@ -280,12 +279,6 @@ docker compose exec -T python-3-13 sh -c "pip list --no-cache-dir" | grep "virtu
 
 # python-3-13 should be serving content
 docker compose exec -T commons sh -c "curl python-3-13:3000/tmp/test" | grep "Python 3.13"
-
-# node-18 should have Node 18
-docker compose exec -T node-18 sh -c "node -v" | grep "v18"
-
-# node-18 should be serving content
-docker compose exec -T commons sh -c "curl node-18:3000/test" | grep "v18"
 
 # node-20 should have Node 20
 docker compose exec -T node-20 sh -c "node -v" | grep "v20"

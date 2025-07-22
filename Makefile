@@ -185,9 +185,6 @@ versioned-images := 		mariadb-10.6 \
 							mongo-4 \
 							mysql-8.0 \
 							mysql-8.4 \
-							node-18 \
-							node-18-builder \
-							node-18-cli \
 							node-20 \
 							node-20-builder \
 							node-20-cli \
@@ -273,8 +270,7 @@ build/mariadb-10.6-drupal: build/mariadb-10.6
 build/mariadb-10.11-drupal: build/mariadb-10.11
 build/mongo-4: build/commons
 build/mysql-8.0 build/mysql-8.4: build/commons
-build/node-18 build/node-20 build/node-22 build/node-24: build/commons
-build/node-18-builder build/node-18-cli: build/node-18
+build/node-20 build/node-22 build/node-24: build/commons
 build/node-20-builder build/node-20-cli: build/node-20
 build/node-22-builder build/node-22-cli: build/node-22
 build/node-24-builder build/node-24-cli: build/node-24

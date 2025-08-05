@@ -79,7 +79,7 @@ RUN apk update \
         postgresql-dev \
         # for yaml
         yaml-dev \
-    && install-php-extensions apcu-5.1.24 \
+    && install-php-extensions apcu-5.1.26 \
     && install-php-extensions imagick-3.8.0 \
     && install-php-extensions redis-6.2.0 \
     && install-php-extensions xdebug-3.4.5 \

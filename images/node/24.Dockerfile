@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM node:24.5-alpine3.21
+FROM node:24.5-alpine3.22
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -10,7 +10,7 @@ LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
 LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="Node.js 24 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/node-24"
-LABEL org.opencontainers.image.base.name="docker.io/node:24-alpine3.21"
+LABEL org.opencontainers.image.base.name="docker.io/node:24-alpine3.22"
 
 ENV LAGOON=node
 

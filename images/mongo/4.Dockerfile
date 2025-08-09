@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM alpine:3.21.4
+FROM alpine:3.22.1
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -10,7 +10,7 @@ LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
 LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="MongoDB 4 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/mongo-4"
-LABEL org.opencontainers.image.base.name="docker.io/alpine:3.21"
+LABEL org.opencontainers.image.base.name="docker.io/alpine:3.22"
 
 ENV LAGOON=mongo
 

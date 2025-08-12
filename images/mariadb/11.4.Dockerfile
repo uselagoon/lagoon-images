@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM mariadb:11.4.7-ubi9
+FROM mariadb:11.4.8-ubi9
 
 
 ARG LAGOON_VERSION

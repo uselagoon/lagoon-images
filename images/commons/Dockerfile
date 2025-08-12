@@ -1,7 +1,6 @@
 FROM webdevops/go-crond:23.12.0-alpine AS go-crond
 FROM amazeeio/envplate:v1.0.3 AS envplate
-
-FROM alpine:3.21.4
+FROM alpine:3.22.1
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -11,7 +10,7 @@ LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
 LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="Base image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/commons"
-LABEL org.opencontainers.image.base.name="docker.io/alpine:3.21"
+LABEL org.opencontainers.image.base.name="docker.io/alpine:3.22"
 
 ENV LAGOON=commons
 

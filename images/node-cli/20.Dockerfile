@@ -16,7 +16,7 @@ RUN apk add --no-cache bash \
         findutils \
         git \
         gzip  \
-        mariadb-client=11.4.5-r0 \
+        mariadb-client=11.4.5-r2 \
         mariadb-connector-c \
         mongodb-tools \
         openssh-client \

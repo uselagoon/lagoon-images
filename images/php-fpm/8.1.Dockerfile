@@ -58,6 +58,9 @@ RUN apk update \
         gettext-dev \
         # for imagemagick
         imagemagick-dev \
+        # for gd
+        libavif-dev \
+        # for imagemagick
         libgcrypt-dev \
         # for gd
         libjpeg-turbo-dev \
@@ -80,12 +83,13 @@ RUN apk update \
         # for yaml
         yaml-dev \
     && install-php-extensions apcu-5.1.24 \
+    && install-php-extensions brotli-0.18.0 \
     && install-php-extensions imagick-3.8.0 \
     && install-php-extensions redis-6.2.0 \
     && install-php-extensions xdebug-3.4.5 \
     && install-php-extensions yaml-2.2.4 \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
+    && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype --with-avif \
     && docker-php-ext-install -j4 bcmath exif gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets tidy xsl zip \
     && apk del -r \
         .devdeps \
@@ -107,6 +111,7 @@ RUN apk update \
         imagemagick-webp \
         imagemagick-svg \
         imagemagick-tiff \
+        libavif \
         libgcrypt \
         libjpeg-turbo \
         libmcrypt \

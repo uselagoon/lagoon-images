@@ -17,3 +17,4 @@ COPY drupal /etc/nginx/conf.d/drupal/
 COPY drupal.conf /etc/nginx/conf.d/app.conf
 
 RUN fix-permissions /etc/nginx
+

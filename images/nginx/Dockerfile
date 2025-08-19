@@ -1,5 +1,41 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
+
+# Brotli module compilation stage.
+FROM openresty/openresty:1.25.3.2-5-alpine AS brotli-module
+ENV OPENRESTY_VERSION=1.25.3.2
+
+# Install build dependencies.
+RUN apk add --no-cache \
+    brotli-libs \
+    brotli-dev \
+    git \
+    gcc \
+    make \
+    musl-dev \
+    pcre-dev \
+    openssl-dev \
+    zlib-dev \
+    perl
+
+# Clone and prepare the Brotli module.
+# There are no tags, so we'll checkout a specific hash.
+RUN git clone --recursive https://github.com/google/ngx_brotli.git /tmp/ngx_brotli && \
+    cd /tmp/ngx_brotli && git checkout a71f9312c2deb28875acc7bacfdd5695a111aa53
+
+# Download the OpenResty source.
+RUN wget -O /tmp/openresty-${OPENRESTY_VERSION}.tar.gz https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz && \
+    tar -xzvf /tmp/openresty-${OPENRESTY_VERSION}.tar.gz -C /tmp/
+
+# Configure and build OpenResty with Brotli module.
+WORKDIR /tmp/openresty-${OPENRESTY_VERSION}
+RUN ./configure --with-compat --add-dynamic-module=/tmp/ngx_brotli \
+    && make
+
+# Copy the compiled Brotli modules to the installed OpenResty modules directory
+RUN cp ./build/nginx-*/objs/ngx_http_brotli_filter_module.so /usr/local/openresty/nginx/modules/
+RUN cp ./build/nginx-*/objs/ngx_http_brotli_static_module.so /usr/local/openresty/nginx/modules/
+
 FROM openresty/openresty:1.25.3.2-5-alpine
 
 ARG LAGOON_VERSION
@@ -39,6 +75,10 @@ RUN apk update \
     && rm -rf /var/cache/apk/*
 
 RUN rm -Rf /etc/nginx && ln -s /usr/local/openresty/nginx/conf /etc/nginx
+
+# Copy Brotli module
+COPY --from=brotli-module "/usr/local/openresty/nginx/modules/ngx_http_brotli_filter_module.so" "/usr/lib/nginx/modules/ngx_http_brotli_filter_module.so"
+COPY --from=brotli-module "/usr/local/openresty/nginx/modules/ngx_http_brotli_static_module.so" "/usr/lib/nginx/modules/ngx_http_brotli_static_module.so"
 
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY fastcgi.conf /etc/nginx/fastcgi.conf

@@ -192,6 +192,10 @@ docker compose exec -T commons sh -c "curl -kL http://nginx:8080" | grep "hr" | 
 docker compose exec -T commons sh -c "curl -I nginx:8080" | grep -i "Server" | grep -i "openresty"
 docker compose exec -T commons sh -c "curl -I nginx:8080" | grep -i "X-Lagoon"
 
+# nginx should support brotli encoding
+docker compose exec -T nginx sh -c "/bin/dd if=/dev/random of=/app/brotli.txt bs=512b count=1" # Sets up a compressable file
+docker compose exec -T commons sh -c "curl -sI -H 'Accept-Encoding: br' nginx:8080/brotli.txt | grep -i Content-Encoding | grep -i br"
+
 # opensearch-2 should have opensearch 2
 docker compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | grep "2."
 

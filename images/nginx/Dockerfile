@@ -2,7 +2,7 @@ ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
 
 # Brotli module compilation stage.
-FROM openresty/openresty:1.25.3.2-5-alpine AS brotli-module
+FROM openresty/openresty:1.27.1.2-3-alpine AS brotli-module
 ENV OPENRESTY_VERSION=1.25.3.2
 
 # Install build dependencies.
@@ -36,7 +36,7 @@ RUN ./configure --with-compat --add-dynamic-module=/tmp/ngx_brotli \
 RUN cp ./build/nginx-*/objs/ngx_http_brotli_filter_module.so /usr/local/openresty/nginx/modules/
 RUN cp ./build/nginx-*/objs/ngx_http_brotli_static_module.so /usr/local/openresty/nginx/modules/
 
-FROM openresty/openresty:1.25.3.2-5-alpine
+FROM openresty/openresty:1.27.1.2-3-alpine
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

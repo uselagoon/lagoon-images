@@ -20,7 +20,7 @@ RUN apk add --no-cache bash \
         findutils \
         git \
         gzip  \
-        mariadb-client=11.4.5-r2 \
+        mariadb-client=11.4.8-r0 \
         mariadb-connector-c \
         mongodb-tools \
         nodejs=~22 \

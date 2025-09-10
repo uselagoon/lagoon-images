@@ -12,6 +12,9 @@ LABEL org.opencontainers.image.description="Solr 8 image optimised for running i
 LABEL org.opencontainers.image.title="uselagoon/solr-8"
 LABEL org.opencontainers.image.base.name="docker.io/solr:8"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/solr-9"
+
 ENV LAGOON=solr
 
 ENV SOLR_DATA_HOME=/var/solr

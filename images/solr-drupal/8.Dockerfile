@@ -16,6 +16,9 @@ LABEL org.opencontainers.image.description="Solr 8 image optimised for Drupal wo
 LABEL org.opencontainers.image.title="uselagoon/solr-8-drupal"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/solr-8"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/solr-9-drupal"
+
 COPY --from=jumpstart /search_api_solr/jump-start/solr8/config-set /solr-conf/conf
 ENV SOLR_INSTALL_DIR=/opt/solr
 

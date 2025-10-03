@@ -192,6 +192,17 @@ docker compose exec -T commons sh -c "curl -kL http://nginx:8080" | grep "hr" | 
 docker compose exec -T commons sh -c "curl -I nginx:8080" | grep -i "Server" | grep -i "openresty"
 docker compose exec -T commons sh -c "curl -I nginx:8080" | grep -i "X-Lagoon"
 
+# nginx should support brotli encoding
+docker compose exec -u root -T nginx sh -c "/bin/dd if=/dev/random of=/app/brotli.txt bs=512b count=1" # Sets up a compressable file
+docker compose exec -T commons sh -c "curl -sI -H 'Accept-Encoding: br' nginx:8080/brotli.txt | grep -i Content-Encoding | grep -i br"
+
+# nginx should support serving pre-compressed brotli files
+docker compose exec -u root -T nginx sh -c "mkdir -p /app/static && /bin/dd if=/dev/random of=/app/static/brotlistatic.txt bs=512b count=1" # Sets up a compressable file
+docker compose exec -u root -T nginx sh -c "apk add brotli && brotli -j /app/static/brotlistatic.txt " # pre-compresses file, '-j' remove source file, just in case
+docker compose exec -u root -T nginx sh -c "echo bG9jYXRpb24gL3N0YXRpYy8gewogICAgYnJvdGxpX3N0YXRpYyBvbjsKfQ== | base64 -d > /etc/nginx/helpers/brotli_static.conf && nginx -s reload" # set up a space to serve static files from, reload nginx
+docker compose exec -T commons sh -c "curl -sI -H 'Accept-Encoding: br' nginx:8080/static/brotlistatic.txt | grep -i Content-Encoding | grep -i br"
+
+
 # opensearch-2 should have opensearch 2
 docker compose exec -T commons sh -c "curl opensearch-2:9200" | grep number | grep "2."
 

@@ -82,7 +82,7 @@ RUN apk update \
         postgresql-dev \
         # for yaml
         yaml-dev \
-    && install-php-extensions apcu-5.1.26 \
+    && install-php-extensions apcu-5.1.27 \
     && install-php-extensions brotli-0.18.2 \
     && install-php-extensions imagick-3.8.0 \
     && install-php-extensions redis-6.2.0 \
@@ -132,7 +132,7 @@ RUN apk update \
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=12.0.0.25
+ENV NEWRELIC_VERSION=12.1.0.26
 RUN mkdir -p /tmp/newrelic && cd /tmp/newrelic \
     && wget https://download.newrelic.com/php_agent/archive/${NEWRELIC_VERSION}/newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz \
     && gzip -dc newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz | tar --strip-components=1 -xf - \
@@ -155,7 +155,7 @@ RUN mkdir -p /tmp/newrelic && cd /tmp/newrelic \
     && fix-permissions /usr/local/etc/
 
 # Add blackfire probe and agent.
-ENV BLACKFIRE_VERSION=2.28.31
+ENV BLACKFIRE_VERSION=2.29.1
 RUN version=$(php -r "echo PHP_MAJOR_VERSION.PHP_MINOR_VERSION;") \
     && architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && mkdir -p /blackfire \

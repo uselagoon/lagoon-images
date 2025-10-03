@@ -20,7 +20,7 @@ RUN apk add --no-cache bash \
         findutils \
         git \
         gzip  \
-        mariadb-client=11.4.5-r2 \
+        mariadb-client=11.4.8-r0 \
         mariadb-connector-c \
         mongodb-tools \
         nodejs=~22 \
@@ -35,7 +35,7 @@ RUN apk add --no-cache bash \
     && rm -rf /var/cache/apk/* \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server
 
-RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.8.10/composer.phar \
+RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.8.12/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/

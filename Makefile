@@ -229,8 +229,6 @@ versioned-images := 		mariadb-10.6 \
 							ruby-3.2 \
 							ruby-3.3 \
 							ruby-3.4 \
-							solr-8 \
-							solr-8-drupal \
 							solr-9 \
 							solr-9-drupal \
 							valkey-8 \
@@ -295,8 +293,7 @@ build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12 build/pyt
 build/redis-7 build/redis-8: build/commons
 build/redis-7-persistent: build/redis-7
 build/ruby-3.2 build/ruby-3.3 build/ruby-3.4: build/commons
-build/solr-8 build/solr-9: build/commons
-build/solr-8-drupal: build/solr-8
+build/solr-9: build/commons
 build/solr-9-drupal: build/solr-9
 build/valkey-8: build/commons
 build/varnish-6 build/varnish-7: build/commons

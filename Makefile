@@ -218,7 +218,7 @@ versioned-images := 		mariadb-10.6 \
 							postgres-16-drupal \
 							postgres-17 \
 							postgres-17-drupal \
-							postgres-18
+							postgres-18 \
 							python-3.9 \
 							python-3.10 \
 							python-3.11 \

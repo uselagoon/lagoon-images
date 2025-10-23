@@ -42,6 +42,7 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-8:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://solr-9:8983 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://valkey-8:6379 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://valkey-9:6379 -timeout 1m
 ```
 
 Verification commands
@@ -70,6 +71,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-8
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-9
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep valkey-8
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep valkey-9
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-7
 
@@ -365,6 +367,28 @@ docker compose exec -T valkey-8 sh -c "valkey-cli dbsize"
 # valkey-8 should be able to read/write data
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=valkey-8" | grep "SERVICE_HOST=valkey-8"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=valkey-8" |grep "LAGOON_TEST_VAR=all-images"
+
+# valkey-9 should be running Valkey v9 server and Redis compatible
+docker compose exec -T valkey-9 sh -c "valkey-server --version" | grep v=9.
+docker compose exec -T valkey-9 sh -c "redis-server --version" | grep v=9.
+
+# valkey-9 should be running Valkey v9 cli and Redis compatible
+docker compose exec -T valkey-9 sh -c "valkey-cli --version" | grep 9.
+docker compose exec -T valkey-9 sh -c "redis-cli --version" | grep 9.
+
+# valkey-9 should be Redis 7.2.4 compatible
+docker compose exec -T valkey-9 sh -c "redis-cli INFO" | grep valkey_version | grep :9.
+docker compose exec -T valkey-9 sh -c "redis-cli INFO" | grep redis_version | grep :7.2.4
+
+# valkey-9 should be able to see Valkey databases
+docker compose exec -T valkey-9 sh -c "valkey-cli CONFIG GET databases"
+
+# valkey-9 should have initialized database
+docker compose exec -T valkey-9 sh -c "valkey-cli dbsize"
+
+# valkey-9 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=valkey-9" | grep "SERVICE_HOST=valkey-9"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/redis?service=valkey-9" |grep "LAGOON_TEST_VAR=all-images"
 
 # varnish-6 should have correct vmods in varnish folder
 docker compose exec -T varnish-6 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so

@@ -223,6 +223,7 @@ versioned-images := 		mariadb-10.6 \
 							python-3.11 \
 							python-3.12 \
 							python-3.13 \
+							python-3.14 \
 							redis-7 \
 							redis-7-persistent \
 							redis-8 \
@@ -289,7 +290,7 @@ build/postgres-14-drupal: build/postgres-14
 build/postgres-15-drupal: build/postgres-15
 build/postgres-16-drupal: build/postgres-16
 build/postgres-17-drupal: build/postgres-17
-build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12 build/python-3.13: build/commons
+build/python-3.9 build/python-3.10 build/python-3.11 build/python-3.12 build/python-3.13 build/python-3.14: build/commons
 build/redis-7 build/redis-8: build/commons
 build/redis-7-persistent: build/redis-7
 build/ruby-3.2 build/ruby-3.3 build/ruby-3.4: build/commons

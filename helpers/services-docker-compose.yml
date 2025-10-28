@@ -148,6 +148,12 @@ services:
       - "6379"
     << : *default-user
 
+  valkey-9:
+    image: uselagoon/valkey-9:latest
+    ports:
+      - "6379"
+    << : *default-user
+
   varnish-6:
     image: uselagoon/varnish-6:latest
     labels:

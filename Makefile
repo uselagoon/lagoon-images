@@ -233,6 +233,7 @@ versioned-images := 		mariadb-10.6 \
 							solr-9 \
 							solr-9-drupal \
 							valkey-8 \
+							valkey-9 \
 							varnish-6 \
 							varnish-6-drupal \
 							varnish-6-persistent \
@@ -296,7 +297,7 @@ build/redis-7-persistent: build/redis-7
 build/ruby-3.2 build/ruby-3.3 build/ruby-3.4: build/commons
 build/solr-9: build/commons
 build/solr-9-drupal: build/solr-9
-build/valkey-8: build/commons
+build/valkey-8 build/valkey-9: build/commons
 build/varnish-6 build/varnish-7: build/commons
 build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal

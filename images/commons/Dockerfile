@@ -1,5 +1,5 @@
-FROM webdevops/go-crond:23.12.0-alpine AS go-crond
-FROM amazeeio/envplate:v1.0.3 AS envplate
+FROM ghcr.io/amazeeio/go-crond:25.10.0 AS go-crond
+FROM ghcr.io/amazeeio/envplate:25.10.0 AS envplate
 FROM alpine:3.22.2
 
 ARG LAGOON_VERSION

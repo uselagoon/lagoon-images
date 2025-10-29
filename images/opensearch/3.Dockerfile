@@ -58,7 +58,8 @@ RUN for plugin in \
   opensearch-notifications-core \
   opensearch-observability \
   opensearch-reports-scheduler \
-  opensearch-security; do \
+  opensearch-security \
+  opensearch-skills; do \
   /usr/share/opensearch/bin/opensearch-plugin remove --purge $plugin; \
   done
 

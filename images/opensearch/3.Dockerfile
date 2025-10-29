@@ -53,6 +53,7 @@ RUN for plugin in \
   opensearch-anomaly-detection \
   opensearch-cross-cluster-replication \
   opensearch-index-management \
+  opensearch-ml \
   opensearch-notifications \
   opensearch-notifications-core \
   opensearch-observability \

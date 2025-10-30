@@ -241,7 +241,11 @@ versioned-images := 		mariadb-10.6 \
 							varnish-7 \
 							varnish-7-drupal \
 							varnish-7-persistent \
-							varnish-7-persistent-drupal
+							varnish-7-persistent-drupal \
+							varnish-8 \
+							varnish-8-drupal \
+							varnish-8-persistent \
+							varnish-8-persistent-drupal
 
 build-versioned-images = $(foreach image,$(versioned-images),build/$(image))
 
@@ -298,11 +302,13 @@ build/ruby-3.2 build/ruby-3.3 build/ruby-3.4: build/commons
 build/solr-9: build/commons
 build/solr-9-drupal: build/solr-9
 build/valkey-8 build/valkey-9: build/commons
-build/varnish-6 build/varnish-7: build/commons
+build/varnish-6 build/varnish-7 build/varnish-8: build/commons
 build/varnish-6-drupal build/varnish-6-persistent: build/varnish-6
 build/varnish-6-persistent-drupal: build/varnish-6-drupal
 build/varnish-7-drupal build/varnish-7-persistent: build/varnish-7
 build/varnish-7-persistent-drupal: build/varnish-7-drupal
+build/varnish-8-drupal build/varnish-8-persistent: build/varnish-8
+build/varnish-8-persistent-drupal: build/varnish-8-drupal
 
 #######
 ####### Building Images

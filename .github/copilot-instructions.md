@@ -150,18 +150,18 @@ make scan-images  # Outputs to ./scans/*.{trivy,syft,grype}.txt
 ### Version Management
 New service versions require updates to:
 1. `versioned-images` variable in Makefile (add to the list)
-2. Dependency declarations in Makefile (add to existing dependency line, e.g., `build/python-3.9 build/python-3.10 ... build/python-3.14: build/commons`)
+2. Dependency declarations in Makefile (add to existing dependency line, e.g., `build/python-3.10 build/python-3.11 ... build/python-3.14: build/commons`)
 3. New Dockerfile in appropriate subdirectory
 4. Test coverage in helper files
 
 **Critical Makefile Pattern**: Most services follow the pattern where all versions depend on commons:
-- `build/python-3.9 build/python-3.10 ... build/python-3.14: build/commons`
+- `build/python-3.10 build/python-3.11 ... build/python-3.14: build/commons`
 - `build/node-20 build/node-22 build/node-24: build/commons`
 - `build/ruby-3.2 build/ruby-3.3 build/ruby-3.4: build/commons`
 
 **CRITICAL: When adding new service versions, you must make BOTH Makefile changes:**
 1. Add `new-service-X.Y` to the `versioned-images` list
-2. Add `build/new-service-X.Y` to the existing dependency line (e.g., add `build/python-3.14` to `build/python-3.9 build/python-3.10 ... build/python-3.14: build/commons`)
+2. Add `build/new-service-X.Y` to the existing dependency line (e.g., add `build/python-3.15` to `build/python-3.10 build/python-3.11 ... build/python-3.14: build/commons`)
 
 When adding new images, follow the established naming and dependency patterns. The Makefile automatically handles complex multi-version builds through variable parsing and dependency resolution.
 
@@ -516,3 +516,216 @@ git push origin feature-branch
 ```
 
 This workflow ensures consistency, proper dependency management, and comprehensive validation for complex multi-variant service implementations.
+
+## End-of-Life Image Management
+
+When upstream software versions reach end-of-life or become deprecated, follow this process to properly mark images and guide users to supported alternatives.
+
+### Identifying End-of-Life Images
+
+**Common scenarios requiring EOL marking:**
+- Upstream software version reaches official end-of-life (e.g., Python 3.10, Node 16)
+- Security vulnerabilities with no upstream patches available
+- Major version deprecation by upstream maintainers
+- Technology stack obsolescence
+
+### Adding End-of-Life Labels
+
+Add deprecation labels immediately after the standard OCI labels in the Dockerfile:
+
+```dockerfile
+# Standard OCI labels
+LABEL org.opencontainers.image.authors="The Lagoon Authors"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/service/version.Dockerfile"
+LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
+LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
+LABEL org.opencontainers.image.description="Service X.Y image optimised for running in Lagoon"
+LABEL org.opencontainers.image.title="uselagoon/service-X.Y"
+LABEL org.opencontainers.image.base.name="docker.io/upstream:X.Y"
+
+# End-of-life deprecation labels
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/service-Z.W"
+```
+
+### Choosing Replacement Versions
+
+**Replacement selection priority:**
+1. **Latest LTS/Stable**: Choose the most recent long-term support version
+2. **Maximum longevity**: Select versions with longest remaining support lifecycle  
+3. **Compatibility**: Ensure reasonable upgrade path exists
+4. **Availability**: Verify the suggested replacement exists in lagoon-images
+
+**Examples of good replacement choices:**
+- `python-3.10` → `python-3.14` (latest stable with longest support)
+- `node-16` → `node-22` (latest LTS with extended support)
+- `solr-8` → `solr-9` (next major version)
+- `mariadb-10.6` → `mariadb-11.4` (latest stable)
+
+### End-of-Life Label Reference
+
+**Required Labels:**
+```dockerfile
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/recommended-replacement"
+```
+
+**Label Definitions:**
+- **`sh.lagoon.image.deprecated.status`**: Always set to `"endoflife"` for EOL images
+- **`sh.lagoon.image.deprecated.suggested`**: Full image reference for recommended replacement
+  - Format: `"docker.io/uselagoon/service-version"`
+  - Must point to an image that exists in lagoon-images
+  - Should provide the longest support lifecycle available
+
+### Implementation Workflow
+
+1. **Identify EOL Timeline**: Research upstream end-of-life dates and security support
+2. **Select Replacement**: Choose the most appropriate long-term replacement version
+3. **Verify Availability**: Confirm replacement image exists and builds successfully
+4. **Add Labels**: Insert deprecation labels after OCI labels in Dockerfile
+5. **Test Build**: Ensure image still builds with new labels
+6. **Document Migration**: Consider adding migration notes or documentation
+
+### Example Implementation
+
+**Before (Active Image):**
+```dockerfile
+FROM python:3.13.9-alpine3.22
+# ... standard labels only
+ENV LAGOON=python
+```
+
+**After (End-of-Life Image):**
+```dockerfile
+FROM python:3.13.9-alpine3.22
+# ... standard OCI labels ...
+
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/python-3.14"
+
+ENV LAGOON=python
+```
+
+### Integration with Tooling
+
+These labels are consumed by:
+- **Container scanners**: Trivy, Syft, Grype detect deprecated images
+- **Lagoon platform**: Warning systems and upgrade recommendations  
+- **CI/CD pipelines**: Automated detection of deprecated dependencies
+- **Documentation**: Automatic generation of migration guides
+
+### Best Practices
+
+✅ **DO:**
+- Mark images as EOL immediately when upstream support ends
+- Suggest the newest stable version with longest support lifecycle
+- Verify replacement images build and function correctly
+- Keep existing functionality unchanged (only add labels)
+
+❌ **DON'T:**
+- Remove or break existing EOL images (maintain backward compatibility)
+- Suggest intermediate versions unless necessary for compatibility
+- Add EOL labels without researching proper replacement versions
+- Forget to verify the suggested replacement actually exists
+
+This process ensures users receive clear guidance on deprecated images while maintaining system stability during migration periods.
+
+## Complete Image Deprecation Workflow
+
+After marking images as end-of-life with deprecation labels, images may eventually need complete removal from the repository to reduce maintenance overhead and build complexity.
+
+### Full Deprecation Process
+
+**Phase 1: End-of-Life Marking** (See End-of-Life Image Management section above)
+1. Add deprecation labels to Dockerfile
+2. Keep image functional for backward compatibility
+3. Provide clear replacement guidance
+
+**Phase 2: Complete Removal** (After sufficient migration period)
+1. **Remove Dockerfile**: Delete `images/service/version.Dockerfile`
+2. **Update Build System**: Remove from Makefile versioned-images list and dependency declarations
+3. **Remove Test Infrastructure**: Remove docker-compose services and test cases
+4. **Update Documentation**: Remove references from copilot instructions and examples
+5. **Verify Clean Removal**: Ensure no remaining references in repository
+
+### Complete Removal Checklist
+
+**Build System Updates:**
+```bash
+# Remove from versioned-images list in Makefile
+service-X-Y \  # ← Remove this line
+
+# Remove from dependency declarations
+build/service-X-Y build/service-A build/service-B: build/commons  # ← Remove service-X-Y
+# Becomes:
+build/service-A build/service-B: build/commons
+```
+
+**Test Infrastructure Updates:**
+```yaml
+# Remove from helpers/images-docker-compose.yml or helpers/services-docker-compose.yml
+service-X-Y:  # ← Remove entire service definition
+  image: uselagoon/service-X-Y:latest
+  ports:
+    - "PORT"
+  << : *default-user
+```
+
+**Test Case Removal:**
+Remove all test commands from `helpers/TESTING_*_dockercompose.md`:
+```bash
+# Remove service startup verification
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep service-X-Y
+
+# Remove version checks
+docker compose exec -T service-X-Y version-command | grep "X.Y"
+
+# Remove functionality tests
+docker compose exec -T service-X-Y functionality-test | grep expected
+```
+
+**Documentation Updates:**
+- Remove examples from copilot instructions
+- Update version ranges in documentation
+- Remove deprecated version from upgrade guides
+
+### Validation Commands
+
+**Verify Complete Removal:**
+```bash
+# Check build system
+make build-list | grep service-X-Y  # Should return nothing
+
+# Search for remaining references
+grep -r "service-X-Y\|service.*X\.Y" . --exclude-dir=.git --exclude-dir=scans --exclude-dir=build
+
+# Verify file deletion
+ls images/service/X-Y.Dockerfile  # Should not exist
+```
+
+**Test Build System:**
+```bash
+# Ensure build system works without removed image
+make build/service-related-image  # Should succeed
+
+# Verify dependency resolution
+make build-list  # Should show remaining images only
+```
+
+### Timeline Considerations
+
+**Minimum Deprecation Period:** 6-12 months between EOL marking and complete removal
+**Communication:** Announce removal timeline in release notes and documentation
+**Monitoring:** Track usage patterns before removal to ensure safe deprecation
+
+### Example: Python 3.9 Complete Removal
+
+Following the end-of-life marking of Python 3.9, the complete removal process involved:
+
+1. **File Deletion**: `rm images/python/3.9.Dockerfile`
+2. **Makefile Updates**: Removed `python-3.9` from versioned-images list and dependency line
+3. **Test Removal**: Removed docker-compose service and all test cases
+4. **Documentation**: Updated copilot instruction examples to use Python 3.10+ 
+5. **Verification**: Confirmed `make build-list | grep python` shows only supported versions
+
+This demonstrates the complete lifecycle from active image → EOL marking → full removal, ensuring clean repository maintenance while providing users adequate migration time.

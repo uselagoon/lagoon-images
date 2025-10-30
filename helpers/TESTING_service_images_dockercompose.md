@@ -74,6 +74,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep valkey-9
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-7
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-8
 
 # commons should be running Alpine Linux
 docker compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
@@ -404,6 +405,14 @@ docker compose exec -T varnish-7 sh -c "ls -la /usr/lib/varnish/vmods" | grep li
 # varnish-7 should be serving pages as version 7
 docker compose exec -T commons sh -c "curl -I varnish-7:8080" | grep -i "Varnish" | grep -i "7."
 docker compose exec -T varnish-7 sh -c "varnishlog -d" | grep User-Agent | grep curl 
+
+# varnish-8 should have correct vmods in varnish folder
+docker compose exec -T varnish-8 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_bodyaccess.so
+docker compose exec -T varnish-8 sh -c "ls -la /usr/lib/varnish/vmods" | grep libvmod_dynamic.so
+
+# varnish-8 should be serving pages as version 8
+docker compose exec -T commons sh -c "curl -I varnish-8:8080" | grep -i "Varnish" | grep -i "8."
+docker compose exec -T varnish-8 sh -c "varnishlog -d" | grep User-Agent | grep curl 
 ```
 
 Destroy tests

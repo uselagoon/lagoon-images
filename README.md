@@ -4,6 +4,9 @@
 
 # Lagoon Base Images
 
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11411/badge)](https://www.bestpractices.dev/projects/11411)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/uselagoon/lagoon-images/badge)](https://securityscorecards.dev/viewer/?uri=github.com/uselagoon/lagoon-images)
+
 This repository contains [Dockerfiles](https://docs.docker.com/engine/reference/builder/) related to [Lagoon](https://github.com/uselagoon/lagoon/).
 
 This repository was created with `git filter-repo` from the main Lagoon repository, in order to preserve commit history.

@@ -218,6 +218,7 @@ versioned-images := 		mariadb-10.6 \
 							postgres-16-drupal \
 							postgres-17 \
 							postgres-17-drupal \
+							postgres-18 \
 							python-3.9 \
 							python-3.10 \
 							python-3.11 \
@@ -285,7 +286,7 @@ build/php-8.3-cli: build/php-8.3-fpm
 build/php-8.3-cli-drupal: build/php-8.3-cli
 build/php-8.4-cli: build/php-8.4-fpm
 build/php-8.4-cli-drupal: build/php-8.4-cli
-build/postgres-13 build/postgres-14 build/postgres-15 build/postgres-16 build/postgres-17: build/commons
+build/postgres-13 build/postgres-14 build/postgres-15 build/postgres-16 build/postgres-17 build/postgres-18: build/commons
 build/postgres-13-drupal: build/postgres-13
 build/postgres-14-drupal: build/postgres-14
 build/postgres-15-drupal: build/postgres-15

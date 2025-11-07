@@ -30,6 +30,7 @@ RUN apk update \
         rsync \
         tar \
         tini \
+        tzdata \
     && rm -rf /var/cache/apk/* \
     && mkdir -p /lagoon/crontabs && fix-permissions /lagoon/crontabs \
     && ln -s /home/.bashrc /home/.profile

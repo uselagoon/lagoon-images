@@ -40,7 +40,8 @@ ENV MARIADB_DATABASE=lagoon \
     MARIADB_PASSWORD=lagoon \
     MARIADB_ROOT_PASSWORD=Lag00n
 
-RUN microdnf install -y epel-release \
+RUN printf "[main]\nexcludepkgs=MariaDB*" > /etc/dnf/dnf.conf \
+    && microdnf install -y epel-release \
     && microdnf update -y \
     && microdnf install -y \
         gettext \

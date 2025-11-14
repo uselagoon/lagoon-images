@@ -42,10 +42,8 @@ ENV MARIADB_DATABASE=lagoon \
 
 RUN printf "[main]\nexcludepkgs=MariaDB*" > /etc/dnf/dnf.conf \
     && microdnf install -y epel-release \
-    && microdnf update -y \
     && microdnf install -y \
         gettext \
-        net-tools \
         openssh-clients \
         pwgen \
         rsync \

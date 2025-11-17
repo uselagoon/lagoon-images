@@ -40,11 +40,10 @@ ENV MARIADB_DATABASE=lagoon \
     MARIADB_PASSWORD=lagoon \
     MARIADB_ROOT_PASSWORD=Lag00n
 
-RUN microdnf install -y epel-release \
-    && microdnf update -y \
+RUN printf "[main]\nexcludepkgs=MariaDB*" > /etc/dnf/dnf.conf \
+    && microdnf install -y epel-release \
     && microdnf install -y \
         gettext \
-        net-tools \
         openssh-clients \
         pwgen \
         rsync \

@@ -5,10 +5,7 @@ FROM valkey/valkey:9.0.0-alpine3.22
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
-LABEL org.opencontainers.image.authors="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/valkey/9.Dockerfile"
-LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
-LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="Valkey 9 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/valkey-9"
 LABEL org.opencontainers.image.base.name="docker.io/valkey/valkey:9-alpine"

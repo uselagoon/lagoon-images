@@ -79,7 +79,11 @@ docker_build = PLATFORMS=$(PLATFORM_ARCH) IMAGE_REPO=$(CI_BUILD_TAG) UPSTREAM_RE
 .PHONY: docker_buildx_create
 docker_buildx_create:
 	docker run -d -p 5000:5000 --restart always --name registry registry:2 || echo "registry already exists"
-	docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-local --buildkitd-flags '--oci-max-parallelism=$(BUILDKIT_PARALLELISM)' || echo "ci-local builder already exists"
+	@if ! docker buildx ls | grep -q "ci-lagoon-images"; then \
+		docker buildx create --platform linux/arm64,linux/arm/v8 --driver-opt network=host --name ci-lagoon-images --buildkitd-flags '--oci-max-parallelism=$(BUILDKIT_PARALLELISM)'; \
+	else \
+		echo "ci-lagoon-images builder already exists"; \
+	fi
 
 #######
 ####### Building Images
@@ -142,6 +146,6 @@ clean:
 docker_buildx_clean:
 	docker stop registry || echo "no registry"
 	docker rm registry || echo "no registry"
-	docker buildx rm ci-local || echo "no buildx cache"
+	docker buildx rm ci-lagoon-images || echo "no buildx cache"
 	docker buildx ls
 	docker context ls

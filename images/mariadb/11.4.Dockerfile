@@ -5,10 +5,7 @@ FROM mariadb:11.4.8-ubi9
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
-LABEL org.opencontainers.image.authors="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/mariadb/11.4.Dockerfile"
-LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
-LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="MariaDB 11.4 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/mariadb-11.4"
 LABEL org.opencontainers.image.base.name="docker.io/mariadb:11.4-ubi9"

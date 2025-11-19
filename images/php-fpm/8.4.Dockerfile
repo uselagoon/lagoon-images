@@ -9,10 +9,7 @@ FROM php:8.4.14-fpm-alpine3.22
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
-LABEL org.opencontainers.image.authors="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/php-fpm/8.4.Dockerfile"
-LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
-LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="PHP 8.4 FPM image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/php-8.4-fpm"
 LABEL org.opencontainers.image.base.name="docker.io/php:8.4-fpm-alpine3.22"

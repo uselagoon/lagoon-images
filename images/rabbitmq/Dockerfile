@@ -4,10 +4,7 @@ FROM rabbitmq:3.10.25-management-alpine
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
-LABEL org.opencontainers.image.authors="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/rabbitmq/Dockerfile"
-LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
-LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="RabbitMQ image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/rabbitmq"
 LABEL org.opencontainers.image.base.name="docker.io/rabbitmq:3-management-alpine"

@@ -3,10 +3,7 @@ FROM ${IMAGE_REPO:-lagoon}/postgres-15
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
-LABEL org.opencontainers.image.authors="The Lagoon Authors"
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/postgres-drupal/15.Dockerfile"
-LABEL org.opencontainers.image.url="https://github.com/uselagoon/lagoon-images"
-LABEL org.opencontainers.image.version="${LAGOON_VERSION}"
 LABEL org.opencontainers.image.description="PostgreSQL 15 image optimised for Drupal workloads running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/postgres-15-drupal"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/postgres-15"

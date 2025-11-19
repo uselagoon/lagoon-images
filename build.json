@@ -1,0 +1,2122 @@
+{
+  "group": {
+    "default": {
+      "targets": [
+        "commons",
+        "mariadb-10-11",
+        "mariadb-10-11-drupal",
+        "mariadb-10-6",
+        "mariadb-10-6-drupal",
+        "mariadb-11-4",
+        "mongo-4",
+        "mysql-8-0",
+        "mysql-8-4",
+        "nginx",
+        "nginx-drupal",
+        "node-20",
+        "node-20-builder",
+        "node-20-cli",
+        "node-22",
+        "node-22-builder",
+        "node-22-cli",
+        "node-24",
+        "node-24-builder",
+        "node-24-cli",
+        "opensearch-2",
+        "opensearch-3",
+        "php-8-1-cli",
+        "php-8-1-cli-drupal",
+        "php-8-1-fpm",
+        "php-8-2-cli",
+        "php-8-2-cli-drupal",
+        "php-8-2-fpm",
+        "php-8-3-cli",
+        "php-8-3-cli-drupal",
+        "php-8-3-fpm",
+        "php-8-4-cli",
+        "php-8-4-cli-drupal",
+        "php-8-4-fpm",
+        "postgres-13",
+        "postgres-13-drupal",
+        "postgres-14",
+        "postgres-14-drupal",
+        "postgres-15",
+        "postgres-15-drupal",
+        "postgres-16",
+        "postgres-16-drupal",
+        "postgres-17",
+        "postgres-17-drupal",
+        "python-3-10",
+        "python-3-11",
+        "python-3-12",
+        "python-3-13",
+        "python-3-14",
+        "python-3-9",
+        "rabbitmq",
+        "rabbitmq-cluster",
+        "redis-7",
+        "redis-7-persistent",
+        "redis-8",
+        "ruby-3-2",
+        "ruby-3-3",
+        "ruby-3-4",
+        "solr-9",
+        "solr-9-drupal",
+        "valkey-8",
+        "valkey-9",
+        "varnish-6",
+        "varnish-6-drupal",
+        "varnish-6-persistent",
+        "varnish-6-persistent-drupal",
+        "varnish-7",
+        "varnish-7-drupal",
+        "varnish-7-persistent",
+        "varnish-7-persistent-drupal"
+      ]
+    },
+    "nginx": {
+      "targets": [
+        "commons",
+        "nginx",
+        "nginx-drupal"
+      ]
+    },
+    "rabbitmq": {
+      "targets": [
+        "commons",
+        "rabbitmq",
+        "rabbitmq-cluster"
+      ]
+    }
+  },
+  "target": {
+    "commons": {
+      "context": "images/commons",
+      "dockerfile": "Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/commons:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "mariadb-10-11": {
+      "context": "images/mariadb",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "10.11.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/mariadb-10.11:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "mariadb-10-11-drupal": {
+      "context": "images/mariadb-drupal",
+      "contexts": {
+        "lagoon/mariadb-10.11": "target:mariadb-10-11"
+      },
+      "dockerfile": "10.11.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/mariadb-10.11-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "mariadb-10-6": {
+      "context": "images/mariadb",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "10.6.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/mariadb-10.6:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "mariadb-10-6-drupal": {
+      "context": "images/mariadb-drupal",
+      "contexts": {
+        "lagoon/mariadb-10.6": "target:mariadb-10-6"
+      },
+      "dockerfile": "10.6.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/mariadb-10.6-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "mariadb-11-4": {
+      "context": "images/mariadb",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "11.4.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/mariadb-11.4:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "mongo-4": {
+      "context": "images/mongo",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "4.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/mongo-4:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "mysql-8-0": {
+      "context": "images/mysql",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "8.0.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/mysql-8.0:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "mysql-8-4": {
+      "context": "images/mysql",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "8.4.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/mysql-8.4:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "nginx": {
+      "context": "images/nginx",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/nginx:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "nginx-drupal": {
+      "context": "images/nginx-drupal",
+      "contexts": {
+        "lagoon/nginx": "target:nginx"
+      },
+      "dockerfile": "Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/nginx-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "node-20": {
+      "context": "images/node",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "20.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/node-20:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "node-20-builder": {
+      "context": "images/node-builder",
+      "contexts": {
+        "lagoon/node-20": "target:node-20"
+      },
+      "dockerfile": "20.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/node-20-builder:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "node-20-cli": {
+      "context": "images/node-cli",
+      "contexts": {
+        "lagoon/node-20": "target:node-20"
+      },
+      "dockerfile": "20.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/node-20-cli:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "node-22": {
+      "context": "images/node",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "22.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/node-22:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "node-22-builder": {
+      "context": "images/node-builder",
+      "contexts": {
+        "lagoon/node-22": "target:node-22"
+      },
+      "dockerfile": "22.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/node-22-builder:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "node-22-cli": {
+      "context": "images/node-cli",
+      "contexts": {
+        "lagoon/node-22": "target:node-22"
+      },
+      "dockerfile": "22.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/node-22-cli:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "node-24": {
+      "context": "images/node",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "24.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/node-24:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "node-24-builder": {
+      "context": "images/node-builder",
+      "contexts": {
+        "lagoon/node-24": "target:node-24"
+      },
+      "dockerfile": "24.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/node-24-builder:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "node-24-cli": {
+      "context": "images/node-cli",
+      "contexts": {
+        "lagoon/node-24": "target:node-24"
+      },
+      "dockerfile": "24.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/node-24-cli:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "opensearch-2": {
+      "context": "images/opensearch",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "2.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/opensearch-2:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "opensearch-3": {
+      "context": "images/opensearch",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "3.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/opensearch-3:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-1-cli": {
+      "context": "images/php-cli",
+      "contexts": {
+        "lagoon/php-8.1-fpm": "target:php-8-1-fpm"
+      },
+      "dockerfile": "8.1.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.1-cli:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-1-cli-drupal": {
+      "context": "images/php-cli-drupal",
+      "contexts": {
+        "lagoon/php-8.1-cli": "target:php-8-1-cli"
+      },
+      "dockerfile": "8.1.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.1-cli-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-1-fpm": {
+      "context": "images/php-fpm",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "8.1.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.1-fpm:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-2-cli": {
+      "context": "images/php-cli",
+      "contexts": {
+        "lagoon/php-8.2-fpm": "target:php-8-2-fpm"
+      },
+      "dockerfile": "8.2.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.2-cli:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-2-cli-drupal": {
+      "context": "images/php-cli-drupal",
+      "contexts": {
+        "lagoon/php-8.2-cli": "target:php-8-2-cli"
+      },
+      "dockerfile": "8.2.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.2-cli-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-2-fpm": {
+      "context": "images/php-fpm",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "8.2.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.2-fpm:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-3-cli": {
+      "context": "images/php-cli",
+      "contexts": {
+        "lagoon/php-8.3-fpm": "target:php-8-3-fpm"
+      },
+      "dockerfile": "8.3.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.3-cli:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-3-cli-drupal": {
+      "context": "images/php-cli-drupal",
+      "contexts": {
+        "lagoon/php-8.3-cli": "target:php-8-3-cli"
+      },
+      "dockerfile": "8.3.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.3-cli-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-3-fpm": {
+      "context": "images/php-fpm",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "8.3.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.3-fpm:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-4-cli": {
+      "context": "images/php-cli",
+      "contexts": {
+        "lagoon/php-8.4-fpm": "target:php-8-4-fpm"
+      },
+      "dockerfile": "8.4.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.4-cli:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-4-cli-drupal": {
+      "context": "images/php-cli-drupal",
+      "contexts": {
+        "lagoon/php-8.4-cli": "target:php-8-4-cli"
+      },
+      "dockerfile": "8.4.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.4-cli-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "php-8-4-fpm": {
+      "context": "images/php-fpm",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "8.4.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/php-8.4-fpm:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "postgres-13": {
+      "context": "images/postgres",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "13.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/postgres-13:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "postgres-13-drupal": {
+      "context": "images/postgres-drupal",
+      "contexts": {
+        "lagoon/postgres-13": "target:postgres-13"
+      },
+      "dockerfile": "13.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/postgres-13-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "postgres-14": {
+      "context": "images/postgres",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "14.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/postgres-14:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "postgres-14-drupal": {
+      "context": "images/postgres-drupal",
+      "contexts": {
+        "lagoon/postgres-14": "target:postgres-14"
+      },
+      "dockerfile": "14.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/postgres-14-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "postgres-15": {
+      "context": "images/postgres",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "15.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/postgres-15:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "postgres-15-drupal": {
+      "context": "images/postgres-drupal",
+      "contexts": {
+        "lagoon/postgres-15": "target:postgres-15"
+      },
+      "dockerfile": "15.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/postgres-15-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "postgres-16": {
+      "context": "images/postgres",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "16.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/postgres-16:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "postgres-16-drupal": {
+      "context": "images/postgres-drupal",
+      "contexts": {
+        "lagoon/postgres-16": "target:postgres-16"
+      },
+      "dockerfile": "16.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/postgres-16-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "postgres-17": {
+      "context": "images/postgres",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "17.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/postgres-17:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "postgres-17-drupal": {
+      "context": "images/postgres-drupal",
+      "contexts": {
+        "lagoon/postgres-17": "target:postgres-17"
+      },
+      "dockerfile": "17.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/postgres-17-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "python-3-10": {
+      "context": "images/python",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "3.10.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/python-3.10:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "python-3-11": {
+      "context": "images/python",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "3.11.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/python-3.11:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "python-3-12": {
+      "context": "images/python",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "3.12.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/python-3.12:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "python-3-13": {
+      "context": "images/python",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "3.13.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/python-3.13:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "python-3-14": {
+      "context": "images/python",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "3.14.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/python-3.14:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "python-3-9": {
+      "context": "images/python",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "3.9.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/python-3.9:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "rabbitmq": {
+      "context": "images/rabbitmq",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/rabbitmq:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "rabbitmq-cluster": {
+      "context": "images/rabbitmq-cluster",
+      "contexts": {
+        "lagoon/rabbitmq": "target:rabbitmq"
+      },
+      "dockerfile": "Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/rabbitmq-cluster:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "redis-7": {
+      "context": "images/redis",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "7.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/redis-7:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "redis-7-persistent": {
+      "context": "images/redis-persistent",
+      "contexts": {
+        "lagoon/redis-7": "target:commons"
+      },
+      "dockerfile": "7.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/redis-7-persistent:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "redis-8": {
+      "context": "images/redis",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "8.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/redis-8:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "ruby-3-2": {
+      "context": "images/ruby",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "3.2.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/ruby-3.2:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "ruby-3-3": {
+      "context": "images/ruby",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "3.3.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/ruby-3.3:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "ruby-3-4": {
+      "context": "images/ruby",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "3.4.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/ruby-3.4:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "solr-9": {
+      "context": "images/solr",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "9.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/solr-9:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "solr-9-drupal": {
+      "context": "images/solr-drupal",
+      "contexts": {
+        "lagoon/commons": "target:commons",
+        "lagoon/solr-9": "target:solr-9"
+      },
+      "dockerfile": "9.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/solr-9-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "valkey-8": {
+      "context": "images/valkey",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "8.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/valkey-8:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "valkey-9": {
+      "context": "images/valkey",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "9.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/valkey-9:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "varnish-6": {
+      "context": "images/varnish",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "6.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/varnish-6:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "varnish-6-drupal": {
+      "context": "images/varnish-drupal",
+      "contexts": {
+        "lagoon/varnish-6": "target:varnish-6"
+      },
+      "dockerfile": "6.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/varnish-6-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "varnish-6-persistent": {
+      "context": "images/varnish-persistent",
+      "contexts": {
+        "lagoon/varnish-6": "target:varnish-6"
+      },
+      "dockerfile": "6.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/varnish-6-persistent:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "varnish-6-persistent-drupal": {
+      "context": "images/varnish-persistent-drupal",
+      "contexts": {
+        "lagoon/varnish-6-drupal": "target:varnish-6-drupal"
+      },
+      "dockerfile": "6.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/varnish-6-persistent-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "varnish-7": {
+      "context": "images/varnish",
+      "contexts": {
+        "lagoon/commons": "target:commons"
+      },
+      "dockerfile": "7.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/varnish-7:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "varnish-7-drupal": {
+      "context": "images/varnish-drupal",
+      "contexts": {
+        "lagoon/varnish-7": "target:varnish-7"
+      },
+      "dockerfile": "7.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/varnish-7-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "varnish-7-persistent": {
+      "context": "images/varnish-persistent",
+      "contexts": {
+        "lagoon/varnish-7": "target:varnish-7"
+      },
+      "dockerfile": "7.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/varnish-7-persistent:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    },
+    "varnish-7-persistent-drupal": {
+      "context": "images/varnish-persistent-drupal",
+      "contexts": {
+        "lagoon/varnish-7-drupal": "target:varnish-7-drupal"
+      },
+      "dockerfile": "7.Dockerfile",
+      "args": {
+        "IMAGE_REPO": "lagoon",
+        "LAGOON_VERSION": "development",
+        "UPSTREAM_REPO": "",
+        "UPSTREAM_TAG": ""
+      },
+      "labels": {
+        "org.opencontainers.image.authors": "The Lagoon Authors",
+        "org.opencontainers.image.licenses": "Apache 2.0",
+        "org.opencontainers.image.url": "https://github.com/uselagoon/lagoon-images",
+        "org.opencontainers.image.version": "development",
+        "repository": "https://github.com/uselagoon/lagoon-images"
+      },
+      "tags": [
+        "lagoon/varnish-7-persistent-drupal:latest"
+      ],
+      "output": [
+        {
+          "type": "docker"
+        }
+      ],
+      "no-cache": false
+    }
+  }
+}

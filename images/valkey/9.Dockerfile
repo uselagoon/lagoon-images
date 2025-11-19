@@ -44,3 +44,4 @@ RUN fix-permissions /etc/valkey \
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
 CMD ["valkey-server", "/etc/valkey/valkey.conf"]
+

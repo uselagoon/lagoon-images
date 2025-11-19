@@ -1,5 +1,3 @@
-def skipRemainingStages = false
-
 pipeline {
   agent { label 'lagoon-images' }
   environment {
@@ -26,9 +24,6 @@ pipeline {
     stage ('clean docker image cache') {
       when {
         buildingTag()
-        expression {
-            !skipRemainingStages
-        }
       }
       steps {
         sh script: "docker image prune -af", label: "Pruning images"
@@ -36,11 +31,6 @@ pipeline {
     }
 
     stage ('build and push images') {
-      when {
-        expression {
-            !skipRemainingStages
-        }
-      }
       environment {
         PASSWORD = credentials('amazeeiojenkins-dockerhub-password')
       }
@@ -93,11 +83,6 @@ pipeline {
     }
 
     stage ('build images and push to testlagoon/*') {
-      when {
-        expression {
-            !skipRemainingStages
-        }
-      }
       environment {
         PASSWORD = credentials('amazeeiojenkins-dockerhub-password')
       }
@@ -129,9 +114,6 @@ pipeline {
         not {
           environment name: 'SKIP_IMAGE_PUBLISH', value: 'true'
         }
-        expression {
-            !skipRemainingStages
-        }
       }
       environment {
         PASSWORD = credentials('amazeeiojenkins-dockerhub-password')
@@ -147,9 +129,6 @@ pipeline {
         buildingTag()
         not {
           environment name: 'SKIP_IMAGE_PUBLISH', value: 'true'
-        }
-        expression {
-            !skipRemainingStages
         }
       }
       environment {

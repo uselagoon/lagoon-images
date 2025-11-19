@@ -1,4 +1,4 @@
-# docker-bake.dev.hcl
+# Docker Bake file (docker-bake.hcl)
 variable "IMAGE_REPO" {
   default = "ghcr.io/uselagoon"
 }
@@ -813,7 +813,7 @@ target "redis-7-persistent" {
   inherits = ["default"]
   context = "images/redis-persistent"
   contexts = {
-    "${IMAGE_REPO}/redis-7": "target:commons"
+    "${IMAGE_REPO}/redis-7": "target:redis-7"
   }
   dockerfile = "7.Dockerfile"
   tags = ["${IMAGE_REPO}/redis-7-persistent:${TAG}"]

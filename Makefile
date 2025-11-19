@@ -142,11 +142,6 @@ publish-uselagoon-images:
 	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) IMAGE_REPO=docker.io/uselagoon TAG=$(LAGOON_VERSION) LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
 	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) IMAGE_REPO=docker.io/uselagoon TAG=latest LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
 
-.PHONY: clean
-clean:
-	rm -rf build/*
-	echo -e "use 'make docker_buildx_clean' to remove semi-permanent builder image"
-
 .PHONY: docker_buildx_clean
 docker_buildx_clean:
 	docker stop registry || echo "no registry"

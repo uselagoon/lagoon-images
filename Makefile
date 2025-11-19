@@ -74,7 +74,7 @@ $(shell >scan.txt)
 
 # Builds a docker image. Expects as arguments: name of the image, location of Dockerfile, path of
 # Docker Build Context
-docker_build = PLATFORMS=$(PLATFORM_ARCH) IMAGE_REPO=$(CI_BUILD_TAG) UPSTREAM_REPO=$(UPSTREAM_REPO) UPSTREAM_TAG=$(UPSTREAM_TAG) TAG=latest LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --load $(1)
+docker_build = PLATFORMS=$(PLATFORM_ARCH) IMAGE_REPO=$(CI_BUILD_TAG) UPSTREAM_REPO=$(UPSTREAM_REPO) UPSTREAM_TAG=$(UPSTREAM_TAG) TAG=latest LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images $(1)
 
 .PHONY: docker_buildx_create
 docker_buildx_create:
@@ -92,11 +92,16 @@ docker_buildx_create:
 # Builds all Images
 .PHONY: build
 build: docker_buildx_create
+	$(call docker_build,default --load)
+
+# Builds all Images in the background
+.PHONY: build-bg
+build-bg: docker_buildx_create
 	$(call docker_build,default)
 
 # Build individual images with specific targets
 build/%: docker_buildx_create
-	$(call docker_build,$*)
+	$(call docker_build,$* --load)
 
 # Outputs a list of all Images we manage
 .PHONY: build-list

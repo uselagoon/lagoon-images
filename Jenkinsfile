@@ -46,7 +46,7 @@ pipeline {
         PASSWORD = credentials('amazeeiojenkins-dockerhub-password')
       }
       steps {
-        sh script: "make -j$NPROC -O build", label: "Building images"
+        sh script: "make -O build", label: "Building images"
         retry(3) {
           sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
           sh script: "make -O publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built amd64 images to testlagoon/*"

@@ -92,7 +92,7 @@ pipeline {
       }
     }
 
-    stage ('build arm images and push all images to testlagoon/*') {
+    stage ('build images and push to testlagoon/*') {
       when {
         expression {
             !skipRemainingStages
@@ -102,14 +102,23 @@ pipeline {
         PASSWORD = credentials('amazeeiojenkins-dockerhub-password')
       }
       steps {
-        retry(3) {
-          timeout(time: 30, unit: 'MINUTES') {
-            sh script: "make -O build-bg PLATFORM_ARCH=linux/arm64", label: "Building arm images in the background"
+        script {
+          if (env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'arm64-images') {
+            retry(3) {
+              timeout(time: 45, unit: 'MINUTES') {
+                sh script: "make -O build-bg PLATFORM_ARCH=linux/arm64", label: "Building arm images in the background"
+              }
+            }
+            retry(3) {
+              sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+              sh script: "timeout 12m make -O publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/arm64,linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built multiarch images"
+            }
+          } else {
+            retry(3) {
+              sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
+              sh script: "timeout 12m make -O publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built singlearch images"
+            }
           }
-        }
-        retry(3) {
-          sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-          sh script: "timeout 12m make -O publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/arm64,linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built images"
         }
       }
     }
@@ -173,7 +182,6 @@ pipeline {
 
   post {
     always {
-      cleanup()
       deleteDir()
     }
     success {
@@ -185,16 +193,6 @@ pipeline {
     aborted {
       notifySlack('ABORTED')
     }
-  }
-}
-
-def cleanup() {
-  try {
-    sh "cat build.*"
-    sh "make docker-buildx-remove"
-    sh "make clean"
-  } catch (error) {
-    echo "cleanup failed, ignoring this."
   }
 }
 

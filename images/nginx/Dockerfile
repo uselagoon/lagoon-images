@@ -1,5 +1,5 @@
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons AS commons
+ARG LOCAL_REPO
+FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 
 # Brotli module compilation stage.
 FROM openresty/openresty:1.25.3.2-5-alpine AS brotli-module
@@ -38,8 +38,6 @@ RUN cp ./build/nginx-*/objs/ngx_http_brotli_static_module.so /usr/local/openrest
 
 FROM openresty/openresty:1.25.3.2-5-alpine
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/nginx/Dockerfile"
 LABEL org.opencontainers.image.description="OpenResty (Nginx) image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/nginx"

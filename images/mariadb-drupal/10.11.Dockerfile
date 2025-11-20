@@ -1,8 +1,6 @@
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/mariadb-10.11
+ARG LOCAL_REPO
+FROM ${LOCAL_REPO:-lagoon}/mariadb-10.11
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/mariadb-drupal/10.11.Dockerfile"
 LABEL org.opencontainers.image.description="MariaDB 10.11 image optimised for Drupal workloads running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/mariadb-10.11-drupal"

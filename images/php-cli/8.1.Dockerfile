@@ -1,8 +1,6 @@
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/php-8.1-fpm
+ARG LOCAL_REPO
+FROM ${LOCAL_REPO:-lagoon}/php-8.1-fpm
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/php-cli/8.1.Dockerfile"
 LABEL org.opencontainers.image.description="PHP 8.1 cli image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/php-8.1-cli"

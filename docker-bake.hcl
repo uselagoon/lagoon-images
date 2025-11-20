@@ -1,9 +1,9 @@
 # Docker Bake file (docker-bake.hcl)
-variable "IMAGE_REPO" {
-  default = "ghcr.io/uselagoon"
+variable "LOCAL_REPO" {
+  default = "lagoon"
 }
 
-variable "TAG" {
+variable "LOCAL_TAG" {
   default = "latest"
 }
 
@@ -11,11 +11,11 @@ variable "LAGOON_VERSION" {
   default = "development"
 }
 
-variable "UPSTREAM_REPO" {
-  default = "uselagoon"
+variable "PUSH_REPO" {
+  default = "ghcr.io/uselagoon"
 }
 
-variable "UPSTREAM_TAG" {
+variable "PUSH_TAG" {
   default = "latest"
 }
 
@@ -40,9 +40,9 @@ target "default"{
   }
   args = {
     LAGOON_VERSION = "${LAGOON_VERSION}"
-    UPSTREAM_REPO = "${UPSTREAM_REPO}"
-    UPSTREAM_TAG = "${UPSTREAM_TAG}"
-    IMAGE_REPO = "${IMAGE_REPO}"
+    PUSH_REPO = "${PUSH_REPO}"
+    PUSH_TAG = "${PUSH_TAG}"
+    LOCAL_REPO = "${LOCAL_REPO}"
   }
 }
 
@@ -284,57 +284,57 @@ target "commons" {
   inherits = ["default"]
   context = "images/commons"
   dockerfile = "Dockerfile"
-  tags = ["${IMAGE_REPO}/commons:${TAG}"]
+  tags = ["${PUSH_REPO}/commons:${PUSH_TAG}"]
 }
 
 target "mariadb-10-6" {
   inherits = ["default"]
   context = "images/mariadb"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "10.6.Dockerfile"
-  tags = ["${IMAGE_REPO}/mariadb-10.6:${TAG}"]
+  tags = ["${PUSH_REPO}/mariadb-10.6:${PUSH_TAG}"]
 }
 
 target "mariadb-10-6-drupal" {
   inherits = ["default"]
   context = "images/mariadb-drupal"
   contexts = {
-    "${IMAGE_REPO}/mariadb-10.6": "target:mariadb-10-6"
+    "${LOCAL_REPO}/mariadb-10.6": "target:mariadb-10-6"
   }
   dockerfile = "10.6.Dockerfile"
-  tags = ["${IMAGE_REPO}/mariadb-10.6-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/mariadb-10.6-drupal:${PUSH_TAG}"]
 }
 
 target "mariadb-10-11" {
   inherits = ["default"]
   context = "images/mariadb"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "10.11.Dockerfile"
-  tags = ["${IMAGE_REPO}/mariadb-10.11:${TAG}"]
+  tags = ["${PUSH_REPO}/mariadb-10.11:${PUSH_TAG}"]
 }
 
 target "mariadb-10-11-drupal" {
   inherits = ["default"]
   context = "images/mariadb-drupal"
   contexts = {
-    "${IMAGE_REPO}/mariadb-10.11": "target:mariadb-10-11"
+    "${LOCAL_REPO}/mariadb-10.11": "target:mariadb-10-11"
   }
   dockerfile = "10.11.Dockerfile"
-  tags = ["${IMAGE_REPO}/mariadb-10.11-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/mariadb-10.11-drupal:${PUSH_TAG}"]
 }
 
 target "mariadb-11-4" {
   inherits = ["default"]
   context = "images/mariadb"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "11.4.Dockerfile"
-  tags = ["${IMAGE_REPO}/mariadb-11.4:${TAG}"]
+  tags = ["${PUSH_REPO}/mariadb-11.4:${PUSH_TAG}"]
 }
 
 
@@ -342,390 +342,390 @@ target "mongo-4" {
   inherits = ["default"]
   context = "images/mongo"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "4.Dockerfile"
-  tags = ["${IMAGE_REPO}/mongo-4:${TAG}"]
+  tags = ["${PUSH_REPO}/mongo-4:${PUSH_TAG}"]
 }
 
 target "mysql-8-0" {
   inherits = ["default"]
   context = "images/mysql"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.0.Dockerfile"
-  tags = ["${IMAGE_REPO}/mysql-8.0:${TAG}"]
+  tags = ["${PUSH_REPO}/mysql-8.0:${PUSH_TAG}"]
 }
 
 target "mysql-8-4" {
   inherits = ["default"]
   context = "images/mysql"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["${IMAGE_REPO}/mysql-8.4:${TAG}"]
+  tags = ["${PUSH_REPO}/mysql-8.4:${PUSH_TAG}"]
 }
 
 target "nginx" {
   inherits = ["default"]
   context = "images/nginx"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "Dockerfile"
-  tags = ["${IMAGE_REPO}/nginx:${TAG}"]
+  tags = ["${PUSH_REPO}/nginx:${PUSH_TAG}"]
 }
 
 target "nginx-drupal" {
   inherits = ["default"]
   context = "images/nginx-drupal"
   contexts = {
-    "${IMAGE_REPO}/nginx": "target:nginx"
+    "${LOCAL_REPO}/nginx": "target:nginx"
   }
   dockerfile = "Dockerfile"
-  tags = ["${IMAGE_REPO}/nginx-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/nginx-drupal:${PUSH_TAG}"]
 }
 
 target "node-20" {
   inherits = ["default"]
   context = "images/node"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "20.Dockerfile"
-  tags = ["${IMAGE_REPO}/node-20:${TAG}"]
+  tags = ["${PUSH_REPO}/node-20:${PUSH_TAG}"]
 }
 
 target "node-20-builder" {
   inherits = ["default"]
   context = "images/node-builder"
   contexts = {
-    "${IMAGE_REPO}/node-20": "target:node-20"
+    "${LOCAL_REPO}/node-20": "target:node-20"
   }
   dockerfile = "20.Dockerfile"
-  tags = ["${IMAGE_REPO}/node-20-builder:${TAG}"]
+  tags = ["${PUSH_REPO}/node-20-builder:${PUSH_TAG}"]
 }
 
 target "node-20-cli" {
   inherits = ["default"]
   context = "images/node-cli"
   contexts = {
-    "${IMAGE_REPO}/node-20": "target:node-20"
+    "${LOCAL_REPO}/node-20": "target:node-20"
   }
   dockerfile = "20.Dockerfile"
-  tags = ["${IMAGE_REPO}/node-20-cli:${TAG}"]
+  tags = ["${PUSH_REPO}/node-20-cli:${PUSH_TAG}"]
 }
 
 target "node-22" {
   inherits = ["default"]
   context = "images/node"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "22.Dockerfile"
-  tags = ["${IMAGE_REPO}/node-22:${TAG}"]
+  tags = ["${PUSH_REPO}/node-22:${PUSH_TAG}"]
 }
 
 target "node-22-builder" {
   inherits = ["default"]
   context = "images/node-builder"
   contexts = {
-    "${IMAGE_REPO}/node-22": "target:node-22"
+    "${LOCAL_REPO}/node-22": "target:node-22"
   }
   dockerfile = "22.Dockerfile"
-  tags = ["${IMAGE_REPO}/node-22-builder:${TAG}"]
+  tags = ["${PUSH_REPO}/node-22-builder:${PUSH_TAG}"]
 }
 
 target "node-22-cli" {
   inherits = ["default"]
   context = "images/node-cli"
   contexts = {
-    "${IMAGE_REPO}/node-22": "target:node-22"
+    "${LOCAL_REPO}/node-22": "target:node-22"
   }
   dockerfile = "22.Dockerfile"
-  tags = ["${IMAGE_REPO}/node-22-cli:${TAG}"]
+  tags = ["${PUSH_REPO}/node-22-cli:${PUSH_TAG}"]
 }
 
 target "node-24" {
   inherits = ["default"]
   context = "images/node"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "24.Dockerfile"
-  tags = ["${IMAGE_REPO}/node-24:${TAG}"]
+  tags = ["${PUSH_REPO}/node-24:${PUSH_TAG}"]
 }
 
 target "node-24-builder" {
   inherits = ["default"]
   context = "images/node-builder"
   contexts = {
-    "${IMAGE_REPO}/node-24": "target:node-24"
+    "${LOCAL_REPO}/node-24": "target:node-24"
   }
   dockerfile = "24.Dockerfile"
-  tags = ["${IMAGE_REPO}/node-24-builder:${TAG}"]
+  tags = ["${PUSH_REPO}/node-24-builder:${PUSH_TAG}"]
 }
 
 target "node-24-cli" {
   inherits = ["default"]
   context = "images/node-cli"
   contexts = {
-    "${IMAGE_REPO}/node-24": "target:node-24"
+    "${LOCAL_REPO}/node-24": "target:node-24"
   }
   dockerfile = "24.Dockerfile"
-  tags = ["${IMAGE_REPO}/node-24-cli:${TAG}"]
+  tags = ["${PUSH_REPO}/node-24-cli:${PUSH_TAG}"]
 }
 
 target "opensearch-2" {
   inherits = ["default"]
   context = "images/opensearch"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "2.Dockerfile"
-  tags = ["${IMAGE_REPO}/opensearch-2:${TAG}"]
+  tags = ["${PUSH_REPO}/opensearch-2:${PUSH_TAG}"]
 }
 
 target "opensearch-3" {
   inherits = ["default"]
   context = "images/opensearch"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.Dockerfile"
-  tags = ["${IMAGE_REPO}/opensearch-3:${TAG}"]
+  tags = ["${PUSH_REPO}/opensearch-3:${PUSH_TAG}"]
 }
 
 target "php-8-1-fpm" {
   inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.1.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.1-fpm:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.1-fpm:${PUSH_TAG}"]
 }
 
 target "php-8-1-cli" {
   inherits = ["default"]
   context = "images/php-cli"
   contexts = {
-    "${IMAGE_REPO}/php-8.1-fpm": "target:php-8-1-fpm"
+    "${LOCAL_REPO}/php-8.1-fpm": "target:php-8-1-fpm"
   }
   dockerfile = "8.1.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.1-cli:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.1-cli:${PUSH_TAG}"]
 }
 
 target "php-8-1-cli-drupal" {
   inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
-    "${IMAGE_REPO}/php-8.1-cli": "target:php-8-1-cli"
+    "${LOCAL_REPO}/php-8.1-cli": "target:php-8-1-cli"
   }
   dockerfile = "8.1.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.1-cli-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.1-cli-drupal:${PUSH_TAG}"]
 }
 
 target "php-8-2-fpm" {
   inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.2.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.2-fpm:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.2-fpm:${PUSH_TAG}"]
 }
 
 target "php-8-2-cli" {
   inherits = ["default"]
   context = "images/php-cli"
   contexts = {
-    "${IMAGE_REPO}/php-8.2-fpm": "target:php-8-2-fpm"
+    "${LOCAL_REPO}/php-8.2-fpm": "target:php-8-2-fpm"
   }
   dockerfile = "8.2.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.2-cli:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.2-cli:${PUSH_TAG}"]
 }
 
 target "php-8-2-cli-drupal" {
   inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
-    "${IMAGE_REPO}/php-8.2-cli": "target:php-8-2-cli"
+    "${LOCAL_REPO}/php-8.2-cli": "target:php-8-2-cli"
   }
   dockerfile = "8.2.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.2-cli-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.2-cli-drupal:${PUSH_TAG}"]
 }
 
 target "php-8-3-fpm" {
   inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.3.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.3-fpm:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.3-fpm:${PUSH_TAG}"]
 }
 
 target "php-8-3-cli" {
   inherits = ["default"]
   context = "images/php-cli"
   contexts = {
-    "${IMAGE_REPO}/php-8.3-fpm": "target:php-8-3-fpm"
+    "${LOCAL_REPO}/php-8.3-fpm": "target:php-8-3-fpm"
   }
   dockerfile = "8.3.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.3-cli:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.3-cli:${PUSH_TAG}"]
 }
 
 target "php-8-3-cli-drupal" {
   inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
-    "${IMAGE_REPO}/php-8.3-cli": "target:php-8-3-cli"
+    "${LOCAL_REPO}/php-8.3-cli": "target:php-8-3-cli"
   }
   dockerfile = "8.3.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.3-cli-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.3-cli-drupal:${PUSH_TAG}"]
 }
 
 target "php-8-4-fpm" {
   inherits = ["default"]
   context = "images/php-fpm"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.4-fpm:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.4-fpm:${PUSH_TAG}"]
 }
 
 target "php-8-4-cli" {
   inherits = ["default"]
   context = "images/php-cli"
   contexts = {
-    "${IMAGE_REPO}/php-8.4-fpm": "target:php-8-4-fpm"
+    "${LOCAL_REPO}/php-8.4-fpm": "target:php-8-4-fpm"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.4-cli:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.4-cli:${PUSH_TAG}"]
 }
 
 target "php-8-4-cli-drupal" {
   inherits = ["default"]
   context = "images/php-cli-drupal"
   contexts = {
-    "${IMAGE_REPO}/php-8.4-cli": "target:php-8-4-cli"
+    "${LOCAL_REPO}/php-8.4-cli": "target:php-8-4-cli"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["${IMAGE_REPO}/php-8.4-cli-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/php-8.4-cli-drupal:${PUSH_TAG}"]
 }
 
 target "postgres-13" {
   inherits = ["default"]
   context = "images/postgres"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "13.Dockerfile"
-  tags = ["${IMAGE_REPO}/postgres-13:${TAG}"]
+  tags = ["${PUSH_REPO}/postgres-13:${PUSH_TAG}"]
 }
 
 target "postgres-13-drupal" {
   inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
-    "${IMAGE_REPO}/postgres-13": "target:postgres-13"
+    "${LOCAL_REPO}/postgres-13": "target:postgres-13"
   }
   dockerfile = "13.Dockerfile"
-  tags = ["${IMAGE_REPO}/postgres-13-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/postgres-13-drupal:${PUSH_TAG}"]
 }
 
 target "postgres-14" {
   inherits = ["default"]
   context = "images/postgres"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "14.Dockerfile"
-  tags = ["${IMAGE_REPO}/postgres-14:${TAG}"]
+  tags = ["${PUSH_REPO}/postgres-14:${PUSH_TAG}"]
 }
 
 target "postgres-14-drupal" {
   inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
-    "${IMAGE_REPO}/postgres-14": "target:postgres-14"
+    "${LOCAL_REPO}/postgres-14": "target:postgres-14"
   }
   dockerfile = "14.Dockerfile"
-  tags = ["${IMAGE_REPO}/postgres-14-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/postgres-14-drupal:${PUSH_TAG}"]
 }
 
 target "postgres-15" {
   inherits = ["default"]
   context = "images/postgres"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "15.Dockerfile"
-  tags = ["${IMAGE_REPO}/postgres-15:${TAG}"]
+  tags = ["${PUSH_REPO}/postgres-15:${PUSH_TAG}"]
 }
 
 target "postgres-15-drupal" {
   inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
-    "${IMAGE_REPO}/postgres-15": "target:postgres-15"
+    "${LOCAL_REPO}/postgres-15": "target:postgres-15"
   }
   dockerfile = "15.Dockerfile"
-  tags = ["${IMAGE_REPO}/postgres-15-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/postgres-15-drupal:${PUSH_TAG}"]
 }
 
 target "postgres-16" {
   inherits = ["default"]
   context = "images/postgres"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "16.Dockerfile"
-  tags = ["${IMAGE_REPO}/postgres-16:${TAG}"]
+  tags = ["${PUSH_REPO}/postgres-16:${PUSH_TAG}"]
 }
 
 target "postgres-16-drupal" {
   inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
-    "${IMAGE_REPO}/postgres-16": "target:postgres-16"
+    "${LOCAL_REPO}/postgres-16": "target:postgres-16"
   }
   dockerfile = "16.Dockerfile"
-  tags = ["${IMAGE_REPO}/postgres-16-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/postgres-16-drupal:${PUSH_TAG}"]
 }
 
 target "postgres-17" {
   inherits = ["default"]
   context = "images/postgres"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "17.Dockerfile"
-  tags = ["${IMAGE_REPO}/postgres-17:${TAG}"]
+  tags = ["${PUSH_REPO}/postgres-17:${PUSH_TAG}"]
 }
 
 target "postgres-17-drupal" {
   inherits = ["default"]
   context = "images/postgres-drupal"
   contexts = {
-    "${IMAGE_REPO}/postgres-17": "target:postgres-17"
+    "${LOCAL_REPO}/postgres-17": "target:postgres-17"
   }
   dockerfile = "17.Dockerfile"
-  tags = ["${IMAGE_REPO}/postgres-17-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/postgres-17-drupal:${PUSH_TAG}"]
 }
 
 target "python-3-9" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.9.Dockerfile"
-  tags = ["${IMAGE_REPO}/python-3.9:${TAG}"]
+  tags = ["${PUSH_REPO}/python-3.9:${PUSH_TAG}"]
 }
 
 
@@ -733,248 +733,248 @@ target "python-3-10" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.10.Dockerfile"
-  tags = ["${IMAGE_REPO}/python-3.10:${TAG}"]
+  tags = ["${PUSH_REPO}/python-3.10:${PUSH_TAG}"]
 }
 
 target "python-3-11" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.11.Dockerfile"
-  tags = ["${IMAGE_REPO}/python-3.11:${TAG}"]
+  tags = ["${PUSH_REPO}/python-3.11:${PUSH_TAG}"]
 }
 
 target "python-3-12" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.12.Dockerfile"
-  tags = ["${IMAGE_REPO}/python-3.12:${TAG}"]
+  tags = ["${PUSH_REPO}/python-3.12:${PUSH_TAG}"]
 }
 
 target "python-3-13" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.13.Dockerfile"
-  tags = ["${IMAGE_REPO}/python-3.13:${TAG}"]
+  tags = ["${PUSH_REPO}/python-3.13:${PUSH_TAG}"]
 }
 
 target "python-3-14" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.14.Dockerfile"
-  tags = ["${IMAGE_REPO}/python-3.14:${TAG}"]
+  tags = ["${PUSH_REPO}/python-3.14:${PUSH_TAG}"]
 }
 
 target "rabbitmq" {
   inherits = ["default"]
   context = "images/rabbitmq"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "Dockerfile"
-  tags = ["${IMAGE_REPO}/rabbitmq:${TAG}"]
+  tags = ["${PUSH_REPO}/rabbitmq:${PUSH_TAG}"]
 }
 
 target "rabbitmq-cluster" {
   inherits = ["default"]
   context = "images/rabbitmq-cluster"
   contexts = {
-    "${IMAGE_REPO}/rabbitmq": "target:rabbitmq"
+    "${LOCAL_REPO}/rabbitmq": "target:rabbitmq"
   }
   dockerfile = "Dockerfile"
-  tags = ["${IMAGE_REPO}/rabbitmq-cluster:${TAG}"]
+  tags = ["${PUSH_REPO}/rabbitmq-cluster:${PUSH_TAG}"]
 }
 
 target "redis-7" {
   inherits = ["default"]
   context = "images/redis"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${IMAGE_REPO}/redis-7:${TAG}"]
+  tags = ["${PUSH_REPO}/redis-7:${PUSH_TAG}"]
 }
 
 target "redis-7-persistent" {
   inherits = ["default"]
   context = "images/redis-persistent"
   contexts = {
-    "${IMAGE_REPO}/redis-7": "target:redis-7"
+    "${LOCAL_REPO}/redis-7": "target:redis-7"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${IMAGE_REPO}/redis-7-persistent:${TAG}"]
+  tags = ["${PUSH_REPO}/redis-7-persistent:${PUSH_TAG}"]
 }
 
 target "redis-8" {
   inherits = ["default"]
   context = "images/redis"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["${IMAGE_REPO}/redis-8:${TAG}"]
+  tags = ["${PUSH_REPO}/redis-8:${PUSH_TAG}"]
 }
 
 target "ruby-3-2" {
   inherits = ["default"]
   context = "images/ruby"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.2.Dockerfile"
-  tags = ["${IMAGE_REPO}/ruby-3.2:${TAG}"]
+  tags = ["${PUSH_REPO}/ruby-3.2:${PUSH_TAG}"]
 }
 
 target "ruby-3-3" {
   inherits = ["default"]
   context = "images/ruby"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.3.Dockerfile"
-  tags = ["${IMAGE_REPO}/ruby-3.3:${TAG}"]
+  tags = ["${PUSH_REPO}/ruby-3.3:${PUSH_TAG}"]
 }
 
 target "ruby-3-4" {
   inherits = ["default"]
   context = "images/ruby"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.4.Dockerfile"
-  tags = ["${IMAGE_REPO}/ruby-3.4:${TAG}"]
+  tags = ["${PUSH_REPO}/ruby-3.4:${PUSH_TAG}"]
 }
 
 target "solr-9" {
   inherits = ["default"]
   context = "images/solr"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "9.Dockerfile"
-  tags = ["${IMAGE_REPO}/solr-9:${TAG}"]
+  tags = ["${PUSH_REPO}/solr-9:${PUSH_TAG}"]
 }
 
 target "solr-9-drupal" {
   inherits = ["default"]
   context = "images/solr-drupal"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons",
-    "${IMAGE_REPO}/solr-9": "target:solr-9"
+    "${LOCAL_REPO}/commons": "target:commons",
+    "${LOCAL_REPO}/solr-9": "target:solr-9"
   }
   dockerfile = "9.Dockerfile"
-  tags = ["${IMAGE_REPO}/solr-9-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/solr-9-drupal:${PUSH_TAG}"]
 }
 target "valkey-8" {
   inherits = ["default"]
   context = "images/valkey"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["${IMAGE_REPO}/valkey-8:${TAG}"]
+  tags = ["${PUSH_REPO}/valkey-8:${PUSH_TAG}"]
 }
 
 target "valkey-9" {
   inherits = ["default"]
   context = "images/valkey"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "9.Dockerfile"
-  tags = ["${IMAGE_REPO}/valkey-9:${TAG}"]
+  tags = ["${PUSH_REPO}/valkey-9:${PUSH_TAG}"]
 }
 
 target "varnish-6" {
   inherits = ["default"]
   context = "images/varnish"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["${IMAGE_REPO}/varnish-6:${TAG}"]
+  tags = ["${PUSH_REPO}/varnish-6:${PUSH_TAG}"]
 }
 
 target "varnish-6-drupal" {
   inherits = ["default"]
   context = "images/varnish-drupal"
   contexts = {
-    "${IMAGE_REPO}/varnish-6": "target:varnish-6"
+    "${LOCAL_REPO}/varnish-6": "target:varnish-6"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["${IMAGE_REPO}/varnish-6-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/varnish-6-drupal:${PUSH_TAG}"]
 }
 
 target "varnish-6-persistent" {
   inherits = ["default"]
   context = "images/varnish-persistent"
   contexts = {
-    "${IMAGE_REPO}/varnish-6": "target:varnish-6"
+    "${LOCAL_REPO}/varnish-6": "target:varnish-6"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["${IMAGE_REPO}/varnish-6-persistent:${TAG}"]
+  tags = ["${PUSH_REPO}/varnish-6-persistent:${PUSH_TAG}"]
 }
 
 target "varnish-6-persistent-drupal" {
   inherits = ["default"]
   context = "images/varnish-persistent-drupal"
   contexts = {
-    "${IMAGE_REPO}/varnish-6-drupal": "target:varnish-6-drupal"
+    "${LOCAL_REPO}/varnish-6-drupal": "target:varnish-6-drupal"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["${IMAGE_REPO}/varnish-6-persistent-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/varnish-6-persistent-drupal:${PUSH_TAG}"]
 }
 
 target "varnish-7" {
   inherits = ["default"]
   context = "images/varnish"
   contexts = {
-    "${IMAGE_REPO}/commons": "target:commons"
+    "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${IMAGE_REPO}/varnish-7:${TAG}"]
+  tags = ["${PUSH_REPO}/varnish-7:${PUSH_TAG}"]
 }
 
 target "varnish-7-drupal" {
   inherits = ["default"]
   context = "images/varnish-drupal"
   contexts = {
-    "${IMAGE_REPO}/varnish-7": "target:varnish-7"
+    "${LOCAL_REPO}/varnish-7": "target:varnish-7"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${IMAGE_REPO}/varnish-7-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/varnish-7-drupal:${PUSH_TAG}"]
 }
 
 target "varnish-7-persistent" {
   inherits = ["default"]
   context = "images/varnish-persistent"
   contexts = {
-    "${IMAGE_REPO}/varnish-7": "target:varnish-7"
+    "${LOCAL_REPO}/varnish-7": "target:varnish-7"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${IMAGE_REPO}/varnish-7-persistent:${TAG}"]
+  tags = ["${PUSH_REPO}/varnish-7-persistent:${PUSH_TAG}"]
 }
 
 target "varnish-7-persistent-drupal" {
   inherits = ["default"]
   context = "images/varnish-persistent-drupal"
   contexts = {
-    "${IMAGE_REPO}/varnish-7-drupal": "target:varnish-7-drupal"
+    "${LOCAL_REPO}/varnish-7-drupal": "target:varnish-7-drupal"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${IMAGE_REPO}/varnish-7-persistent-drupal:${TAG}"]
+  tags = ["${PUSH_REPO}/varnish-7-persistent-drupal:${PUSH_TAG}"]
 }

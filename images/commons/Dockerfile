@@ -2,8 +2,6 @@ FROM ghcr.io/amazeeio/go-crond:25.10.0 AS go-crond
 FROM ghcr.io/amazeeio/envplate:25.10.0 AS envplate
 FROM alpine:3.22.2
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/commons/Dockerfile"
 LABEL org.opencontainers.image.description="Base image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/commons"

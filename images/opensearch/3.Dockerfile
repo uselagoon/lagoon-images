@@ -1,6 +1,6 @@
 ARG IMAGE_REPO
 FROM ${IMAGE_REPO:-lagoon}/commons AS commons
-FROM opensearchproject/opensearch:3.2.0
+FROM opensearchproject/opensearch:3.3.1
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -50,11 +50,13 @@ RUN for plugin in \
   opensearch-anomaly-detection \
   opensearch-cross-cluster-replication \
   opensearch-index-management \
+  opensearch-ml \
   opensearch-notifications \
   opensearch-notifications-core \
   opensearch-observability \
   opensearch-reports-scheduler \
-  opensearch-security; do \
+  opensearch-security \
+  opensearch-skills; do \
   /usr/share/opensearch/bin/opensearch-plugin remove --purge $plugin; \
   done
 

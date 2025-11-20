@@ -32,7 +32,7 @@ RUN apk add --no-cache bash \
     && rm -rf /var/cache/apk/* \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server
 
-RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.9.1/composer.phar \
+RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.9.2/composer.phar \
     && chmod +x /usr/local/bin/composer \
     # To be removed when 2.9.2 is released
     && php /usr/local/bin/composer self-update --snapshot \

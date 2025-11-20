@@ -1,10 +1,8 @@
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons AS commons
+ARG LOCAL_REPO
+FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 
 FROM varnish:7.7-alpine
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/varnish/7.Dockerfile"
 LABEL org.opencontainers.image.description="Varnish 7 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/varnish-7"

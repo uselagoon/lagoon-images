@@ -1,8 +1,6 @@
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/postgres-15
+ARG LOCAL_REPO
+FROM ${LOCAL_REPO:-lagoon}/postgres-15
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/postgres-drupal/15.Dockerfile"
 LABEL org.opencontainers.image.description="PostgreSQL 15 image optimised for Drupal workloads running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/postgres-15-drupal"

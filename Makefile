@@ -45,6 +45,8 @@ DOCKER_BUILD_PARAMS :=
 # CI systems to define an Environment variable CI_BUILD_TAG which uniquely identifies each build.
 # If it's not set we assume that we are running local and just call it lagoon.
 CI_BUILD_TAG ?= lagoon
+LOCAL_REPO ?= lagoon
+LOCAL_TAG ?= latest
 
 # Local environment
 ARCH := $(shell uname | tr '[:upper:]' '[:lower:]')
@@ -74,7 +76,7 @@ $(shell >scan.txt)
 
 # Builds a docker image. Expects as arguments: name of the image, location of Dockerfile, path of
 # Docker Build Context
-docker_build = PLATFORMS=$(PLATFORM_ARCH) IMAGE_REPO=$(CI_BUILD_TAG) UPSTREAM_REPO=$(UPSTREAM_REPO) UPSTREAM_TAG=$(UPSTREAM_TAG) TAG=latest LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images $(1)
+docker_build = PLATFORMS=$(PLATFORM_ARCH) LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=$(CI_BUILD_TAG) PUSH_TAG=$(LOCAL_TAG) LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images $(1)
 
 .PHONY: docker_buildx_create
 docker_buildx_create:
@@ -132,14 +134,14 @@ scan-images:
 
 .PHONY: publish-testlagoon-images
 publish-testlagoon-images:
-	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) IMAGE_REPO=docker.io/testlagoon TAG=$(BRANCH_NAME) LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
+	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=docker.io/testlagoon PUSH_TAG=$(BRANCH_NAME) LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
 
 # tag and push all images
 
 .PHONY: publish-uselagoon-images
 publish-uselagoon-images:
-	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) IMAGE_REPO=docker.io/uselagoon TAG=$(LAGOON_VERSION) LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
-	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) IMAGE_REPO=docker.io/uselagoon TAG=latest LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
+	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) NO_CACHE=true LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=docker.io/uselagoon PUSH_TAG=$(LAGOON_VERSION) LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
+	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) NO_CACHE=true LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=docker.io/uselagoon PUSH_TAG=latest LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
 
 .PHONY: docker_buildx_clean
 docker_buildx_clean:

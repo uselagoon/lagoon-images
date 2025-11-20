@@ -1,8 +1,6 @@
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/node-22
+ARG LOCAL_REPO
+FROM ${LOCAL_REPO:-lagoon}/node-22
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/node-cli/22.Dockerfile"
 LABEL org.opencontainers.image.description="Node.js 22 cli image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/node-22-cli"

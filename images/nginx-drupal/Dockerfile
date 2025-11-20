@@ -1,8 +1,6 @@
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/nginx
+ARG LOCAL_REPO
+FROM ${LOCAL_REPO:-lagoon}/nginx
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/nginx-drupal/Dockerfile"
 LABEL org.opencontainers.image.description="OpenResty (Nginx) image optimised for Drupal workloads running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/nginx-drupal"

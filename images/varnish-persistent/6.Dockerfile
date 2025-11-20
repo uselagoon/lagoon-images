@@ -1,8 +1,6 @@
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/varnish-6
+ARG LOCAL_REPO
+FROM ${LOCAL_REPO:-lagoon}/varnish-6
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/varnish-persistent/6.Dockerfile"
 LABEL org.opencontainers.image.description="Varnish 6 image optimised for persistent workloads running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/varnish-6-persistent"

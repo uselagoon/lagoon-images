@@ -1,8 +1,6 @@
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/node-24
+ARG LOCAL_REPO
+FROM ${LOCAL_REPO:-lagoon}/node-24
 
-ARG LAGOON_VERSION
-ENV LAGOON_VERSION=$LAGOON_VERSION
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/node-cli/24.Dockerfile"
 LABEL org.opencontainers.image.description="Node.js 24 cli image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/node-24-cli"

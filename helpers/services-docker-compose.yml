@@ -173,3 +173,13 @@ services:
     << : *default-user
     depends_on:
       - nginx
+
+  varnish-8:
+    image: uselagoon/varnish-8:latest
+    labels:
+      lando.type: varnish
+    ports:
+      - "8080"
+    << : *default-user
+    depends_on:
+      - nginx

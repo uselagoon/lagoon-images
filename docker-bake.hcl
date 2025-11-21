@@ -117,7 +117,11 @@ group "default" {
     "varnish-7",
     "varnish-7-drupal",
     "varnish-7-persistent",
-    "varnish-7-persistent-drupal"
+    "varnish-7-persistent-drupal",
+    "varnish-8",
+    "varnish-8-drupal",
+    "varnish-8-persistent",
+    "varnish-8-persistent-drupal"
   ]
 }
 
@@ -276,7 +280,11 @@ group "varnish" {
     "varnish-7",
     "varnish-7-drupal",
     "varnish-7-persistent",
-    "varnish-7-persistent-drupal"
+    "varnish-7-persistent-drupal",
+    "varnish-8",
+    "varnish-8-drupal",
+    "varnish-8-persistent",
+    "varnish-8-persistent-drupal"
   ]
 }
 
@@ -977,4 +985,44 @@ target "varnish-7-persistent-drupal" {
   }
   dockerfile = "7.Dockerfile"
   tags = ["${PUSH_REPO}/varnish-7-persistent-drupal:${PUSH_TAG}"]
+}
+
+target "varnish-8" {
+  inherits = ["default"]
+  context = "images/varnish"
+  contexts = {
+    "${LOCAL_REPO}/commons": "target:commons"
+  }
+  dockerfile = "8.Dockerfile"
+  tags = ["${PUSH_REPO}/varnish-8:${PUSH_TAG}"]
+}
+
+target "varnish-8-drupal" {
+  inherits = ["default"]
+  context = "images/varnish-drupal"
+  contexts = {
+    "${LOCAL_REPO}/varnish-8": "target:varnish-8"
+  }
+  dockerfile = "8.Dockerfile"
+  tags = ["${PUSH_REPO}/varnish-8-drupal:${PUSH_TAG}"]
+}
+
+target "varnish-8-persistent" {
+  inherits = ["default"]
+  context = "images/varnish-persistent"
+  contexts = {
+    "${LOCAL_REPO}/varnish-8": "target:varnish-8"
+  }
+  dockerfile = "8.Dockerfile"
+  tags = ["${PUSH_REPO}/varnish-8-persistent:${PUSH_TAG}"]
+}
+
+target "varnish-8-persistent-drupal" {
+  inherits = ["default"]
+  context = "images/varnish-persistent-drupal"
+  contexts = {
+    "${LOCAL_REPO}/varnish-8-drupal": "target:varnish-8-drupal"
+  }
+  dockerfile = "8.Dockerfile"
+  tags = ["${PUSH_REPO}/varnish-8-persistent-drupal:${PUSH_TAG}"]
 }

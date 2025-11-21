@@ -8,6 +8,9 @@ LABEL org.opencontainers.image.description="Python 3.9 image optimised for runni
 LABEL org.opencontainers.image.title="uselagoon/python-3.9"
 LABEL org.opencontainers.image.base.name="docker.io/python:3.9-alpine3.22"
 
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/python3.14"
+
 ENV LAGOON=python
 
 # Copy commons files

@@ -140,8 +140,7 @@ publish-testlagoon-images:
 
 .PHONY: publish-uselagoon-images
 publish-uselagoon-images:
-	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) NO_CACHE=true LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=docker.io/uselagoon PUSH_TAG=$(LAGOON_VERSION) LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
-	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) NO_CACHE=true LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=docker.io/uselagoon PUSH_TAG=latest LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
+	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) NO_CACHE=true LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=docker.io/uselagoon PUSH_TAG=$(LAGOON_VERSION) PUSH_TAG_ADDITIONAL=latest LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
 
 .PHONY: docker_buildx_clean
 docker_buildx_clean:

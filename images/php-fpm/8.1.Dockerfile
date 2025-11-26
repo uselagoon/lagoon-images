@@ -75,7 +75,7 @@ RUN apk update \
         # for yaml
         yaml-dev \
     && install-php-extensions apcu-5.1.27 \
-    && install-php-extensions imagick-3.8.0 \
+    && install-php-extensions imagick-3.8.1 \
     && install-php-extensions redis-6.3.0 \
     && install-php-extensions xdebug-3.4.7 \
     && install-php-extensions yaml-2.3.0 \

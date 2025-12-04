@@ -117,6 +117,12 @@ services:
       - "5432"
     << : *default-user
 
+  postgres-18:
+    image: uselagoon/postgres-18:latest
+    ports:
+      - "5432"
+    << : *default-user
+
   rabbitmq:
     image: uselagoon/rabbitmq:latest
     ports:

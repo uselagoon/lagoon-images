@@ -25,7 +25,8 @@
       ],
       "matchStrings": [
         "pecl install -f apcu-(?<currentValue>.*?) ",
-        "install-php-extensions apcu-(?<currentValue>.*?) "
+        "install-php-extensions apcu-(?<currentValue>.*?) ",
+        "pie install apcu/apcu-(?<currentValue>.*?) "
       ],
       "depNameTemplate": "krakjoe/apcu",
       "datasourceTemplate": "github-releases"
@@ -37,7 +38,8 @@
       ],
       "matchStrings": [
         "pecl install -f imagick-(?<currentValue>.*?) ",
-        "install-php-extensions imagick-(?<currentValue>.*?) "
+        "install-php-extensions imagick-(?<currentValue>.*?) ",
+        "pie install imagick/imagick-(?<currentValue>.*?) "
       ],
       "depNameTemplate": "Imagick/imagick",
       "datasourceTemplate": "github-tags"
@@ -49,7 +51,8 @@
       ],
       "matchStrings": [
         "pecl install -f redis-(?<currentValue>.*?) ",
-        "install-php-extensions redis-(?<currentValue>.*?) "
+        "install-php-extensions redis-(?<currentValue>.*?) ",
+        "pie install phpredis/phpredis-(?<currentValue>.*?) "
       ],
       "depNameTemplate": "phpredis/phpredis",
       "datasourceTemplate": "github-tags"
@@ -61,7 +64,8 @@
       ],
       "matchStrings": [
         "pecl install -f xdebug-(?<currentValue>.*?) ",
-        "install-php-extensions xdebug-(?<currentValue>.*?) "
+        "install-php-extensions xdebug-(?<currentValue>.*?) ",
+        "pie install xdebug/xdebug-(?<currentValue>.*?) "
       ],
       "depNameTemplate": "xdebug/xdebug",
       "datasourceTemplate": "github-tags"
@@ -73,7 +77,8 @@
       ],
       "matchStrings": [
         "pecl install -f yaml-(?<currentValue>.*?) ",
-        "install-php-extensions yaml-(?<currentValue>.*?) "
+        "install-php-extensions yaml-(?<currentValue>.*?) ",
+        "pie install pecl/yaml-(?<currentValue>.*?) "
       ],
       "depNameTemplate": "php/pecl-file_formats-yaml",
       "datasourceTemplate": "github-tags"

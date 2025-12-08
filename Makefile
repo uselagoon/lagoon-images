@@ -102,7 +102,7 @@ build-bg: docker_buildx_create
 
 # Build individual images with specific targets
 build/%: docker_buildx_create
-	$(call docker_build,$* --load)
+	$(call docker_build,$(subst .,-,$*) --load)
 
 # Outputs a list of all Images we manage
 .PHONY: build-list

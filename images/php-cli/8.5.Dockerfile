@@ -15,10 +15,10 @@ RUN apk add --no-cache bash \
         findutils \
         git \
         gzip  \
-        mariadb-client=11.4.8-r0 \
+        mariadb-client=~11.4 \
         mariadb-connector-c \
         mongodb-tools \
-        nodejs=~22 \
+        nodejs=~24 \
         npm \
         openssh-client \
         openssh-sftp-server \

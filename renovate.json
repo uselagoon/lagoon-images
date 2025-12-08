@@ -1,5 +1,5 @@
 {
-  "baseBranches": [
+  "baseBranchPatterns": [
     "main",
     "testing/alpine_next",
     "testing/renovate"
@@ -20,8 +20,8 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/"
       ],
       "matchStrings": [
         "pecl install -f apcu-(?<currentValue>.*?) ",
@@ -33,8 +33,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/"
       ],
       "matchStrings": [
         "pecl install -f imagick-(?<currentValue>.*?) ",
@@ -46,8 +46,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/"
       ],
       "matchStrings": [
         "pecl install -f redis-(?<currentValue>.*?) ",
@@ -59,8 +59,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/"
       ],
       "matchStrings": [
         "pecl install -f xdebug-(?<currentValue>.*?) ",
@@ -72,8 +72,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/"
       ],
       "matchStrings": [
         "pecl install -f yaml-(?<currentValue>.*?) ",
@@ -85,8 +85,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/"
       ],
       "matchStrings": [
         "ENV BLACKFIRE_VERSION=(?<currentValue>.*?)\n"
@@ -96,8 +96,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/"
       ],
       "matchStrings": [
         "ENV NEWRELIC_VERSION=(?<currentValue>.*?)\n"
@@ -107,8 +107,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/"
       ],
       "matchStrings": [
         "curl.*https://github.com/(?<depName>.*?)/releases/download/(?<currentValue>.*?)/.*.phar.*\n"
@@ -117,8 +117,8 @@
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "(^|/|\\.)Dockerfile$"
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/"
       ],
       "matchStrings": [
         "php.*--require=(?<depName>.*?):(?<currentValue>.*?)\\s.*\n"

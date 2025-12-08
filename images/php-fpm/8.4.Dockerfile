@@ -80,7 +80,7 @@ RUN apk update \
         postgresql-dev \
         # for yaml
         yaml-dev \
-    && pie install apcu/apcu:5.1.27 \
+    && pie install apcu/apcu:5.1.28 \
     && pie install imagick/imagick:3.8.1 \
     && pie install phpredis/phpredis:6.3.0 \
     && pie install xdebug/xdebug:3.4.7 \

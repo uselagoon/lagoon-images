@@ -42,7 +42,7 @@ COPY 00-lagoon-php.ini.tpl "$PHP_INI_DIR/conf.d/"
 COPY php-fpm.d/www.conf php-fpm.d/global.conf /usr/local/etc/php-fpm.d/
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
-COPY --from=ghcr.io/php/pie:1.2.1-bin /pie /usr/local/bin/
+COPY --from=ghcr.io/php/pie:1.3.1-bin /pie /usr/local/bin/
 
 RUN apk update \
     && apk upgrade --available musl \

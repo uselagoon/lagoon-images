@@ -173,16 +173,6 @@ services:
         exec php -S 0.0.0.0:9000
         "] # runs a webserver with phpinfo output
 
-  python-3-9:
-    image: uselagoon/python-3.9:latest
-    ports:
-      - "3000"
-    << : *default-user # uses the defined user from top
-    command: ["sh", "-c", "
-        python -V | xargs > tmp/test;
-        exec python -m http.server 3000
-        "]
-
   python-3-10:
     image: uselagoon/python-3.10:latest
     ports:

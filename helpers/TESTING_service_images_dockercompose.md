@@ -37,6 +37,7 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-15:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-16:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-17:5432 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-18:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://rabbitmq:15672 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-7:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-8:6379 -timeout 1m
@@ -66,6 +67,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-15
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-16
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-17
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-18
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep rabbitmq
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-7
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-8
@@ -298,6 +300,21 @@ docker compose exec -T postgres-17 bash -c "psql -U lagoon -d lagoon < /tmp/list
 # postgres-17 should be able to read/write data
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-17" | grep "SERVICE_HOST=PostgreSQL 17"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-17" | grep "LAGOON_TEST_VAR=all-images"
+
+# postgres-18 should be version 18 client
+docker compose exec -T postgres-18 bash -c "psql --version" | grep "psql" | grep "18."
+
+# postgres-18 should be version 18 server
+docker compose exec -T postgres-18 bash -c "echo U0VMRUNUIHZlcnNpb24oKTs= | base64 -d > /tmp/selectversion.sql"
+docker compose exec -T postgres-18 bash -c "psql -U lagoon -d lagoon < /tmp/selectversion.sql" | grep "PostgreSQL" | grep "18."
+
+# postgres-18 should have lagoon database
+docker compose exec -T postgres-18 bash -c "echo XGwrIGxhZ29vbg== | base64 -d > /tmp/listlagoon.sql"
+docker compose exec -T postgres-18 bash -c "psql -U lagoon -d lagoon < /tmp/listlagoon.sql" | grep "lagoon"
+
+# postgres-18 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-18" | grep "SERVICE_HOST=PostgreSQL 18"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-18" | grep "LAGOON_TEST_VAR=all-images"
 
 # rabbitmq should have RabbitMQ running 3.10
 docker compose exec -T rabbitmq sh -c "rabbitmqctl version" | grep 3.10

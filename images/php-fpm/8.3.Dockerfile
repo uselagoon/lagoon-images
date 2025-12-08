@@ -83,7 +83,7 @@ RUN apk update \
     && pie install apcu/apcu:5.1.27 \
     && pie install imagick/imagick:3.8.1 \
     && pie install phpredis/phpredis:6.3.0 \
-    && pie install xdebug/xdebug:3.4.7 \
+    && pie install xdebug/xdebug:3.5.0 \
     && pie install pecl/yaml:2.3.0 \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \

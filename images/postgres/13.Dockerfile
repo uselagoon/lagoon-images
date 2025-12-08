@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.title="uselagoon/postgres-13"
 LABEL org.opencontainers.image.base.name="docker.io/postgres:13-alpine3.22"
 
 LABEL sh.lagoon.image.deprecated.status="endoflife"
-LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/postgres-3.17"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/postgres-17"
 
 ENV LAGOON=postgres
 

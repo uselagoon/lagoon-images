@@ -42,10 +42,16 @@ COPY 00-lagoon-php.ini.tpl "$PHP_INI_DIR/conf.d/"
 COPY php-fpm.d/www.conf php-fpm.d/global.conf /usr/local/etc/php-fpm.d/
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
-COPY --from=docker.io/mlocati/php-extension-installer:2.9 /usr/bin/install-php-extensions /usr/local/bin/
+COPY --from=ghcr.io/php/pie:1.2.1-bin /pie /usr/local/bin/
 
 RUN apk update \
     && apk upgrade --available musl \
+    && apk add --no-cache --virtual .build-deps \
+        build-base \
+        autoconf \
+        automake \
+        libtool \
+        m4 \
     && apk add --no-cache --virtual .devdeps \
         # for gd
         freetype-dev \
@@ -74,16 +80,17 @@ RUN apk update \
         postgresql-dev \
         # for yaml
         yaml-dev \
-    && install-php-extensions apcu-5.1.27 \
-    && install-php-extensions imagick-3.8.1 \
-    && install-php-extensions redis-6.3.0 \
-    && install-php-extensions xdebug-3.4.7 \
-    && install-php-extensions yaml-2.3.0 \
+    && pie install apcu/apcu:5.1.27 \
+    && pie install imagick/imagick:3.8.1 \
+    && pie install phpredis/phpredis:6.3.0 \
+    && pie install xdebug/xdebug:3.4.7 \
+    && pie install pecl/yaml:2.3.0 \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
     && docker-php-ext-install -j4 bcmath exif gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets tidy xsl zip \
     && apk del -r \
         .devdeps \
+        .build-deps \
     && apk add --no-cache \
         acl \
         fcgi \

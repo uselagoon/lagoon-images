@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM opensearchproject/opensearch:3.2.0
+FROM opensearchproject/opensearch:3.3.2
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/opensearch/3.Dockerfile"
 LABEL org.opencontainers.image.description="OpenSearch 3 image optimised for running in Lagoon in production and locally"
@@ -51,8 +51,7 @@ RUN for plugin in \
   opensearch-notifications \
   opensearch-notifications-core \
   opensearch-observability \
-  opensearch-reports-scheduler \
-  opensearch-security; do \
+  opensearch-reports-scheduler; do \
   /usr/share/opensearch/bin/opensearch-plugin remove --purge $plugin; \
   done
 

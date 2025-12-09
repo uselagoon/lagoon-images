@@ -50,7 +50,6 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-4-prod
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-5-dev
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep php-8-5-prod
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-9
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-10
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-11
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-12
@@ -272,17 +271,6 @@ docker compose exec -T commons sh -c "curl -kL http://php-8-5-prod:9000" | grep 
 docker compose exec -T commons sh -c "curl -kL http://php-8-5-prod:9000" | grep "session.cookie_samesite" | grep "Strict"
 docker compose exec -T commons sh -c "curl -kL http://php-8-5-prod:9000" | grep "upload_max_filesize" | grep "1024M"
 docker compose exec -T commons sh -c "curl -kL http://php-8-5-prod:9000" | grep "error_reporting" | grep "22519"
-
-# python-3-9 should be version 3.9
-docker compose exec -T python-3-9 sh -c "python -V" | grep "3.9"
-
-# python-3-9 should have basic tools installed
-docker compose exec -T python-3-9 sh -c "pip list --no-cache-dir" | grep "pip"
-docker compose exec -T python-3-9 sh -c "pip list --no-cache-dir" | grep "setuptools"
-docker compose exec -T python-3-9 sh -c "pip list --no-cache-dir" | grep "virtualenv"
-
-# python-3-9 should be serving content
-docker compose exec -T commons sh -c "curl python-3-9:3000/tmp/test" | grep "Python 3.9"
 
 # python-3-10 should be version 3.10
 docker compose exec -T python-3-10 sh -c "python -V" | grep "3.10"

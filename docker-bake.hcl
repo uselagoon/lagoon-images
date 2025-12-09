@@ -95,7 +95,6 @@ group "default" {
     "postgres-16-drupal",
     "postgres-17",
     "postgres-17-drupal",
-    "python-3-9",
     "python-3-10",
     "python-3-11",
     "python-3-12",
@@ -225,7 +224,6 @@ group "postgres" {
 group "python" {
   targets = [
     "commons", 
-    "python-3-9",
     "python-3-10",
     "python-3-11",
     "python-3-12",
@@ -761,17 +759,6 @@ target "postgres-17-drupal" {
   dockerfile = "17.Dockerfile"
   tags = ["${PUSH_REPO}/postgres-17-drupal:${PUSH_TAG}"]
 }
-
-target "python-3-9" {
-  inherits = ["default"]
-  context = "images/python"
-  contexts = {
-    "${LOCAL_REPO}/commons": "target:commons"
-  }
-  dockerfile = "3.9.Dockerfile"
-  tags = ["${PUSH_REPO}/python-3.9:${PUSH_TAG}"]
-}
-
 
 target "python-3-10" {
   inherits = ["default"]

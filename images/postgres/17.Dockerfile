@@ -1,11 +1,11 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM postgres:17.7-alpine3.22
+FROM postgres:17.7-alpine3.23
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/postgres/17.Dockerfile"
 LABEL org.opencontainers.image.description="PostgreSQL 17 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/postgres-17"
-LABEL org.opencontainers.image.base.name="docker.io/postgres:17-alpine3.22"
+LABEL org.opencontainers.image.base.name="docker.io/postgres:17-alpine3.23"
 
 ENV LAGOON=postgres
 

@@ -29,7 +29,6 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mysql-8-0:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mysql-8-4:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://nginx:8080 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-3:9200 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-3:9200 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m

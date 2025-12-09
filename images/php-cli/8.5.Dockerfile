@@ -1,10 +1,10 @@
 ARG LOCAL_REPO
-FROM ${LOCAL_REPO:-lagoon}/php-8.4-fpm
+FROM ${LOCAL_REPO:-lagoon}/php-8.5-fpm
 
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/php-cli/8.4.Dockerfile"
-LABEL org.opencontainers.image.description="PHP 8.4 cli image optimised for running in Lagoon in production and locally"
-LABEL org.opencontainers.image.title="uselagoon/php-8.4-cli"
-LABEL org.opencontainers.image.base.name="docker.io/uselagoon/php-8.4-fpm"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/php-cli/8.5.Dockerfile"
+LABEL org.opencontainers.image.description="PHP 8.5 cli image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/php-8.5-cli"
+LABEL org.opencontainers.image.base.name="docker.io/uselagoon/php-8.5-fpm"
 
 ENV LAGOON=cli
 
@@ -18,7 +18,7 @@ RUN apk add --no-cache bash \
         mariadb-client=~11.4 \
         mariadb-connector-c \
         mongodb-tools \
-        nodejs=~22 \
+        nodejs=~24 \
         npm \
         openssh-client \
         openssh-sftp-server \

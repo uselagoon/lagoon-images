@@ -173,6 +173,39 @@ services:
         exec php -S 0.0.0.0:9000
         "] # runs a webserver with phpinfo output
 
+  php-8-5-dev:
+    image: uselagoon/php-8.5-cli:latest
+    ports:
+      - "9000"
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=development
+      - XDEBUG_ENABLE=true
+      - XDEBUG_LOG=true
+      # - NEWRELIC_ENABLED=true
+      # - BLACKFIRE_ENABLED=true
+      # - NEWRELIC_APPLICATION_LOGGING_ENABLED=false
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
+
+  php-8-5-prod:
+    image: uselagoon/php-8.5-cli:latest
+    ports:
+      - "9000"
+    environment:
+      - LAGOON_ENVIRONMENT_TYPE=production
+      - PHP_MAX_INPUT_VARS=4000
+      - PHP_MAX_FILE_UPLOADS=40
+      - PHP_SESSION_COOKIE_SAMESITE="Strict"
+      - PHP_UPLOAD_MAX_FILESIZE=1024M
+    << : *default-user # uses the defined user from top
+    command: ["sh", "-c", "
+        echo PD9waHAKCnBocGluZm8oICk7Cgo/Pg== | base64 -d > /app/index.php;
+        exec php -S 0.0.0.0:9000
+        "] # runs a webserver with phpinfo output
+
   python-3-10:
     image: uselagoon/python-3.10:latest
     ports:

@@ -96,7 +96,7 @@ pipeline {
             }
             retry(3) {
               sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-              sh script: "timeout 12m make -O publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/arm64,linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built multiarch images"
+              sh script: "timeout 12m make -O publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/arm64,linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME} PUSH_TAG_ADDITIONAL=latest", label: "Publishing built multiarch images"
             }
           } else {
             retry(3) {
@@ -105,22 +105,6 @@ pipeline {
             }
           }
         }
-      }
-    }
-    
-    stage ('push images to testlagoon/* with :latest tag') {
-       when {
-        branch 'main'
-        not {
-          environment name: 'SKIP_IMAGE_PUBLISH', value: 'true'
-        }
-      }
-      environment {
-        PASSWORD = credentials('amazeeiojenkins-dockerhub-password')
-      }
-      steps {
-        sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-        sh script: "make -O publish-testlagoon-images BRANCH_NAME=latest", label: "Publishing built images with :latest tag"
       }
     }
 

@@ -48,10 +48,13 @@ RUN for plugin in \
   opensearch-anomaly-detection \
   opensearch-cross-cluster-replication \
   opensearch-index-management \
+  opensearch-ml \
   opensearch-notifications \
   opensearch-notifications-core \
   opensearch-observability \
-  opensearch-reports-scheduler; do \
+  opensearch-reports-scheduler \
+  opensearch-security \
+  opensearch-skills; do \
   /usr/share/opensearch/bin/opensearch-plugin remove --purge $plugin; \
   done
 

@@ -48,13 +48,14 @@ RUN for plugin in \
   opensearch-anomaly-detection \
   opensearch-cross-cluster-replication \
   opensearch-index-management \
+# opensearch-skills needs to be removed before opensearch-ml as it is a dependency
+  opensearch-skills \
   opensearch-ml \
   opensearch-notifications \
   opensearch-notifications-core \
   opensearch-observability \
   opensearch-reports-scheduler \
-  opensearch-security \
-  opensearch-skills; do \
+  opensearch-security; do \
   /usr/share/opensearch/bin/opensearch-plugin remove --purge $plugin; \
   done
 

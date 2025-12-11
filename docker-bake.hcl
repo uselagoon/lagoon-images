@@ -25,7 +25,7 @@ variable "PUSH_TAG_ADDITIONAL" {
 
 function "tags" {
   params = [image]
-  result = notequal("",PUSH_TAG_ADDITIONAL) ? ["${PUSH_REPO}/${image}:${PUSH_TAG}", "${PUSH_REPO}/${image}:${PUSH_TAG_ADDITIONAL}"] : ["${PUSH_REPO}/${image}:${PUSH_TAG}"]
+  result = notequal(PUSH_TAG_ADDITIONAL, "") ? ["${PUSH_REPO}/${image}:${PUSH_TAG}", "${PUSH_REPO}/${image}:${PUSH_TAG_ADDITIONAL}"] : ["${PUSH_REPO}/${image}:${PUSH_TAG}"]
 }
 
 variable "PLATFORMS" {

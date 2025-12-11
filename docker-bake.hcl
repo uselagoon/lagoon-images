@@ -19,6 +19,15 @@ variable "PUSH_TAG" {
   default = "latest"
 }
 
+variable "PUSH_TAG_ADDITIONAL" {
+  default = ""
+}
+
+function "tags" {
+  params = [image]
+  result = notequal(PUSH_TAG_ADDITIONAL, "") ? ["${PUSH_REPO}/${image}:${PUSH_TAG}", "${PUSH_REPO}/${image}:${PUSH_TAG_ADDITIONAL}"] : ["${PUSH_REPO}/${image}:${PUSH_TAG}"]
+}
+
 variable "PLATFORMS" {
   // use PLATFORMS=linux/amd64,linux/arm64 to override default single architecture on the cli
   default = "linux/amd64"
@@ -296,7 +305,7 @@ target "commons" {
   inherits = ["default"]
   context = "images/commons"
   dockerfile = "Dockerfile"
-  tags = ["${PUSH_REPO}/commons:${PUSH_TAG}"]
+  tags = tags("commons")
 }
 
 target "mariadb-10-6" {
@@ -306,7 +315,7 @@ target "mariadb-10-6" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "10.6.Dockerfile"
-  tags = ["${PUSH_REPO}/mariadb-10.6:${PUSH_TAG}"]
+  tags = tags("mariadb-10.6")
 }
 
 target "mariadb-10-6-drupal" {
@@ -316,7 +325,7 @@ target "mariadb-10-6-drupal" {
     "${LOCAL_REPO}/mariadb-10.6": "target:mariadb-10-6"
   }
   dockerfile = "10.6.Dockerfile"
-  tags = ["${PUSH_REPO}/mariadb-10.6-drupal:${PUSH_TAG}"]
+  tags = tags("mariadb-10.6-drupal")
 }
 
 target "mariadb-10-11" {
@@ -326,7 +335,7 @@ target "mariadb-10-11" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "10.11.Dockerfile"
-  tags = ["${PUSH_REPO}/mariadb-10.11:${PUSH_TAG}"]
+  tags = tags("mariadb-10.11")
 }
 
 target "mariadb-10-11-drupal" {
@@ -336,7 +345,7 @@ target "mariadb-10-11-drupal" {
     "${LOCAL_REPO}/mariadb-10.11": "target:mariadb-10-11"
   }
   dockerfile = "10.11.Dockerfile"
-  tags = ["${PUSH_REPO}/mariadb-10.11-drupal:${PUSH_TAG}"]
+  tags = tags("mariadb-10.11-drupal")
 }
 
 target "mariadb-11-4" {
@@ -346,7 +355,7 @@ target "mariadb-11-4" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "11.4.Dockerfile"
-  tags = ["${PUSH_REPO}/mariadb-11.4:${PUSH_TAG}"]
+  tags = tags("mariadb-11.4")
 }
 
 
@@ -357,7 +366,7 @@ target "mongo-4" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "4.Dockerfile"
-  tags = ["${PUSH_REPO}/mongo-4:${PUSH_TAG}"]
+  tags = tags("mongo-4")
 }
 
 target "mysql-8-0" {
@@ -367,7 +376,7 @@ target "mysql-8-0" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.0.Dockerfile"
-  tags = ["${PUSH_REPO}/mysql-8.0:${PUSH_TAG}"]
+  tags = tags("mysql-8.0")
 }
 
 target "mysql-8-4" {
@@ -377,7 +386,7 @@ target "mysql-8-4" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["${PUSH_REPO}/mysql-8.4:${PUSH_TAG}"]
+  tags = tags("mysql-8.4")
 }
 
 target "nginx" {
@@ -387,7 +396,7 @@ target "nginx" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "Dockerfile"
-  tags = ["${PUSH_REPO}/nginx:${PUSH_TAG}"]
+  tags = tags("nginx")
 }
 
 target "nginx-drupal" {
@@ -397,7 +406,7 @@ target "nginx-drupal" {
     "${LOCAL_REPO}/nginx": "target:nginx"
   }
   dockerfile = "Dockerfile"
-  tags = ["${PUSH_REPO}/nginx-drupal:${PUSH_TAG}"]
+  tags = tags("nginx-drupal")
 }
 
 target "node-20" {
@@ -407,7 +416,7 @@ target "node-20" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "20.Dockerfile"
-  tags = ["${PUSH_REPO}/node-20:${PUSH_TAG}"]
+  tags = tags("node-20")
 }
 
 target "node-20-builder" {
@@ -417,7 +426,7 @@ target "node-20-builder" {
     "${LOCAL_REPO}/node-20": "target:node-20"
   }
   dockerfile = "20.Dockerfile"
-  tags = ["${PUSH_REPO}/node-20-builder:${PUSH_TAG}"]
+  tags = tags("node-20-builder")
 }
 
 target "node-20-cli" {
@@ -427,7 +436,7 @@ target "node-20-cli" {
     "${LOCAL_REPO}/node-20": "target:node-20"
   }
   dockerfile = "20.Dockerfile"
-  tags = ["${PUSH_REPO}/node-20-cli:${PUSH_TAG}"]
+  tags = tags("node-20-cli")
 }
 
 target "node-22" {
@@ -437,7 +446,7 @@ target "node-22" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "22.Dockerfile"
-  tags = ["${PUSH_REPO}/node-22:${PUSH_TAG}"]
+  tags = tags("node-22")
 }
 
 target "node-22-builder" {
@@ -447,7 +456,7 @@ target "node-22-builder" {
     "${LOCAL_REPO}/node-22": "target:node-22"
   }
   dockerfile = "22.Dockerfile"
-  tags = ["${PUSH_REPO}/node-22-builder:${PUSH_TAG}"]
+  tags = tags("node-22-builder")
 }
 
 target "node-22-cli" {
@@ -457,7 +466,7 @@ target "node-22-cli" {
     "${LOCAL_REPO}/node-22": "target:node-22"
   }
   dockerfile = "22.Dockerfile"
-  tags = ["${PUSH_REPO}/node-22-cli:${PUSH_TAG}"]
+  tags = tags("node-22-cli")
 }
 
 target "node-24" {
@@ -467,7 +476,7 @@ target "node-24" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "24.Dockerfile"
-  tags = ["${PUSH_REPO}/node-24:${PUSH_TAG}"]
+  tags = tags("node-24")
 }
 
 target "node-24-builder" {
@@ -477,7 +486,7 @@ target "node-24-builder" {
     "${LOCAL_REPO}/node-24": "target:node-24"
   }
   dockerfile = "24.Dockerfile"
-  tags = ["${PUSH_REPO}/node-24-builder:${PUSH_TAG}"]
+  tags = tags("node-24-builder")
 }
 
 target "node-24-cli" {
@@ -487,7 +496,7 @@ target "node-24-cli" {
     "${LOCAL_REPO}/node-24": "target:node-24"
   }
   dockerfile = "24.Dockerfile"
-  tags = ["${PUSH_REPO}/node-24-cli:${PUSH_TAG}"]
+  tags = tags("node-24-cli")
 }
 
 target "opensearch-2" {
@@ -497,7 +506,7 @@ target "opensearch-2" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "2.Dockerfile"
-  tags = ["${PUSH_REPO}/opensearch-2:${PUSH_TAG}"]
+  tags = tags("opensearch-2")
 }
 
 target "opensearch-3" {
@@ -507,7 +516,7 @@ target "opensearch-3" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.Dockerfile"
-  tags = ["${PUSH_REPO}/opensearch-3:${PUSH_TAG}"]
+  tags = tags("opensearch-3")
 }
 
 target "php-8-1-fpm" {
@@ -517,7 +526,7 @@ target "php-8-1-fpm" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.1.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.1-fpm:${PUSH_TAG}"]
+  tags = tags("php-8.1-fpm")
 }
 
 target "php-8-1-cli" {
@@ -527,7 +536,7 @@ target "php-8-1-cli" {
     "${LOCAL_REPO}/php-8.1-fpm": "target:php-8-1-fpm"
   }
   dockerfile = "8.1.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.1-cli:${PUSH_TAG}"]
+  tags = tags("php-8.1-cli")
 }
 
 target "php-8-1-cli-drupal" {
@@ -537,7 +546,7 @@ target "php-8-1-cli-drupal" {
     "${LOCAL_REPO}/php-8.1-cli": "target:php-8-1-cli"
   }
   dockerfile = "8.1.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.1-cli-drupal:${PUSH_TAG}"]
+  tags = tags("php-8.1-cli-drupal")
 }
 
 target "php-8-2-fpm" {
@@ -547,7 +556,7 @@ target "php-8-2-fpm" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.2.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.2-fpm:${PUSH_TAG}"]
+  tags = tags("php-8.2-fpm")
 }
 
 target "php-8-2-cli" {
@@ -557,7 +566,7 @@ target "php-8-2-cli" {
     "${LOCAL_REPO}/php-8.2-fpm": "target:php-8-2-fpm"
   }
   dockerfile = "8.2.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.2-cli:${PUSH_TAG}"]
+  tags = tags("php-8.2-cli")
 }
 
 target "php-8-2-cli-drupal" {
@@ -567,7 +576,7 @@ target "php-8-2-cli-drupal" {
     "${LOCAL_REPO}/php-8.2-cli": "target:php-8-2-cli"
   }
   dockerfile = "8.2.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.2-cli-drupal:${PUSH_TAG}"]
+  tags = tags("php-8.2-cli-drupal")
 }
 
 target "php-8-3-fpm" {
@@ -577,7 +586,7 @@ target "php-8-3-fpm" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.3.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.3-fpm:${PUSH_TAG}"]
+  tags = tags("php-8.3-fpm")
 }
 
 target "php-8-3-cli" {
@@ -587,7 +596,7 @@ target "php-8-3-cli" {
     "${LOCAL_REPO}/php-8.3-fpm": "target:php-8-3-fpm"
   }
   dockerfile = "8.3.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.3-cli:${PUSH_TAG}"]
+  tags = tags("php-8.3-cli")
 }
 
 target "php-8-3-cli-drupal" {
@@ -597,7 +606,7 @@ target "php-8-3-cli-drupal" {
     "${LOCAL_REPO}/php-8.3-cli": "target:php-8-3-cli"
   }
   dockerfile = "8.3.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.3-cli-drupal:${PUSH_TAG}"]
+  tags = tags("php-8.3-cli-drupal")
 }
 
 target "php-8-4-fpm" {
@@ -607,7 +616,7 @@ target "php-8-4-fpm" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.4-fpm:${PUSH_TAG}"]
+  tags = tags("php-8.4-fpm")
 }
 
 target "php-8-4-cli" {
@@ -617,7 +626,7 @@ target "php-8-4-cli" {
     "${LOCAL_REPO}/php-8.4-fpm": "target:php-8-4-fpm"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.4-cli:${PUSH_TAG}"]
+  tags = tags("php-8.4-cli")
 }
 
 target "php-8-4-cli-drupal" {
@@ -627,7 +636,7 @@ target "php-8-4-cli-drupal" {
     "${LOCAL_REPO}/php-8.4-cli": "target:php-8-4-cli"
   }
   dockerfile = "8.4.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.4-cli-drupal:${PUSH_TAG}"]
+  tags = tags("php-8.4-cli-drupal")
 }
 
 target "php-8-5-fpm" {
@@ -667,7 +676,7 @@ target "postgres-13" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "13.Dockerfile"
-  tags = ["${PUSH_REPO}/postgres-13:${PUSH_TAG}"]
+  tags = tags("postgres-13")
 }
 
 target "postgres-13-drupal" {
@@ -677,7 +686,7 @@ target "postgres-13-drupal" {
     "${LOCAL_REPO}/postgres-13": "target:postgres-13"
   }
   dockerfile = "13.Dockerfile"
-  tags = ["${PUSH_REPO}/postgres-13-drupal:${PUSH_TAG}"]
+  tags = tags("postgres-13-drupal")
 }
 
 target "postgres-14" {
@@ -687,7 +696,7 @@ target "postgres-14" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "14.Dockerfile"
-  tags = ["${PUSH_REPO}/postgres-14:${PUSH_TAG}"]
+  tags = tags("postgres-14")
 }
 
 target "postgres-14-drupal" {
@@ -697,7 +706,7 @@ target "postgres-14-drupal" {
     "${LOCAL_REPO}/postgres-14": "target:postgres-14"
   }
   dockerfile = "14.Dockerfile"
-  tags = ["${PUSH_REPO}/postgres-14-drupal:${PUSH_TAG}"]
+  tags = tags("postgres-14-drupal")
 }
 
 target "postgres-15" {
@@ -707,7 +716,7 @@ target "postgres-15" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "15.Dockerfile"
-  tags = ["${PUSH_REPO}/postgres-15:${PUSH_TAG}"]
+  tags = tags("postgres-15")
 }
 
 target "postgres-15-drupal" {
@@ -717,7 +726,7 @@ target "postgres-15-drupal" {
     "${LOCAL_REPO}/postgres-15": "target:postgres-15"
   }
   dockerfile = "15.Dockerfile"
-  tags = ["${PUSH_REPO}/postgres-15-drupal:${PUSH_TAG}"]
+  tags = tags("postgres-15-drupal")
 }
 
 target "postgres-16" {
@@ -727,7 +736,7 @@ target "postgres-16" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "16.Dockerfile"
-  tags = ["${PUSH_REPO}/postgres-16:${PUSH_TAG}"]
+  tags = tags("postgres-16")
 }
 
 target "postgres-16-drupal" {
@@ -737,7 +746,7 @@ target "postgres-16-drupal" {
     "${LOCAL_REPO}/postgres-16": "target:postgres-16"
   }
   dockerfile = "16.Dockerfile"
-  tags = ["${PUSH_REPO}/postgres-16-drupal:${PUSH_TAG}"]
+  tags = tags("postgres-16-drupal")
 }
 
 target "postgres-17" {
@@ -747,7 +756,7 @@ target "postgres-17" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "17.Dockerfile"
-  tags = ["${PUSH_REPO}/postgres-17:${PUSH_TAG}"]
+  tags = tags("postgres-17")
 }
 
 target "postgres-17-drupal" {
@@ -757,7 +766,7 @@ target "postgres-17-drupal" {
     "${LOCAL_REPO}/postgres-17": "target:postgres-17"
   }
   dockerfile = "17.Dockerfile"
-  tags = ["${PUSH_REPO}/postgres-17-drupal:${PUSH_TAG}"]
+  tags = tags("postgres-17-drupal")
 }
 
 target "python-3-10" {
@@ -767,7 +776,7 @@ target "python-3-10" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.10.Dockerfile"
-  tags = ["${PUSH_REPO}/python-3.10:${PUSH_TAG}"]
+  tags = tags("python-3.10")
 }
 
 target "python-3-11" {
@@ -777,7 +786,7 @@ target "python-3-11" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.11.Dockerfile"
-  tags = ["${PUSH_REPO}/python-3.11:${PUSH_TAG}"]
+  tags = tags("python-3.11")
 }
 
 target "python-3-12" {
@@ -787,7 +796,7 @@ target "python-3-12" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.12.Dockerfile"
-  tags = ["${PUSH_REPO}/python-3.12:${PUSH_TAG}"]
+  tags = tags("python-3.12")
 }
 
 target "python-3-13" {
@@ -797,7 +806,7 @@ target "python-3-13" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.13.Dockerfile"
-  tags = ["${PUSH_REPO}/python-3.13:${PUSH_TAG}"]
+  tags = tags("python-3.13")
 }
 
 target "python-3-14" {
@@ -807,7 +816,7 @@ target "python-3-14" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.14.Dockerfile"
-  tags = ["${PUSH_REPO}/python-3.14:${PUSH_TAG}"]
+  tags = tags("python-3.14")
 }
 
 target "rabbitmq" {
@@ -817,7 +826,7 @@ target "rabbitmq" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "Dockerfile"
-  tags = ["${PUSH_REPO}/rabbitmq:${PUSH_TAG}"]
+  tags = tags("rabbitmq")
 }
 
 target "rabbitmq-cluster" {
@@ -827,7 +836,7 @@ target "rabbitmq-cluster" {
     "${LOCAL_REPO}/rabbitmq": "target:rabbitmq"
   }
   dockerfile = "Dockerfile"
-  tags = ["${PUSH_REPO}/rabbitmq-cluster:${PUSH_TAG}"]
+  tags = tags("rabbitmq-cluster")
 }
 
 target "redis-7" {
@@ -837,7 +846,7 @@ target "redis-7" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${PUSH_REPO}/redis-7:${PUSH_TAG}"]
+  tags = tags("redis-7")
 }
 
 target "redis-7-persistent" {
@@ -847,7 +856,7 @@ target "redis-7-persistent" {
     "${LOCAL_REPO}/redis-7": "target:redis-7"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${PUSH_REPO}/redis-7-persistent:${PUSH_TAG}"]
+  tags = tags("redis-7-persistent")
 }
 
 target "redis-8" {
@@ -857,7 +866,7 @@ target "redis-8" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["${PUSH_REPO}/redis-8:${PUSH_TAG}"]
+  tags = tags("redis-8")
 }
 
 target "ruby-3-2" {
@@ -867,7 +876,7 @@ target "ruby-3-2" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.2.Dockerfile"
-  tags = ["${PUSH_REPO}/ruby-3.2:${PUSH_TAG}"]
+  tags = tags("ruby-3.2")
 }
 
 target "ruby-3-3" {
@@ -877,7 +886,7 @@ target "ruby-3-3" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.3.Dockerfile"
-  tags = ["${PUSH_REPO}/ruby-3.3:${PUSH_TAG}"]
+  tags = tags("ruby-3.3")
 }
 
 target "ruby-3-4" {
@@ -887,7 +896,7 @@ target "ruby-3-4" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "3.4.Dockerfile"
-  tags = ["${PUSH_REPO}/ruby-3.4:${PUSH_TAG}"]
+  tags = tags("ruby-3.4")
 }
 
 target "solr-9" {
@@ -897,7 +906,7 @@ target "solr-9" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "9.Dockerfile"
-  tags = ["${PUSH_REPO}/solr-9:${PUSH_TAG}"]
+  tags = tags("solr-9")
 }
 
 target "solr-9-drupal" {
@@ -908,7 +917,7 @@ target "solr-9-drupal" {
     "${LOCAL_REPO}/solr-9": "target:solr-9"
   }
   dockerfile = "9.Dockerfile"
-  tags = ["${PUSH_REPO}/solr-9-drupal:${PUSH_TAG}"]
+  tags = tags("solr-9-drupal")
 }
 target "valkey-8" {
   inherits = ["default"]
@@ -917,7 +926,7 @@ target "valkey-8" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["${PUSH_REPO}/valkey-8:${PUSH_TAG}"]
+  tags = tags("valkey-8")
 }
 
 target "valkey-9" {
@@ -927,7 +936,7 @@ target "valkey-9" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "9.Dockerfile"
-  tags = ["${PUSH_REPO}/valkey-9:${PUSH_TAG}"]
+  tags = tags("valkey-9")
 }
 
 target "varnish-6" {
@@ -937,7 +946,7 @@ target "varnish-6" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-6:${PUSH_TAG}"]
+  tags = tags("varnish-6")
 }
 
 target "varnish-6-drupal" {
@@ -947,7 +956,7 @@ target "varnish-6-drupal" {
     "${LOCAL_REPO}/varnish-6": "target:varnish-6"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-6-drupal:${PUSH_TAG}"]
+  tags = tags("varnish-6-drupal")
 }
 
 target "varnish-6-persistent" {
@@ -957,7 +966,7 @@ target "varnish-6-persistent" {
     "${LOCAL_REPO}/varnish-6": "target:varnish-6"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-6-persistent:${PUSH_TAG}"]
+  tags = tags("varnish-6-persistent")
 }
 
 target "varnish-6-persistent-drupal" {
@@ -967,7 +976,7 @@ target "varnish-6-persistent-drupal" {
     "${LOCAL_REPO}/varnish-6-drupal": "target:varnish-6-drupal"
   }
   dockerfile = "6.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-6-persistent-drupal:${PUSH_TAG}"]
+  tags = tags("varnish-6-persistent-drupal")
 }
 
 target "varnish-7" {
@@ -977,7 +986,7 @@ target "varnish-7" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-7:${PUSH_TAG}"]
+  tags = tags("varnish-7")
 }
 
 target "varnish-7-drupal" {
@@ -987,7 +996,7 @@ target "varnish-7-drupal" {
     "${LOCAL_REPO}/varnish-7": "target:varnish-7"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-7-drupal:${PUSH_TAG}"]
+  tags = tags("varnish-7-drupal")
 }
 
 target "varnish-7-persistent" {
@@ -997,7 +1006,7 @@ target "varnish-7-persistent" {
     "${LOCAL_REPO}/varnish-7": "target:varnish-7"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-7-persistent:${PUSH_TAG}"]
+  tags = tags("varnish-7-persistent")
 }
 
 target "varnish-7-persistent-drupal" {
@@ -1007,7 +1016,7 @@ target "varnish-7-persistent-drupal" {
     "${LOCAL_REPO}/varnish-7-drupal": "target:varnish-7-drupal"
   }
   dockerfile = "7.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-7-persistent-drupal:${PUSH_TAG}"]
+  tags = tags("varnish-7-persistent-drupal")
 }
 
 target "varnish-8" {
@@ -1017,7 +1026,7 @@ target "varnish-8" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-8:${PUSH_TAG}"]
+  tags = tags("varnish-8")
 }
 
 target "varnish-8-drupal" {
@@ -1027,7 +1036,7 @@ target "varnish-8-drupal" {
     "${LOCAL_REPO}/varnish-8": "target:varnish-8"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-8-drupal:${PUSH_TAG}"]
+  tags = tags("varnish-8-drupal")
 }
 
 target "varnish-8-persistent" {
@@ -1037,7 +1046,7 @@ target "varnish-8-persistent" {
     "${LOCAL_REPO}/varnish-8": "target:varnish-8"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-8-persistent:${PUSH_TAG}"]
+  tags = tags("varnish-8-persistent")
 }
 
 target "varnish-8-persistent-drupal" {
@@ -1047,5 +1056,5 @@ target "varnish-8-persistent-drupal" {
     "${LOCAL_REPO}/varnish-8-drupal": "target:varnish-8-drupal"
   }
   dockerfile = "8.Dockerfile"
-  tags = ["${PUSH_REPO}/varnish-8-persistent-drupal:${PUSH_TAG}"]
+  tags = tags("varnish-8-persistent-drupal")
 }

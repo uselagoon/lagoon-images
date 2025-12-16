@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM mariadb:11.4.8-ubi9
+FROM mariadb:11.4.9-ubi9
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/mariadb/11.4.Dockerfile"
 LABEL org.opencontainers.image.description="MariaDB 11.4 image optimised for running in Lagoon in production and locally"
@@ -58,7 +58,7 @@ RUN rm /lagoon/entrypoints/9999-mariadb-init.10.bash \
     && mv /lagoon/entrypoints/9999-mariadb-init.11.bash /lagoon/entrypoints/9999-mariadb-init.bash \
     && echo "!include /etc/mysql/my.cnf" >> /etc/my.cnf
 
-RUN for i in /var/run/mysqld /run/mysqld /var/lib/mysql /etc/mysql/conf.d /docker-entrypoint-initdb.d /home; \
+RUN for i in /var/run/mysqld /run/mariadb /run/mysqld /var/lib/mysql /etc/mysql/conf.d /docker-entrypoint-initdb.d /home; \
     do mkdir -p $i; chown mysql $i; /bin/fix-permissions $i; \
     done
 

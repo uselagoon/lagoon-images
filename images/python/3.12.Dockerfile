@@ -1,12 +1,12 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 
-FROM python:3.12.12-alpine3.22
+FROM python:3.12.12-alpine3.23
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/python/3.12.Dockerfile"
 LABEL org.opencontainers.image.description="Python 3.12 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/python-3.12"
-LABEL org.opencontainers.image.base.name="docker.io/python:3.12-alpine3.22"
+LABEL org.opencontainers.image.base.name="docker.io/python:3.12-alpine3.23"
 
 ENV LAGOON=python
 

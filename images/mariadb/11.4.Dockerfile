@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM mariadb:11.4.8-ubi9
+FROM mariadb:11.4.9-ubi9
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/mariadb/11.4.Dockerfile"
 LABEL org.opencontainers.image.description="MariaDB 11.4 image optimised for running in Lagoon in production and locally"

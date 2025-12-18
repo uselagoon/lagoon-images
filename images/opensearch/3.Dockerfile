@@ -47,6 +47,7 @@ RUN for plugin in \
   opensearch-alerting \
   opensearch-anomaly-detection \
   opensearch-cross-cluster-replication \
+  opensearch-flow-framework \
   opensearch-index-management \
 # opensearch-skills needs to be removed before opensearch-ml as it is a dependency
   opensearch-skills \

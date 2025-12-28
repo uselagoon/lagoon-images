@@ -87,12 +87,6 @@ services:
       - "9200"
     << : *default-user
 
-  postgres-13:
-    image: uselagoon/postgres-13:latest
-    ports:
-      - "5432"
-    << : *default-user
-
   postgres-14:
     image: uselagoon/postgres-14:latest
     ports:

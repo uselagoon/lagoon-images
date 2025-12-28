@@ -31,7 +31,6 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://nginx:8080 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-2:9200 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://opensearch-3:9200 -timeout 1m
-docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-13:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-14:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-15:5432 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://postgres-16:5432 -timeout 1m
@@ -60,7 +59,6 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep nginx
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep opensearch-2
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep opensearch-3
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-13
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-14
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-15
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep postgres-16
@@ -222,21 +220,6 @@ docker compose exec -T commons sh -c "curl opensearch-3:9200/_cluster/health" | 
 # opensearch-3 should be able to read/write data
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch?service=opensearch-3" | grep "SERVICE_HOST=opensearch-3"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/opensearch?service=opensearch-3" | grep "LAGOON_TEST_VAR=all"
-
-# postgres-13 should be version 13 client
-docker compose exec -T postgres-13 bash -c "psql --version" | grep "psql" | grep "13."
-
-# postgres-13 should be version 13 server
-docker compose exec -T postgres-13 bash -c "echo U0VMRUNUIHZlcnNpb24oKTs= | base64 -d > /tmp/selectversion.sql"
-docker compose exec -T postgres-13 bash -c "psql -U lagoon -d lagoon < /tmp/selectversion.sql" | grep "PostgreSQL" | grep "13."
-
-# postgres-13 should have lagoon database
-docker compose exec -T postgres-13 bash -c "echo XGwrIGxhZ29vbg== | base64 -d > /tmp/listlagoon.sql"
-docker compose exec -T postgres-13 bash -c "psql -U lagoon -d lagoon < /tmp/listlagoon.sql" | grep "lagoon"
-
-# postgres-13 should be able to read/write data
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-13" | grep "SERVICE_HOST=PostgreSQL 13"
-docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/postgres?service=postgres-13" | grep "LAGOON_TEST_VAR=all-images"
 
 # postgres-14 should be version 14 client
 docker compose exec -T postgres-14 bash -c "psql --version" | grep "psql" | grep "14."

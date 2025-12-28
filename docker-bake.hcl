@@ -117,6 +117,7 @@ group "default" {
     "ruby-3-2",
     "ruby-3-3",
     "ruby-3-4",
+    "ruby-4-0",
     "solr-9",
     "solr-9-drupal",
     "valkey-8",
@@ -264,6 +265,7 @@ group "ruby" {
     "ruby-3-2",
     "ruby-3-3",
     "ruby-3-4",
+    "ruby-4-0",
   ]
 }
 
@@ -897,6 +899,16 @@ target "ruby-3-4" {
   }
   dockerfile = "3.4.Dockerfile"
   tags = tags("ruby-3.4")
+}
+
+target "ruby-4-0" {
+  inherits = ["default"]
+  context = "images/ruby"
+  contexts = {
+    "${LOCAL_REPO}/commons": "target:commons"
+  }
+  dockerfile = "4.0.Dockerfile"
+  tags = tags("ruby-4.0")
 }
 
 target "solr-9" {

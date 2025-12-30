@@ -58,6 +58,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-2
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-3
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-4
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-4-0
 
 # commons should be running Alpine Linux
 docker compose exec -T commons sh -c "cat /etc/os-release" | grep "Alpine Linux"
@@ -359,6 +360,12 @@ docker compose exec -T ruby-3-4 sh -c "ruby -v" | grep "3.4"
 
 # ruby-3-4 should be serving content
 docker compose exec -T commons sh -c "curl ruby-3-4:3000/tmp/" | grep "ruby 3.4"
+
+# ruby-4-0 should have Ruby 4.0
+docker compose exec -T ruby-4-0 sh -c "ruby -v" | grep "4.0"
+
+# ruby-4-0 should be serving content
+docker compose exec -T commons sh -c "curl ruby-4-0:3000/tmp/" | grep "ruby 4.0"
 ```
 
 Destroy tests

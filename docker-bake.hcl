@@ -94,8 +94,6 @@ group "default" {
     "php-8-5-fpm",
     "php-8-5-cli",
     "php-8-5-cli-drupal",
-    "postgres-13",
-    "postgres-13-drupal",
     "postgres-14",
     "postgres-14-drupal",
     "postgres-15",
@@ -217,9 +215,7 @@ group "php" {
 
 group "postgres" {
   targets = [
-    "commons", 
-    "postgres-13",
-    "postgres-13-drupal",
+    "commons",
     "postgres-14",
     "postgres-14-drupal",
     "postgres-15",
@@ -669,26 +665,6 @@ target "php-8-5-cli-drupal" {
   }
   dockerfile = "8.5.Dockerfile"
   tags = ["${PUSH_REPO}/php-8.5-cli-drupal:${PUSH_TAG}"]
-}
-
-target "postgres-13" {
-  inherits = ["default"]
-  context = "images/postgres"
-  contexts = {
-    "${LOCAL_REPO}/commons": "target:commons"
-  }
-  dockerfile = "13.Dockerfile"
-  tags = tags("postgres-13")
-}
-
-target "postgres-13-drupal" {
-  inherits = ["default"]
-  context = "images/postgres-drupal"
-  contexts = {
-    "${LOCAL_REPO}/postgres-13": "target:postgres-13"
-  }
-  dockerfile = "13.Dockerfile"
-  tags = tags("postgres-13-drupal")
 }
 
 target "postgres-14" {

@@ -12,6 +12,10 @@ LABEL org.opencontainers.image.description="PHP 8.1 FPM image optimised for runn
 LABEL org.opencontainers.image.title="uselagoon/php-8.1-fpm"
 LABEL org.opencontainers.image.base.name="docker.io/php:8.1-fpm-alpine3.22"
 
+# End-of-life deprecation labels
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/php-8.4-fpm"
+
 ENV LAGOON=php
 
 # Copy commons files

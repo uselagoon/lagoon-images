@@ -6,6 +6,10 @@ LABEL org.opencontainers.image.description="PHP 8.1 cli image optimised for Drup
 LABEL org.opencontainers.image.title="uselagoon/php-8.1-cli-drupal"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/php-8.1-cli"
 
+# End-of-life deprecation labels
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/php-8.4-cli-drupal"
+
 ENV LAGOON=cli-drupal
 
 ENV DRUSH_LAUNCHER_FALLBACK=/opt/drush8/vendor/bin/drush

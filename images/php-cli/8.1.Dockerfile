@@ -6,6 +6,10 @@ LABEL org.opencontainers.image.description="PHP 8.1 cli image optimised for runn
 LABEL org.opencontainers.image.title="uselagoon/php-8.1-cli"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/php-8.1-fpm"
 
+# End-of-life deprecation labels
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/php-8.4-cli"
+
 ENV LAGOON=cli
 
 STOPSIGNAL SIGTERM

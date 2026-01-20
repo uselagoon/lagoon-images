@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="MongoDB 4 image optimised for runnin
 LABEL org.opencontainers.image.title="uselagoon/mongo-4"
 LABEL org.opencontainers.image.base.name="docker.io/alpine:3.22"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=mongo
 
 COPY --from=commons /lagoon /lagoon

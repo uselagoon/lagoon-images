@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="PostgreSQL 16 image optimised for ru
 LABEL org.opencontainers.image.title="uselagoon/postgres-16"
 LABEL org.opencontainers.image.base.name="docker.io/postgres:16-alpine3.22"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=postgres
 
 # Copy commons files

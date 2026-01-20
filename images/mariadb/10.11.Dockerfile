@@ -7,6 +7,10 @@ LABEL org.opencontainers.image.description="MariaDB 10.11 image optimised for ru
 LABEL org.opencontainers.image.title="uselagoon/mariadb-10.11"
 LABEL org.opencontainers.image.base.name="docker.io/alpine:3.19"
 
+
+ARG LAGOON_VERSIONß
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=mariadb
 
 # Copy commons files

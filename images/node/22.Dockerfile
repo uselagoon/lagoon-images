@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="Node.js 22 image optimised for runni
 LABEL org.opencontainers.image.title="uselagoon/node-22"
 LABEL org.opencontainers.image.base.name="docker.io/node:22-alpine3.22"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=node
 
 RUN apk add --no-cache \

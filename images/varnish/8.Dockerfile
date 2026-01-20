@@ -8,6 +8,9 @@ LABEL org.opencontainers.image.description="Varnish 8 image optimised for runnin
 LABEL org.opencontainers.image.title="uselagoon/varnish-8"
 LABEL org.opencontainers.image.base.name="docker.io/varnish:8.0-alpine"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=varnish
 
 # Copy commons files

@@ -43,6 +43,9 @@ LABEL org.opencontainers.image.description="OpenResty (Nginx) image optimised fo
 LABEL org.opencontainers.image.title="uselagoon/nginx"
 LABEL org.opencontainers.image.base.name="docker.io/openresty/openresty:1.25-alpine"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=nginx
 
 # Copy commons files

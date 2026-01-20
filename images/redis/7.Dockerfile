@@ -8,6 +8,9 @@ LABEL org.opencontainers.image.description="Redis 7 image optimised for running 
 LABEL org.opencontainers.image.title="uselagoon/redis-7"
 LABEL org.opencontainers.image.base.name="docker.io/redis:7-alpine3.21"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=redis
 
 ENV FLAVOR=ephemeral

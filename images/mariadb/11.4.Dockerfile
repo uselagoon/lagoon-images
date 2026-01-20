@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="MariaDB 11.4 image optimised for run
 LABEL org.opencontainers.image.title="uselagoon/mariadb-11.4"
 LABEL org.opencontainers.image.base.name="docker.io/mariadb:11.4-ubi9"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=mariadb
 
 USER root

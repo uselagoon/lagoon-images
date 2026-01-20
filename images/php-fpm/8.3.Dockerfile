@@ -12,6 +12,9 @@ LABEL org.opencontainers.image.description="PHP 8.3 FPM image optimised for runn
 LABEL org.opencontainers.image.title="uselagoon/php-8.3-fpm"
 LABEL org.opencontainers.image.base.name="docker.io/php:8.3-fpm-alpine3.22"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=php
 
 # Copy commons files

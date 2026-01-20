@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="Valkey 9 image optimised for running
 LABEL org.opencontainers.image.title="uselagoon/valkey-9"
 LABEL org.opencontainers.image.base.name="docker.io/valkey/valkey:9-alpine"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=valkey
 
 ENV FLAVOR=ephemeral

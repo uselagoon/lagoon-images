@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="RabbitMQ image optimised for running
 LABEL org.opencontainers.image.title="uselagoon/rabbitmq"
 LABEL org.opencontainers.image.base.name="docker.io/rabbitmq:3-management-alpine"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=rabbitmq
 
 RUN apk add --no-cache \

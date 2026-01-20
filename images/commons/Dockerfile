@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="Base image optimised for running in 
 LABEL org.opencontainers.image.title="uselagoon/commons"
 LABEL org.opencontainers.image.base.name="docker.io/alpine:3.22"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=commons
 
 COPY lagoon/ /lagoon/

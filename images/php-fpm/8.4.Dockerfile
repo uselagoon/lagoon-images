@@ -5,12 +5,12 @@ FROM composer:latest AS healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.7
 
-FROM php:8.4.17-fpm-alpine3.22
+FROM php:8.4.17-fpm-alpine3.23
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/php-fpm/8.4.Dockerfile"
 LABEL org.opencontainers.image.description="PHP 8.4 FPM image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/php-8.4-fpm"
-LABEL org.opencontainers.image.base.name="docker.io/php:8.4-fpm-alpine3.22"
+LABEL org.opencontainers.image.base.name="docker.io/php:8.4-fpm-alpine3.23"
 
 ENV LAGOON=php
 

@@ -1,11 +1,11 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM node:20.20-alpine3.22
+FROM node:20.20-alpine3.23
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/node/20.Dockerfile"
 LABEL org.opencontainers.image.description="Node.js 20 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/node-20"
-LABEL org.opencontainers.image.base.name="docker.io/node:20-alpine3.22"
+LABEL org.opencontainers.image.base.name="docker.io/node:20-alpine3.23"
 
 ENV LAGOON=node
 

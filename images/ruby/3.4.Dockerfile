@@ -1,11 +1,11 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM ruby:3.4.8-alpine3.22
+FROM ruby:3.4.8-alpine3.23
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/ruby/3.4.Dockerfile"
 LABEL org.opencontainers.image.description="Ruby 3.4 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/ruby-3.4"
-LABEL org.opencontainers.image.base.name="docker.io/ruby:3.4-alpine3.22"
+LABEL org.opencontainers.image.base.name="docker.io/ruby:3.4-alpine3.23"
 
 ENV LAGOON=ruby
 

@@ -17,6 +17,9 @@ LABEL org.opencontainers.image.base.name="docker.io/php:8.1-fpm-alpine3.22"
 LABEL sh.lagoon.image.deprecated.status="endoflife"
 LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/php-8.4-fpm"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=php
 
 # Copy commons files

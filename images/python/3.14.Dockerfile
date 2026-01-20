@@ -8,6 +8,9 @@ LABEL org.opencontainers.image.description="Python 3.14 image optimised for runn
 LABEL org.opencontainers.image.title="uselagoon/python-3.14"
 LABEL org.opencontainers.image.base.name="docker.io/python:3.14-alpine3.23"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=python
 
 # Copy commons files

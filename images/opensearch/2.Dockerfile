@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="OpenSearch 2 image optimised for run
 LABEL org.opencontainers.image.title="uselagoon/opensearch-2"
 LABEL org.opencontainers.image.base.name="docker.io/opensearchproject/opensearch:2"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=opensearch
 
 # Copy commons files

@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="MySQL 8.0 image optimised for runnin
 LABEL org.opencontainers.image.title="uselagoon/mysql-8.0"
 LABEL org.opencontainers.image.base.name="docker.io/mysql:8.0-oracle"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=mysql
 
 # Copy commons files

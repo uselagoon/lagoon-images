@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="Ruby 3.4 image optimised for running
 LABEL org.opencontainers.image.title="uselagoon/ruby-3.4"
 LABEL org.opencontainers.image.base.name="docker.io/ruby:3.4-alpine3.23"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=ruby
 
 # Copy commons files

@@ -7,6 +7,9 @@ LABEL org.opencontainers.image.description="Solr 9 image optimised for running i
 LABEL org.opencontainers.image.title="uselagoon/solr-9"
 LABEL org.opencontainers.image.base.name="docker.io/solr:9"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=solr
 
 ENV SOLR_DATA_HOME=/var/solr

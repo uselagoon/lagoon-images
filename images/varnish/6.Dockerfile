@@ -45,6 +45,9 @@ LABEL org.opencontainers.image.description="Varnish 6 image optimised for runnin
 LABEL org.opencontainers.image.title="uselagoon/varnish-6"
 LABEL org.opencontainers.image.base.name="docker.io/varnish:6.0"
 
+ARG LAGOON_VERSION
+ENV LAGOON_VERSION=$LAGOON_VERSION
+
 ENV LAGOON=varnish
 
 # Copy commons files

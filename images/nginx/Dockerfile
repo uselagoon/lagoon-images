@@ -3,7 +3,7 @@ FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 
 # Brotli module compilation stage.
 FROM openresty/openresty:1.27.1.2-5-alpine AS brotli-module
-ENV OPENRESTY_VERSION=1.25.3.2
+ENV OPENRESTY_VERSION=1.27.1.2
 
 # Install build dependencies.
 RUN apk add --no-cache \

@@ -63,6 +63,9 @@ RUN apk update \
         gettext-dev \
         # for imagemagick
         imagemagick-dev \
+        # for gd
+        libavif-dev \
+        # for imagemagick
         libgcrypt-dev \
         # for gd
         libjpeg-turbo-dev \
@@ -85,12 +88,13 @@ RUN apk update \
         # for yaml
         yaml-dev \
     && pie install apcu/apcu:5.1.28 \
+    && pie install kjdev/brotli:0.18.2 \
     && pie install imagick/imagick:3.8.1 \
     && pie install phpredis/phpredis:6.3.0 \
     && pie install xdebug/xdebug:3.5.0 \
     && pie install pecl/yaml:2.3.0 \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
+    && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype --with-avif \
     && docker-php-ext-install -j4 bcmath exif gd gettext intl mysqli pdo_mysql opcache pdo_pgsql pgsql shmop soap sockets tidy xsl zip \
     && apk del -r \
         .devdeps \
@@ -113,6 +117,7 @@ RUN apk update \
         imagemagick-webp \
         imagemagick-svg \
         imagemagick-tiff \
+        libavif \
         libgcrypt \
         libjpeg-turbo \
         libmcrypt \

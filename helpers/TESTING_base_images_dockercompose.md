@@ -69,7 +69,7 @@ docker compose exec -T php-8-1-dev bash -c "php -i" | grep "PHP Version" | grep 
 
 # PHP 8.1 development should have modules enabled
 docker compose exec -T commons sh -c "curl -kL http://php-8-1-dev:9000" | grep "APCu Support" | grep "Enabled"
-docker compose exec -T commons sh -c "curl -kL http://php-8-1-dev:9000" | grep "Brotli Support" | grep "Enabled"
+docker compose exec -T commons sh -c "curl -kL http://php-8-1-dev:9000" | grep "Brotli support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-1-dev:9000" | grep "LibYAML Support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-1-dev:9000" | grep "Redis Support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-1-dev:9000" | grep "imagick module" | grep "enabled"
@@ -112,7 +112,7 @@ docker compose exec -T php-8-2-dev bash -c "php -i" | grep "PHP Version" | grep 
 
 # PHP 8.2 development should have modules enabled
 docker compose exec -T commons sh -c "curl -kL http://php-8-2-dev:9000" | grep "APCu Support" | grep "Enabled"
-docker compose exec -T commons sh -c "curl -kL http://php-8-2-dev:9000" | grep "Brotli Support" | grep "Enabled"
+docker compose exec -T commons sh -c "curl -kL http://php-8-2-dev:9000" | grep "Brotli support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-2-dev:9000" | grep "LibYAML Support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-2-dev:9000" | grep "Redis Support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-2-dev:9000" | grep "imagick module" | grep "enabled"
@@ -155,7 +155,7 @@ docker compose exec -T php-8-3-dev bash -c "php -i" | grep "PHP Version" | grep 
 
 # PHP 8.3 development should have modules enabled
 docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "APCu Support" | grep "Enabled"
-docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "Brotli Support" | grep "Enabled"
+docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "Brotli support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "LibYAML Support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "Redis Support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-3-dev:9000" | grep "imagick module" | grep "enabled"
@@ -198,7 +198,7 @@ docker compose exec -T php-8-4-dev bash -c "php -i" | grep "PHP Version" | grep 
 
 # PHP 8.4 development should have modules enabled
 docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "APCu Support" | grep "Enabled"
-docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "Brotli Support" | grep "Enabled"
+docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "Brotli support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "LibYAML Support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "Redis Support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-4-dev:9000" | grep "imagick module" | grep "enabled"
@@ -241,7 +241,7 @@ docker compose exec -T php-8-5-dev bash -c "php -i" | grep "PHP Version" | grep 
 
 # PHP 8.5 development should have modules enabled
 docker compose exec -T commons sh -c "curl -kL http://php-8-5-dev:9000" | grep "APCu Support" | grep "Enabled"
-docker compose exec -T commons sh -c "curl -kL http://php-8-5-dev:9000" | grep "Brotli Support" | grep "Enabled"
+docker compose exec -T commons sh -c "curl -kL http://php-8-5-dev:9000" | grep "Brotli support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-5-dev:9000" | grep "LibYAML Support" | grep "enabled"
 docker compose exec -T commons sh -c "curl -kL http://php-8-5-dev:9000" | grep "Redis Support" | grep "enabled"
 # docker compose exec -T commons sh -c "curl -kL http://php-8-5-dev:9000" | grep "imagick module" | grep "enabled"

@@ -644,7 +644,7 @@ target "php-8-5-fpm" {
     "${LOCAL_REPO}/commons": "target:commons"
   }
   dockerfile = "8.5.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.5-fpm:${PUSH_TAG}"]
+  tags = tags("php-8.5-fpm")
 }
 
 target "php-8-5-cli" {
@@ -654,7 +654,7 @@ target "php-8-5-cli" {
     "${LOCAL_REPO}/php-8.5-fpm": "target:php-8-5-fpm"
   }
   dockerfile = "8.5.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.5-cli:${PUSH_TAG}"]
+  tags = tags("php-8.5-cli")
 }
 
 target "php-8-5-cli-drupal" {
@@ -664,7 +664,7 @@ target "php-8-5-cli-drupal" {
     "${LOCAL_REPO}/php-8.5-cli": "target:php-8-5-cli"
   }
   dockerfile = "8.5.Dockerfile"
-  tags = ["${PUSH_REPO}/php-8.5-cli-drupal:${PUSH_TAG}"]
+  tags = tags("php-8.5-cli-drupal")
 }
 
 target "postgres-14" {

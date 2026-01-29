@@ -34,7 +34,7 @@ RUN apk add --no-cache bash \
     && rm -rf /var/cache/apk/* \
     && ln -s /usr/lib/ssh/sftp-server /usr/local/bin/sftp-server
 
-RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.9.4/composer.phar \
+RUN curl -L -o /usr/local/bin/composer https://github.com/composer/composer/releases/download/2.9.5/composer.phar \
     && chmod +x /usr/local/bin/composer \
     && mkdir -p /home/.ssh \
     && fix-permissions /home/

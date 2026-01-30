@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM alpine:3.23.2
+FROM alpine:3.23.3
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/mongo/4.Dockerfile"
 LABEL org.opencontainers.image.description="MongoDB 4 image optimised for running in Lagoon in production and locally"

@@ -2,6 +2,24 @@
 
 This repository builds Docker base images for Lagoon - a Drupal & PHP hosting platform optimized for Kubernetes.
 
+# Review instructions for AI Agents
+
+Follow the PR Review Rubric defined in docs/reviewing/PR_REVIEW_RUBRIC.md.
+Review PRs with focus on:
+1. Functional correctness: reproducible builds, explicit version pins.
+2. Security: no unverified external downloads, minimal attack surface.
+3. Testing: CI coverage and smoke tests exist.
+4. Clarity: documented intent and comments.
+5. Performance: minimal final image size.
+6. Consistency: shared conventions align with other images.
+7. Documentation: readme explains build & usage.
+8. Backward compatibility: no silent breaking changes.
+9. Maintenance: up-to-date with upstream.
+
+Summarize issues by category, avoid low-signal style comments already covered by linters.
+
+
+
 ## Architecture Overview
 
 ### Image Hierarchy & Dependencies

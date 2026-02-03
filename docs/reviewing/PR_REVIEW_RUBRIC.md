@@ -42,8 +42,9 @@ If major version bump:
 
 Only one comment per Dockerfile. No pile-on.
 
-2. Layer construction and determinism
-Explicit checks
+## 2. Layer construction and determinism
+
+**Explicit checks**
 
 Copilot must check:
 
@@ -73,8 +74,9 @@ If layering is inefficient:
 
 No style commentary. Size and determinism only.
 
-3. Helper scripts (helpers/, shared scripts)
-Explicit checks
+## 3. Helper scripts (helpers/, shared scripts)
+
+**Explicit checks**
 
 If a helper script changes, Copilot must verify:
 
@@ -98,8 +100,9 @@ If error handling weakens:
 
 Copilot must not suggest refactors unless behavior is broken.
 
-4. Security posture (image-specific, not generic)
-Explicit checks
+## 4. Security posture (image-specific, not generic)
+
+**Explicit checks**
 
 Copilot must flag:
 
@@ -123,8 +126,9 @@ Runtime as root:
 
 Copilot must not recommend security theatre. Only concrete risks.
 
-5. Image intent and audience clarity
-Explicit checks
+## 5. Image intent and audience clarity
+
+**Explicit checks**
 
 Copilot must verify:
 
@@ -184,8 +188,6 @@ This image is not covered by CI build verification. Add CI coverage to ensure re
 
 **Rule:** Do NOT speculate about test frameworks or suggest new testing approaches.
 
-8. Documentation impact
-Explicit checks
 ## 8. Documentation Impact
 
 **Required Checks:**
@@ -201,7 +203,6 @@ If documentation is outdated:
 ```
 Documentation does not reflect this image change. Update README to match new behavior or requirements.
 ```
-Explicit checks
 
 ## 9. Backward Compatibility and Tagging
 
@@ -218,9 +219,6 @@ This change alters existing image behavior. Confirm backward compatibility or do
 ```
 
 **Rule:** Do NOT block minor internal refactors that don't affect external behavior.
-Copilot must structure its PR review as:
-
-Summary
 
 ## 10. Review Output Format (MANDATORY STRUCTURE)
 

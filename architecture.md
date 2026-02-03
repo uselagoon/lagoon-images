@@ -34,7 +34,7 @@ Examples: `php-8.3-fpm`, `node-22-builder`, `varnish-8-drupal`
   - `make build/{image}` — Build a specific image and its parents.
   - `make build-list` — List all buildable images.
   - `make clean && make build` — Force rebuild of all images.
-  - Multi-platform builds (CI): `make docker-buildx-configure` and `make build PUBLISH_IMAGES=true PLATFORM='linux/amd64,linux/arm64/v8'`.
+  - Multi-platform builds (CI): use the background build + publish pattern (e.g., `make build-bg` followed by `make publish-testlagoon-images`), as used in the Jenkins pipeline.
 - **Dockerfile Conventions:**
   - All Dockerfiles start with a standard block (ARGs, FROM, labels, ENV, and commons utilities copy).
   - Version-specific Dockerfiles are placed in `images/{service}/{version}.Dockerfile`.

@@ -36,15 +36,13 @@ Image dependencies are managed through the `contexts` parameter in each target:
 ```hcl
 target "nginx-drupal" {
   contexts = {
-    commons = "target:commons"
-    nginx = "target:nginx"
+    "${LOCAL_REPO}/nginx" = "target:nginx"
   }
 }
 
 target "php-8-3-cli" {
   contexts = {
-    commons = "target:commons"
-    php-fpm = "target:php-8-3-fpm"
+    "${LOCAL_REPO}/php-8.3-fpm" = "target:php-8-3-fpm"
   }
 }
 ```
@@ -67,9 +65,10 @@ make build-list
 # Force rebuild (removes build markers)
 make clean && make build
 
-# Multi-platform builds (CI only)
-make docker-buildx-configure
-make build PUBLISH_IMAGES=true PLATFORM='linux/amd64,linux/arm64/v8'
+# Multi-platform builds (CI only, see Jenkins pipeline)
+# Use background build + publish pattern as used in Jenkins:
+make build-bg PUBLISH_PLATFORM_ARCH='linux/amd64,linux/arm64/v8'
+make publish-testlagoon-images PUBLISH_PLATFORM_ARCH='linux/amd64,linux/arm64/v8'
 ```
 
 ### Testing Images
@@ -109,23 +108,23 @@ Many services follow a consistent variant pattern for specialized use cases:
 # Base service depends on commons
 target "service-X" {
   contexts = {
-    commons = "target:commons"
+    "${LOCAL_REPO}/commons" = "target:commons"
   }
 }
 
 # Specialized variants depend on base service
 target "service-X-drupal" {
   contexts = {
-    commons = "target:commons"
-    service = "target:service-X"
+    "${LOCAL_REPO}/commons" = "target:commons"
+    "${LOCAL_REPO}/service" = "target:service-X"
   }
 }
 
 # Combined variants depend on first specialization
 target "service-X-persistent-drupal" {
   contexts = {
-    commons = "target:commons"
-    service-drupal = "target:service-X-drupal"
+    "${LOCAL_REPO}/commons" = "target:commons"
+    "${LOCAL_REPO}/service-drupal" = "target:service-X-drupal"
   }
 }
 ```
@@ -133,8 +132,8 @@ target "service-X-persistent-drupal" {
 ### Dockerfile Conventions
 All Dockerfiles start with:
 ```dockerfile
-ARG IMAGE_REPO
-FROM ${IMAGE_REPO:-lagoon}/commons AS commons
+ARG LOCAL_REPO
+FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 FROM upstream:version
 
 # Standard labels
@@ -158,7 +157,7 @@ target "php-8-3-fpm" {              # Target name (dashes replace dots)
   dockerfile = "8.3.Dockerfile"     # Version-specific Dockerfile
   tags = tags("php-8.3-fpm")        # Published image name
   contexts = {
-    commons = "target:commons"      # Parent dependencies
+    "${LOCAL_REPO}/commons" = "target:commons"      # Parent dependencies
   }
 }
 ```
@@ -168,7 +167,7 @@ Note: Target names use dashes instead of dots (e.g., `php-8-3-fpm` vs `php-8.3-f
 ### Environment Variables & Configuration
 - `LAGOON_VERSION`: Git tag or "development"  
 - `CI_BUILD_TAG`: Unique identifier for CI builds
-- `IMAGE_REPO`: Base repository for parent images (lagoon/testlagoon/uselagoon)
+- `LOCAL_REPO`: Base repository for parent images (lagoon/testlagoon/uselagoon)
 - Development images enable xdebug, have higher memory limits
 - Production images disable debug features, enforce stricter security
 
@@ -208,7 +207,7 @@ target "python-3-15" {
   inherits = ["default"]
   context = "images/python"
   contexts = {
-    commons = "target:commons"
+    "${LOCAL_REPO}/commons" = "target:commons"
   }
   dockerfile = "3.15.Dockerfile"
   tags = tags("python-3.15")
@@ -545,7 +544,7 @@ target "service-X" {
   inherits = ["default"]
   context = "images/service"
   contexts = {
-    commons = "target:commons"
+    "${LOCAL_REPO}/commons" = "target:commons"
   }
   dockerfile = "X.Dockerfile"
   tags = tags("service-X")
@@ -556,8 +555,8 @@ target "service-X-drupal" {
   inherits = ["default"]
   context = "images/service-drupal"
   contexts = {
-    commons = "target:commons"
-    service = "target:service-X"
+    "${LOCAL_REPO}/commons" = "target:commons"
+    "${LOCAL_REPO}/service" = "target:service-X"
   }
   dockerfile = "X.Dockerfile"
   tags = tags("service-X-drupal")
@@ -567,8 +566,8 @@ target "service-X-persistent" {
   inherits = ["default"]
   context = "images/service-persistent"
   contexts = {
-    commons = "target:commons"
-    service = "target:service-X"
+    "${LOCAL_REPO}/commons" = "target:commons"
+    "${LOCAL_REPO}/service" = "target:service-X"
   }
   dockerfile = "X.Dockerfile"
   tags = tags("service-X-persistent")
@@ -578,8 +577,8 @@ target "service-X-persistent-drupal" {
   inherits = ["default"]
   context = "images/service-persistent-drupal"
   contexts = {
-    commons = "target:commons"
-    service-drupal = "target:service-X-drupal"
+    "${LOCAL_REPO}/commons" = "target:commons"
+    "${LOCAL_REPO}/service-drupal" = "target:service-X-drupal"
   }
   dockerfile = "X.Dockerfile"
   tags = tags("service-X-persistent-drupal")

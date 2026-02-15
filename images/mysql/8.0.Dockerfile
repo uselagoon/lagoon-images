@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM mysql:8.0.45-oracle
+FROM mysql:8.4.8-oracle
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/mysql/8.0.Dockerfile"
 LABEL org.opencontainers.image.description="MySQL 8.0 image optimised for running in Lagoon in production and locally"

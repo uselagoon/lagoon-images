@@ -79,9 +79,6 @@ group "default" {
     "node-24-cli",
     "opensearch-2",
     "opensearch-3",
-    "php-8-1-fpm",
-    "php-8-1-cli",
-    "php-8-1-cli-drupal",
     "php-8-2-fpm",
     "php-8-2-cli",
     "php-8-2-cli-drupal",
@@ -195,9 +192,6 @@ group "opensearch" {
 group "php" {
   targets = [
     "commons", 
-    "php-8-1-fpm",
-    "php-8-1-cli",
-    "php-8-1-cli-drupal",
     "php-8-2-fpm",
     "php-8-2-cli",
     "php-8-2-cli-drupal",
@@ -515,36 +509,6 @@ target "opensearch-3" {
   }
   dockerfile = "3.Dockerfile"
   tags = tags("opensearch-3")
-}
-
-target "php-8-1-fpm" {
-  inherits = ["default"]
-  context = "images/php-fpm"
-  contexts = {
-    "${LOCAL_REPO}/commons": "target:commons"
-  }
-  dockerfile = "8.1.Dockerfile"
-  tags = tags("php-8.1-fpm")
-}
-
-target "php-8-1-cli" {
-  inherits = ["default"]
-  context = "images/php-cli"
-  contexts = {
-    "${LOCAL_REPO}/php-8.1-fpm": "target:php-8-1-fpm"
-  }
-  dockerfile = "8.1.Dockerfile"
-  tags = tags("php-8.1-cli")
-}
-
-target "php-8-1-cli-drupal" {
-  inherits = ["default"]
-  context = "images/php-cli-drupal"
-  contexts = {
-    "${LOCAL_REPO}/php-8.1-cli": "target:php-8-1-cli"
-  }
-  dockerfile = "8.1.Dockerfile"
-  tags = tags("php-8.1-cli-drupal")
 }
 
 target "php-8-2-fpm" {

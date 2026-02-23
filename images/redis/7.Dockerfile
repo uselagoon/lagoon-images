@@ -1,7 +1,7 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 # Held at alpine3.21 until EOL
-FROM redis:7.2.12-alpine3.21
+FROM redis:7.4.8-alpine3.21
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/redis/7.Dockerfile"
 LABEL org.opencontainers.image.description="Redis 7 image optimised for running in Lagoon in production and locally"

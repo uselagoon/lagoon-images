@@ -1,7 +1,7 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 
-FROM varnish:6.0.16 AS vmod
+FROM varnish:8.0.0 AS vmod
 
 USER root
 
@@ -38,7 +38,7 @@ RUN cd /tmp && curl -sSLO https://github.com/varnish/varnish-modules/archive/${V
     && unzip ${VARNISH_MODULES_VERSION}.zip && cd varnish-modules-${VARNISH_MODULES_VERSION} \
     && ./bootstrap && ./configure && make && make install
 
-FROM varnish:6.0.16
+FROM varnish:8.0.0
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/varnish/6.Dockerfile"
 LABEL org.opencontainers.image.description="Varnish 6 image optimised for running in Lagoon in production and locally"

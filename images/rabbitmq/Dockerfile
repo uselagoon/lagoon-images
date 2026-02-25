@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM rabbitmq:3.10.25-management-alpine
+FROM rabbitmq:3.13.7-management-alpine
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/rabbitmq/Dockerfile"
 LABEL org.opencontainers.image.description="RabbitMQ image optimised for running in Lagoon in production and locally"

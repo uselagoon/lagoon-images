@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM valkey/valkey:9.0.2-alpine3.23
+FROM valkey/valkey:9.0.3-alpine3.23
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/valkey/9.Dockerfile"
 LABEL org.opencontainers.image.description="Valkey 9 image optimised for running in Lagoon in production and locally"

@@ -48,15 +48,6 @@ RUN apt-get -y update \
 RUN architecture=$(case $(uname -m) in x86_64 | amd64) echo "amd64" ;; aarch64 | arm64 | armv8) echo "arm64" ;; *) echo "amd64" ;; esac) \
     && curl -sL https://github.com/krallin/tini/releases/download/v0.19.0/tini-${architecture} -o /sbin/tini && chmod a+x /sbin/tini
 
-# needed to fix dash upgrade - man files are removed from slim images
-RUN set -x \
-    && mkdir -p /usr/share/man/man1 \
-    && touch /usr/share/man/man1/sh.distrib.1.gz
-
-# replace default dash shell with bash to allow for bashisms
-RUN echo "dash dash/sh boolean false" | debconf-set-selections
-RUN DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
-
 RUN mkdir -p /var/solr /opt/solr/server/logs /opt/solr/server/solr
 RUN fix-permissions /var/solr \
     && chown solr:solr /var/solr /opt/solr/server/logs /opt/solr/server/solr \
@@ -77,7 +68,7 @@ VOLUME /var/solr
 # Define provided solr-docker entrypoint to append
 ENV APPEND_NATIVE_ENTRYPOINT=/opt/solr/docker/scripts/docker-entrypoint.sh
 
-ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash"]
 
 # solr-precreate in Solr 10 calls `exec solr-fg --user-managed` internally,
 # so standalone mode is preserved despite Solr 10 defaulting to SolrCloud.

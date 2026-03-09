@@ -3,7 +3,7 @@ FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 
 # Brotli module compilation stage.
 FROM openresty/openresty:1.29.2.1-0-alpine AS brotli-module
-ENV OPENRESTY_VERSION=1.27.1.2
+ENV OPENRESTY_VERSION=1.29.2.1
 
 # Install build dependencies.
 RUN apk add --no-cache \
@@ -11,6 +11,7 @@ RUN apk add --no-cache \
     brotli-dev \
     git \
     gcc \
+    linux-headers \
     make \
     musl-dev \
     pcre-dev \
@@ -41,7 +42,7 @@ FROM openresty/openresty:1.29.2.1-0-alpine
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/nginx/Dockerfile"
 LABEL org.opencontainers.image.description="OpenResty (Nginx) image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/nginx"
-LABEL org.opencontainers.image.base.name="docker.io/openresty/openresty:1.27-alpine"
+LABEL org.opencontainers.image.base.name="docker.io/openresty/openresty:1.29-alpine"
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

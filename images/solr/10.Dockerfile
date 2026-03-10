@@ -55,7 +55,8 @@ RUN fix-permissions /var/solr \
     && fix-permissions /opt/solr/server/solr
 
 COPY solr-recreate.sh /opt/solr/docker/scripts/solr-recreate
-RUN chmod 775 /opt/solr/docker/scripts/solr-recreate
+COPY solr-foreground.sh /opt/solr/docker/scripts/solr-foreground
+RUN chmod 775 /opt/solr/docker/scripts/solr-recreate /opt/solr/docker/scripts/solr-foreground
 
 # solr really doesn't like to be run as root, so we define the default user again
 USER solr
@@ -70,6 +71,7 @@ ENV APPEND_NATIVE_ENTRYPOINT=/opt/solr/docker/scripts/docker-entrypoint.sh
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.bash"]
 
-# solr-precreate in Solr 10 calls `exec solr-fg --user-managed` internally,
-# so standalone mode is preserved despite Solr 10 defaulting to SolrCloud.
+# solr-precreate creates the core on disk then calls solr-foreground.
+# solr-foreground injects --user-managed unless SOLR_CLOUD_MODE=true,
+# keeping standalone mode despite Solr 10 defaulting to SolrCloud.
 CMD ["solr-precreate", "mycore"]

@@ -1,6 +1,6 @@
 set $fhcc none;
 
-if ( $http_user_agent ~* "StatusCake|Pingdom|Site25x7|Uptime|nagios" ) {
+if ( $http_user_agent ~* "StatusCake|Pingdom|Site24x7|Uptime|nagios" ) {
   set $fhcc "A";
 }
 

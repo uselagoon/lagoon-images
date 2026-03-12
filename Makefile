@@ -57,7 +57,9 @@ BRANCH_NAME :=
 
 PUBLISH_PLATFORM_ARCH := linux/amd64,linux/arm64
 
-ifeq ($(MACHINE), arm64)
+MACHINE ?= $(shell uname -m)
+
+ifeq ($(filter $(MACHINE), arm64 aarch64), $(MACHINE))
 	PLATFORM_ARCH ?= linux/arm64
 else
 	PLATFORM_ARCH ?= linux/amd64

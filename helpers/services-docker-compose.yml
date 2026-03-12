@@ -136,6 +136,12 @@ services:
       - "8983"
     user: solr
 
+  solr-10:
+    image: uselagoon/solr-10:latest
+    ports:
+      - "8983"
+    user: solr
+
   valkey-8:
     image: uselagoon/valkey-8:latest
     ports:

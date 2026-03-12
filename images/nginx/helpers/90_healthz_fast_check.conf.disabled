@@ -1,6 +1,7 @@
 set $fhcc none;
 
-if ( $http_user_agent ~* "StatusCake|Pingdom|Site25x7|Uptime|nagios" ) {
+# Case insensitive matching on user agent.
+if ( $http_user_agent ~* "StatusCake|Pingdom|Site24x7|Uptime|nagios|monitoring" ) {
   set $fhcc "A";
 }
 

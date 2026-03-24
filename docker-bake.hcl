@@ -115,6 +115,7 @@ group "default" {
     "ruby-4-0",
     "solr-9",
     "solr-9-drupal",
+    "solr-10",
     "valkey-8",
     "valkey-9",
     "varnish-6",
@@ -264,6 +265,7 @@ group "solr" {
     "commons", 
     "solr-9",
     "solr-9-drupal",
+    "solr-10",
   ]
 }
 
@@ -871,6 +873,17 @@ target "solr-9-drupal" {
   dockerfile = "9.Dockerfile"
   tags = tags("solr-9-drupal")
 }
+
+target "solr-10" {
+  inherits = ["default"]
+  context = "images/solr"
+  contexts = {
+    "${LOCAL_REPO}/commons": "target:commons"
+  }
+  dockerfile = "10.Dockerfile"
+  tags = tags("solr-10")
+}
+
 target "valkey-8" {
   inherits = ["default"]
   context = "images/valkey"

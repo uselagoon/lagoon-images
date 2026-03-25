@@ -19,7 +19,7 @@ COPY --from=commons /home /home
 
 USER root
 
-RUN dnf update --releasever=latest -y \
+RUN dnf update -y \
     && dnf install -y \
         findutils \
         rsync \

@@ -17,3 +17,4 @@ openshift
 /helpers/node_modules
 /helpers/yarn.lock
 /helpers/package.json
+helpers/docker-compose.override.yml

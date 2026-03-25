@@ -122,7 +122,6 @@ scan-images:
 	rm -f ./scans/*.txt
 	@for tag in $(shell $(MAKE) build-tags); do \
 			tag_name=$$(echo $$tag | sed 's|.*/\([^:]*\):.*|\1|'); \
-			docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/root/.cache/ aquasec/trivy image --timeout 5m0s $$tag > ./scans/$$tag_name.trivy.txt ; \
 			docker run --rm -v /var/run/docker.sock:/var/run/docker.sock anchore/syft $$tag > ./scans/$$tag_name.syft.txt ; \
 			docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(HOME)/Library/Caches:/var/lib/grype/db anchore/grype --add-cpes-if-none $$tag > ./scans/$$tag_name.grype.txt ; \
 			echo $$tag ; \

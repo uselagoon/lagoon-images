@@ -63,6 +63,10 @@ USER solr
 
 ENV SOLR_OPTS="-Dlog4j2.formatMsgNoLookups=true"
 
+# JDK21+ have new XML parsing limits that cause Solr to fail when indexing large documents. These options disable those limits.
+# REF https://www.drupal.org/project/search_api_solr/issues/3577485
+ENV JDK_JAVA_OPTIONS="-Djdk.xml.maxGeneralEntitySizeLimit=0 -Djdk.xml.totalEntitySizeLimit=0"
+
 # Define Volume so locally we get persistent cores
 VOLUME /var/solr
 

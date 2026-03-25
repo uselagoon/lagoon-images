@@ -1,5 +1,5 @@
 FROM ghcr.io/amazeeio/go-crond:26.3.0 AS go-crond
-FROM ghcr.io/amazeeio/envplate:25.10.0 AS envplate
+FROM ghcr.io/amazeeio/envplate:26.3.0 AS envplate
 FROM alpine:3.23.3
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/commons/Dockerfile"

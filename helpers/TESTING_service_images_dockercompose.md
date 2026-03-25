@@ -39,6 +39,7 @@ docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp:/
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-7:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://redis-8:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://solr-9:8983 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://solr-10:8983 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://valkey-8:6379 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://valkey-9:6379 -timeout 1m
 ```
@@ -67,6 +68,7 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-7
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep redis-8
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-9
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep solr-10
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep valkey-8
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep valkey-9
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep varnish-6
@@ -328,6 +330,19 @@ docker compose exec -T solr-9 sh -c "cat /var/solr/data/mycore/conf/solrconfig.x
 # solr-9 should be able to read/write data
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-9" | grep "SERVICE_HOST=solr-9"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-9" | grep "LAGOON_TEST_VAR=all-images"
+
+# solr-10 should have a "mycore" Solr core
+docker compose exec -T commons sh -c "curl solr-10:8983/solr/admin/cores?action=STATUS\&core=mycore"
+
+# solr-10 should be able to reload "mycore" Solr core
+docker compose exec -T commons sh -c "curl solr-10:8983/solr/admin/cores?action=RELOAD\&core=mycore"
+
+# solr-10 should have solr 10 solrconfig in "mycore" core
+docker compose exec -T solr-10 sh -c "cat /var/solr/data/mycore/conf/solrconfig.xml" | grep luceneMatchVersion | grep 10.
+
+# solr-10 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-10" | grep "SERVICE_HOST=solr-10"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/solr?service=solr-10" | grep "LAGOON_TEST_VAR=all-images"
 
 # valkey-8 should be running Valkey v8 server and Redis compatible
 docker compose exec -T valkey-8 sh -c "valkey-server --version" | grep v=8.

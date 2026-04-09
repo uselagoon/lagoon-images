@@ -124,6 +124,30 @@
         "php.*--require=(?<depName>.*?):(?<currentValue>.*?)\\s.*\n"
       ],
       "datasourceTemplate": "packagist"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)nginx/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "ENV OPENRESTY_VERSION=(?<currentValue>[\\d.]+)\n"
+      ],
+      "depNameTemplate": "openresty/openresty",
+      "datasourceTemplate": "github-tags",
+      "extractVersionTemplate": "^v(?<version>.*)$",
+      "versioningTemplate": "regex:^(\\d)\\.(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)varnish/6\\.Dockerfile$/"
+      ],
+      "matchStrings": [
+        "ENV VARNISH_VERSION=(?<currentValue>[\\d.]+)\n"
+      ],
+      "depNameTemplate": "varnish",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
@@ -292,6 +316,17 @@
       "matchPackageNames": [
         "alpine"
       ]
+    },
+    {
+      "enabled": true,
+      "matchDatasources": [
+        "github-tags"
+      ],
+      "matchPackageNames": [
+        "openresty/openresty"
+      ],
+      "extractVersion": "^v(?<version>.*)$",
+      "versioning": "regex:^(\\d)\\.(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
   ]
 }

@@ -3,6 +3,8 @@ FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 
 # Brotli module compilation stage.
 FROM openresty/openresty:1.27.1.2-11-alpine AS brotli-module
+
+# renovate: datasource=github-tags depName=openresty/openresty
 ENV OPENRESTY_VERSION=1.27.1.2
 
 # Install build dependencies.

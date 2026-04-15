@@ -51,7 +51,7 @@ COPY php-fpm.d/www.conf php-fpm.d/global.conf /usr/local/etc/php-fpm.d/
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 COPY --from=docker.io/mlocati/php-extension-installer:2.10 /usr/bin/install-php-extensions /usr/local/bin/
-COPY --from=ghcr.io/php/pie:1.4.0-bin /pie /usr/local/bin/
+COPY --from=ghcr.io/php/pie:1.4.1-bin /pie /usr/local/bin/
 
 RUN apk update \
     && apk upgrade --available musl \

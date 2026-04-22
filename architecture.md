@@ -475,7 +475,7 @@ flowchart LR
     new["New version<br/>(target + group + Dockerfile + tests)"]
     active["Active<br/>built, tested, published"]
     eol["EOL<br/>labels:<br/>sh.lagoon.image.deprecated.status<br/>sh.lagoon.image.deprecated.suggested"]
-    removed["Removed<br/>(after ≥ 6 months)"]
+    removed["Removed<br/>(after ≥ 1 release)"]
 
     new --> active --> eol --> removed
 ```
@@ -487,12 +487,16 @@ Two distinct phases:
    `sh.lagoon.image.deprecated.suggested` label pointing at the
    recommended successor. Scanners and the Lagoon platform surface this
    to users.
-2. **Removal.** After at least six months of EOL warnings, the image is
+2. **Removal.** After at least one release with EOL warnings, the image is
    deleted from `images/`, its bake target and group memberships are
    removed, and its compose entry + test commands are stripped from
    `helpers/`.
+3. **Lagoon Reporting.** Lagoon Builds will always mark these images as
+   deprecated for as long as the image remains published and available.
+   In some faster-moving images, the replacement image may also have been
+   marked deprecated, but can't be resolved without republishing.
 
-For the precise mechanics of both phases, see the EOL section in
+For the precise mechanics of these phases, see the EOL section in
 [.github/copilot-instructions.md](.github/copilot-instructions.md).
 
 ---

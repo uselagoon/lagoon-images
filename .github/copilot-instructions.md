@@ -9,7 +9,20 @@
 
 ## When reviewing a PR
 
-Use [docs/reviewing/PR_REVIEW_RUBRIC.md](../docs/reviewing/PR_REVIEW_RUBRIC.md).
+### Instruction source for CI Copilot reviews
+
+For guidance that must be enforced on every automated PR review, place it in
+`.github/instructions/*.instructions.md`.
+
+Keep this file as task-focused guidance and workflow recipes. Linked docs
+such as `architecture.md` and `docs/reviewing/PR_REVIEW_RUBRIC.md` are
+reference material. Use `.github/instructions/pr-review.instructions.md` as
+the canonical machine-consumed PR review policy.
+
+Use [`.github/instructions/pr-review.instructions.md`](instructions/pr-review.instructions.md)
+for enforceable review checks, and
+[docs/reviewing/PR_REVIEW_RUBRIC.md](../docs/reviewing/PR_REVIEW_RUBRIC.md)
+for explanatory context.
 Focus on:
 
 1. **Correctness** — reproducible builds, explicit version pins.
@@ -141,6 +154,11 @@ Then add the target to the service group **and** the `default` group.
 
 ### 3. Test + validate as in Recipe 1, step 4.
 
+For variants, the normal expectation is **targeted validation** rather
+than re-running the full base-image test suite: startup check, version
+check, and assertions specific to the variant behavior (for example
+Drupal VCL or persistent cache settings).
+
 ---
 
 ## Recipe 3 — Add a brand-new service with multiple variants
@@ -154,7 +172,8 @@ Order of operations:
    existing) service group **and** to `default`.
 3. Add compose entries + TESTING commands for every variant.
 4. `make build/service-X-persistent-drupal` (which transitively builds the rest).
-5. Validate every variant via the local compose loop in Recipe 1 step 4.
+5. Fully validate the **base** image via the local compose loop in
+  Recipe 1 step 4, then run targeted smoke checks for each variant.
 6. Commit Dockerfiles + bake changes + helpers in a single PR.
 
 ---
@@ -163,6 +182,14 @@ Order of operations:
 
 These are *patterns*. Always run them against the built image and adjust
 to real output before committing.
+
+Default testing depth:
+
+- Run the full verification set on the base image for the service.
+- For variants, run focused checks that prove the variant delta
+  (plus startup and version checks).
+- Only run full suites on every variant when the change is broad enough
+  to affect all variants.
 
 **PHP (FPM on port 9000)** — needs a startup wait:
 ```bash

@@ -44,7 +44,7 @@ lagoon-images/
 │
 ├── docs/
 │   └── reviewing/
-│       └── PR_REVIEW_RUBRIC.md         ← PR review criteria
+│       └── PR_REVIEW_RUBRIC.md         ← PR review context/rationale
 │
 ├── helpers/                            ← test harness consumed by Jenkins
 │   ├── images-docker-compose.yml       ← compose stack for "base image" tests
@@ -475,7 +475,7 @@ flowchart LR
     new["New version<br/>(target + group + Dockerfile + tests)"]
     active["Active<br/>built, tested, published"]
     eol["EOL<br/>labels:<br/>sh.lagoon.image.deprecated.status<br/>sh.lagoon.image.deprecated.suggested"]
-    removed["Removed<br/>(after ≥ 1 release)"]
+  removed["Removed<br/>(after ≥ 6 months)"]
 
     new --> active --> eol --> removed
 ```
@@ -487,7 +487,7 @@ Two distinct phases:
    `sh.lagoon.image.deprecated.suggested` label pointing at the
    recommended successor. Scanners and the Lagoon platform surface this
    to users.
-2. **Removal.** After at least one release with EOL warnings, the image is
+2. **Removal.** After at least 6 months with EOL warnings, the image is
    deleted from `images/`, its bake target and group memberships are
    removed, and its compose entry + test commands are stripped from
    `helpers/`.
@@ -506,7 +506,7 @@ For the precise mechanics of these phases, see the EOL section in
 | If you want to…                                | Read                                                       |
 | ---------------------------------------------- | ---------------------------------------------------------- |
 | Add, remove, or test an image                  | [.github/copilot-instructions.md](.github/copilot-instructions.md) |
-| Review a PR                                    | [docs/reviewing/PR_REVIEW_RUBRIC.md](docs/reviewing/PR_REVIEW_RUBRIC.md) |
+| Review a PR                                    | [.github/instructions/pr-review.instructions.md](.github/instructions/pr-review.instructions.md) |
 | Understand build orchestration                 | [docker-bake.hcl](docker-bake.hcl), [Makefile](Makefile)   |
 | Understand the CI flow                         | [Jenkinsfile](Jenkinsfile)                                 |
 | Understand the entrypoint / commons utilities  | [images/commons/](images/commons)                          |

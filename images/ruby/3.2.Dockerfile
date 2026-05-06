@@ -7,6 +7,8 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 LABEL org.opencontainers.image.description="Ruby 3.2 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/ruby-3.2"
 LABEL org.opencontainers.image.base.name="docker.io/ruby:3.2-alpine3.23"
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/ruby-4.0"
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

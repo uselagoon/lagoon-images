@@ -475,7 +475,7 @@ flowchart LR
     new["New version<br/>(target + group + Dockerfile + tests)"]
     active["Active<br/>built, tested, published"]
     eol["EOL<br/>labels:<br/>sh.lagoon.image.deprecated.status<br/>sh.lagoon.image.deprecated.suggested"]
-  removed["Removed<br/>(after ≥ 6 months)"]
+  removed["Removed<br/>(typically after 1-2 releases)"]
 
     new --> active --> eol --> removed
 ```
@@ -487,7 +487,7 @@ Two distinct phases:
    `sh.lagoon.image.deprecated.suggested` label pointing at the
    recommended successor. Scanners and the Lagoon platform surface this
    to users.
-2. **Removal.** After at least 6 months with EOL warnings, the image is
+2. **Removal.** Typically after 1-2 releases with EOL warnings, the image is
    deleted from `images/`, its bake target and group memberships are
    removed, and its compose entry + test commands are stripped from
    `helpers/`.

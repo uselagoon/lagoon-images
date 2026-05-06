@@ -263,7 +263,7 @@ Syft / Grype and the Lagoon platform consume them to warn users.
 
 ---
 
-## Recipe 6 — Remove an EOL image (after ≥ 6 months)
+## Recipe 6 — Remove an EOL image (typically after 1-2 releases)
 
 1. `rm images/<service>/<version>.Dockerfile`
 2. In `docker-bake.hcl`: delete the `target` block, remove the target

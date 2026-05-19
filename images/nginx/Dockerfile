@@ -2,10 +2,10 @@ ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 
 # Brotli module compilation stage.
-FROM openresty/openresty:1.27.1.2-12-alpine AS brotli-module
+FROM openresty/openresty:1.29.2.4-0-alpine AS brotli-module
 
 # renovate: datasource=github-tags depName=openresty/openresty
-ENV OPENRESTY_VERSION=1.27.1.2
+ENV OPENRESTY_VERSION=1.29.2.4
 
 # Install build dependencies.
 RUN apk add --no-cache \
@@ -13,6 +13,7 @@ RUN apk add --no-cache \
     brotli-dev \
     git \
     gcc \
+    linux-headers \
     make \
     musl-dev \
     pcre-dev \
@@ -38,12 +39,12 @@ RUN ./configure --with-compat --add-dynamic-module=/tmp/ngx_brotli \
 RUN cp ./build/nginx-*/objs/ngx_http_brotli_filter_module.so /usr/local/openresty/nginx/modules/
 RUN cp ./build/nginx-*/objs/ngx_http_brotli_static_module.so /usr/local/openresty/nginx/modules/
 
-FROM openresty/openresty:1.27.1.2-12-alpine
+FROM openresty/openresty:1.29.2.4-0-alpine
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/nginx/Dockerfile"
 LABEL org.opencontainers.image.description="OpenResty (Nginx) image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/nginx"
-LABEL org.opencontainers.image.base.name="docker.io/openresty/openresty:1.27-alpine"
+LABEL org.opencontainers.image.base.name="docker.io/openresty/openresty:1.29.2.4-alpine"
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

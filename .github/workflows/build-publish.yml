@@ -1,0 +1,104 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # CI_BUILD_TAG is used to namespace locally built images so concurrent runs
+      # don't collide. Mirrors the Jenkins construction: 'lagoon' + last 26 chars
+      # of the sanitised branch+run_number string.
+      - name: Compute CI environment variables
+        run: |
+          SAFEBRANCH_NAME=$(printf '%s' "${GITHUB_REF_NAME}" \
+            | sed 's/%2F/-/g; s/%2f/-/g; s/[^A-Za-z0-9]\+/-/g' \
+            | tr '[:upper:]' '[:lower:]')
+
+          RAW="${SAFEBRANCH_NAME}${GITHUB_RUN_NUMBER}${GITHUB_RUN_ATTEMPT}"
+          SAFEBRANCH_AND_BUILDNUMBER=$(printf '%s' "${RAW}" \
+            | sed 's/[^A-Za-z0-9]//g' \
+            | tr '[:upper:]' '[:lower:]')
+
+          LEN=${#SAFEBRANCH_AND_BUILDNUMBER}
+          if [ "${LEN}" -gt 26 ]; then
+            TAIL="${SAFEBRANCH_AND_BUILDNUMBER: -26}"
+          else
+            TAIL="${SAFEBRANCH_AND_BUILDNUMBER}"
+          fi
+          CI_BUILD_TAG="lagoon${TAIL}"
+
+          echo "CI_BUILD_TAG=${CI_BUILD_TAG}" >> "${GITHUB_ENV}"
+          echo "CI_BUILD_TAG=${CI_BUILD_TAG}"
+
+      - name: Set up Docker Buildx (creates ci-lagoon-images builder)
+        uses: docker/setup-buildx-action@v3
+        with:
+          name: ci-lagoon-images
+          driver-opts: network=host
+
+      - name: Build images
+        run: make -O build
+
+      - name: Clone lagoon-examples repository
+        run: |
+          rm -rf tests || echo 'no tests directory to remove'
+          git clone https://github.com/uselagoon/lagoon-examples.git tests
+
+      - name: Set up test helpers and submodules
+        working-directory: tests
+        run: |
+          git submodule sync && git submodule update --init
+          mkdir -p ./all-images
+          cp ../helpers/*docker-compose.yml ./all-images/
+          cp ../helpers/TESTING_*_dockercompose.md ./all-images/
+          sed -i "/image: uselagoon/ s/uselagoon/${CI_BUILD_TAG}/" ./all-images/*-docker-compose.yml
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+          cache-dependency-path: tests/yarn.lock
+
+      - name: Install test dependencies
+        working-directory: tests
+        run: yarn install
+
+      - name: Create Docker test network
+        run: docker network inspect amazeeio-network >/dev/null 2>&1 || docker network create amazeeio-network
+
+      # Switch back to the standard docker driver so docker-compose builds inside
+      # the test suite don't go through the buildx driver.
+      - name: Prepare test image references
+        working-directory: tests
+        run: |
+          docker buildx use default
+          grep -rl uselagoon . | xargs sed -i "/^FROM/ s/uselagoon/${CI_BUILD_TAG}/"
+          grep -rl uselagoon . | xargs sed -i "/image: uselagoon/ s/uselagoon/${CI_BUILD_TAG}/"
+          find . -maxdepth 2 -name docker-compose.yml | xargs sed -i -e '/###/d'
+
+      - name: Run base-images tests
+        working-directory: tests
+        run: TEST=./all-images/TESTING_base_images* yarn test
+
+      - name: Run service-images tests
+        working-directory: tests
+        run: TEST=./all-images/TESTING_service_images* yarn test
+
+      - name: Run simple Drupal tests
+        working-directory: tests
+        run: yarn test:simple
+
+      - name: Run advanced Drupal tests
+        working-directory: tests
+        run: yarn test:advanced

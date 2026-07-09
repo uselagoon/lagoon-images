@@ -5,6 +5,8 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 LABEL org.opencontainers.image.description="Node.js 20 builder image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/node-20-builder"
 LABEL org.opencontainers.image.base.name="docker.io/uselagoon/node-20"
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/node-24-builder"
 
 RUN apk update \
     && apk add --no-cache \

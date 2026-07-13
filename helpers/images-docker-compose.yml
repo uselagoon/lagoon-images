@@ -41,6 +41,17 @@ services:
         exec http-server -p 3000
         "]
 
+  node-26:
+    image: uselagoon/node-26:latest
+    ports:
+      - "3000"
+    user: root
+    command: ["sh", "-c", "
+        npm install -g http-server;
+        node -v | xargs > /app/test.html;
+        exec http-server -p 3000
+        "]
+
   php-8-2-dev:
     image: uselagoon/php-8.2-cli:latest
     ports:

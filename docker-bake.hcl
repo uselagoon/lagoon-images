@@ -77,6 +77,9 @@ group "default" {
     "node-24",
     "node-24-builder",
     "node-24-cli",
+    "node-26",
+    "node-26-builder",
+    "node-26-cli",
     "opensearch-2",
     "opensearch-3",
     "php-8-2-fpm",
@@ -178,7 +181,10 @@ group "node" {
     "node-22-cli",
     "node-24",
     "node-24-builder",
-    "node-24-cli"
+    "node-24-cli",
+    "node-26",
+    "node-26-builder",
+    "node-26-cli"
   ]
 }
 
@@ -491,6 +497,36 @@ target "node-24-cli" {
   }
   dockerfile = "24.Dockerfile"
   tags = tags("node-24-cli")
+}
+
+target "node-26" {
+  inherits = ["default"]
+  context = "images/node"
+  contexts = {
+    "${LOCAL_REPO}/commons": "target:commons"
+  }
+  dockerfile = "26.Dockerfile"
+  tags = tags("node-26")
+}
+
+target "node-26-builder" {
+  inherits = ["default"]
+  context = "images/node-builder"
+  contexts = {
+    "${LOCAL_REPO}/node-26": "target:node-26"
+  }
+  dockerfile = "26.Dockerfile"
+  tags = tags("node-26-builder")
+}
+
+target "node-26-cli" {
+  inherits = ["default"]
+  context = "images/node-cli"
+  contexts = {
+    "${LOCAL_REPO}/node-26": "target:node-26"
+  }
+  dockerfile = "26.Dockerfile"
+  tags = tags("node-26-cli")
 }
 
 target "opensearch-2" {

@@ -2,10 +2,10 @@ ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 
 # Brotli module compilation stage.
-FROM openresty/openresty:1.29.2.5-1-alpine AS brotli-module
+FROM openresty/openresty:1.31.1.1-2-alpine AS brotli-module
 
 # renovate: datasource=github-tags depName=openresty/openresty
-ENV OPENRESTY_VERSION=1.29.2.5
+ENV OPENRESTY_VERSION=1.31.1.1
 
 # Install build dependencies.
 RUN apk add --no-cache \
@@ -39,7 +39,7 @@ RUN ./configure --with-compat --add-dynamic-module=/tmp/ngx_brotli \
 RUN cp ./build/nginx-*/objs/ngx_http_brotli_filter_module.so /usr/local/openresty/nginx/modules/
 RUN cp ./build/nginx-*/objs/ngx_http_brotli_static_module.so /usr/local/openresty/nginx/modules/
 
-FROM openresty/openresty:1.29.2.5-1-alpine
+FROM openresty/openresty:1.31.1.1-2-alpine
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/nginx/Dockerfile"
 LABEL org.opencontainers.image.description="OpenResty (Nginx) image optimised for running in Lagoon in production and locally"

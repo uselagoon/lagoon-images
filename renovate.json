@@ -17,6 +17,9 @@
   "separateMajorMinor": true,
   "separateMinorPatch": true,
   "separateMultipleMajor": true,
+  "enabledManagers": [
+    "custom.regex"
+  ],
   "customManagers": [
     {
       "customType": "regex",
@@ -223,71 +226,8 @@
       ]
     },
     {
-      "enabled": true,
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "patch"
-      ],
-      "matchPackageNames": [
-        "mariadb",
-        "mysql",
-        "php",
-        "python",
-        "ruby"
-      ]
-    },
-    {
-      "enabled": true,
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "openresty/openresty"
-      ],
-      "versioning": "regex:^(\\d)\\.(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<build>\\d+)-(?<compatibility>.*)$"
-    },
-    {
-      "draftPR": true,
-      "groupName": "Draft major and minor update PRs - packages update only patch",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor"
-      ],
-      "matchPackageNames": [
-        "mariadb",
-        "mysql",
-        "php",
-        "python",
-        "ruby"
-      ]
-    },
-    {
-      "enabled": true,
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "patch",
-        "minor"
-      ],
-      "matchPackageNames": [
-        "node",
-        "opensearchproject/opensearch",
-        "postgres",
-        "redis",
-        "solr",
-        "valkey/valkey",
-        "varnish"
-      ]
-    },
-    {
-      "draftPR": true,
-      "groupName": "Draft major release PRs - packages update only minor",
+      "enabled": false,
+      "groupName": "Disable VARNISH_VERSION major updates - varnish/6.Dockerfile stays on v6",
       "matchDatasources": [
         "docker"
       ],
@@ -295,26 +235,7 @@
         "major"
       ],
       "matchPackageNames": [
-        "node",
-        "opensearchproject/opensearch",
-        "postgres",
-        "redis",
-        "solr",
-        "valkey/valkey",
         "varnish"
-      ]
-    },
-    {
-      "enabled": false,
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "major",
-        "minor"
-      ],
-      "matchPackageNames": [
-        "alpine"
       ]
     },
     {

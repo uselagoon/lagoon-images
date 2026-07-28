@@ -20,7 +20,7 @@ RUN apk add --no-cache \
     openssl-dev \
     zlib-dev \
     perl
-
+RUN ls
 # Clone and prepare the Brotli module.
 # There are no tags, so we'll checkout a specific hash.
 RUN git clone --recursive https://github.com/google/ngx_brotli.git /tmp/ngx_brotli && \

@@ -46,7 +46,7 @@ COPY php-fpm.d/www.conf php-fpm.d/global.conf /usr/local/etc/php-fpm.d/
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
 COPY --from=docker.io/mlocati/php-extension-installer:2.11 /usr/bin/install-php-extensions /usr/local/bin/
-COPY --from=ghcr.io/php/pie:1.4.8-bin /pie /usr/local/bin/
+COPY --from=ghcr.io/php/pie:1.4.9-bin /pie /usr/local/bin/
 
 RUN apk update \
     && apk upgrade --available musl \
@@ -133,7 +133,7 @@ RUN apk update \
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=12.7.0.36
+ENV NEWRELIC_VERSION=12.9.0.38
 RUN mkdir -p /tmp/newrelic && cd /tmp/newrelic \
     && wget https://download.newrelic.com/php_agent/archive/${NEWRELIC_VERSION}/newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz \
     && gzip -dc newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz | tar --strip-components=1 -xf - \

@@ -144,6 +144,29 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/)valkey/.*\\.Dockerfile$/"
+      ],
+      "matchStrings": [
+        "FROM valkey/valkey:(?<currentValue>[\\d.]+)-alpine[\\d.]+"
+      ],
+      "depNameTemplate": "valkey/valkey",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)valkey/.*\\.Dockerfile$/"
+      ],
+      "matchStrings": [
+        "FROM valkey/valkey:[\\d.]+-alpine(?<currentValue>[\\d.]+)"
+      ],
+      "depNameTemplate": "valkey-alpine-base",
+      "packageNameTemplate": "alpine",
+      "datasourceTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/)varnish/6\\.Dockerfile$/"
       ],
       "matchStrings": [
@@ -236,6 +259,22 @@
       ],
       "matchPackageNames": [
         "varnish"
+      ]
+    },
+    {
+      "groupName": "valkey",
+      "matchFileNames": [
+        "images/valkey/**"
+      ]
+    },
+    {
+      "enabled": false,
+      "groupName": "Disable valkey major updates - one Dockerfile per pinned major",
+      "matchDepNames": [
+        "valkey/valkey"
+      ],
+      "matchUpdateTypes": [
+        "major"
       ]
     },
     {

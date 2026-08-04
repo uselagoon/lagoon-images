@@ -42,8 +42,9 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "solr"
         update-types: ["version-update:semver-major"]
+      # valkey is handled by renovate custom managers so the alpine tag
+      # suffix can be bumped together with the valkey version
       - dependency-name: "valkey/valkey"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "varnish"
         update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"

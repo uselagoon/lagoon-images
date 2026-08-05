@@ -63,6 +63,7 @@ group "default" {
     "mariadb-10-11",
     "mariadb-10-11-drupal",
     "mariadb-11-4",
+    "mariadb-11-8",
     "mariadb-12-3",
     "mongo-4",
     "mysql-8-0",
@@ -141,6 +142,7 @@ group "mariadb" {
     "mariadb-10-11",
     "mariadb-10-11-drupal",
     "mariadb-11-4",
+    "mariadb-11-8",
     "mariadb-12-3"
   ]
 }
@@ -350,6 +352,16 @@ target "mariadb-11-4" {
   }
   dockerfile = "11.4.Dockerfile"
   tags = tags("mariadb-11.4")
+}
+
+target "mariadb-11-8" {
+  inherits = ["default"]
+  context = "images/mariadb"
+  contexts = {
+    "${LOCAL_REPO}/commons": "target:commons"
+  }
+  dockerfile = "11.8.Dockerfile"
+  tags = tags("mariadb-11.8")
 }
 
 target "mariadb-12-3" {

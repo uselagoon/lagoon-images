@@ -150,7 +150,8 @@
         "FROM valkey/valkey:(?<currentValue>[\\d.]+)-alpine[\\d.]+"
       ],
       "depNameTemplate": "valkey/valkey",
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+)-alpine[\\d.]+$"
     },
     {
       "customType": "regex",
@@ -162,7 +163,8 @@
       ],
       "depNameTemplate": "valkey-alpine-base",
       "packageNameTemplate": "alpine",
-      "datasourceTemplate": "docker"
+      "datasourceTemplate": "docker",
+      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+)$"
     },
     {
       "customType": "regex",

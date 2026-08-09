@@ -112,7 +112,6 @@ group "default" {
     "redis-7",
     "redis-7-persistent",
     "redis-8",
-    "ruby-3-2",
     "ruby-3-3",
     "ruby-3-4",
     "ruby-4-0",
@@ -259,7 +258,6 @@ group "redis" {
 group "ruby" {
   targets = [
     "commons", 
-    "ruby-3-2",
     "ruby-3-3",
     "ruby-3-4",
     "ruby-4-0",
@@ -847,16 +845,6 @@ target "redis-8" {
   }
   dockerfile = "8.Dockerfile"
   tags = tags("redis-8")
-}
-
-target "ruby-3-2" {
-  inherits = ["default"]
-  context = "images/ruby"
-  contexts = {
-    "${LOCAL_REPO}/commons": "target:commons"
-  }
-  dockerfile = "3.2.Dockerfile"
-  tags = tags("ruby-3.2")
 }
 
 target "ruby-3-3" {

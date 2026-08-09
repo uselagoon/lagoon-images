@@ -68,9 +68,6 @@ group "default" {
     "mysql-8-4",
     "nginx",
     "nginx-drupal",
-    "node-20",
-    "node-20-builder",
-    "node-20-cli",
     "node-22",
     "node-22-builder",
     "node-22-cli",
@@ -172,9 +169,6 @@ group "nginx" {
 group "node" {
   targets = [
     "commons", 
-    "node-20",
-    "node-20-builder",
-    "node-20-cli",
     "node-22",
     "node-22-builder",
     "node-22-cli",
@@ -405,36 +399,6 @@ target "nginx-drupal" {
   }
   dockerfile = "Dockerfile"
   tags = tags("nginx-drupal")
-}
-
-target "node-20" {
-  inherits = ["default"]
-  context = "images/node"
-  contexts = {
-    "${LOCAL_REPO}/commons": "target:commons"
-  }
-  dockerfile = "20.Dockerfile"
-  tags = tags("node-20")
-}
-
-target "node-20-builder" {
-  inherits = ["default"]
-  context = "images/node-builder"
-  contexts = {
-    "${LOCAL_REPO}/node-20": "target:node-20"
-  }
-  dockerfile = "20.Dockerfile"
-  tags = tags("node-20-builder")
-}
-
-target "node-20-cli" {
-  inherits = ["default"]
-  context = "images/node-cli"
-  contexts = {
-    "${LOCAL_REPO}/node-20": "target:node-20"
-  }
-  dockerfile = "20.Dockerfile"
-  tags = tags("node-20-cli")
 }
 
 target "node-22" {

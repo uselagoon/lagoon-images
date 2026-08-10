@@ -68,9 +68,6 @@ group "default" {
     "mysql-8-4",
     "nginx",
     "nginx-drupal",
-    "node-20",
-    "node-20-builder",
-    "node-20-cli",
     "node-22",
     "node-22-builder",
     "node-22-cli",
@@ -112,7 +109,6 @@ group "default" {
     "redis-7",
     "redis-7-persistent",
     "redis-8",
-    "ruby-3-2",
     "ruby-3-3",
     "ruby-3-4",
     "ruby-4-0",
@@ -173,9 +169,6 @@ group "nginx" {
 group "node" {
   targets = [
     "commons", 
-    "node-20",
-    "node-20-builder",
-    "node-20-cli",
     "node-22",
     "node-22-builder",
     "node-22-cli",
@@ -259,7 +252,6 @@ group "redis" {
 group "ruby" {
   targets = [
     "commons", 
-    "ruby-3-2",
     "ruby-3-3",
     "ruby-3-4",
     "ruby-4-0",
@@ -407,36 +399,6 @@ target "nginx-drupal" {
   }
   dockerfile = "Dockerfile"
   tags = tags("nginx-drupal")
-}
-
-target "node-20" {
-  inherits = ["default"]
-  context = "images/node"
-  contexts = {
-    "${LOCAL_REPO}/commons": "target:commons"
-  }
-  dockerfile = "20.Dockerfile"
-  tags = tags("node-20")
-}
-
-target "node-20-builder" {
-  inherits = ["default"]
-  context = "images/node-builder"
-  contexts = {
-    "${LOCAL_REPO}/node-20": "target:node-20"
-  }
-  dockerfile = "20.Dockerfile"
-  tags = tags("node-20-builder")
-}
-
-target "node-20-cli" {
-  inherits = ["default"]
-  context = "images/node-cli"
-  contexts = {
-    "${LOCAL_REPO}/node-20": "target:node-20"
-  }
-  dockerfile = "20.Dockerfile"
-  tags = tags("node-20-cli")
 }
 
 target "node-22" {
@@ -847,16 +809,6 @@ target "redis-8" {
   }
   dockerfile = "8.Dockerfile"
   tags = tags("redis-8")
-}
-
-target "ruby-3-2" {
-  inherits = ["default"]
-  context = "images/ruby"
-  contexts = {
-    "${LOCAL_REPO}/commons": "target:commons"
-  }
-  dockerfile = "3.2.Dockerfile"
-  tags = tags("ruby-3.2")
 }
 
 target "ruby-3-3" {

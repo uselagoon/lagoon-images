@@ -36,7 +36,6 @@ Run the following commands to validate things are rolling as they should.
 ```bash
 # should have all the services we expect
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep commons
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-20
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-22
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-24
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep node-26
@@ -53,7 +52,6 @@ docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep 
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-12
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-13
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep python-3-14
-docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-2
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-3
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-3-4
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep ruby-4-0
@@ -285,12 +283,6 @@ docker compose exec -T python-3-14 sh -c "pip list --no-cache-dir" | grep "virtu
 # python-3-14 should be serving content
 docker compose exec -T commons sh -c "curl python-3-14:3000/tmp/test" | grep "Python 3.14"
 
-# node-20 should have Node 20
-docker compose exec -T node-20 sh -c "node -v" | grep "v20"
-
-# node-20 should be serving content
-docker compose exec -T commons sh -c "curl node-20:3000/test" | grep "v20"
-
 # node-22 should have Node 22
 docker compose exec -T node-22 sh -c "node -v" | grep "v22"
 
@@ -308,12 +300,6 @@ docker compose exec -T node-26 sh -c "node -v" | grep "v26"
 
 # node-26 should be serving content
 docker compose exec -T commons sh -c "curl node-26:3000/test" | grep "v26"
-
-# ruby-3-2 should have Ruby 3.2
-docker compose exec -T ruby-3-2 sh -c "ruby -v" | grep "3.2"
-
-# ruby-3-2 should be serving content
-docker compose exec -T commons sh -c "curl ruby-3-2:3000/tmp/" | grep "ruby 3.2"
 
 # ruby-3-3 should have Ruby 3.3
 docker compose exec -T ruby-3-3 sh -c "ruby -v" | grep "3.3"

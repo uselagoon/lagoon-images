@@ -25,6 +25,7 @@ docker compose build && docker compose up -d
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-6:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-10-11:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-11-4:3306 -timeout 1m
+docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mariadb-12-3:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mongo-4:27017 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mysql-8-0:3306 -timeout 1m
 docker run --rm --net all-images_default jwilder/dockerize dockerize -wait tcp://mysql-8-4:3306 -timeout 1m
@@ -54,6 +55,7 @@ Run the following commands to validate things are rolling as they should.
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep commons
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-6
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-10-11
+docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mariadb-12-3
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mongo-4
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mysql-8-0
 docker ps --filter label=com.docker.compose.project=all-images | grep Up | grep mysql-8-4
@@ -143,6 +145,28 @@ docker compose exec -T mariadb-11-4 sh -c "mariadb -D lagoon -u lagoon --passwor
 # mariadb-11-4 should be able to read/write data
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-11-4" | grep "SERVICE_HOST=11.4"
 docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-11-4" | grep "LAGOON_TEST_VAR=all-images"
+
+# mariadb-12-3 should be version 12.3 client
+docker compose exec -T mariadb-12-3 sh -c "mariadb -V" | grep "12.3"
+
+# mariadb-12-3 should be version 12.3 server
+docker compose exec -T mariadb-12-3 sh -c "echo U0hPVyB2YXJpYWJsZXM7 | base64 -d > /tmp/showvariables.sql"
+docker compose exec -T mariadb-12-3 sh -c "mariadb < /tmp/showvariables.sql" | grep "version" | grep "12.3"
+
+# mariadb-12-3 should have performance schema and slow logging enabled
+docker compose exec -T mariadb-12-3 sh -c "echo U0hPVyBHTE9CQUwgVkFSSUFCTEVTOw== | base64 -d > /tmp/showglobalvars.sql"
+docker compose exec -T mariadb-12-3 sh -c "mariadb -D lagoon -u lagoon --password=lagoon < /tmp/showglobalvars.sql" | grep "performance_schema" | grep "ON"
+docker compose exec -T mariadb-12-3 sh -c "mariadb -D lagoon -u lagoon --password=lagoon < /tmp/showglobalvars.sql" | grep "slow_query_log" | grep "ON"
+docker compose exec -T mariadb-12-3 sh -c "mariadb -D lagoon -u lagoon --password=lagoon < /tmp/showglobalvars.sql" | grep "long_query_time" | grep "30"
+docker compose exec -T mariadb-12-3 sh -c "mariadb -D lagoon -u lagoon --password=lagoon < /tmp/showglobalvars.sql" | grep "log_slow_rate_limit" | grep "5"
+
+# mariadb-12-3 should use default credentials
+docker compose exec -T mariadb-12-3 sh -c "echo U0hPVyBkYXRhYmFzZXM7 | base64 -d > /tmp/showdatabases.sql"
+docker compose exec -T mariadb-12-3 sh -c "mariadb -D lagoon -u lagoon --password=lagoon < /tmp/showdatabases.sql" | grep lagoon
+
+# mariadb-12-3 should be able to read/write data
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-12-3" | grep "SERVICE_HOST=12.3"
+docker compose exec -T commons sh -c "curl -kL http://internal-services-test:3000/mariadb?service=mariadb-12-3" | grep "LAGOON_TEST_VAR=all-images"
 
 # mongo-4 should be version 4.0 client
 docker compose exec -T mongo-4 sh -c "mongo --version" | grep "shell version" | grep "v4.0"

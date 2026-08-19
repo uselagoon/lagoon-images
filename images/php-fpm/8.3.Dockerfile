@@ -5,7 +5,7 @@ FROM composer:latest AS healthcheckbuilder
 
 RUN composer create-project --no-dev amazeeio/healthz-php /healthz-php v0.0.7
 
-FROM php:8.3.30-fpm-alpine3.23
+FROM php:8.3.32-fpm-alpine3.23
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/php-fpm/8.3.Dockerfile"
 LABEL org.opencontainers.image.description="PHP 8.3 FPM image optimised for running in Lagoon in production and locally"
@@ -45,8 +45,8 @@ COPY 00-lagoon-php.ini.tpl "$PHP_INI_DIR/conf.d/"
 COPY php-fpm.d/www.conf php-fpm.d/global.conf /usr/local/etc/php-fpm.d/
 COPY ssmtp.conf /etc/ssmtp/ssmtp.conf
 COPY blackfire.ini /usr/local/etc/php/conf.d/blackfire.disable
-COPY --from=docker.io/mlocati/php-extension-installer:2.10 /usr/bin/install-php-extensions /usr/local/bin/
-COPY --from=ghcr.io/php/pie:1.3.9-bin /pie /usr/local/bin/
+COPY --from=docker.io/mlocati/php-extension-installer:2.11 /usr/bin/install-php-extensions /usr/local/bin/
+COPY --from=ghcr.io/php/pie:1.4.9-bin /pie /usr/local/bin/
 
 RUN apk update \
     && apk upgrade --available musl \
@@ -87,7 +87,7 @@ RUN apk update \
     && pie install apcu/apcu:5.1.28 \
     && pie install imagick/imagick:3.8.1 \
     && pie install phpredis/phpredis:6.3.0 \
-    && pie install xdebug/xdebug:3.5.1 \
+    && pie install xdebug/xdebug:3.5.3 \
     && pie install pecl/yaml:2.3.0 \
     && sed -i '1s/^/;Intentionally disabled. Enable via setting env variable XDEBUG_ENABLE to true\n;/' /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && docker-php-ext-configure gd --with-webp --with-jpeg --with-freetype \
@@ -133,7 +133,7 @@ RUN apk update \
 # New Relic PHP Agent.
 # @see https://docs.newrelic.com/docs/release-notes/agent-release-notes/php-release-notes/
 # @see https://docs.newrelic.com/docs/agents/php-agent/getting-started/php-agent-compatibility-requirements
-ENV NEWRELIC_VERSION=12.5.0.30
+ENV NEWRELIC_VERSION=12.9.0.38
 RUN mkdir -p /tmp/newrelic && cd /tmp/newrelic \
     && wget https://download.newrelic.com/php_agent/archive/${NEWRELIC_VERSION}/newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz \
     && gzip -dc newrelic-php5-${NEWRELIC_VERSION}-linux-musl.tar.gz | tar --strip-components=1 -xf - \
@@ -151,6 +151,7 @@ RUN mkdir -p /tmp/newrelic && cd /tmp/newrelic \
     && sed -i -e "s/;newrelic.application_logging.enabled = .*/newrelic.application_logging.enabled = \${NEWRELIC_APPLICATION_LOGGING_ENABLED:-true}/" /usr/local/etc/php/conf.d/newrelic.ini \
     && sed -i -e "s/;newrelic.application_logging.metrics.enabled = .*/newrelic.application_logging.metrics.enabled = \${NEWRELIC_APPLICATION_LOGGING_METRICS_ENABLED:-true}/" /usr/local/etc/php/conf.d/newrelic.ini \
     && sed -i -e "s/;newrelic.application_logging.forwarding.enabled = .*/newrelic.application_logging.forwarding.enabled = \${NEWRELIC_APPLICATION_LOGGING_FORWARDING_ENABLED:-true}/" /usr/local/etc/php/conf.d/newrelic.ini \
+    && sed -i -e "s/;newrelic.transaction_tracer.max_segments_web = .*/newrelic.transaction_tracer.max_segments_web = \${NEWRELIC_TRANSACTION_TRACER_MAX_SEGMENTS_WEB:-0}/" /usr/local/etc/php/conf.d/newrelic.ini \
     && mv /usr/local/etc/php/conf.d/newrelic.ini /usr/local/etc/php/conf.d/newrelic.disable \
     && cd / && rm -rf /tmp/newrelic \
     && fix-permissions /usr/local/etc/

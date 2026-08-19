@@ -1,10 +1,10 @@
 ARG LOCAL_REPO
-FROM ${LOCAL_REPO:-lagoon}/node-20
+FROM ${LOCAL_REPO:-lagoon}/node-26
 
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/node-cli/20.Dockerfile"
-LABEL org.opencontainers.image.description="Node.js 20 cli image optimised for running in Lagoon in production and locally"
-LABEL org.opencontainers.image.title="uselagoon/node-20-cli"
-LABEL org.opencontainers.image.base.name="docker.io/uselagoon/node-20"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/node-cli/26.Dockerfile"
+LABEL org.opencontainers.image.description="Node.js 26 cli image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/node-26-cli"
+LABEL org.opencontainers.image.base.name="docker.io/uselagoon/node-26"
 
 RUN apk add --no-cache bash \
         coreutils \
@@ -36,8 +36,7 @@ RUN fix-permissions /etc/my.cnf.d/
 
 # SSH Key and Agent Setup
 COPY ssh_config /etc/ssh/ssh_config
-COPY id_ed25519_lagoon_cli.key /home/.ssh/lagoon_cli.key
-RUN chmod 400 /home/.ssh/lagoon_cli.key
+RUN sed -i '/# Deprecated: lagoon_cli.key/,+2d' /etc/ssh/ssh_config
 ENV SSH_AUTH_SOCK=/tmp/ssh-agent
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]

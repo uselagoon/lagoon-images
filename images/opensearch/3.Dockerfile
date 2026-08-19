@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM opensearchproject/opensearch:3.5.0
+FROM opensearchproject/opensearch:3.7.0
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/opensearch/3.Dockerfile"
 LABEL org.opencontainers.image.description="OpenSearch 3 image optimised for running in Lagoon in production and locally"
@@ -19,7 +19,7 @@ COPY --from=commons /home /home
 
 USER root
 
-RUN dnf update --releasever=latest -y \
+RUN dnf update -y \
     && dnf install -y \
         findutils \
         rsync \

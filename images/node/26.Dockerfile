@@ -1,11 +1,11 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM node:20.20-alpine3.23
+FROM node:26.5-alpine3.23
 
-LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/node/20.Dockerfile"
-LABEL org.opencontainers.image.description="Node.js 20 image optimised for running in Lagoon in production and locally"
-LABEL org.opencontainers.image.title="uselagoon/node-20"
-LABEL org.opencontainers.image.base.name="docker.io/node:20-alpine3.23"
+LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/node/26.Dockerfile"
+LABEL org.opencontainers.image.description="Node.js 26 image optimised for running in Lagoon in production and locally"
+LABEL org.opencontainers.image.title="uselagoon/node-26"
+LABEL org.opencontainers.image.base.name="docker.io/node:26-alpine3.23"
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION
@@ -35,10 +35,6 @@ ENV TMPDIR=/tmp \
     ENV=/home/.bashrc \
     # When Bash is invoked as non-interactive (like `bash -c command`) it sources a file that is given in `BASH_ENV`
     BASH_ENV=/home/.bashrc
-
-# Make sure Bower and NPM are allowed to be running as root
-RUN echo '{ "allow_root": true }' > /home/.bowerrc \
-    && echo 'unsafe-perm=true' > /home/.npmrc
 
 WORKDIR /app
 

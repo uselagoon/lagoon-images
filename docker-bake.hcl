@@ -63,20 +63,21 @@ group "default" {
     "mariadb-10-11",
     "mariadb-10-11-drupal",
     "mariadb-11-4",
+    "mariadb-12-3",
     "mongo-4",
     "mysql-8-0",
     "mysql-8-4",
     "nginx",
     "nginx-drupal",
-    "node-20",
-    "node-20-builder",
-    "node-20-cli",
     "node-22",
     "node-22-builder",
     "node-22-cli",
     "node-24",
     "node-24-builder",
     "node-24-cli",
+    "node-26",
+    "node-26-builder",
+    "node-26-cli",
     "opensearch-2",
     "opensearch-3",
     "php-8-2-fpm",
@@ -109,7 +110,6 @@ group "default" {
     "redis-7",
     "redis-7-persistent",
     "redis-8",
-    "ruby-3-2",
     "ruby-3-3",
     "ruby-3-4",
     "ruby-4-0",
@@ -141,7 +141,8 @@ group "mariadb" {
     "mariadb-10-6-drupal",
     "mariadb-10-11",
     "mariadb-10-11-drupal",
-    "mariadb-11-4"
+    "mariadb-11-4",
+    "mariadb-12-3"
   ]
 }
 
@@ -171,15 +172,15 @@ group "nginx" {
 group "node" {
   targets = [
     "commons", 
-    "node-20",
-    "node-20-builder",
-    "node-20-cli",
     "node-22",
     "node-22-builder",
     "node-22-cli",
     "node-24",
     "node-24-builder",
-    "node-24-cli"
+    "node-24-cli",
+    "node-26",
+    "node-26-builder",
+    "node-26-cli"
   ]
 }
 
@@ -254,7 +255,6 @@ group "redis" {
 group "ruby" {
   targets = [
     "commons", 
-    "ruby-3-2",
     "ruby-3-3",
     "ruby-3-4",
     "ruby-4-0",
@@ -354,6 +354,16 @@ target "mariadb-11-4" {
   tags = tags("mariadb-11.4")
 }
 
+target "mariadb-12-3" {
+  inherits = ["default"]
+  context = "images/mariadb"
+  contexts = {
+    "${LOCAL_REPO}/commons": "target:commons"
+  }
+  dockerfile = "12.3.Dockerfile"
+  tags = tags("mariadb-12.3")
+}
+
 
 target "mongo-4" {
   inherits = ["default"]
@@ -403,36 +413,6 @@ target "nginx-drupal" {
   }
   dockerfile = "Dockerfile"
   tags = tags("nginx-drupal")
-}
-
-target "node-20" {
-  inherits = ["default"]
-  context = "images/node"
-  contexts = {
-    "${LOCAL_REPO}/commons": "target:commons"
-  }
-  dockerfile = "20.Dockerfile"
-  tags = tags("node-20")
-}
-
-target "node-20-builder" {
-  inherits = ["default"]
-  context = "images/node-builder"
-  contexts = {
-    "${LOCAL_REPO}/node-20": "target:node-20"
-  }
-  dockerfile = "20.Dockerfile"
-  tags = tags("node-20-builder")
-}
-
-target "node-20-cli" {
-  inherits = ["default"]
-  context = "images/node-cli"
-  contexts = {
-    "${LOCAL_REPO}/node-20": "target:node-20"
-  }
-  dockerfile = "20.Dockerfile"
-  tags = tags("node-20-cli")
 }
 
 target "node-22" {
@@ -493,6 +473,36 @@ target "node-24-cli" {
   }
   dockerfile = "24.Dockerfile"
   tags = tags("node-24-cli")
+}
+
+target "node-26" {
+  inherits = ["default"]
+  context = "images/node"
+  contexts = {
+    "${LOCAL_REPO}/commons": "target:commons"
+  }
+  dockerfile = "26.Dockerfile"
+  tags = tags("node-26")
+}
+
+target "node-26-builder" {
+  inherits = ["default"]
+  context = "images/node-builder"
+  contexts = {
+    "${LOCAL_REPO}/node-26": "target:node-26"
+  }
+  dockerfile = "26.Dockerfile"
+  tags = tags("node-26-builder")
+}
+
+target "node-26-cli" {
+  inherits = ["default"]
+  context = "images/node-cli"
+  contexts = {
+    "${LOCAL_REPO}/node-26": "target:node-26"
+  }
+  dockerfile = "26.Dockerfile"
+  tags = tags("node-26-cli")
 }
 
 target "opensearch-2" {
@@ -813,16 +823,6 @@ target "redis-8" {
   }
   dockerfile = "8.Dockerfile"
   tags = tags("redis-8")
-}
-
-target "ruby-3-2" {
-  inherits = ["default"]
-  context = "images/ruby"
-  contexts = {
-    "${LOCAL_REPO}/commons": "target:commons"
-  }
-  dockerfile = "3.2.Dockerfile"
-  tags = tags("ruby-3.2")
 }
 
 target "ruby-3-3" {

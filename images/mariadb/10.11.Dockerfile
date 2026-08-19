@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM alpine:3.20.9
+FROM alpine:3.20.10
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/mariadb/10.11.Dockerfile"
 LABEL org.opencontainers.image.description="MariaDB 10.11 image optimised for running in Lagoon in production and locally"
@@ -41,10 +41,10 @@ RUN apk update \
         bash \
         curl \
         gettext \
-        mariadb-client=10.11.14-r0 \
-        mariadb-common=10.11.14-r0 \
-        mariadb-server-utils=10.11.14-r0 \
-        mariadb=10.11.14-r0 \
+        mariadb-client=~10.11 \
+        mariadb-common=~10.11 \
+        mariadb-server-utils=~10.11 \
+        mariadb=~10.11 \
         mariadb-connector-c \
         net-tools \
         perl-doc \

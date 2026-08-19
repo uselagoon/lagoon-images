@@ -1,0 +1,55 @@
+version: 2
+updates:
+  - package-ecosystem: "docker"
+    directories:
+      - "/images/*"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 20
+    labels:
+      - "dependencies"
+    groups:
+      patch-updates:
+        update-types:
+          - "patch"
+      minor-updates:
+        update-types:
+          - "minor"
+    ignore:
+      # One Dockerfile per pinned major.minor (e.g. mariadb/10.6.Dockerfile,
+      # php-fpm/8.2.Dockerfile) - patch updates only
+      - dependency-name: "mariadb"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "mysql"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "php"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "python"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "ruby"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "alpine"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      # One Dockerfile per pinned major (e.g. postgres/14.Dockerfile stays on
+      # postgres 14) - minor and patch updates only
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "opensearchproject/opensearch"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "postgres"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "redis"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "solr"
+        update-types: ["version-update:semver-major"]
+      # valkey is handled by renovate custom managers so the alpine tag
+      # suffix can be bumped together with the valkey version
+      - dependency-name: "valkey/valkey"
+      - dependency-name: "varnish"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"

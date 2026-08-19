@@ -147,24 +147,11 @@
         "/(^|/)valkey/.*\\.Dockerfile$/"
       ],
       "matchStrings": [
-        "FROM valkey/valkey:(?<currentValue>[\\d.]+)-alpine[\\d.]+"
+        "FROM valkey/valkey:(?<currentValue>[\\d.]+-alpine[\\d.]+)"
       ],
       "depNameTemplate": "valkey/valkey",
       "datasourceTemplate": "docker",
-      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+\\.\\d+)-alpine[\\d.]+$"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/)valkey/.*\\.Dockerfile$/"
-      ],
-      "matchStrings": [
-        "FROM valkey/valkey:[\\d.]+-alpine(?<currentValue>[\\d.]+)"
-      ],
-      "depNameTemplate": "valkey-alpine-base",
-      "packageNameTemplate": "alpine",
-      "datasourceTemplate": "docker",
-      "extractVersionTemplate": "^(?<version>\\d+\\.\\d+)$"
+      "versioningTemplate": "regex:^(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-alpine(?<build>\\d+)\\.(?<revision>\\d+)$"
     },
     {
       "customType": "regex",

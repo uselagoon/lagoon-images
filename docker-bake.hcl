@@ -116,6 +116,7 @@ group "default" {
     "solr-9",
     "solr-9-drupal",
     "solr-10",
+    "solr-10-drupal",
     "valkey-8",
     "valkey-9",
     "varnish-6",
@@ -266,6 +267,7 @@ group "solr" {
     "solr-9",
     "solr-9-drupal",
     "solr-10",
+    "solr-10-drupal",
   ]
 }
 
@@ -882,6 +884,17 @@ target "solr-10" {
   }
   dockerfile = "10.Dockerfile"
   tags = tags("solr-10")
+}
+
+target "solr-10-drupal" {
+  inherits = ["default"]
+  context = "images/solr-drupal"
+  contexts = {
+    "${LOCAL_REPO}/commons": "target:commons",
+    "${LOCAL_REPO}/solr-10": "target:solr-10"
+  }
+  dockerfile = "10.Dockerfile"
+  tags = tags("solr-10-drupal")
 }
 
 target "valkey-8" {

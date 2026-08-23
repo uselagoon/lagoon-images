@@ -5,7 +5,7 @@ FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 FROM openresty/openresty:1.29.2.5-1-alpine AS brotli-module
 
 # renovate: datasource=github-tags depName=openresty/openresty
-ENV OPENRESTY_VERSION=1.29.2.5
+ENV OPENRESTY_VERSION=1.31.1.1
 
 # Install build dependencies.
 RUN apk add --no-cache \

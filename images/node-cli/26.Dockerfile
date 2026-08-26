@@ -36,7 +36,6 @@ RUN fix-permissions /etc/my.cnf.d/
 
 # SSH Key and Agent Setup
 COPY ssh_config /etc/ssh/ssh_config
-RUN sed -i '/# Deprecated: lagoon_cli.key/,+2d' /etc/ssh/ssh_config
 ENV SSH_AUTH_SOCK=/tmp/ssh-agent
 
 ENTRYPOINT ["/sbin/tini", "--", "/lagoon/entrypoints.sh"]

@@ -4,7 +4,3 @@ Host *
   IdentityFile /home/.ssh/key
   ServerAliveInterval 60
   ServerAliveCountMax 1440
-
-# Deprecated: lagoon_cli.key
-Match localuser root
-  IdentityFile /home/.ssh/lagoon_cli.key

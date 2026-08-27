@@ -7,7 +7,7 @@ FROM redis:7.2.16-alpine3.21
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/redis/7.Dockerfile"
 LABEL org.opencontainers.image.description="Redis 7 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/redis-7"
-LABEL org.opencontainers.image.base.name="docker.io/redis:7-alpine3.21"
+LABEL org.opencontainers.image.base.name="docker.io/redis:7.2-alpine3.21"
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

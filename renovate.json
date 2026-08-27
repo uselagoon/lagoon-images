@@ -251,10 +251,11 @@
       ]
     },
     {
-      "groupName": "Redis OSS",
+      "groupName": "Redis 7.2 OSS",
       "matchDatasources": ["docker"],
+      "matchFileNames": ["images/redis/7.Dockerfile"],
       "matchPackageNames": ["redis"],
-      "allowedVersions": "!/^7\\.4/"
+      "allowedVersions": "/^7\\.2\\./"
     },
     {
       "groupName": "valkey",

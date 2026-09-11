@@ -101,6 +101,7 @@ group "default" {
     "postgres-16-drupal",
     "postgres-17",
     "postgres-17-drupal",
+    "postgres-18",
     "python-3-10",
     "python-3-11",
     "python-3-12",
@@ -223,6 +224,7 @@ group "postgres" {
     "postgres-16-drupal",
     "postgres-17",
     "postgres-17-drupal",
+    "postgres-18",
   ]
 }
 
@@ -735,6 +737,16 @@ target "postgres-17-drupal" {
   }
   dockerfile = "17.Dockerfile"
   tags = tags("postgres-17-drupal")
+}
+
+target "postgres-18" {
+  inherits = ["default"]
+  context = "images/postgres"
+  contexts = {
+    "${LOCAL_REPO}/commons": "target:commons"
+  }
+  dockerfile = "18.Dockerfile"
+  tags = tags("postgres-18")
 }
 
 target "python-3-10" {

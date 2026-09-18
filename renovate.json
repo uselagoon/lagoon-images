@@ -289,8 +289,8 @@
       ]
     },
     {
-      "draftPR": true,
-      "groupName": "Draft major and minor update PRs - packages update only patch",
+      "enabled": false,
+      "groupName": "Disable major/minor updates - one Dockerfile per pinned major.minor (e.g. php-fpm/8.3.Dockerfile stays on 8.3)",
       "matchDatasources": [
         "docker"
       ],
@@ -326,8 +326,8 @@
       ]
     },
     {
-      "draftPR": true,
-      "groupName": "Draft major release PRs - packages update only minor",
+      "enabled": false,
+      "groupName": "Disable major updates - one Dockerfile per pinned major (e.g. postgres/14.Dockerfile stays on 14, varnish/6.Dockerfile stays on 6)",
       "matchDatasources": [
         "docker"
       ],

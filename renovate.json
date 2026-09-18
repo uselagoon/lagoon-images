@@ -18,6 +18,7 @@
   "separateMinorPatch": true,
   "separateMultipleMajor": true,
   "enabledManagers": [
+    "dockerfile",
     "custom.regex"
   ],
   "customManagers": [
@@ -238,19 +239,6 @@
       ]
     },
     {
-      "enabled": false,
-      "groupName": "Disable VARNISH_VERSION major updates - varnish/6.Dockerfile stays on v6",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ],
-      "matchPackageNames": [
-        "varnish"
-      ]
-    },
-    {
       "groupName": "Redis 7.2 OSS",
       "matchDatasources": ["docker"],
       "matchFileNames": ["images/redis/7.Dockerfile"],
@@ -264,16 +252,6 @@
       ]
     },
     {
-      "enabled": false,
-      "groupName": "Disable valkey major updates - one Dockerfile per pinned major",
-      "matchDepNames": [
-        "valkey/valkey"
-      ],
-      "matchUpdateTypes": [
-        "major"
-      ]
-    },
-    {
       "enabled": true,
       "matchDatasources": [
         "github-tags"
@@ -283,6 +261,111 @@
       ],
       "extractVersion": "^v(?<version>.*)$",
       "versioning": "regex:^(\\d)\\.(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "enabled": true,
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "openresty/openresty"
+      ],
+      "versioning": "regex:^(\\d)\\.(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<build>\\d+)-(?<compatibility>.*)$"
+    },
+    {
+      "enabled": true,
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "matchPackageNames": [
+        "mariadb",
+        "mysql",
+        "php",
+        "python",
+        "ruby"
+      ]
+    },
+    {
+      "enabled": false,
+      "groupName": "Disable major/minor updates - one Dockerfile per pinned major.minor (e.g. php-fpm/8.3.Dockerfile stays on 8.3)",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "matchPackageNames": [
+        "mariadb",
+        "mysql",
+        "php",
+        "python",
+        "ruby"
+      ]
+    },
+    {
+      "enabled": true,
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "matchPackageNames": [
+        "node",
+        "opensearchproject/opensearch",
+        "postgres",
+        "redis",
+        "solr",
+        "valkey/valkey",
+        "varnish"
+      ]
+    },
+    {
+      "enabled": false,
+      "groupName": "Disable major updates - one Dockerfile per pinned major (e.g. postgres/14.Dockerfile stays on 14, varnish/6.Dockerfile stays on 6)",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "matchPackageNames": [
+        "node",
+        "opensearchproject/opensearch",
+        "postgres",
+        "redis",
+        "solr",
+        "valkey/valkey",
+        "varnish"
+      ]
+    },
+    {
+      "enabled": false,
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
+      ],
+      "matchPackageNames": [
+        "alpine"
+      ]
+    },
+    {
+      "description": "valkey is managed by the custom.regex manager (handles the alpine tag suffix); disable the built-in dockerfile manager for it to avoid duplicate PRs",
+      "enabled": false,
+      "matchManagers": [
+        "dockerfile"
+      ],
+      "matchDepNames": [
+        "valkey/valkey"
+      ]
     }
   ]
 }

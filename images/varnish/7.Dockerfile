@@ -7,6 +7,8 @@ LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-image
 LABEL org.opencontainers.image.description="Varnish 7 image optimised for running in Lagoon in production and locally"
 LABEL org.opencontainers.image.title="uselagoon/varnish-7"
 LABEL org.opencontainers.image.base.name="docker.io/varnish:7-alpine"
+LABEL sh.lagoon.image.deprecated.status="endoflife"
+LABEL sh.lagoon.image.deprecated.suggested="docker.io/uselagoon/varnish-8"
 
 ARG LAGOON_VERSION
 ENV LAGOON_VERSION=$LAGOON_VERSION

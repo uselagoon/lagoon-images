@@ -25,7 +25,7 @@ RUN apk add --no-cache \
 # Clone and prepare the Brotli module.
 # There are no tags, so we'll checkout a specific hash.
 RUN git clone --recursive https://github.com/google/ngx_brotli.git /tmp/ngx_brotli && \
-    cd /tmp/ngx_brotli && git checkout a71f9312c2deb28875acc7bacfdd5695a111aa53
+    cd /tmp/ngx_brotli && git checkout 53e0fb55f250f48fe80c0ddbf6c0f7103cdbaae1
 
 # Download the OpenResty source.
 RUN wget -O /tmp/openresty-${OPENRESTY_VERSION}.tar.gz https://openresty.org/download/openresty-${OPENRESTY_VERSION}.tar.gz && \

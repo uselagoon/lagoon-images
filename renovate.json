@@ -93,6 +93,30 @@
         "/(^|/|\\.)Dockerfile$/"
       ],
       "matchStrings": [
+        "pie install kjdev/brotli:(?<currentValue>[\\d.]+)\\s"
+      ],
+      "depNameTemplate": "kjdev/php-ext-brotli",
+      "datasourceTemplate": "github-tags"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/)nginx/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "--revision=(?<currentDigest>[a-f0-9]{40})\\s"
+      ],
+      "currentValueTemplate": "master",
+      "depNameTemplate": "google/ngx_brotli",
+      "packageNameTemplate": "https://github.com/google/ngx_brotli",
+      "datasourceTemplate": "git-refs"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/(^|/|\\.)Dockerfile$/"
+      ],
+      "matchStrings": [
         "ENV BLACKFIRE_VERSION=(?<currentValue>.*?)\n"
       ],
       "depNameTemplate": "blackfireio/docker",

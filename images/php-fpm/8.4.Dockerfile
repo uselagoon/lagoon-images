@@ -88,7 +88,7 @@ RUN apk update \
         # for yaml
         yaml-dev \
     && pie install apcu/apcu:5.1.28 \
-    && pie install kjdev/brotli:0.18.3 \
+    && pie install kjdev/brotli:0.21.1 \
     && pie install imagick/imagick:3.8.1 \
     && pie install phpredis/phpredis:6.3.0 \
     && pie install xdebug/xdebug:3.5.3 \

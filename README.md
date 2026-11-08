@@ -17,6 +17,14 @@ These dockerfiles are used to create the base images for consumption in [Docker 
 
 The images used to build Lagoon itself are stored in the Lagoon repository, and are built separately.
 
+## Releases
+
+The Lagoon team is committed to releasing new versions of these images at least once a month. Additional patch releases are made between monthly releases when needed (for example, to address security issues).
+
+Releases are versioned as `YY.M.PATCH` (e.g. `26.10.0` is the October 2026 release), and published to the [`uselagoon` organization on Docker Hub](https://hub.docker.com/u/uselagoon), where they are tagged with both the release version and `:latest`.
+
+Release notes for each version are available on the [GitHub releases page](https://github.com/uselagoon/lagoon-images/releases).
+
 ## Experimental images
 
 From time to time, the Lagoon team may release images that are not suitable for use in production, but are ready for testing.

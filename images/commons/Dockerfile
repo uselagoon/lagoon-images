@@ -1,4 +1,4 @@
-FROM ghcr.io/amazeeio/go-crond:26.3.0 AS go-crond
+FROM ghcr.io/amazeeio/go-crond:26.11.0 AS go-crond
 FROM ghcr.io/amazeeio/envplate:26.3.0 AS envplate
 FROM alpine:3.23.8
 

@@ -96,12 +96,12 @@ pipeline {
             }
             retry(3) {
               sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-              sh script: "timeout 12m make -O publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/arm64,linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME} PUSH_TAG_ADDITIONAL=latest", label: "Publishing built multiarch images"
+              sh script: "timeout 20m make -O publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/arm64,linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME} PUSH_TAG_ADDITIONAL=latest", label: "Publishing built multiarch images"
             }
           } else {
             retry(3) {
               sh script: 'docker login -u amazeeiojenkins -p $PASSWORD', label: "Docker login"
-              sh script: "timeout 12m make -O publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built singlearch images"
+              sh script: "timeout 20m make -O publish-testlagoon-images PUBLISH_PLATFORM_ARCH=linux/amd64 BRANCH_NAME=${SAFEBRANCH_NAME}", label: "Publishing built singlearch images"
             }
           }
         }

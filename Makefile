@@ -135,13 +135,13 @@ scan-images:
 
 .PHONY: publish-testlagoon-images
 publish-testlagoon-images:
-	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=docker.io/testlagoon PUSH_TAG=$(BRANCH_NAME) LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
+	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=docker.io/testlagoon PUSH_TAG=$(BRANCH_NAME) LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --set '*.attest=type=sbom' --push
 
 # tag and push all images
 
 .PHONY: publish-uselagoon-images
 publish-uselagoon-images:
-	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) NO_CACHE=true LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=docker.io/uselagoon PUSH_TAG=$(LAGOON_VERSION) PUSH_TAG_ADDITIONAL=latest LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --push
+	PLATFORMS=$(PUBLISH_PLATFORM_ARCH) NO_CACHE=true LOCAL_REPO=$(CI_BUILD_TAG) LOCAL_TAG=$(LOCAL_TAG) PUSH_REPO=docker.io/uselagoon PUSH_TAG=$(LAGOON_VERSION) PUSH_TAG_ADDITIONAL=latest LAGOON_VERSION=$(LAGOON_VERSION) docker buildx bake -f docker-bake.hcl --builder ci-lagoon-images --set '*.attest=type=sbom' --push
 
 .PHONY: docker_buildx_clean
 docker_buildx_clean:

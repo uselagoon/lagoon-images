@@ -5,7 +5,7 @@ FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 FROM openresty/openresty:1.31.1.1-alpine AS brotli-module
 
 # renovate: datasource=github-tags depName=openresty/openresty
-ENV OPENRESTY_VERSION=1.31.1.1
+ENV OPENRESTY_VERSION=1.31.8.1
 
 
 # Install build dependencies.

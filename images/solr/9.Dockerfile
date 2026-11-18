@@ -71,7 +71,7 @@ RUN chmod 775 /opt/solr/docker/scripts/solr-recreate
 # solr really doesn't like to be run as root, so we define the default user agin
 USER solr
 
-ENV SOLR_OPTS="-Dlog4j2.formatMsgNoLookups=true"
+ENV SOLR_OPTS="-Dlog4j2.formatMsgNoLookups=true -XX:-UseBASE64Intrinsics"
 
 # Define Volume so locally we get persistent cores
 VOLUME /var/solr

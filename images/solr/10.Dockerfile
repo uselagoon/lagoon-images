@@ -61,7 +61,7 @@ RUN chmod 775 /opt/solr/docker/scripts/solr-recreate /opt/solr/docker/scripts/so
 # solr really doesn't like to be run as root, so we define the default user again
 USER solr
 
-ENV SOLR_OPTS="-Dlog4j2.formatMsgNoLookups=true"
+ENV SOLR_OPTS="-Dlog4j2.formatMsgNoLookups=true -XX:-UseBASE64Intrinsics"
 
 # JDK21+ have new XML parsing limits that cause Solr to fail when indexing large documents. These options disable those limits.
 # REF https://www.drupal.org/project/search_api_solr/issues/3577485

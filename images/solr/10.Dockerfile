@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
-FROM solr:10.0.0
+FROM solr:10.1.0
 
 LABEL org.opencontainers.image.source="https://github.com/uselagoon/lagoon-images/blob/main/images/solr/10.Dockerfile"
 LABEL org.opencontainers.image.description="Solr 10 image optimised for running in Lagoon in production and locally"

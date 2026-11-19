@@ -25,14 +25,6 @@ Releases are versioned as `YY.M.PATCH` (e.g. `26.10.0` is the October 2026 relea
 
 Release notes for each version are available on the [GitHub releases page](https://github.com/uselagoon/lagoon-images/releases).
 
-## Experimental images
-
-From time to time, the Lagoon team may release images that are not suitable for use in production, but are ready for testing.
-
-These images will be available from the `testlagoon` organization on dockerhub, and be tagged with an `:experimental` tag instead of :latest
-
-The release notes will outline the status of experimental images
-
 ## Contribute
 
 Branch/fork and add/edit a Dockerfile in the `images/` directory.

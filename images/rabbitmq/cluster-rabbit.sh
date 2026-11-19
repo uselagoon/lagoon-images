@@ -11,7 +11,7 @@ if [ -e /etc/rabbitmq/definitions.json ]; then
 	/bin/ep /etc/rabbitmq/definitions.json
 fi
 
-# Check if the container runs in Kubernetes/OpenShift
+# Check if the container runs in Kubernetes
 if [ -z "$POD_NAMESPACE" ]; then
   # Single container runs in docker
   echo "POD_NAMESPACE not set, spin up single node"

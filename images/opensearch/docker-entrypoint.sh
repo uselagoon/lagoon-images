@@ -14,7 +14,7 @@ if [ -z "$POD_NAMESPACE" ]; then
   sed -i 's/cluster.initial_cluster_manager_nodes:.*//' /usr/share/opensearch/config/opensearch.yml
   echo "cluster.initial_cluster_manager_nodes: ${HOSTNAME}" >> /usr/share/opensearch/config/opensearch.yml
 else
-  # Is running in Kubernetes/OpenShift, so find all other pods
+  # Is running in Kubernetes, so find all other pods
   # belonging to the namespace
   echo "Opensearch: Running in Kubernetes, setting up for clustering"
   echo "Using service name: ${HOSTNAME}"

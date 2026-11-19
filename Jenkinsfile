@@ -6,7 +6,6 @@ pipeline {
     SAFEBRANCH_AND_BUILDNUMBER = (env.SAFEBRANCH_NAME+env.BUILD_NUMBER).replaceAll('%2f','').replaceAll('[^A-Za-z0-9]+', '').toLowerCase();
     CI_BUILD_TAG = 'lagoon'.concat(env.SAFEBRANCH_AND_BUILDNUMBER.drop(env.SAFEBRANCH_AND_BUILDNUMBER.length()-26));
     SKIP_IMAGE_PUBLISH = credentials('SKIP_IMAGE_PUBLISH')
-    SYNC_MAKE_OUTPUT = 'target'
   }
 
   stages {

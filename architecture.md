@@ -40,7 +40,6 @@ lagoon-images/
 ├── Jenkinsfile                         ← CI: build → test → publish
 ├── README.md
 ├── renovate.json                       ← upstream version bumps
-├── build.txt / scan.txt                ← generated cross-reference tables
 │
 ├── docs/
 │   └── reviewing/
@@ -66,7 +65,6 @@ lagoon-images/
 │   ├── opensearch/   mongo/
 │   └── python/       ruby/
 │
-├── build/                              ← empty marker files (build cache)
 └── scans/                              ← Syft / Grype output
 ```
 
@@ -300,9 +298,6 @@ The Makefile is intentionally thin — it only sets variables and calls
 | `make publish-testlagoon-images`| Push to `docker.io/testlagoon/<image>:${BRANCH_NAME}`                   |
 | `make publish-uselagoon-images` | Push to `docker.io/uselagoon/<image>:${LAGOON_VERSION}` + `:latest`     |
 | `make docker_buildx_create`     | Create the dedicated `ci-lagoon-images` buildx builder                  |
-
-Per-image build markers are written to `build/` so repeated invocations
-short-circuit; `make clean` removes them to force a rebuild.
 
 ---
 

@@ -156,6 +156,17 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
+        "/(^|/)php-fpm/.*\\.Dockerfile$/"
+      ],
+      "matchStrings": [
+        "composer create-project\\s+(?:--\\S+\\s+)*amazeeio/healthz-php\\s+\\S+\\s+(?<currentValue>v?\\d[\\w.-]*)"
+      ],
+      "depNameTemplate": "amazeeio/healthz-php",
+      "datasourceTemplate": "packagist"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
         "/(^|/)nginx/Dockerfile$/"
       ],
       "matchStrings": [

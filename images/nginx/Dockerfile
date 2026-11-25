@@ -1,6 +1,6 @@
 ARG LOCAL_REPO
 # renovate: datasource=docker depName=openresty/openresty
-ARG OPENRESTY_TAG=1.31.9.1-0-alpine
+ARG OPENRESTY_TAG=1.31.9.1-1-alpine
 FROM ${LOCAL_REPO:-lagoon}/commons AS commons
 
 # Brotli module compilation stage.
